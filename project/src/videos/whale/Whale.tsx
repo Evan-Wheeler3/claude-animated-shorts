@@ -8,7 +8,7 @@
 // Place changes crossfade by stacking a second canvas for the fade frames; the hook ends on a 4-frame white flash.
 import React, { useEffect, useMemo } from "react";
 import * as THREE from "three";
-import { AbsoluteFill, getInputProps, useCurrentFrame } from "remotion";
+import { AbsoluteFill, Audio, getInputProps, staticFile, useCurrentFrame } from "remotion";
 import { ThreeCanvas } from "@remotion/three";
 import { useThree } from "@react-three/fiber";
 import { EffectComposer } from "@react-three/postprocessing";
@@ -102,6 +102,7 @@ export const WhaleShort: React.FC = () => {
     <AbsoluteFill style={{ background: "#cfe3f2" }}>
       {layersAt(f).map((l, i) => <ShotView key={i ? "over" : "base"} id={l.id} alpha={l.alpha} />)}
       {flash > 0 && <AbsoluteFill style={{ background: "#ffffff", opacity: flash }} />}
+      <Audio src={staticFile("whale/mix.m4a")} />
     </AbsoluteFill>
   );
 };

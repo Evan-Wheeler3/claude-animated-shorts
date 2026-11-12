@@ -120,8 +120,8 @@ export const CHUNKS: Chunk[] = (() => {
   const add = (x: number, z: number, land: number, s: number, h = 46) =>
     out.push({ to: [x, gy(x, z) + 0.22 * s, z], land, h, s, spin: 2 + 5 * hh(out.length, 3), from: [WH[0] + (hh(out.length, 5) - 0.5) * 6, WH[1] + 1.5, WH[2]] });
   add(SLAB_AT[0], SLAB_AT[2], SLAB, 1.0, 52); out[0].to = SLAB_AT;                    // 0: the slab for the car
-  add(CROWD[0] - 1.9, CROWD[2] - 4.3, HIT1, 0.55);                                    // 1: lands in front of the crowd
-  add(CROWD[0] + 2.6, CROWD[2] - 3.4, HIT2, 0.45);                                    // 2
+  add(CROWD[0] - 0.5, CROWD[2] - 2.3, HIT1, 0.5);                                    // 1: lands in front of the crowd
+  add(CROWD[0] + 0.8, CROWD[2] - 1.6, HIT2, 0.42);                                    // 2
   add(HEAD_AT[0], HEAD_AT[2], HIT3, 0.62); out[3].to = [HEAD_AT[0], gy(HEAD_AT[0], HEAD_AT[2]) + 1.24, HEAD_AT[2]]; // 3: on a head
   for (let i = 0; i < 26; i++) // the rain over the crowd and the dune (shots 17-18)
     add(CROWD[0] + (hh(i, 1) - 0.5) * 26, CROWD[2] + (hh(i, 2) - 0.6) * 20, HIT3 + 6 + Math.floor(hh(i, 4) * 84), 0.28 + 0.4 * hh(i, 6), 40 + 14 * hh(i, 7));
