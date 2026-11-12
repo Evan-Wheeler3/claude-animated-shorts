@@ -226,7 +226,7 @@ export class World {
     }
     // ---- rocks, hills, pines, drift wood, dune grass ----
     M.rock = col("#565a6b"); M.rockTop = col("#5f8a4a"); M.hill = col("#4f8048"); M.pine = col("#2f6a45"); M.pine2 = col("#3d7d4c"); M.trunk = col("#7a5a3c");
-    M.wood = lam("woodW", () => ({ map: tex("woodW", 256, 256, woodTex) })); M.drift = col("#b9a48a");
+    M.wood = lam("woodW", () => ({ map: tex("woodW", 256, 256, woodTex) })); M.drift = lam("driftW", () => ({ map: tex("woodW", 256, 256, woodTex), color: "#f3e3cc" }));
     for (const [x, z, s, hgt] of [[-70, -95, 16, 30], [-52, -112, 9, 17], [46, -150, 22, 38], [120, -80, 12, 22], [150, -100, 7, 13], [-150, -200, 26, 44]]) {
       const g = lumpGeo(x, 2, 0.25); g.scale(s, hgt, s * 0.8);
       const m = new THREE.Mesh(g, M.rock); m.position.set(x, hgt * 0.25, z); sh(m); R.add(m);
@@ -246,7 +246,7 @@ export class World {
       }
       im.castShadow = true; im.receiveShadow = true; R.add(im);
     }
-    for (const [x, z, L, yaw] of [[LOG[0], LOG[2], 3.6, 0.04], [-22, 7, 4.6, 0.5], [26, 12, 3.0, -0.4], [-34, 30, 5, 1.1]]) {
+    for (const [x, z, L, yaw] of [[LOG[0], LOG[2], 2.7, 0.04], [-22, 7, 4.6, 0.5], [26, 12, 3.0, -0.4], [-34, 30, 5, 1.1]]) {
       const g = new THREE.Group();
       g.add(cyl(0.24, L, M.drift, 0, 0.22, 0, "x", 0.19, 10), cyl(0.09, 0.8, M.drift, L * 0.22, 0.5, 0.1, "y", 0.05, 7));
       g.position.set(x, gy(x, z) + 0.06, z); g.rotation.y = yaw; sh(g); R.add(g);
@@ -282,14 +282,14 @@ export class World {
     const tongue = new THREE.Mesh(new THREE.SphereGeometry(1, 14, 10).scale(1.0, 0.13, 0.5), col("#e86e78")); tongue.position.set(6.3, 0.16, 2.45); tongue.rotation.y = -0.5; front.add(tongue);
     const fin = new THREE.Mesh(new THREE.SphereGeometry(1, 12, 8).scale(1.0, 0.14, 0.5), M.skinFlat); fin.position.set(2.0, 0.3, 2.0); fin.rotation.set(0.0, 0.5, 0.15); front.add(fin);
     const eyeT = ctex("eyeX", 128, 128, (g) => { const p = new Pen(g); p.stroke([[30, 30], [98, 98]], 20, INK); p.stroke([[98, 30], [30, 98]], 20, INK); });
-    for (const s of [1, -1]) { const e = new THREE.Mesh(new THREE.PlaneGeometry(0.62, 0.62), new THREE.MeshBasicMaterial({ map: eyeT, transparent: true, depthWrite: false, side: THREE.DoubleSide })); e.position.set(4.25, 1.12, s * 1.79); e.rotation.x = -s * 0.3; e.layers.set(NOINK); e.renderOrder = 0.6; front.add(e); }
+    for (const s of [1]) { const e = new THREE.Mesh(new THREE.PlaneGeometry(0.62, 0.62), new THREE.MeshBasicMaterial({ map: eyeT, transparent: true, depthWrite: false, side: THREE.DoubleSide })); e.position.set(4.25, 1.12, s * 1.79); e.rotation.x = -s * 0.3; e.layers.set(NOINK); e.renderOrder = 0.6; front.add(e); }
     this.whale.add(this.whaleWhole, this.whaleHead, front);
     this.whale.position.set(WH[0], WH[1] - 0.12, WH[2]); sh(this.whale); R.add(this.whale);
     for (const o of this.whale.children[2].children) if ((o as THREE.Mesh).material instanceof THREE.MeshBasicMaterial) o.castShadow = false;
     // what the blast leaves: the tail thrown aside, a scorched pit, puddles
     const tail = new THREE.Group();
     tail.add(new THREE.Mesh(whaleGeo(0, 0.2, 0, 0.7), M.skin), new THREE.Mesh(capGeo(0.2, 1, 0.7, 4), M.meat), flukes());
-    tail.position.set(WH[0] - 3.5, gy(-10, 15) - 0.1, 16.5); tail.rotation.y = 0.8; sh(tail);
+    tail.position.set(WH[0] - 7.5, gy(-9, 13) - 0.1, 13.2); tail.rotation.y = 0.5; sh(tail);
     this.blasted.add(tail, patch(WH[0] - 3.2, WH[2] + 0.4, 6.5, 4.6, col("#6b5a54")), patch(WH[0] - 2.6, WH[2] + 0.6, 3.6, 2.6, col("#8f1820"), true, 0.05),
       patch(WH[0] - 6.5, WH[2] + 3.4, 1.6, 1.1, col("#c4232b"), true, 0.05), patch(WH[0] + 1.5, WH[2] + 4.4, 1.3, 0.9, col("#c4232b"), true, 0.05));
     for (let i = 0; i < 5; i++) { const m = new THREE.Mesh(lumpGeo(i + 20, 1, 0.3).scale(0.9, 0.5, 0.7), M.meat); const x = WH[0] - 6 + i * 1.6, z = WH[2] + (i % 2 ? 1.6 : -0.4); m.position.set(x, gy(x, z) + 0.3, z); m.rotation.y = i; sh(m); this.blasted.add(m); }
@@ -343,7 +343,7 @@ export class World {
       const N = this.newsCam, dk = col("#3a3d47"), mid = col("#5b6170");
       for (const a of [0, 2.1, 4.2]) { const l = box(0.05, 1.5, 0.05, dk, 0.28 * Math.cos(a), 0.7, 0.28 * Math.sin(a)); l.rotation.set(-0.36 * Math.sin(a), 0, 0.36 * Math.cos(a)); N.add(l); }
       N.add(box(0.56, 0.36, 0.3, mid, 0, 1.58, 0), cyl(0.1, 0.3, dk, 0.42, 1.58, 0, "x", 0.13), cyl(0.17, 0.07, dk, -0.12, 1.92, 0, "z"), cyl(0.17, 0.07, dk, 0.16, 1.92, 0, "z"));
-      N.position.set(REP[0] - 1.35, gy(REP[0] - 1.35, REP[2] + 0.7), REP[2] + 0.7); sh(N); R.add(N);
+      N.position.set(REP[0] - 1.1, gy(REP[0] - 1.1, REP[2] + 0.9), REP[2] + 0.9); sh(N); R.add(N);
     }
     // ---- the car park and the sale lot ----
     const asp = tex("asphaltW", 512, 512, asphaltTex);
@@ -365,17 +365,17 @@ export class World {
       for (const [dx, c] of [[-7.5, "#c8443c"], [8.6, "#e9dcb8"], [-14, "#3f6fb5"]] as const) { const o = makeCar(c); o.g.position.set(dx, 0.04, -4.5); o.g.rotation.y = Math.PI / 2 - 0.2; D.add(o.g); }
       const wall = box(30, 5.6, 8, col("#f1e6cf"), 0, 2.8, -15); D.add(wall);
       const front = new THREE.Mesh(new THREE.PlaneGeometry(30, 5.6), lam("showroomW", () => ({ map: tex("showroomW", 1024, 512, (c) => showroomTex(c)) }))); front.position.set(0, 2.8, -10.98); D.add(front);
-      const ban = new THREE.Mesh(new THREE.PlaneGeometry(9.6, 2.4), unlit(tex("bannerW", 2048, 512, (c) => bannerTex(c)))); ban.position.set(0, 5.0, -2.5); D.add(ban);
-      D.add(box(0.16, 6.4, 0.16, col("#d9dee4"), -4.9, 3.2, -2.5), box(0.16, 6.4, 0.16, col("#d9dee4"), 4.9, 3.2, -2.5));
+      const ban = new THREE.Mesh(new THREE.PlaneGeometry(4.4, 4.4), unlit(tex("bannerW", 1024, 1024, (c) => bannerTex(c)))); ban.position.set(0, 5.2, -2.5); D.add(ban);
+      D.add(box(0.16, 7.4, 0.16, col("#d9dee4"), -2.3, 3.7, -2.56), box(0.16, 7.4, 0.16, col("#d9dee4"), 2.3, 3.7, -2.56));
       const cols = ["#e2453c", "#ffd84a", "#3f8fb5", "#f7f5ee"];
       for (let i = 0; i < 22; i++) { // pennants on two strings
-        const u = i / 21, x = -11 + 22 * u, y = 6.6 - 1.6 * 4 * u * (1 - u);
+        const u = i / 21, x = -13 + 26 * u, y = 9.3 - 1.3 * 4 * u * (1 - u);
         const tr = new THREE.Mesh(new THREE.BufferGeometry().setAttribute("position", new THREE.Float32BufferAttribute([-0.22, 0, 0, 0.22, 0, 0, 0, -0.55, 0], 3)), new THREE.MeshBasicMaterial({ color: cols[i % 4], side: THREE.DoubleSide }));
-        tr.position.set(x, y, -1.4); D.add(tr);
+        tr.position.set(x, y, -4.4); tr.scale.setScalar(1.5); D.add(tr);
       }
       D.position.set(DEAL[0], PL, DEAL[2]); sh(D); ban.castShadow = false; R.add(D);
     }
-    this.packet = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.035, 0.125), [col("#e2453c"), col("#e2453c"), unlit(tex("packetW", 256, 160, (c) => packetTex(c))), col("#e2453c"), col("#e2453c"), col("#e2453c")]);
+    this.packet = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.05, 0.21), [col("#e2453c"), col("#e2453c"), unlit(tex("packetW", 256, 160, (c) => packetTex(c))), col("#e2453c"), col("#e2453c"), col("#e2453c")]);
     this.packet.position.set(KET[0], PL + 0.065, KET[2]); this.packet.rotation.y = 0.3; sh(this.packet); R.add(this.packet);
 
     // ---- chunks ----
@@ -402,7 +402,7 @@ export class World {
   private actor(i: number) { while (this.actors.length <= i) this.actors.push(new Actor(this.root)); return this.actors[i]; }
   private fx(i: number) { while (this.fxs.length <= i) this.fxs.push(new Fx(this.root)); return this.fxs[i]; }
 
-  private props(id: number, f: number, st: State) {
+  private props(id: number, f: number, st: State, camPos: THREE.Vector3) {
     const name = SHOTS[id - 1].name, t = f / FPS;
     // whale
     this.whale.visible = st.whale === "whole" || st.whale === "blasted";
@@ -456,6 +456,8 @@ export class World {
       if (landed) { m.rotation.set(0, i * 1.3, i === 0 ? 0.04 : 0.12 * Math.sin(i)); const sq = 1 - 0.25 * Math.exp(-(f - c.land) / 3); m.scale.set(1 / Math.sqrt(sq), sq, 1 / Math.sqrt(sq)); }
       else { m.rotation.set(u * 14 * c.spin, u * 9, i); m.scale.setScalar(1); }
       if (i === 0 && id < 19) m.visible = !landed;
+      if (id === 16) m.scale.setScalar(2.2 + 2.2 * clamp01((f - 1203) / 31));
+      if (m.position.distanceTo(camPos) < (id === 20 ? 14 : 4.5) && id !== 16 && id !== 17) m.visible = false;
     });
   }
 
@@ -505,7 +507,7 @@ export class World {
     untone(wc.near, W.wNearC.value); untone(wc.mid, W.wMidC.value); untone(wc.far, W.wFarC.value);
     untone(wc.crest, W.wCrest.value); untone(wc.trough, W.wTrough.value); untone(wc.glint, W.wGlint.value);
     W.wShade.value.set(...wc.shade); W.wTime.value = t;
-    this.props(id, f, st);
+    this.props(id, f, st, cam.position);
     // ---- cast + effects ----
     const right = V(0, 0, 0).setFromMatrixColumn(cam.matrixWorld, 0);
     const stg = stage(id, f, st, { pos: cam.position, right });

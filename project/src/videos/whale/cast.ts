@@ -5,7 +5,7 @@
 // the sun, painted crescent in the drawing); standing ones get a soft multiply contact blob. Effects are unlit cards.
 // Cards, effects and blobs live on the NOINK layer so the world ink pass never outlines their quads.
 import * as THREE from "three";
-import { Pen, bodyFront, bodySide, KID, SKINS, fxBurst, fxPuff, fxStars, fxShadow, fxContact, Outfit, Expr, FrontOpts, SideOpts } from "./toon";
+import { Pen, bodyFront, bodySide, KID, SKINS, fxBurst, fxStars, fxShadow, fxContact, Outfit, Expr, FrontOpts, SideOpts } from "./toon";
 import { fxGull, fxGullFar, fxFeather, fxStink, fxFlies, fxBubble, fxCloud2, fxSplat, fxBits, fxShards, fxStreak, fxHub, fxBoot, fxSquirt, MEAT, GullPose } from "./fxw";
 import {
   FPS, V3, gy, at, smooth, clamp01, easeOut, lerp, State, SHOTS, WH, CRATE, HOOKPLG, SIGN, EASEL, LOG, WALT0, CROWD, REP, PLG, CAR, KET, DEAL, PL,
@@ -299,8 +299,8 @@ const blastFx = (c: Cast, n: number, plume = true, k = 1) => {
 /** the smoke that keeps rising from the crater */
 const smokeFx = (c: Cast) => {
   for (let i = 0; i < 5; i++) {
-    const u = (c.t * 0.13 + i / 5) % 1, s = 2.5 + 6 * u;
-    card(c, `smoke${i % 3}`, 400, 400, (p) => fxCloud2(p, "#8f8d96", i % 3), WH[0] - 3.4 + 4 * u + Math.sin(i * 3) * 0.8, WH[1] + 1.5 + 16 * u, WH[2] - 0.5, s, s * 0.9);
+    const u = (c.t * 0.13 + i / 5) % 1, s = 1.6 + 4.2 * u;
+    card(c, `smoke${i % 3}`, 400, 400, (p) => fxCloud2(p, "#8f8d96", i % 3), WH[0] - 2.2 + 4 * u + Math.sin(i * 3) * 0.6, WH[1] + 2.4 + 16 * u, WH[2] - 1.2, s, s * 0.9);
   }
 };
 /** what a landing chunk does to the ground: a splat that stays, and a short spray of bits */
@@ -328,7 +328,7 @@ export const stage = (id: number, f: number, st: State, cam: CamInfo): Stage => 
   if (name === "hook") {
     engAtPlunger(HOOKPLG, f < 118 ? "grin" : "laugh");
     put(c, 51, WORKER[0], "w0", -3.6, 15.4, { expr: "nervous" });
-    put(c, 52, WORKER[1], "w1", 1.9, 15.6, { expr: "nervous", look: -1 });
+    put(c, 52, WORKER[1], "w1", -2.3, 16.3, { expr: "nervous", look: 1 });
     const u = q(((t * 0.8) % 1), 30);
     card(c, `flies${u}`, 300, 300, (p) => fxFlies(p, u), 5.4, WH[1] + 2.9, 11.6, 1.5, 1.5);
     blastFx(c, st.blast, true, 0.8);
@@ -342,7 +342,7 @@ export const stage = (id: number, f: number, st: State, cam: CamInfo): Stage => 
     crowdNear(c, (i) => (i % 3 === 1 ? "dazed" : "pained"), (i) => ({ prop: "pinch", blink: lidAt(t, i, swap), headTilt: q(3 * Math.sin(t * 2 + i), 4) }));
     for (let k = 0; k < 5; k++) {
       const u = q(((t * 0.5 + k * 0.37) % 1), 24), x = -4.5 + k * 2.2;
-      card(c, `stink${u}`, 300, 400, (p) => fxStink(p, u), x, gy(x, 15.6) + 1.2 + 0.7 * u, 15.6 + (k % 2) * 0.8, 1.0, 1.35);
+      card(c, `stink${u}`, 300, 400, (p) => fxStink(p, u), x, gy(x, 17) + 1.5 + 0.9 * u, 17.0 + (k % 2) * 0.5, 0.6, 0.8);
     }
   }
   if (name === "sign") {
@@ -353,12 +353,12 @@ export const stage = (id: number, f: number, st: State, cam: CamInfo): Stage => 
   if (name === "dept" || (name === "boulder" && f < 506)) {
     const think = name === "boulder" && f >= 486;
     put(c, 50, ENG, "eng", -1.5, 17.2, { expr: name === "dept" ? "stern" : think ? "smile_closed" : "neutral", prop: "clipboard", blink: lidAt(t, 50, [486 / FPS]) });
-    put(c, 51, WORKER[0], "w0", -2.75, 17.45, { expr: "neutral", look: 1 });
-    put(c, 52, WORKER[1], "w1", -0.25, 17.4, { expr: name === "dept" ? "nervous" : "neutral", look: -1 });
+    put(c, 51, WORKER[0], "w0", -3.05, 17.45, { expr: "neutral", look: 1 });
+    put(c, 52, WORKER[1], "w1", 0.1, 17.4, { expr: name === "dept" ? "nervous" : "neutral", look: -1 });
     crowdNear(c, (i) => (["neutral", "stern", "nervous"] as Expr[])[i % 3], () => ({}), 0, 3.6);
     if (think) {
       const pop = 0.6 + 0.4 * easeOut((f - 486) / 6);
-      card(c, "bubbleB", 700, 600, (p) => fxBubble(p, "boulder", 0), -0.95, gy(-1.5, 17.2) + 2.62, 17.15, 1.3 * pop, 1.12 * pop);
+      card(c, "bubbleB", 700, 600, (p) => fxBubble(p, "boulder", 0), -0.62, gy(-1.5, 17.2) + 2.5, 17.15, 1.15 * pop, 0.99 * pop);
     }
   }
   if (name === "boulder" && f >= BOULDER && f < BOULDER + 10) {
@@ -370,7 +370,7 @@ export const stage = (id: number, f: number, st: State, cam: CamInfo): Stage => 
     const there = name === "gulls";
     if (there) for (let k = 0; k < 4; k++) {
       const hop = f >= 672 + k * 3 ? Math.max(0, Math.sin((f - 672 - k * 3) * 0.5)) * 0.12 : 0;
-      gull(c, "perch", f >= 660 ? "grin" : "neutral", LOG[0] - 1.15 + k * 0.78, LOG[1] + 0.52 + hop, LOG[2] + 0.05, 0.66, k === 1, k === 3);
+      gull(c, "perch", f >= 660 ? "grin" : "neutral", LOG[0] - 0.85 + k * 0.58, LOG[1] + 0.52 + hop, LOG[2] + 0.05, 0.66, k === 1, k === 3);
     } else {
       const u = (f - 1881) / 47;
       card(c, "feather", 200, 200, fxFeather, LOG[0] + 0.3 + 0.35 * Math.sin(u * 7), LOG[1] + 2.3 - 1.5 * u, LOG[2] + 0.1, 0.34, 0.34, { rot: 0.5 * Math.sin(u * 9) });
@@ -378,22 +378,22 @@ export const stage = (id: number, f: number, st: State, cam: CamInfo): Stage => 
     }
   }
   if (name === "crates") {
-    put(c, 51, WORKER[0], "w0", -3.3, 15.0, { expr: "grin", wave: f % 18 < 9 ? 0.2 : 0.8 });
+    put(c, 51, WORKER[0], "w0", -2.5, 14.9, { expr: "grin", wave: f % 18 < 9 ? 0.2 : 0.8 });
     put(c, 52, WORKER[1], "w1", 2.5, 15.2, { expr: "nervous", look: -1 });
     for (let k = 0; k < 20; k++) {
       const f0 = CRATES0 + ((CRATES1 - CRATES0) * k) / 20, n = f - f0;
-      if (n >= 0 && n < 9) { const u = q(n / 9, 30); card(c, `puff${u}`, 300, 300, (p) => fxPuff(p, u), CRATE[0] + ((k % 5) - 2) * 0.9, CRATE[1] + 0.4 + Math.floor(k / 5) * 0.5, CRATE[2] + 0.5, 1.6, 1.6, { soft: true }); }
+      if (n >= 0 && n < 9) { const u = q(n / 9, 30); const sz = 0.5 + 0.9 * u; card(c, `dust${k % 3}`, 400, 400, (p) => fxCloud2(p, "#f3e6c8", k % 3), CRATE[0] + ((k % 5) - 2) * 1.02 + (k % 2 ? 0.5 : -0.5) * (0.4 + u), CRATE[1] + 0.2 + Math.floor(k / 5) * 0.51 + 0.3 * u, CRATE[2] + 0.45, sz * (1 - 0.6 * u * u), sz * 0.9 * (1 - 0.6 * u * u)); }
     }
   }
   if (name === "walt") {
     const two = f >= 850 && f < 905, wx = WALT0[0], wz = WALT0[2];
     put(c, 60, WALT, "walt", wx, wz, { expr: f < 796 ? "neutral" : two ? "stern" : f < 850 ? "stern" : "neutral", prop: two ? "sticks" : null, blink: lidAt(t, 60, [850 / FPS, 905 / FPS, 916 / FPS]), look: two ? 1 : 0 });
-    if (two) put(c, 50, ENG, "eng", wx + 1.7, wz + 0.1, { expr: "whistle", look: 1, headTilt: 5 });
+    if (two) put(c, 50, ENG, "eng", wx + 1.2, wz + 0.1, { expr: "whistle", look: 1, headTilt: 5 });
     crowdNear(c, (i) => (["neutral", "smile", "nervous", "stern"] as Expr[])[i % 4], (i) => ({ look: i % 2 ? 1 : -1 }), 6.2, 2.4, (i) => i >= 12);
   }
   if (name === "retreat") {
     for (let i = 0; i < NFOLK + 4; i++) {
-      const x = -10 + (i % 7) * 3.6 + hh(i, 41) * 2, z = 34 + Math.floor(i / 7) * 9 + hh(i, 42) * 6 + (f - 933) * 0.05;
+      const x = -7 + (i % 7) * 2.9 + hh(i, 41) * 2, z = 26 + Math.floor(i / 7) * 6 + hh(i, 42) * 4 + (f - 933) * 0.05;
       const o = i < NFOLK ? FOLK[i] : i === NFOLK ? WALT : i === NFOLK + 1 ? ENG : WORKER[i % 2];
       const pl = person(cam, { i, o, okey: `r${i}` }, x, gy(x, z), z, { side: true, mirror: i % 2 === 0 }, {}, { mode: "march", phase: q(((t * 1.6 + hh(i, 43)) % 1), 24), stomp: 0.6, stride: 0.5 }, isKid(i) && i < NFOLK ? 0.72 : 1);
       out.places.push(pl);
@@ -403,7 +403,7 @@ export const stage = (id: number, f: number, st: State, cam: CamInfo): Stage => 
   }
   if (name === "news") {
     put(c, 61, REPORTER, "rep", REP[0], REP[2], { expr: f % 16 < 8 ? "smile" : "grin", prop: "mic" });
-    putSide(c, 62, CAMMAN, "cam", REP[0] - 2.15, REP[2] + 0.75, { mode: "stand", expr: "neutral" }, false, 0);
+    putSide(c, 62, CAMMAN, "cam", REP[0] - 1.85, REP[2] + 0.95, { mode: "stand", expr: "neutral" }, false, 0);
   }
   if (name === "plunger") {
     engAtPlunger([PLG[0] - 0.78, PLG[1], PLG[2]], f < 1062 ? "grin" : "laugh");
@@ -450,9 +450,9 @@ export const stage = (id: number, f: number, st: State, cam: CamInfo): Stage => 
     chunkFx(c, 46, 54);
   }
   if (name === "poof") {
-    put(c, 50, withGore(ENG, 2), "eng", -5.6, 20, { expr: f < POOF ? "smile_closed" : "dazed", prop: "sticks", blink: lidAt(t, 50, [POOF / FPS]) });
+    put(c, 50, withGore(ENG, 2), "eng", -6.0, 20, { expr: f < POOF ? "smile_closed" : "dazed", prop: "sticks", blink: lidAt(t, 50, [POOF / FPS]) });
     const u = q(clamp01((f - 1545) / 62), 40), pop = 0.6 + 0.4 * easeOut((f - 1545) / 6);
-    if (f >= 1545) card(c, `bubbleP${u}`, 700, 600, (p) => fxBubble(p, "poof", u), -4.75, gy(-5.6, 20) + 2.9, 19.95, 1.9 * pop, 1.63 * pop);
+    if (f >= 1545) card(c, `bubbleP${u}`, 700, 600, (p) => fxBubble(p, "poof", u), -5.0, gy(-5.6, 20) + 2.82, 19.95, 1.4 * pop, 1.2 * pop);
     chunkFx(c, 30, 46);
   }
   if (name === "replay") {
@@ -472,7 +472,7 @@ export const stage = (id: number, f: number, st: State, cam: CamInfo): Stage => 
     const drop = clamp01((f - (STOMP - 6)) / 6), y = PL + 0.05 + (1 - drop * drop) * 1.4;
     card(c, "boot", 300, 400, fxBoot, KET[0] - 0.06, y + 0.28, KET[2] - 0.02, 0.44, 0.59);
     const n = f - STOMP;
-    if (n >= 0 && n < 16) { const u = q(n / 16, 30); card(c, `squirt${u}`, 500, 300, (p) => fxSquirt(p, u), KET[0] + 0.05, PL + 0.36, KET[2] + 0.1, 1.9, 1.14); }
+    if (n >= 0 && n < 16) { const u = q(n / 16, 30); card(c, `squirt${u}`, 500, 300, (p) => fxSquirt(p, u), KET[0] + 0.05, PL + 0.3, KET[2] + 0.12, 1.25, 0.75); }
     if (n >= 3) card(c, "splatK", 400, 400, (p) => fxSplat(p, 2, "#d42a2a"), KET[0] + 0.3, PL + 0.012, KET[2] + 0.25, 1.1, 1.1, { flat: true });
   }
   if (name === "ketchup") {
@@ -483,7 +483,7 @@ export const stage = (id: number, f: number, st: State, cam: CamInfo): Stage => 
   }
   if (name === "carcass") {
     const ex: Expr[] = ["dazed", "pained", "dazed"];
-    [[-5.2, 17.2, ENG, "eng", 50], [-3.6, 18.0, WORKER[0], "w0", 51], [-6.9, 18.3, WORKER[1], "w1", 52]].forEach((r, k) => {
+    [[-3.4, 16.6, ENG, "eng", 50], [-1.6, 17.6, WORKER[0], "w0", 51], [-5.6, 18.2, WORKER[1], "w1", 52]].forEach((r, k) => {
       const [x, z, o, key, i] = r as [number, number, Outfit, string, number];
       put(c, i, withGore(o, 3), key, x, z, { mode: "sit", expr: ex[k] });
       const u = q(((t * 0.9 + k * 0.3) % 1), 30);

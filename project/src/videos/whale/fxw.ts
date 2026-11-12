@@ -146,9 +146,12 @@ export const fxBoot = (p: Pen) => {
 };
 /** ketchup squirt, side-on fan (500 x 300): origin bottom centre */
 export const fxSquirt = (p: Pen, t: number) => {
-  for (let i = 0; i < 11; i++) {
-    const a = rad(195 + i * 15), d = 40 + 210 * (1 - (1 - t) ** 2) * (0.6 + 0.4 * rnd(i, 1)), x = 250 + d * Math.cos(a), y = 280 + d * 0.8 * Math.sin(a);
-    p.stroke([[250 + 0.35 * d * Math.cos(a), 280 + 0.28 * d * Math.sin(a)], [x, y]], 12 * (1 - 0.5 * t), MEAT_D); p.ell(x, y, 18 * (1 - 0.3 * t), 15 * (1 - 0.3 * t), "#d42a2a", 5);
+  const e = 1 - (1 - t) ** 2;
+  for (let i = 0; i < 13; i++) {
+    const a = rad(188 + i * 13.5), d = (60 + 190 * e) * (0.55 + 0.45 * rnd(i, 1)), x = 250 + d * Math.cos(a), y = 285 + d * 0.85 * Math.sin(a), r = (9 + 9 * rnd(i, 2)) * (1 - 0.4 * t);
+    const x0 = 250 + 0.45 * d * Math.cos(a), y0 = 285 + 0.4 * d * Math.sin(a), nx = -Math.sin(a) * r * 0.5, ny = Math.cos(a) * r * 0.5;
+    p.poly([[x0, y0], [x + nx, y + ny], [x - nx, y - ny]], "#d42a2a", 4);
+    p.ell(x, y, r, r * 0.85, "#d42a2a", 4);
   }
 };
 
@@ -247,18 +250,18 @@ export const planTex = (g: G) => {
   g.fillStyle = "#f4f8ff";
   for (const y of [345, 680]) { g.beginPath(); g.moveTo(232, y - 22); g.lineTo(280, y - 22); g.lineTo(256, y + 22); g.closePath(); g.fill(); ink(g, 5); g.stroke(); }
 };
-/** the sale banner (2048 x 512) */
+/** the sale banner (1024 x 1024): three stacked lines so it reads in a vertical frame */
 export const bannerTex = (g: G) => {
-  g.fillStyle = "#ffd84a"; g.fillRect(0, 0, 2048, 512);
-  g.fillStyle = "#e2453c"; g.fillRect(0, 0, 2048, 44); g.fillRect(0, 468, 2048, 44);
-  ink(g, 20); g.strokeRect(10, 10, 2028, 492);
+  g.fillStyle = "#ffd84a"; g.fillRect(0, 0, 1024, 1024);
+  g.fillStyle = "#e2453c"; g.fillRect(0, 0, 1024, 56); g.fillRect(0, 968, 1024, 56);
+  ink(g, 22); g.strokeRect(11, 11, 1002, 1002);
   g.textAlign = "center"; g.textBaseline = "middle"; g.lineJoin = "round";
-  g.font = "900 150px Arial Black, Arial, sans-serif";
-  g.lineWidth = 26; g.strokeStyle = INK; g.strokeText("GET A", 770, 150); g.fillStyle = "#ffffff"; g.fillText("GET A", 770, 150);
-  g.font = "900 210px Arial Black, Arial, sans-serif";
-  g.lineWidth = 30; g.strokeText("WHALE OF A DEAL!", 1150, 340); g.fillStyle = "#e2453c"; g.fillText("WHALE OF A DEAL!", 1150, 340);
-  g.save(); g.translate(250, 170); const p = new Pen(g); miniWhale(p, 0, 0, 1.25, false);
-  p.stroke([[60, -70], [50, -120]], 8, "#7ec8f0"); p.stroke([[60, -70], [90, -116]], 8, "#7ec8f0"); p.stroke([[60, -70], [20, -108]], 8, "#7ec8f0");
+  const line = (txt: string, y: number, px: number, fill: string) => { g.font = `900 ${px}px Arial Black, Arial, sans-serif`; g.lineWidth = px * 0.16; g.strokeStyle = INK; g.strokeText(txt, 512, y); g.fillStyle = fill; g.fillText(txt, 512, y); };
+  line("GET A", 170, 130, "#ffffff");
+  line("WHALE", 370, 250, "#e2453c");
+  line("OF A DEAL!", 580, 150, "#ffffff");
+  g.save(); g.translate(512, 800); const p = new Pen(g); miniWhale(p, 0, 0, 1.5, false);
+  p.stroke([[80, -84], [70, -150]], 10, "#7ec8f0"); p.stroke([[80, -84], [120, -140]], 10, "#7ec8f0"); p.stroke([[80, -84], [30, -134]], 10, "#7ec8f0");
   g.restore();
 };
 export const packetTex = (g: G) => {

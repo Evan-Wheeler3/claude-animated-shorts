@@ -25,7 +25,7 @@ export const WH: V3 = at(0, 10);          // whale centre (lies along x, head to
 export const CRATE: V3 = at(-0.6, 12.9);  // dynamite stack against the landward flank
 export const HOOKPLG: V3 = at(4.2, 16.6); // the plunger in the hook shot
 export const SIGN: V3 = at(-9.4, 14.6);
-export const TRUCK: V3 = at(-13, 25);
+export const TRUCK: V3 = at(-23, 31);
 export const EASEL: V3 = at(-8, 19);
 export const LOG: V3 = at(11, 4.6);
 export const WALT0: V3 = at(6, 19);
@@ -70,15 +70,15 @@ export const SHOTS: ShotDef[] = [
   S(19, 1434, 1538, "car"),
   S(20, 1538, 1611, "poof", "golden", -40, 14),
   S(21, 1611, 1693, "replay", "golden", 60, 20),
-  S(22, 1693, 1732, "stomp", "golden", -50, 16),
-  S(23, 1732, 1827, "ketchup", "golden", -50, 16),
+  S(22, 1693, 1732, "stomp"),
+  S(23, 1732, 1827, "ketchup"),
   S(24, 1827, 1881, "carcass"),
   S(25, 1881, 1928, "gone"),
   S(26, 1928, 2017, "owner"),
   S(27, 2017, TOTAL, "deal"),
 ];
 /** crossfades (frames) at time changes */
-export const XFADE: Record<number, number> = { 20: 8, 22: 8, 24: 8, 27: 8 };
+export const XFADE: Record<number, number> = { 20: 8, 22: 8, 27: 8 };
 export const shotAt = (f: number) => SHOTS.find((s) => f >= s.a && f < s.b) ?? SHOTS[SHOTS.length - 1];
 export const layersAt = (f: number): { id: number; alpha: number }[] => {
   for (const s of SHOTS) {
@@ -101,7 +101,7 @@ export const stateAt = (id: number, f: number): State => {
   if (id === 13) st.plunger = smooth((f - PLUNGE) / 6);
   if (id >= 14) { st.blast = f - BLAST; st.whale = "blasted"; st.smoke = true; }
   if (id === 14 && f < BLAST + 2) st.whale = "whole";
-  if (id === 20) st.smoke = false;
+  if (id === 20 || id === 22 || id === 23) st.smoke = false;
   if (id === 21) { st.blast = f >= REPLAY ? f - REPLAY : -1; st.whale = f >= REPLAY + 2 ? "blasted" : "whole"; st.crates = f >= REPLAY ? 0 : 20; st.smoke = false; }
   if (id >= 19) st.carCrush = id === 27 ? 0 : easeOut((f - SLAB) / 4);
   if (id === 27) { st.whale = "whole"; st.blast = -1; st.smoke = false; }
@@ -177,39 +177,39 @@ const o = (p: V3, dx: number, dy: number, dz: number): V3 => [p[0] + dx, p[1] + 
 const C = CROWD, cy = C[1];
 const F: Record<string, (f: number) => Shot> = {
   // 1 hook: whale + stack + the man at the plunger -> the dead eye -> the stack
-  h1: (f) => dolly([12.5, 1.9, 19.5], [0.5, 1.7, 12.2], pushK(f, 0, 0.002), { fov: 48 }),
-  h2: (f) => dolly([8.4, 1.5, 16.6], [5.0, 1.45, 11.2], pushK(f, 85, 0.003), { fov: 36, roll: -0.04 }),
+  h1: (f) => dolly([12.8, 2.0, 20.5], [2.4, 1.6, 14.0], pushK(f, 0, 0.002), { fov: 50 }),
+  h2: (f) => dolly([9.6, 1.7, 18.4], [4.8, 1.3, 11.4], pushK(f, 85, 0.003), { fov: 38, roll: -0.04 }),
   h3: (f) => dolly([3.6, 1.5, 19.2], [CRATE[0] + 1.2, CRATE[1] + 1.0, CRATE[2]], pushK(f, 107, 0.002, 0.007, 24), { fov: 40, roll: 0.04 }),
   // 2 beach aerial -> lower
   b1: (f) => zoom([-24, 15, 38], [0, 0.5, 9], 44, pushK(f, 143, 0.002)),
   b2: (f) => zoom([-13, 5.2, 27], [0.5, 1.2, 10], 44, pushK(f, 187, 0.002)),
   // 3 crowd holding their noses (lens between the whale and the crowd)
   s1: (f) => dolly([0.8, 1.75, 13.6], [0, 1.6, 18], pushK(f, 238, 0.0025), { fov: 42 }),
-  s2: (f) => dolly([-1.1, 1.72, 15.4], [-1.5, 1.66, 18], pushK(f, 284, 0.002, 0.006, 24), { fov: 32, roll: 0.04 }),
+  s2: (f) => dolly([-1.2, 1.72, 14.5], [-1.5, 1.6, 18], pushK(f, 284, 0.002, 0.006, 24), { fov: 36, roll: 0.04 }),
   // 4 the highway sign in the sand
   g1: (f) => dolly([-12.6, 0.75, 19.4], [SIGN[0] + 0.6, SIGN[1] + 2.0, SIGN[2]], pushK(f, 311, 0.002), { fov: 42 }),
   g2: (f) => dolly([-11.4, 1.3, 18.6], [SIGN[0] + 0.3, SIGN[1] + 2.25, SIGN[2]], pushK(f, 349, 0.002), { fov: 36, roll: -0.04 }),
   // 5 the highway department
-  d1: (f) => dolly([-1.2, 1.5, 12.9], [-1.5, 1.5, 17.2], pushK(f, 399, 0.0025), { fov: 44 }),
+  d1: (f) => dolly([-1.3, 1.5, 12.5], [-1.5, 1.45, 17.2], pushK(f, 399, 0.0025), { fov: 48 }),
   // 6 the engineer -> what he sees
-  e1: (f) => dolly([-1.2, 1.72, 14.4], [-1.5, 1.7, 17.2], pushK(f, 468, 0.003), { fov: 34 }),
-  e2: (f) => dolly([-7.5, 1.9, 21.5], [1.2, 1.5, 10.2], pushK(f, 506, 0.0015, 0.005, 30), { fov: 42 }),
+  e1: (f) => dolly([-1.0, 1.8, 13.9], [-1.25, 1.98, 17.2], pushK(f, 468, 0.003), { fov: 40 }),
+  e2: (f) => dolly([-11.5, 2.5, 25.5], [0.6, 1.5, 10.4], pushK(f, 506, 0.0015, 0.005, 30), { fov: 44 }),
   // 7 the plan (a tall board, read top to bottom)
   p1: (f) => dolly([EASEL[0] + 0.15, EASEL[1] + 2.6, EASEL[2] + 3.3], [EASEL[0], EASEL[1] + 2.62, EASEL[2]], pushK(f, 572, 0.002), { fov: 30 }),
   p2: (f) => dolly([EASEL[0] + 0.05, EASEL[1] + 2.0, EASEL[2] + 3.3], [EASEL[0], EASEL[1] + 2.0, EASEL[2]], pushK(f, 606, 0.002), { fov: 30, roll: -0.03 }),
   p3: (f) => dolly([EASEL[0] - 0.1, EASEL[1] + 1.4, EASEL[2] + 3.3], [EASEL[0], EASEL[1] + 1.4, EASEL[2]], pushK(f, 636, 0.002), { fov: 30, roll: 0.03 }),
   // 8 the seagulls
-  u1: (f) => dolly([LOG[0] + 0.3, LOG[1] + 1.0, LOG[2] + 4.6], [LOG[0], LOG[1] + 0.95, LOG[2]], pushK(f, 653, 0.003), { fov: 32 }),
+  u1: (f) => dolly([LOG[0] + 0.4, LOG[1] + 1.5, LOG[2] + 6.3], [LOG[0], LOG[1] + 0.85, LOG[2]], pushK(f, 653, 0.003), { fov: 44 }),
   // 9 the stack grows
   c1: (f) => dolly([-6.2, 1.5, 19.6], [CRATE[0] + 0.4, CRATE[1] + 1.0, CRATE[2]], pushK(f, 696, 0.0025), { fov: 40, roll: -0.03 }),
   // 10 the man who knows
   w1: (f) => dolly([WALT0[0] + 0.5, WALT0[1] + 1.68, WALT0[2] - 4.0], o(WALT0, 0, 1.6, 0), pushK(f, 771, 0.002), { fov: 38 }),
-  w2: (f) => dolly([WALT0[0] + 0.95, WALT0[1] + 1.62, WALT0[2] - 4.7], o(WALT0, 0.85, 1.62, 0), pushK(f, 850, 0.002), { fov: 40 }),
+  w2: (f) => dolly([WALT0[0] + 0.7, WALT0[1] + 1.62, WALT0[2] - 4.9], o(WALT0, 0.6, 1.6, 0), pushK(f, 850, 0.002), { fov: 42 }),
   w3: (f) => dolly([WALT0[0] + 0.25, WALT0[1] + 1.72, WALT0[2] - 2.9], o(WALT0, 0, 1.68, 0), pushK(f, 905, 0.0015, 0.006, 26), { fov: 30, roll: 0.03 }),
   // 11 everyone walks up the dunes
-  r1: (f) => zoom([-11, 7.5, -8], [3, 3.4, 62], 46, pushK(f, 933, 0.002)),
+  r1: (f) => dolly([-12, 2.6, 18], [3, 2.6, 44], pushK(f, 933, 0.0015), { fov: 46 }),
   // 12 the news crew (the beach far behind)
-  n1: (f) => dolly([REP[0] + 0.5, REP[1] + 1.66, REP[2] + 4.3], o(REP, -0.45, 1.5, 0), pushK(f, 994, 0.0025), { fov: 40 }),
+  n1: (f) => dolly([REP[0] - 0.1, REP[1] + 1.66, REP[2] + 4.6], o(REP, -0.75, 1.5, 0), pushK(f, 994, 0.0025), { fov: 42 }),
   // 13 the plunger
   k1: (f) => dolly([PLG[0] - 0.2, PLG[1] + 1.25, PLG[2] + 4.4], o(PLG, -0.3, 1.0, 0), pushK(f, 1043, 0.002, 0.007, 22), { fov: 36 }),
   k2: (f) => dolly([PLG[0] + 0.5, PLG[1] + 0.75, PLG[2] + 2.3], o(PLG, 0, 0.55, 0), pushK(f, 1066, 0.004), { fov: 32, roll: -0.04 }),
@@ -226,28 +226,28 @@ const F: Record<string, (f: number) => Shot> = {
   // 18 the rain
   m1: (f) => dolly([C[0] - 11, cy + 5.2, C[2] - 13], [C[0] + 0.5, cy + 0.9, C[2] + 0.5], pushK(f, 1384, 0.002), { fov: 46, roll: 0.03 }),
   // 19 the car
-  a1: (f) => dolly([CAR[0] - 5.6, PL + 1.25, CAR[2] + 6.2], [CAR[0] - 0.2, PL + 0.95, CAR[2]], pushK(f, 1434, 0.002), { fov: 40 }),
-  a2: (f) => dolly([CAR[0] - 3.9, PL + 0.7, CAR[2] + 5.0], [CAR[0] - 0.1, PL + 1.0, CAR[2]], pushK(f, 1510, 0.002), { fov: 38, roll: -0.04 }),
+  a1: (f) => dolly([CAR[0] - 7.6, PL + 1.9, CAR[2] + 4.6], [CAR[0] + 0.2, PL + 0.95, CAR[2]], pushK(f, 1434, 0.002), { fov: 42 }),
+  a2: (f) => dolly([CAR[0] - 6.4, PL + 1.1, CAR[2] + 4.4], [CAR[0] + 0.1, PL + 1.0, CAR[2]], pushK(f, 1510, 0.002), { fov: 40, roll: -0.04 }),
   // 20 "doesn't make things disappear"
-  t1: (f) => dolly([-5.3, 2.05, 15.6], [-5.6, 2.25, 20], pushK(f, 1538, 0.002), { fov: 42 }),
+  t1: (f) => dolly([-5.4, 2.1, 15.2], [-5.5, 2.3, 20], pushK(f, 1538, 0.002), { fov: 44 }),
   // 21 the replay from above
   v1: (f) => dolly([0, 50, 37], [0, 0, 14], pushK(f, 1611, 0.0012), { fov: 44 }),
   v2: (f) => dolly([0, 62, 44], [0, 0, 16], pushK(f, 1640, 0.001), { fov: 46, roll: 0.03 }),
   // 22 the ketchup packet
-  j1: (f) => dolly([KET[0] + 0.75, PL + 0.3, KET[2] + 1.5], [KET[0], PL + 0.14, KET[2]], pushK(f, 1693, 0.003), { fov: 34 }),
+  j1: (f) => dolly([KET[0] + 0.55, PL + 0.72, KET[2] + 1.25], [KET[0], PL + 0.16, KET[2]], pushK(f, 1693, 0.003), { fov: 36 }),
   // 23 it is on everybody
   z1: (f) => dolly([KET[0] + 1.9, PL + 1.6, KET[2] + 4.2], [KET[0] + 1.9, PL + 1.55, KET[2]], pushK(f, 1732, 0.002), { fov: 38 }),
   z2: (f) => dolly([KET[0] + 1.2, PL + 1.9, KET[2] + 7.6], [KET[0] + 1.4, PL + 1.3, KET[2]], pushK(f, 1783, 0.0012), { fov: 42 }),
   // 24 the carcass
-  i1: (f) => dolly([-13, 2.3, 23], [1, 1.3, 10.4], pushK(f, 1827, 0.002), { fov: 44 }),
+  i1: (f) => dolly([-12, 2.6, 24], [1.2, 1.3, 10.6], pushK(f, 1827, 0.002), { fov: 44 }),
   // 25 no gulls
-  u2: (f) => dolly([LOG[0] + 0.3, LOG[1] + 1.0, LOG[2] + 4.6], [LOG[0], LOG[1] + 1.1, LOG[2]], pushK(f, 1881, 0.002), { fov: 34, roll: 0.03 }),
+  u2: (f) => dolly([LOG[0] + 0.4, LOG[1] + 1.5, LOG[2] + 6.3], [LOG[0], LOG[1] + 1.0, LOG[2]], pushK(f, 1881, 0.002), { fov: 44, roll: 0.03 }),
   // 26 the owner
-  o1: (f) => dolly([CAR[0] - 5.4, PL + 1.5, CAR[2] + 6.6], [CAR[0] - 1.2, PL + 1.15, CAR[2] + 0.6], pushK(f, 1928, 0.002), { fov: 42 }),
+  o1: (f) => dolly([CAR[0] - 7.8, PL + 1.8, CAR[2] + 5.4], [CAR[0] - 0.6, PL + 1.05, CAR[2] + 0.4], pushK(f, 1928, 0.002), { fov: 44 }),
   o2: (f) => dolly([CAR[0] - 3.2, PL + 1.72, CAR[2] + 4.6], [CAR[0] - 2.9, PL + 1.66, CAR[2] + 1.9], pushK(f, 1963, 0.0015, 0.005, 26), { fov: 32, roll: -0.03 }),
   // 27 the sale
-  f1: (f) => dolly([DEAL[0] - 1.2, PL + 1.5, DEAL[2] + 6.8], [DEAL[0] - 0.9, PL + 1.5, DEAL[2] + 1.2], pushK(f, 2017, 0.002), { fov: 44 }),
-  f2: (f) => zoom([DEAL[0] - 0.6, PL + 1.3, DEAL[2] + 7.4], [DEAL[0], PL + 5.0, DEAL[2] - 2.5], 40, pushK(f, 2052, 0.0022)),
+  f1: (f) => dolly([DEAL[0] - 1.1, PL + 1.5, DEAL[2] + 6.8], [DEAL[0] - 1.0, PL + 1.5, DEAL[2] + 1.2], pushK(f, 2017, 0.002), { fov: 44 }),
+  f2: (f) => zoom([DEAL[0] - 0.8, PL + 1.2, DEAL[2] + 8.6], [DEAL[0] - 0.3, PL + 4.6, DEAL[2] - 2.5], 46, pushK(f, 2052, 0.0018)),
 };
 const CAMS: Record<number, Key[]> = {
   1: [{ f: 0, s: F.h1 }, { f: 85, cut: true, s: F.h2 }, { f: 100, dur: 28, s: F.h3 }],
@@ -314,7 +314,7 @@ export const DOF: Dof[] = [
   { f: 1150, cInf: 10, focus: () => [C[0], cy + 1.6, C[2] - 1] }, { f: 1203, cInf: 0 },
   { f: 1234, cInf: 12, focus: () => [C[0], cy + 1.6, C[2] - 1] },
   { f: 1384, cInf: 0 },
-  { f: 1434, cInf: 9 }, { f: 1538, cInf: 11, focus: () => [-5.6, 1.9, 20] }, { f: 1611, cInf: 0 },
+  { f: 1434, cInf: 9 }, { f: 1538, cInf: 11, focus: () => [-6, 1.9, 20] }, { f: 1611, cInf: 0 },
   { f: 1693, cInf: 15 }, { f: 1732, cInf: 11, focus: () => [KET[0] + 1.9, PL + 1.6, KET[2]] }, { f: 1774, dur: 30, cInf: 5, focus: () => [KET[0] + 1.9, PL + 1.6, KET[2]] },
   { f: 1827, cInf: 5 }, { f: 1881, cInf: 14 },
   { f: 1928, cInf: 8 }, { f: 1953, dur: 30, cInf: 14, focus: () => [CAR[0] - 2.9, PL + 1.66, CAR[2] + 1.9] },
