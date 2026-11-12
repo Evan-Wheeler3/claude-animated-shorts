@@ -2,7 +2,7 @@
 import sys, os
 from PIL import Image, ImageDraw
 out, files = sys.argv[1], sys.argv[2:]
-W, H, n = 300, 533, 6
+W, H, n = (200, 356, 9) if len(files) > 12 else (300, 533, 6)
 rows = (len(files) + n - 1) // n
 sheet = Image.new("RGB", (W * min(n, len(files)), H * rows), "black")
 for i, f in enumerate(files):
