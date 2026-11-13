@@ -5,6 +5,7 @@ A Remotion project that holds the shorts made with the skill in this repo.
 | Short | Composition | Source | Script, voice, sound |
 |---|---|---|---|
 | A Whale of a Deal (exploding whale, Oregon 1970) | `WhaleShort` | `src/videos/whale/` | `shorts/whale/` |
+| The Great Emu War (Western Australia 1932) | `EmuShort` | `src/videos/emu/` | `shorts/emu/` |
 | The Bridge That Fell for a Song (template) | `BridgeShort` | `src/videos/bridge/` | not included (needs the Kenney props) |
 
 ## Render the whale short (needs a computer with a graphics card)
@@ -13,6 +14,7 @@ cd project
 npm install
 npm run render:whale        # 1440x2560, writes out/whale/whale_2k.mp4 with sound
 npm run render:whale:1080   # 1080x1920, faster
+npm run render:emu:1080     # the Emu War, writes out/emu/emu_1080.mp4 (render:emu for 2K)
 ```
 Needs Node 20+. Remotion downloads its own headless browser on the first run. No ffmpeg install is needed.
 

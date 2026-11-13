@@ -24,6 +24,8 @@
   "scripts": {
     "render:whale": "node scripts/render-final.mjs WhaleShort out/whale/whale_2k.mp4 1.3333",
     "render:whale:1080": "node scripts/render-final.mjs WhaleShort out/whale/whale_1080.mp4 1",
-    "still": "node scripts/stills.mjs"
+    "still": "node scripts/stills.mjs",
+    "render:emu": "node scripts/render-final.mjs EmuShort out/emu/emu_2k.mp4 1.3333",
+    "render:emu:1080": "node scripts/render-final.mjs EmuShort out/emu/emu_1080.mp4 1"
   }
 }

@@ -194,7 +194,7 @@ export class World {
       const tt = tex("wheatE", 256, 256, wheatTex); tt.wrapS = tt.wrapT = THREE.ClampToEdgeWrapping;
       const pl = new THREE.PlaneGeometry(1, 1).translate(0, 0.5, 0), g = mergeGeometries([pl, pl.clone().rotateY(Math.PI / 2)], false)!;
       const nrm = g.attributes.normal as THREE.BufferAttribute; for (let i = 0; i < nrm.count; i++) nrm.setXYZ(i, 0, 1, 0);
-      const mat = lam("wheatE", () => ({ map: tt, alphaTest: 0.5, side: THREE.DoubleSide }));
+      const mat = new THREE.MeshBasicMaterial({ map: tt, alphaTest: 0.5, side: THREE.DoubleSide, color: "#f4ead2" }); // unlit: two-tone shade turned the stalks into a brown fence
       const N = 5200, im = new THREE.InstancedMesh(g, mat, N), q = new THREE.Quaternion(), up = V(0, 1, 0);
       let n = 0;
       for (let ix = 0; ix < 110 && n < N; ix++) for (let iz = 0; iz < 40 && n < N; iz++) {
@@ -203,7 +203,7 @@ export class World {
         const s = 0.85 + hh(i, 14) * 0.3;
         im.setMatrixAt(n++, this.m4.compose(V(x, gy(x, z) - 0.04, z), q.setFromAxisAngle(up, hh(i, 15) * 6.28), V(s * 1.9, s, s * 1.9)));
       }
-      im.count = n; im.layers.set(NOINK); im.receiveShadow = true; R.add(im);
+      im.count = n; im.layers.set(NOINK); im.receiveShadow = false; R.add(im);
     }
     // ---- scrub in the desert (kept clear of every place a lens goes) ----
     {
@@ -305,14 +305,14 @@ export class World {
     // ---- the bounty office ----
     {
       const O = new THREE.Group();
-      const face = new THREE.Mesh(new THREE.PlaneGeometry(8, 6), lam("bountyE", () => ({ map: tex("bountyE", 1024, 768, bountyTex) }))); face.rotation.y = Math.PI; face.position.set(0, 3, -0.02);
-      O.add(box(8, 6, 6, M.wall, 0, 3, 3), face, new THREE.Mesh(roofGeo(8.8, 7.2, 2.2), M.iron), box(3.5, 0.1, 0.7, M.wood, 0, 1.1, -0.85), box(3.3, 1.05, 0.5, M.wood, 0, 0.53, -0.85), box(9, 0.12, 2.6, M.iron, 0, 4.3, -1.3));
-      O.children[2].position.set(0, 6, 3);
+      const face = new THREE.Mesh(new THREE.PlaneGeometry(5, 5), lam("bountyE", () => ({ map: tex("bountyE", 1024, 1024, bountyTex) }))); face.rotation.y = Math.PI; face.position.set(0, 2.5, -0.02);
+      O.add(box(5, 5, 6, M.wall, 0, 2.5, 3), face, new THREE.Mesh(roofGeo(5.8, 7.2, 1.8), M.iron), box(2.6, 0.1, 0.7, M.wood, 0, 1.36, -0.85), box(2.4, 1.3, 0.5, M.wood, 0, 0.66, -0.85));
+      O.children[2].position.set(0, 5, 3);
       O.position.set(BOUNTY[0], BOUNTY[1], BOUNTY[2]); sh(O); R.add(O);
       R.add(patch(BOUNTY[0], BOUNTY[2] - 4, 12, 5, lam("roadE", () => ({ map: earth, color: "#c9a57c" })), false, 0.03, 0, 7));
     }
     // ---- ten thousand rounds, spent ----
-    { const m = new THREE.Mesh(lumpGeo(9, 2, 0.14).scale(1.5, 1.05, 1.3), col("#d9aa3a")); m.position.set(BRASS[0] - 0.9, BRASS[1] + 0.25, BRASS[2] - 0.2); sh(m); R.add(m); }
+    { const m = new THREE.Mesh(lumpGeo(9, 2, 0.14).scale(0.6, 0.42, 0.5), col("#d9aa3a")); m.position.set(BRASS[0] - 0.6, BRASS[1] + 0.15, BRASS[2] - 0.2); sh(m); R.add(m); }
   }
 
   private shotSun(id: number, s: ShotDef, L: LightPreset) {

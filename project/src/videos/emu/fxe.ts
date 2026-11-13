@@ -202,13 +202,14 @@ export const ammoTop = (g: G, r: () => number) => { boards(g, 256, 256, 3, "#667
 export const wallTex = (g: G, r: () => number) => boards(g, 512, 512, 9, "#e9dcc0", r);
 export const ironTex = (g: G, r: () => number) => boards(g, 512, 256, 16, "#b0544a", r, true);
 export const postTex = (g: G, r: () => number) => boards(g, 128, 256, 3, "#9a8266", r, true);
-/** the bounty office front (1024 x 768): sign, a counter window, a door */
+/** the bounty office front (1024 x 1024 = 5 m square): the sign right over a counter window, so both fit a vertical frame */
 export const bountyTex = (g: G, r: () => number) => {
-  boards(g, 1024, 768, 12, "#d9c9a4", r);
-  g.fillStyle = "#2f5f4a"; g.fillRect(140, 40, 744, 190); ink(g, 14); g.strokeRect(140, 40, 744, 190);
-  g.fillStyle = "#f7f0d0"; g.textAlign = "center"; g.textBaseline = "middle"; g.font = "900 120px Arial Black, Arial, sans-serif"; g.fillText("EMU BOUNTY", 512, 140);
-  g.fillStyle = "#3a302a"; g.fillRect(330, 330, 364, 300); ink(g, 16); g.strokeRect(330, 330, 364, 300);
-  g.fillStyle = "#8a6a4a"; g.fillRect(300, 630, 424, 40); ink(g, 12); g.strokeRect(300, 630, 424, 40);
+  boards(g, 1024, 1024, 14, "#d9c9a4", r);
+  g.fillStyle = "#2f5f4a"; g.fillRect(150, 70, 724, 250); ink(g, 16); g.strokeRect(150, 70, 724, 250);
+  g.fillStyle = "#f7f0d0"; g.textAlign = "center"; g.textBaseline = "middle";
+  g.font = "900 130px Arial Black, Arial, sans-serif"; g.fillText("EMU", 512, 140); g.fillText("BOUNTY", 512, 252);
+  g.fillStyle = "#3a302a"; g.fillRect(300, 410, 424, 330); ink(g, 18); g.strokeRect(300, 410, 424, 330);
+  g.fillStyle = "#8a6a4a"; g.fillRect(270, 740, 484, 44); ink(g, 12); g.strokeRect(270, 740, 484, 44);
 };
 /** dirt road ruts / dry earth cracks (512 x 512) */
 export const earthTex = (g: G, r: () => number) => {

@@ -320,12 +320,12 @@ export const stage = (id: number, f: number, cam: CamInfo): Stage => {
   }
   if (name === "fire") {
     const n = f - FIRE;
-    if (n < 70) { muzzle(c, [BANK[0], BANK[1] + 0.75, BANK[2] - 0.9], f, 2.0); for (let k = 0; k < 3; k++) { const u = ((n * 0.31 + k * 0.33) % 1); card(c, "tracer", 400, 60, fxTracer, BANK[0] + (k - 1) * 0.5, BANK[1] + 0.8 - 0.2 * u, BANK[2] - 2 - 16 * u, 1.6, 0.24, { rot: Math.PI / 2 }); } }
+    if (n < 70) muzzle(c, [BANK[0], BANK[1] + 0.75, BANK[2] - 1.5], f, 1.5);
     for (let i = 0; i < 64; i++) {
       const x0 = BANK[0] + ((i % 8) - 3.5) * 2.2 + hh(i, 1), z0 = BANK[2] - 4 - Math.floor(i / 8) * 2.6 - hh(i, 2), dirx = x0 > BANK[0] ? 1 : -1, m = Math.max(0, n - 3 - (i % 5));
       if (i < 3 && n > 8) { emu(c, i, x0, z0, "side", { pose: "stand", expr: "shut" }, [dirx, 0], { roll: dirx * -1.45 * easeOut((n - 8) / 6), shadow: false }); continue; }
       if (m === 0) emu(c, i, x0, z0, "front", { pose: "stand", expr: n > 0 ? "alarm" : "neutral" });
-      else emu(c, i, x0 + dirx * m * 0.33, z0 - m * 0.1 * hh(i, 3), "side", { pose: "walk", run: 1, expr: "alarm", phase: (m / 9 + hh(i, 5)) % 1 }, [dirx, -0.2]);
+      else emu(c, i, x0 + dirx * m * 0.07 * (0.4 + hh(i, 3)), z0 - m * 0.3, "side", { pose: "walk", run: 1, expr: "alarm", phase: (m / 9 + hh(i, 5)) % 1 }, [dirx, -0.4]);
     }
     for (let k = 0; k < 8; k++) { const u = clamp01((n - 6 - k * 4) / 50); if (u > 0 && u < 1) card(c, "featherE", 200, 200, fxFeatherE, BANK[0] + (k - 4) * 1.8 + 1.5 * Math.sin(u * 6 + k), BANK[1] + 2.6 - 1.8 * u, BANK[2] - 5 - k, 0.45, 0.45, { rot: u * 5 }); }
   }
@@ -361,7 +361,7 @@ export const stage = (id: number, f: number, cam: CamInfo): Stage => {
   if (name === "luckily") trio(ARMY, ["relief", "smile", "relief_open"]);
   if (name === "unluckily") [-1.2, 0, 1.2].forEach((dx, k) => emu(c, k + 1, UNL[0] + dx, UNL[2] + (k === 1 ? 0 : 0.14), "front", { pose: "stand", expr: k === 1 ? "smug" : "neutral", hat: k === 2 }, [0, 1], { scale: 0.98 }));
   if (name === "range") {
-    putSide(c, 11, SOLDIER[0], "s0", RANGE[0] - 0.9, RANGE[2] - 0.2, { mode: "push", pose: 0.8, expr: f < SWEEP ? "stern" : "grin" }, false);
+    putSide(c, 11, SOLDIER[0], "s0", RANGE[0] + 1.3, RANGE[2] + 0.2, { mode: "push", pose: 0.8, expr: f < SWEEP ? "stern" : "grin" }, false);
     const adv = 9 * (1 - smooth((f - CHARGE) / 17)), n = f - SWEEP;
     for (let r = 0; r < 4; r++) for (let k = 0; k < 5; k++) {
       const i = r * 5 + k, x = RANGE[0] + (k - 2) * 0.95, z = RANGE[2] + 8.5 + r * 1.2 + adv, hop = f >= CHARGE && adv > 0.05 ? 0.25 * Math.abs(Math.sin((f - CHARGE) * 0.9 + i)) : 0;
@@ -373,7 +373,7 @@ export const stage = (id: number, f: number, cam: CamInfo): Stage => {
   const PIG = Array.from({ length: 14 }, (_, i) => [PARK[0] - 1.6 + (i % 5) * 0.85 + hh(i, 21) * 0.6, PARK[2] + 0.6 + Math.floor(i / 5) * 1.2 + hh(i, 22) * 0.5] as [number, number]);
   if (name === "park") {
     PIG.forEach(([x, z], i) => { const pose = (t * 2 + hh(i, 23) * 3) % 1.6 < 0.5 ? "peck" : "stand"; card(c, `pig${pose}`, 200, 200, (p) => fxPigeon(p, pose), x, gy(x, z) + 0.2, z, i % 2 ? 0.42 : -0.42, 0.42); });
-    const run = Math.max(0, f - RUNKID), kx = PARK[0] - 3.3 + run * 0.07;
+    const run = Math.max(0, f - RUNKID), kx = PARK[0] - 2.1 + run * 0.05;
     putSide(c, 30, KID, "kid", kx, PARK[2] + 1.6, run ? { mode: "march", phase: q((run / 9) % 1, 24), expr: "laugh", stomp: 1.2 } : { mode: "stand", expr: "grin" }, false, 0, 0.72);
   }
   if (name === "scatter") {
@@ -399,27 +399,27 @@ export const stage = (id: number, f: number, cam: CamInfo): Stage => {
     const x = -2 + (f - 1697) * 0.32, b = 0.05 * Math.sin(f * 0.9);
     put(c, 11, SOLDIER[0], "s0", x - 0.9, ROAD_Z - 0.35, { expr: "pained" }, 1.02 + b, 1, false);
     put(c, 12, SOLDIER[1], "s1", x - 1.9, ROAD_Z + 0.35, { expr: "dazed" }, 1.02 + b, 1, false);
-    for (let k = 0; k < 5; k++) dust(c, x - 3.4 - k * 1.6, ROAD_Z + 0.3, 1.5 + k * 0.8, (k + Math.floor(f / 4)) % 3);
+    for (let k = 0; k < 3; k++) dust(c, x - 3.2 - k * 0.9, ROAD_Z + 0.9, 0.9 + k * 0.4, (k + Math.floor(f / 4)) % 3);
     emu(c, 1, 9, ROAD_Z - 4.2, "side", { pose: "look", expr: "smug" }, [1, 0]);
   }
   if (name === "brass") {
-    emu(c, 1, BRASS[0] + 1.5, BRASS[2] + 0.3, "front", { pose: "stand", expr: "smug" }, [0, 1], { scale: 1.0 });
+    emu(c, 1, BRASS[0] + 0.5, BRASS[2] + 0.3, "front", { pose: "stand", expr: "smug" }, [0, 1], { scale: 1.0 });
     for (let k = 0; k < 10; k++) {
       const n = f - (BRASS0 + k * 3.5);
       if (n < 0) continue;
       const hop = 0.18 * Math.sin(clamp01(n / 6) * Math.PI);
-      card(c, "casing", 100, 200, fxCasing, BRASS[0] - 0.9 + k * 0.3, BRASS[1] + 0.2 + hop, BRASS[2] + 2.3, 0.16, 0.32);
+      card(c, "casing", 100, 200, fxCasing, BRASS[0] - 0.95 + k * 0.21, BRASS[1] + 0.2 + hop, BRASS[2] + 1.9, 0.14, 0.28);
     }
   }
   if (name === "bounty") {
-    put(c, 40, CLERK, "clerk", BOUNTY[0], BOUNTY[2] - 0.45, { expr: f % 40 < 20 ? "smile" : "smile_closed" }, 0, 1, false);
-    put(c, 20, FARMER[0], "fm0", BOUNTY[0] + 1.35, BOUNTY[2] - 1.9, { expr: "grin", prop: "coin" });
+    put(c, 40, CLERK, "clerk", BOUNTY[0], BOUNTY[2] - 0.4, { expr: f % 40 < 20 ? "smile" : "smile_closed" }, 0.25, 1, false);
+    put(c, 20, FARMER[0], "fm0", BOUNTY[0] + 0.95, BOUNTY[2] - 1.9, { expr: "grin", prop: "coin" });
     for (let k = 0; k < 4; k++) {
       const x = BOUNTY[0] - 1.1 - k * 1.25 + ((f - 1815) % 60 < 14 ? ((f - 1815) % 60) * 0.02 : 0.28) - 0.28;
       putSide(c, 21 + k, FARMER[(k + 1) % 3], `fq${(k + 1) % 3}`, x, BOUNTY[2] - 1.7 - (k % 2) * 0.15, { mode: (f - 1815) % 60 < 14 ? "march" : "stand", phase: q((((f - 1815) % 60) / 14) % 1, 12), stomp: 0.5, stride: 0.4, expr: k % 2 ? "smile" : "grin" });
     }
     const N = Math.min(46, Math.max(0, Math.floor((f - COINS) / 1.2)));
-    for (let k = 0; k < N; k++) card(c, "coin", 100, 100, fxCoin, BOUNTY[0] + 2.45 + 0.03 * Math.sin(k * 2.1), BOUNTY[1] + 0.2 + k * 0.085, BOUNTY[2] - 1.5, 0.4, 0.2);
+    for (let k = 0; k < N; k++) card(c, "coin", 100, 100, fxCoin, BOUNTY[0] + 1.75 + 0.03 * Math.sin(k * 2.1), BOUNTY[1] + 0.2 + k * 0.085, BOUNTY[2] - 1.7, 0.4, 0.2);
   }
   if (name === "end") {
     farmers(["grin", "smile_closed", "laugh"], () => ({ prop: "coin" }));
