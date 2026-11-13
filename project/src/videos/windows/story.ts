@@ -1,3 +1,4 @@
+import { getInputProps } from "remotion";
 // Timeline of "Why Plane Windows Are Round": shots timed to the narration word onsets
 // (shorts/windows/voice/whisper_raw.json, frames at 30 fps), the sets, the beats and the cameras.
 // Engine upgrade (2026-11-13): more frequent smooth punch zooms (ZOOMS) and in-world glides between framings
@@ -202,6 +203,8 @@ export const zoomAt = (id: number, f: number) => {
   return k;
 };
 export const camAt = (id: number, f: number): Cam => {
+  const dbg = (getInputProps() as { cam?: Cam }).cam; // model checks: inputProps { cam: { pos, look, fov, roll } }
+  if (dbg) return dbg;
   const c0 = run(CAMS[id], f), z = zoomAt(id, f);
   const c = z === 1 ? c0 : { ...c0, fov: (360 / Math.PI) * Math.atan(Math.tan((c0.fov * Math.PI) / 360) * z) };
   const a = kickAt(f);

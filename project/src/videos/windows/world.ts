@@ -87,17 +87,34 @@ const makePlane = (round: boolean, livery: string, stripe: string, title: string
   const tail = new THREE.Mesh(new THREE.ConeGeometry(FR, 7, 32, 1, true).rotateZ(Math.PI / 2), metal); tail.position.x = -15.5; body.add(tail);
   g.add(body);
   if (wings) {
-    // wings: the plan shape in (x along the body, y along the span), laid flat (span -> z), swept back
+    // wings: plan shape in (x along the body, y along the span), laid flat (span -> z). The mirrored wing's winding
+    // flips, so the wing material is double-sided (otherwise one wing is culled and the other shows as a sliver).
+    const wingM = new THREE.MeshLambertMaterial({ color: "#d3d9e0", side: THREE.DoubleSide });
+    const flat = (pts: [number, number][], depth: number) => new THREE.ExtrudeGeometry(new THREE.Shape(pts.map(([x, y]) => new THREE.Vector2(x, y))), { depth, bevelEnabled: true, bevelThickness: 0.06, bevelSize: 0.06, bevelSegments: 2 });
     for (const s of [1, -1]) {
-      const sh = new THREE.Shape([new THREE.Vector2(0, 0), new THREE.Vector2(-6.2, 14 * s), new THREE.Vector2(-8.0, 14 * s), new THREE.Vector2(-6.8, 0)]);
-      const w = new THREE.Mesh(new THREE.ExtrudeGeometry(sh, { depth: 0.3, bevelEnabled: false }).rotateX(Math.PI / 2), metal);
-      w.position.set(4.0, -0.7, 0); g.add(w);
-      // the Comet's engines are buried in the wing roots: two smooth fairings with intakes at the leading edge
-      for (const k of [0, 1]) { const z = s * (2.1 + k * 0.8); g.add(cyl(0.3, 3.4, col("#b8c0c9"), 2.7, -0.75, z, "x", 0.34), cyl(0.24, 0.05, col("#16171b"), 4.42, -0.75, z, "x")); }
+      // root chord 7 m, swept leading edge, 15 m span, tip chord 2 m, slight dihedral
+      const w = new THREE.Mesh(flat([[0, 0], [-7.4, 15 * s], [-9.4, 15 * s], [-7.0, 0]], 0.34).rotateX(Math.PI / 2), wingM);
+      w.position.set(4.6, -0.75, 0); w.rotation.x = s * 0.05; g.add(w);
+      // the Comet's engines are buried in the wing roots: one smooth thickened fairing per side with two oval intakes
+      if (round) {
+        // a modern twin: one big turbofan hung under each wing on a pylon
+        const z = s * 6.2, nac = new THREE.Group();
+        nac.add(cyl(0.95, 4.2, wingM, 0, 0, 0, "x", 0.85, 28), cyl(0.82, 0.08, col("#1d1f26"), 2.12, 0, 0, "x", 0.82, 28), cyl(0.35, 0.6, col("#8d949c"), -2.3, 0, 0, "x", 0.6, 20),
+          box(2.4, 0.9, 0.22, wingM, -0.2, 0.75, 0));
+        nac.position.set(1.9, -1.75, z); g.add(nac);
+      } else {
+      const fair = new THREE.Mesh(new THREE.SphereGeometry(1, 28, 16).scale(3.4, 0.48, 1.05), wingM); fair.position.set(2.2, -0.62, s * 2.35); g.add(fair);
+        for (const k of [-1, 1]) { const intake = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 12).scale(0.18, 0.26, 0.34), col("#1d1f26")); intake.position.set(5.45, -0.62, s * 2.35 + k * 0.42); g.add(intake); }
+        const ex = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 12).scale(0.4, 0.3, 0.7), col("#5b6170")); ex.position.set(-1.1, -0.62, s * 2.35); g.add(ex);
+      }
     }
-    const fin = new THREE.Mesh(new THREE.ExtrudeGeometry(new THREE.Shape([new THREE.Vector2(0, 0), new THREE.Vector2(5, 0), new THREE.Vector2(1.6, 5.4), new THREE.Vector2(-0.6, 5.4)]), { depth: 0.24, bevelEnabled: false }), tailCol);
-    fin.position.set(-17.5, 0.6, -0.12); g.add(fin);
-    for (const s of [1, -1]) { const st = new THREE.Mesh(new THREE.ExtrudeGeometry(new THREE.Shape([new THREE.Vector2(0, 0), new THREE.Vector2(3.6, 0), new THREE.Vector2(1.4, 5), new THREE.Vector2(-0.4, 5)]), { depth: 0.18, bevelEnabled: false }).rotateX(Math.PI / 2), metal); st.position.set(-17.4, 0.6, 0); st.scale.y = s; if (s < 0) st.scale.z = -1; g.add(st); }
+    // tail: a swept fin and two tailplanes
+    const fin = new THREE.Mesh(flat([[0, 0], [-5.6, 0], [-7.0, 5.6], [-4.4, 5.6]], 0.26), new THREE.MeshLambertMaterial({ color: livery, side: THREE.DoubleSide }));
+    fin.position.set(-12.4, 0.9, -0.13); g.add(fin);
+    for (const s of [1, -1]) {
+      const st = new THREE.Mesh(flat([[0, 0], [-2.6, 5.4 * s], [-3.9, 5.4 * s], [-3.6, 0]], 0.2).rotateX(Math.PI / 2), wingM);
+      st.position.set(-14.6, 0.55, 0); g.add(st);
+    }
   }
   if (gear) for (const [x, z] of [[10.5, 0], [1.8, 2.6], [1.8, -2.6]]) g.add(cyl(0.1, 1.4, dark, x, -FR - 0.2, z), cyl(0.5, 0.36, col("#2a2a31"), x, -FR - 0.95, z, "z"));
   return { g: sh(g), body };
