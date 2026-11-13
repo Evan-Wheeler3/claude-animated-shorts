@@ -6,6 +6,8 @@ three.js inside Remotion, plus a render project (`project/`) holding the shorts 
 ## Where things are
 - `project/src/videos/whale/` — "A Whale of a Deal" (exploding whale, Oregon 1970). Composition `WhaleShort`.
 - `project/src/videos/emu/` — "The Great Emu War" (Western Australia 1932). Composition `EmuShort`.
+- `project/src/videos/duel/` — "Could You Survive a Western Duel?" (second person, odds counter overlay in `Duel.tsx`,
+  values in `story.ts` `ODDS`). Composition `DuelShort`. ~46 s.
 - `project/src/videos/bridge/` — the skill's template short, unmodified. It needs Kenney GLB props that are not in the repo.
 - `project/shorts/<name>/` — per short: `SCRIPT.md` (facts + sources + script), `voice/` (Kokoro TTS + Whisper word
   timings), `audio/make.py` (synthesized SFX + score + mix).
@@ -18,13 +20,13 @@ three.js inside Remotion, plus a render project (`project/`) holding the shorts 
 - `cast.ts` — who stands where per shot (`stage()`), expressions, effect cards.
 - `world.ts` — the 3D set and per-frame props.
 - `toon.ts` — the 2D character drawer (shared; hats, props and splatter were added for these shorts).
-- `fxw.ts` / `fxe.ts` — effect drawings and painted textures for the whale / emu shorts.
+- `fxw.ts` / `fxe.ts` / `fxd.ts` — effect drawings and painted textures for the whale / emu / duel shorts.
 - `ink.ts`, `lensblur.ts`, `grade.ts`, `shade.ts`, `cardshade.ts`, `lights.ts`, `paint.ts`, `build.ts` — the template's
   look pipeline, reused as is.
 
 ## Working agreement with the user
 - Claude writes and animates. All video rendering, rough or final, is run by the user on their own computer
-  (`npm run render:whale:1080`, `npm run render:emu:1080` in `project/`). The cloud container has no GPU: a still
+  (`npm run render:whale:1080`, `npm run render:emu:1080`, `npm run render:duel:1080` in `project/`). The cloud container has no GPU: a still
   takes ~35 s there and a full video would take about a day.
 - Checking single stills is fine: `node scripts/stills.mjs <Comp> out/<name>/x_ <frames> 0.5`, then
   `python scripts/sheet.py sheet.jpg <files>` to view several at once.
@@ -34,7 +36,9 @@ three.js inside Remotion, plus a render project (`project/`) holding the shorts 
 - Development branch: `claude/sleepy-brown-kbctlr`. `main` does not contain `project/`.
 
 ## State (2026-11-13)
-- Both shorts are built and render with sound. Stills of every shot were checked; motion and audio have not been
+- Whale and emu shorts are rendered by the user (whale judged best so far). The duel short is built, stills checked,
+  not yet rendered. The user prefers shorter shorts (~45-55 s).
+- Both earlier shorts render with sound. Stills of every shot were checked; motion and audio have not been
   reviewed by anyone yet. The user is watching the first renders and will send notes.
 - Known weak spots: emu target-range shot (gun mostly below frame), whale top-down replay (busy), TTS voice may sound
   flat (`am_michael` at speed 1.32), no look-match scoring rounds against `references/` have been run.
