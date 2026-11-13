@@ -9,6 +9,7 @@ A Remotion project that holds the shorts made with the skill in this repo.
 | Could You Survive a Western Duel? | `DuelShort` | `src/videos/duel/` | `shorts/duel/` |
 | Why Plane Windows Are Round | `WindowsShort` | `src/videos/windows/` | `shorts/windows/` |
 | The Eiffel Tower's Secret Job | `EiffelShort` | `src/videos/eiffel/` | `shorts/eiffel/` |
+| The Trojan Horse | `TroyShort` | `src/videos/troy/` | `shorts/troy/` |
 | The Bridge That Fell for a Song (template) | `BridgeShort` | `src/videos/bridge/` | not included (needs the Kenney props) |
 
 ## Render the whale short (needs a computer with a graphics card)
@@ -21,6 +22,7 @@ npm run render:emu:1080     # the Emu War, writes out/emu/emu_1080.mp4 (render:e
 npm run render:duel:1080    # the duel, writes out/duel/duel_1080.mp4 (render:duel for 2K)
 npm run render:windows:1080 # plane windows, writes out/windows/windows_1080.mp4 (render:windows for 2K)
 npm run render:eiffel:1080  # Eiffel Tower, writes out/eiffel/eiffel_1080.mp4 (render:eiffel for 2K)
+npm run render:troy:1080    # Trojan Horse, writes out/troy/troy_1080.mp4 (render:troy for 2K)
 ```
 Needs Node 20+. Remotion downloads its own headless browser on the first run. No ffmpeg install is needed.
 

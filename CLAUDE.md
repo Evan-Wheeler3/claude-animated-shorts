@@ -12,6 +12,9 @@ three.js inside Remotion, plus a render project (`project/`) holding the shorts 
   First short on the engine upgrade: punch zooms (`ZOOMS` in story.ts), more in-world glides, N8AO contact shadows.
 - `project/src/videos/eiffel/` — "The Eiffel Tower's Secret Job" (radio saved it). Composition `EiffelShort`. ~60 s.
   The tower is modelled in world.ts (`makeTower`: four lattice legs, arches, three floors, antennas; `halfW` in story.ts).
+- `project/src/videos/troy/` — "The Trojan Horse" (the horse may have been a battering ram or an earthquake; Schliemann
+  dug through the war layer). Composition `TroyShort`. ~61 s. Horse modelled in world.ts (`makeHorse`); cutaway mound
+  of 9 strata at `HILL`; effects in `fxr.ts`.
 - `project/src/videos/bridge/` — the skill's template short, unmodified. It needs Kenney GLB props that are not in the repo.
 - `project/shorts/<name>/` — per short: `SCRIPT.md` (facts + sources + script), `voice/` (Kokoro TTS + Whisper word
   timings), `audio/make.py` (synthesized SFX + score + mix).
@@ -24,13 +27,13 @@ three.js inside Remotion, plus a render project (`project/`) holding the shorts 
 - `cast.ts` — who stands where per shot (`stage()`), expressions, effect cards.
 - `world.ts` — the 3D set and per-frame props.
 - `toon.ts` — the 2D character drawer (shared; hats, props and splatter were added for these shorts).
-- `fxw.ts` / `fxe.ts` / `fxd.ts` / `fxp.ts` / `fxt.ts` — effect drawings and painted textures for the whale / emu / duel / windows / eiffel shorts.
+- `fxw.ts` / `fxe.ts` / `fxd.ts` / `fxp.ts` / `fxt.ts` / `fxr.ts` — effect drawings and painted textures for the whale / emu / duel / windows / eiffel / troy shorts.
 - `ink.ts`, `lensblur.ts`, `grade.ts`, `shade.ts`, `cardshade.ts`, `lights.ts`, `paint.ts`, `build.ts` — the template's
   look pipeline, reused as is.
 
 ## Working agreement with the user
 - Claude writes and animates. All video rendering, rough or final, is run by the user on their own computer
-  (`npm run render:whale:1080`, `npm run render:emu:1080`, `npm run render:duel:1080` in `project/`). The cloud container has no GPU: a still
+  (`npm run render:<name>:1080` in `project/`, e.g. `render:troy:1080`). The cloud container has no GPU: a still
   takes ~35 s there and a full video would take about a day.
 - Checking single stills is fine: `node scripts/stills.mjs <Comp> out/<name>/x_ <frames> 0.5`, then
   `python scripts/sheet.py sheet.jpg <files>` to view several at once.

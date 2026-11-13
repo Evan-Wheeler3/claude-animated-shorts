@@ -32,6 +32,8 @@
     "render:windows": "node scripts/render-final.mjs WindowsShort out/windows/windows_2k.mp4 1.3333",
     "render:windows:1080": "node scripts/render-final.mjs WindowsShort out/windows/windows_1080.mp4 1",
     "render:eiffel": "node scripts/render-final.mjs EiffelShort out/eiffel/eiffel_2k.mp4 1.3333",
-    "render:eiffel:1080": "node scripts/render-final.mjs EiffelShort out/eiffel/eiffel_1080.mp4 1"
+    "render:eiffel:1080": "node scripts/render-final.mjs EiffelShort out/eiffel/eiffel_1080.mp4 1",
+    "render:troy": "node scripts/render-final.mjs TroyShort out/troy/troy_2k.mp4 1.3333",
+    "render:troy:1080": "node scripts/render-final.mjs TroyShort out/troy/troy_1080.mp4 1"
   }
 }
