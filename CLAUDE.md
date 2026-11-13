@@ -10,6 +10,8 @@ three.js inside Remotion, plus a render project (`project/`) holding the shorts 
   values in `story.ts` `ODDS`). Composition `DuelShort`. ~46 s.
 - `project/src/videos/windows/` — "Why Plane Windows Are Round" (Comet 1954). Composition `WindowsShort`. ~66 s.
   First short on the engine upgrade: punch zooms (`ZOOMS` in story.ts), more in-world glides, N8AO contact shadows.
+- `project/src/videos/eiffel/` — "The Eiffel Tower's Secret Job" (radio saved it). Composition `EiffelShort`. ~60 s.
+  The tower is modelled in world.ts (`makeTower`: four lattice legs, arches, three floors, antennas; `halfW` in story.ts).
 - `project/src/videos/bridge/` — the skill's template short, unmodified. It needs Kenney GLB props that are not in the repo.
 - `project/shorts/<name>/` — per short: `SCRIPT.md` (facts + sources + script), `voice/` (Kokoro TTS + Whisper word
   timings), `audio/make.py` (synthesized SFX + score + mix).
@@ -22,7 +24,7 @@ three.js inside Remotion, plus a render project (`project/`) holding the shorts 
 - `cast.ts` — who stands where per shot (`stage()`), expressions, effect cards.
 - `world.ts` — the 3D set and per-frame props.
 - `toon.ts` — the 2D character drawer (shared; hats, props and splatter were added for these shorts).
-- `fxw.ts` / `fxe.ts` / `fxd.ts` / `fxp.ts` — effect drawings and painted textures for the whale / emu / duel / windows shorts.
+- `fxw.ts` / `fxe.ts` / `fxd.ts` / `fxp.ts` / `fxt.ts` — effect drawings and painted textures for the whale / emu / duel / windows / eiffel shorts.
 - `ink.ts`, `lensblur.ts`, `grade.ts`, `shade.ts`, `cardshade.ts`, `lights.ts`, `paint.ts`, `build.ts` — the template's
   look pipeline, reused as is.
 
@@ -34,6 +36,9 @@ three.js inside Remotion, plus a render project (`project/`) holding the shorts 
   `python scripts/sheet.py sheet.jpg <files>` to view several at once.
 - Vertical frames are narrow: at 6 m the frame is only about 2.5 m wide. Keep groups within about 1 m spacing and
   check that every prop near a lens is recognisable or out of frame.
+- Check every hero model from several angles before staging shots: story.ts `camAt` takes an inputProps override
+  (`PROPS='{"cam":{"pos":[..],"look":[..],"fov":40,"roll":0}}' node scripts/stills.mjs ...`). The user notices
+  when a model is wrong (a plane's wings, engines under the wings).
 - Characters are camera-facing cards with no back view, so stage shots with the lens in front of faces.
 - Development branch: `claude/sleepy-brown-kbctlr`. `main` does not contain `project/`.
 

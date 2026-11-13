@@ -30,6 +30,8 @@
     "render:duel": "node scripts/render-final.mjs DuelShort out/duel/duel_2k.mp4 1.3333",
     "render:duel:1080": "node scripts/render-final.mjs DuelShort out/duel/duel_1080.mp4 1",
     "render:windows": "node scripts/render-final.mjs WindowsShort out/windows/windows_2k.mp4 1.3333",
-    "render:windows:1080": "node scripts/render-final.mjs WindowsShort out/windows/windows_1080.mp4 1"
+    "render:windows:1080": "node scripts/render-final.mjs WindowsShort out/windows/windows_1080.mp4 1",
+    "render:eiffel": "node scripts/render-final.mjs EiffelShort out/eiffel/eiffel_2k.mp4 1.3333",
+    "render:eiffel:1080": "node scripts/render-final.mjs EiffelShort out/eiffel/eiffel_1080.mp4 1"
   }
 }
