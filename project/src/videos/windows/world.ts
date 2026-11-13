@@ -99,13 +99,13 @@ const makePlane = (round: boolean, livery: string, stripe: string, title: string
       if (round) {
         // a modern twin: one big turbofan hung under each wing on a pylon
         const z = s * 6.2, nac = new THREE.Group();
-        nac.add(cyl(0.95, 4.2, wingM, 0, 0, 0, "x", 0.85, 28), cyl(0.82, 0.08, col("#1d1f26"), 2.12, 0, 0, "x", 0.82, 28), cyl(0.35, 0.6, col("#8d949c"), -2.3, 0, 0, "x", 0.6, 20),
-          box(2.4, 0.9, 0.22, wingM, -0.2, 0.75, 0));
-        nac.position.set(1.9, -1.75, z); g.add(nac);
+        nac.add(cyl(0.75, 3.8, wingM, 0, 0, 0, "x", 0.68, 28), cyl(0.64, 0.08, col("#1d1f26"), 1.92, 0, 0, "x", 0.64, 28), cyl(0.28, 0.5, col("#8d949c"), -2.1, 0, 0, "x", 0.5, 20),
+          box(2.2, 0.5, 0.2, wingM, -0.3, 0.92, 0));                              // pylon up into the wing's underside
+        nac.position.set(2.6, -1.95, z); g.add(nac);
       } else {
-      const fair = new THREE.Mesh(new THREE.SphereGeometry(1, 28, 16).scale(3.4, 0.48, 1.05), wingM); fair.position.set(2.2, -0.62, s * 2.35); g.add(fair);
-        for (const k of [-1, 1]) { const intake = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 12).scale(0.18, 0.26, 0.34), col("#1d1f26")); intake.position.set(5.45, -0.62, s * 2.35 + k * 0.42); g.add(intake); }
-        const ex = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 12).scale(0.4, 0.3, 0.7), col("#5b6170")); ex.position.set(-1.1, -0.62, s * 2.35); g.add(ex);
+      const fair = new THREE.Mesh(new THREE.SphereGeometry(1, 28, 16).scale(3.4, 0.48, 1.05), wingM); fair.position.set(2.2, -0.95, s * 2.35); g.add(fair);
+        for (const k of [-1, 1]) { const intake = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 12).scale(0.18, 0.26, 0.34), col("#1d1f26")); intake.position.set(5.45, -0.95, s * 2.35 + k * 0.42); g.add(intake); }
+        const ex = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 12).scale(0.4, 0.3, 0.7), col("#5b6170")); ex.position.set(-1.1, -0.95, s * 2.35); g.add(ex);
       }
     }
     // tail: a swept fin and two tailplanes
