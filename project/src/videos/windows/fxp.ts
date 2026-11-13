@@ -143,7 +143,7 @@ export const fxClip = (p: Pen, bend: number, snapped: boolean) => {
 /** "ding": a call light (200 x 200) */
 export const fxDing = (p: Pen, on: boolean) => { p.ell(100, 100, 60, 60, on ? "#ffd84a" : "#c9ced6", 8); p.poly([[70, 104], [100, 60], [130, 104]], on ? "#fff3b0" : "#e8ecf0", 5); p.ell(100, 112, 30, 10, on ? "#ffd84a" : "#c9ced6", 5); if (on) for (let i = 0; i < 6; i++) { const a = rad(-160 + i * 28); p.stroke([[100 + 72 * Math.cos(a), 100 + 72 * Math.sin(a)], [100 + 94 * Math.cos(a), 100 + 94 * Math.sin(a)]], 7, "#ffd84a"); } };
 /** a highlight ring (200 x 200) */
-export const fxRing = (p: Pen) => { p.ell(100, 100, 80, 80, null, 0); p.g.strokeStyle = "#ffd84a"; p.g.lineWidth = 12; p.g.beginPath(); p.g.arc(100, 100, 80, 0, TWO); p.g.stroke(); };
+export const fxRing = (p: Pen) => { p.ell(100, 100, 12, 12, "#2a3a5a", 0); p.g.strokeStyle = "#ffd84a"; p.g.lineWidth = 12; p.g.beginPath(); p.g.arc(100, 100, 80, 0, TWO); p.g.stroke(); };
 export const fxSweat = (p: Pen) => p.poly([[30, 6], [52, 54], [30, 84], [8, 54]], "#9fd4ff", 5);
 
 // ---------------- painted textures ----------------
@@ -164,8 +164,7 @@ export const fuselageTex = (round: boolean, livery: string, stripe: string, titl
       if (round) { g.fillStyle = "#2a3a5a"; g.beginPath(); g.roundRect(x + 4, y, 26, WIN_DV * H, 10); g.fill(); ink(g, 4); g.stroke(); }
       else { g.fillStyle = "#2a3a5a"; g.fillRect(x - 4, y, 40, WIN_DV * H); ink(g, 4); g.strokeRect(x - 4, y, 40, WIN_DV * H); }
     }
-    g.fillStyle = "#3a3d47"; g.font = "900 54px Georgia, 'DejaVu Serif', serif"; g.textAlign = "center";
-    g.save(); g.translate(1100, H * vc + (vc < 0.5 ? 100 : -78)); if (vc > 0.5) g.scale(-1, -1); g.fillText(title, 0, 0); g.restore();
+    void title;
   }
   g.strokeStyle = "rgba(60,70,90,0.25)"; g.lineWidth = 2; for (let x = 0; x < W; x += 128) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, H); g.stroke(); }
   for (let x = 0; x < W; x += 16) for (const y of [H * 0.2, H * 0.8]) { g.fillStyle = "rgba(60,70,90,0.35)"; g.fillRect(x, y, 3, 3); }

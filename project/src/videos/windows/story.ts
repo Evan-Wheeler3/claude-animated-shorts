@@ -32,6 +32,17 @@ const WA = 2 * Math.PI * (0.355 + 0.0225);
 export const winRel = (i: number): V3 => [-12 + 24 * (356 / 2048 + i * (64 / 2048) + 20 / 2048), -Math.cos(WA) * FR, Math.sin(WA) * FR];
 export const PLANE_SKY: V3 = SKY, PLANE_TAR: V3 = [TARMAC[0], 2.6, TARMAC[2]], PLANE_TANK: V3 = [HANGAR[0], 2.0, HANGAR[2]], PLANE_MOD: V3 = [MODERN[0], 2.9, MODERN[2]];
 export const WIN_SKY = 16, WIN_TANK = 11, WIN_MOD = 14;
+/** the cruising plane's gentle bob and roll (world.ts poses the plane with it, cast.ts pins window cards to it) */
+export const skyPose = (name: string, f: number) => ({
+  bob: 0.25 * Math.sin(f / 26),
+  roll: 0.04 * Math.sin(f / 33) + (name === "break" ? 0.06 * Math.sin((f - 111) * 0.9) * Math.exp(-(f - 111) / 30) : 0),
+  yaw: 0.02 * Math.sin(f / 41),
+});
+/** a point given relative to the cruising plane, moved with its bob and roll */
+export const onSkyPlane = (name: string, f: number, r: V3, dx = 0, dy = 0, dz = 0): V3 => {
+  const { bob, roll } = skyPose(name, f), y = r[1] + dy, z = r[2] + dz, c = Math.cos(roll), sn = Math.sin(roll);
+  return [SKY[0] + r[0] + dx, SKY[1] + bob + y * c - z * sn, SKY[2] + y * sn + z * c];
+};
 
 // ---------------- beats (frames) ----------------
 export const FLASH_AT = -1;
@@ -117,38 +128,38 @@ const F: Record<string, (f: number) => Shot> = {
   cruise2: (f) => ({ pos: P(SK, 14, 3, 21), look: P(SK, 0, 0.8, 0), fov: 34 }),
   brk: (f) => ({ pos: P(SK, 8 - 0.02 * (f - 104), 2.2, 11), look: P(SK, 1.5, 1.2, 0), fov: 32 }),
   win1: (f) => ({ pos: add(SK, wS, 0.6, 0.4, 4.6), look: add(SK, wS), fov: 32 }),
-  win2: (f) => ({ pos: add(SK, wS, 0.05, 0.05, 1.7), look: add(SK, wS), fov: 28 }),
+  win2: (f) => ({ pos: add(SK, wS, 0.05, 0.4, 2.6), look: add(SK, wS), fov: 30 }),
   tar1: (f) => ({ pos: P(T, 26, 14 - 0.06 * (f - 215), 30), look: P(T, 0, 2.5, 0), fov: 40 }),
   tar2: (f) => ({ pos: P(T, 9, 1.7, 12), look: P(T, 2, 2.2, 1), fov: 44 }),
   fast: (f) => ({ pos: P(SK, 6, 1.5, 9), look: P(SK, 6 - 0.9 * (f - 300), 1.0, 0), fov: 50, roll: -0.05 }),
-  quiet: (f) => ({ pos: add(SK, wS, -2.25, 0.05, 1.5), look: add(SK, wS, -2.25, 0, 0), fov: 30 }),
-  quiet2: (f) => ({ pos: add(SK, wS, 2.6, 0.5, 6.2), look: add(SK, wS, -3.2, -0.1, 0), fov: 36, roll: 0.03 }),
+  quiet: (f) => ({ pos: add(SK, wS, -1.5, 1.3, 1.25), look: add(SK, wS, -1.5, 0, 0), fov: 34 }),
+  quiet2: (f) => ({ pos: add(SK, wS, 0.5, 2.4, 3.2), look: add(SK, wS, -2.0, 0, 0), fov: 40, roll: 0.03 }),
   news: (f) => ({ pos: P(NEWS, 0.4, 1.5, 3.6), look: P(NEWS, 0, 1.45, 0), fov: 42 }),
   tank1: (f) => ({ pos: P(H, -4, 7 - 0.02 * (f - 475), 26), look: P(H, 0, 3.5, 0), fov: 46 }),
   tank2: (f) => ({ pos: P(H, 3, 4.2, 14), look: P(H, 0, 2.6, 0), fov: 44 }),
   pump1: (f) => ({ pos: P(H, -9.5, 1.8, 9.6), look: P(H, -9.6, 1.9, 6.6), fov: 40 }),
   pump2: (f) => ({ pos: P(H, -11, 2.4, 11.2), look: P(H, -12.2, 3.0, 7.4), fov: 42 }),
   crack1: (f) => ({ pos: add(PLANE_TANK, wT, 0.1, 0.1, 3.1), look: add(PLANE_TANK, wT), fov: 34 }),
-  crack2: (f) => ({ pos: add(PLANE_TANK, wT, 0.3, 0.25, 1.35), look: add(PLANE_TANK, wT, 0.24, 0.22, 0), fov: 26 }),
+  crack2: (f) => ({ pos: add(PLANE_TANK, wT, 0.3, 0.5, 1.9), look: add(PLANE_TANK, wT, 0.3, 0.12, 0), fov: 30 }),
   why: (f) => ({ pos: P(H, 3.0, 1.7, 7.4), look: P(H, 3.1, 1.75, 4.5), fov: 38, roll: -0.03 }),
-  thin: (f) => ({ pos: add(SK, wS, 1.4, 0.4, 4.4), look: add(SK, wS, -0.6, 0.3, 0.6), fov: 38 }),
+  thin: (f) => ({ pos: add(SK, wS, 0.6, 1.5, 3.6), look: add(SK, wS, -0.4, 0.6, 0.6), fov: 40 }),
   swell1: (f) => ({ pos: P(SK, 0, 3, 30), look: P(SK, 0, 0.6, 0), fov: 40 }),
   swell2: (f) => ({ pos: P(SK, 4, 9, 26), look: P(SK, 0, 0.6, 0), fov: 42 }),
   land: (f) => ({ pos: P(T, 40, 2.2, 26), look: P(T, 26 - 0.35 * (f - 1115), 2.4, 0), fov: 40 }),
   flow1: (f) => ({ pos: P(W, 0, 3.0, 9), look: P(W, 0, 3.0, 0), fov: 44 }),
   flow2: (f) => ({ pos: P(W, 0.8, 3.0, 6.4), look: P(W, 0, 3.0, 0), fov: 40 }),
-  rock: (f) => ({ pos: P(STREAM, 0.6, 3.2, 4.6), look: P(STREAM, 0, 0.0, 0), fov: 42 }),
+  rock: (f) => ({ pos: P(STREAM, 0.6, 6.0, 5.6), look: P(STREAM, 0, 0.0, 0), fov: 46 }),
   round: (f) => ({ pos: P(W, -4.5, 3.0, 6.6), look: P(W, -4.5, 3.0, 0), fov: 40 }),
   square: (f) => ({ pos: P(W, 4.5, 3.0, 6.6), look: P(W, 4.5, 3.0, 0), fov: 40 }),
-  sqCorner: (f) => ({ pos: P(W, 5.6, 4.0, 3.4), look: P(W, 5.6, 4.0, 0), fov: 34, roll: 0.04 }),
+  sqCorner: (f) => ({ pos: P(W, 5.4, 3.8, 4.6), look: P(W, 5.0, 3.6, 0), fov: 38, roll: 0.04 }),
   every: (f) => ({ pos: P(W, 4.5, 3.0, 5.0), look: P(W, 4.5, 3.0, 0), fov: 40 }),
-  clip: (f) => ({ pos: P(DESK, 0, 1.45, 2.4), look: P(DESK, 0, 1.25, 0), fov: 38 }),
+  clip: (f) => ({ pos: P(DESK, 0, 1.55, 3.0), look: P(DESK, 0, 1.25, 0), fov: 40 }),
   modern1: (f) => ({ pos: P(MODERN, 30 - 0.06 * (f - 1715), 6, 34), look: P(MODERN, 0, 3, 0), fov: 40 }),
   modern2: (f) => ({ pos: add(PLANE_MOD, wM, 0.05, 0.05, 2.6), look: add(PLANE_MOD, wM), fov: 30 }),
-  hole1: (f) => ({ pos: P(C, 2.6, 1.35, 0.9), look: P(C, 0, 1.15, -0.6), fov: 46 }),
-  hole2: (f) => ({ pos: P(C, 0.05, 1.18, -0.95), look: P(C, 0.05, 1.18, -1.55), fov: 34 }),
-  att: (f) => ({ pos: P(C, 2.6, 1.4, 0.9), look: P(C, 0.4, 1.3, -0.4), fov: 46 }),
-  att2: (f) => ({ pos: P(C, 2.2, 1.5, 0.6), look: P(C, 0.9, 1.45, -0.2), fov: 38 }),
+  hole1: (f) => ({ pos: P(C, 0.7, 1.35, -0.2), look: P(C, -0.45, 1.15, -1.05), fov: 50 }),
+  hole2: (f) => ({ pos: P(C, 0.05, 1.22, -0.72), look: P(C, 0.05, 1.18, -1.58), fov: 34 }),
+  att: (f) => ({ pos: P(C, 2.4, 1.5, -0.55), look: P(C, -0.35, 1.3, -0.55), fov: 50 }),
+  att2: (f) => ({ pos: P(C, 2.0, 1.5, -0.55), look: P(C, -0.35, 1.4, -0.55), fov: 46 }),
 };
 const one = (a: number, k: string): Key[] => [{ f: a, s: F[k] }];
 const CAMS: Record<number, Key[]> = {
@@ -204,10 +215,10 @@ export const camAt = (id: number, f: number): Cam => {
 // ---------------- lens ----------------
 export type Dof = { f: number; dur?: number; cInf: number; focus?: (f: number) => V3 };
 export const DOF: Dof[] = [
-  { f: 0, cInf: 0 }, { f: 167, cInf: 10 }, { f: 215, cInf: 0 }, { f: 252, dur: 34, cInf: 8 }, { f: 300, cInf: 0 }, { f: 319, cInf: 12 }, { f: 334, cInf: 4 },
-  { f: 387, cInf: 11 }, { f: 475, cInf: 0 }, { f: 600, cInf: 9 }, { f: 749, cInf: 12 }, { f: 849, cInf: 13 }, { f: 880, cInf: 9 },
+  { f: 0, cInf: 0 }, { f: 167, cInf: 6 }, { f: 215, cInf: 0 }, { f: 252, dur: 34, cInf: 8 }, { f: 300, cInf: 0 }, { f: 319, cInf: 12 }, { f: 334, cInf: 4 },
+  { f: 387, cInf: 11 }, { f: 475, cInf: 0 }, { f: 600, cInf: 9 }, { f: 749, cInf: 8 }, { f: 849, cInf: 13 }, { f: 880, cInf: 9 },
   { f: 970, cInf: 0 }, { f: 1175, cInf: 6 }, { f: 1265, cInf: 6 }, { f: 1319, cInf: 6 }, { f: 1544, cInf: 13 }, { f: 1715, cInf: 0 },
-  { f: 1752, dur: 30, cInf: 10 }, { f: 1795, cInf: 9 }, { f: 1887, cInf: 9 },
+  { f: 1752, dur: 30, cInf: 6 }, { f: 1795, cInf: 9 }, { f: 1887, cInf: 9 },
 ];
 export const dofAt = (f: number) => {
   let i = 0; while (i + 1 < DOF.length && f >= DOF[i + 1].f) i++;

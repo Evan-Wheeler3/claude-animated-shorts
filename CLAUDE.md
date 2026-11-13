@@ -8,6 +8,8 @@ three.js inside Remotion, plus a render project (`project/`) holding the shorts 
 - `project/src/videos/emu/` — "The Great Emu War" (Western Australia 1932). Composition `EmuShort`.
 - `project/src/videos/duel/` — "Could You Survive a Western Duel?" (second person, odds counter overlay in `Duel.tsx`,
   values in `story.ts` `ODDS`). Composition `DuelShort`. ~46 s.
+- `project/src/videos/windows/` — "Why Plane Windows Are Round" (Comet 1954). Composition `WindowsShort`. ~66 s.
+  First short on the engine upgrade: punch zooms (`ZOOMS` in story.ts), more in-world glides, N8AO contact shadows.
 - `project/src/videos/bridge/` — the skill's template short, unmodified. It needs Kenney GLB props that are not in the repo.
 - `project/shorts/<name>/` — per short: `SCRIPT.md` (facts + sources + script), `voice/` (Kokoro TTS + Whisper word
   timings), `audio/make.py` (synthesized SFX + score + mix).
@@ -20,7 +22,7 @@ three.js inside Remotion, plus a render project (`project/`) holding the shorts 
 - `cast.ts` — who stands where per shot (`stage()`), expressions, effect cards.
 - `world.ts` — the 3D set and per-frame props.
 - `toon.ts` — the 2D character drawer (shared; hats, props and splatter were added for these shorts).
-- `fxw.ts` / `fxe.ts` / `fxd.ts` — effect drawings and painted textures for the whale / emu / duel shorts.
+- `fxw.ts` / `fxe.ts` / `fxd.ts` / `fxp.ts` — effect drawings and painted textures for the whale / emu / duel / windows shorts.
 - `ink.ts`, `lensblur.ts`, `grade.ts`, `shade.ts`, `cardshade.ts`, `lights.ts`, `paint.ts`, `build.ts` — the template's
   look pipeline, reused as is.
 
@@ -37,7 +39,11 @@ three.js inside Remotion, plus a render project (`project/`) holding the shorts 
 
 ## State (2026-11-13)
 - Whale and emu shorts are rendered by the user (whale judged best so far). The duel short is built, stills checked,
-  not yet rendered. The user prefers shorter shorts (~45-55 s).
+  not yet rendered. The user prefers shorter shorts (~45-60 s) but not at the cost of clarity.
+- What the user wants from scripts (2026-11-13): a hook paradox, stakes, a "You see," mechanism explained step by step
+  with an everyday comparison, and a funny payoff; not a timeline about a thing. The reference channel mostly makes
+  "how a system really works / clever loophole" shorts. The user asked for higher animation quality: more frequent,
+  smoother zooms and in-world camera moves, denser sets.
 - Both earlier shorts render with sound. Stills of every shot were checked; motion and audio have not been
   reviewed by anyone yet. The user is watching the first renders and will send notes.
 - Known weak spots: emu target-range shot (gun mostly below frame), whale top-down replay (busy), TTS voice may sound

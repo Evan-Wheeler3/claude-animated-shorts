@@ -11,7 +11,7 @@ import { fxCrack, fxSpeed, fxAir, fxPaper, fxGauge, fxBoard, fxBird, fxFlow, fxS
 import {
   FPS, V3, gy, smooth, clamp01, easeOut, lerp, SHOTS, SKY, TARMAC, NEWS, HANGAR, PANEL, STREAM, DESK, MODERN, CABIN, winRel, PLANE_SKY, PLANE_TAR, PLANE_TANK,
   WIN_SKY, WIN_TANK, CRACK1, CRACK2, FAST, QUIET, TWO, PUMP, FLIGHTS0, SPLIT, CORNER, WHY, BREATHE, FLOW, ROUND, SQ, SHARP, EVERY, CLIP, NOTFIRST, SNAP,
-  HOLE, DING, ATTEND, STOP, pulseAt, flightsAt, crackAt,
+  HOLE, DING, ATTEND, STOP, pulseAt, flightsAt, crackAt, onSkyPlane,
 } from "./story";
 import { LIGHTS } from "./lights";
 import { NOINK } from "./ink";
@@ -239,6 +239,8 @@ const putSide = (c: Cast, i: number, o: Outfit, okey: string, x: number, z: numb
 const card = (c: Cast, key: string, cw: number, ch: number, draw: (p: Pen) => void, x: number, y: number, z: number, w: number, h: number, extra: Partial<FxPlace> = {}) =>
   c.out.fx.push({ key, cw, ch, draw, x, y, z, w, h, ...extra });
 const add = (a: V3, b: V3, dx = 0, dy = 0, dz = 0): V3 => [a[0] + b[0] + dx, a[1] + b[1] + dy, a[2] + b[2] + dz];
+/** the outward normal of the skin at the window row (y, z) */
+const NY = 0.718, NZ = 0.696;
 /** a face in a fuselage window (200 x 200): asleep / waving / worried */
 const winFace = (mood: "sleep" | "smile" | "wave") => (p: Pen) => {
   p.poly([[8, 8], [192, 8], [192, 192], [8, 192]], "#9ccbe6", 8);
@@ -273,8 +275,8 @@ export const stage = (id: number, f: number, cam: CamInfo): Stage => {
   }
   if (name === "break" || name === "windows") {
     const u1 = clamp01((f - CRACK1) / 10), u2 = clamp01((f - CRACK2) / 12);
-    const w = add(PLANE_SKY, winRel(WIN_SKY));
-    if (f >= CRACK1) card(c, `crk${q(u1, 10)}`, 400, 400, (p) => fxCrack(p, u1, 2), w[0] + 0.55, w[1] + 0.32, w[2] + 0.06, 1.2, 1.2);
+    const w = onSkyPlane(name, f, winRel(WIN_SKY));
+    if (f >= CRACK1) card(c, `crk${q(u1, 10)}`, 400, 400, (p) => fxCrack(p, u1, 2), w[0] + 0.655, w[1] - 0.195 + 0.06 * NY, w[2] + 0.06 * NZ, 1.2, 1.2);
     if (f >= CRACK2) card(c, `crk2${q(u2, 10)}`, 400, 400, (p) => fxCrack(p, u2, 5), w[0] - 2.4, w[1] + 0.3, w[2] + 0.06, 1.4, 1.4, { rot: 0.4 });
     if (name === "break") for (let k = 0; k < 3; k++) { const n = f - CRACK1 - k * 6; if (n >= 0 && n < 14) { const u = q(n / 14, 14); card(c, `bang${u}`, 500, 500, (p) => fxBurst(p, u, "#ffffff", 10, 40, 200), w[0] + 0.6 - k * 1.4, w[1] + 0.4, w[2] + 0.3, 1.2, 1.2); } }
   }
@@ -282,11 +284,11 @@ export const stage = (id: number, f: number, cam: CamInfo): Stage => {
   if (name === "quiet") {
     const w = add(PLANE_SKY, winRel(WIN_SKY));
     [[-3, "sleep"], [-2, "smile"], [-1, "sleep"], [0, "wave"], [1, "smile"], [2, "sleep"]].forEach(([k, m]) => {
-      const wk = add(PLANE_SKY, winRel(WIN_SKY + (k as number)));
-      card(c, `wf${m}`, 200, 200, winFace(m as "sleep"), wk[0], wk[1], wk[2] + 0.03, 0.47, 0.45);
+      const wk = onSkyPlane(name, f, winRel(WIN_SKY + (k as number)));
+      card(c, `wf${m}`, 200, 200, winFace(m as "sleep"), wk[0], wk[1] + 0.06 * NY, wk[2] + 0.06 * NZ, 0.47, 0.45);
       void w;
     });
-    const zx = add(PLANE_SKY, winRel(WIN_SKY - 3));
+    const zx = onSkyPlane(name, f, winRel(WIN_SKY - 3));
     const u = (t * 0.8) % 1; card(c, "zzz", 120, 120, zzz, zx[0] + 0.3 + 0.2 * u, zx[1] + 0.35 + 0.3 * u, zx[2] + 0.1, 0.3, 0.3);
   }
   if (name === "tarmac") {
@@ -313,14 +315,13 @@ export const stage = (id: number, f: number, cam: CamInfo): Stage => {
     }
     if (name === "crack") {
       const w = add(PLANE_TANK, winRel(WIN_TANK)), u = crackAt(f);
-      if (u > 0) card(c, `crk${q(u, 16)}`, 400, 400, (p) => fxCrack(p, u, 7), w[0] + 0.23 + 0.6 * 0.85, w[1] + 0.22 + 0.6 * -0.5, w[2] + 0.02, 1.2, 1.2);
+      if (u > 0) card(c, `crk${q(u, 16)}`, 400, 400, (p) => fxCrack(p, u, 7), w[0] + 0.655, w[1] - 0.195 + 0.06 * NY, w[2] + 0.06 * NZ, 1.2, 1.2);
     }
     if (name === "why") { eng(1, 3.1, 4.5, { expr: "dazed", headTilt: 8, blink: lidAt(t, 31, [WHY / FPS]) }); card(c, "q", 120, 160, qmark, H[0] + 3.5, 2.55, H[2] + 4.5, 0.32, 0.42); }
   }
   if (name === "thin") {
-    const w = add(PLANE_SKY, winRel(WIN_SKY)), gasp = Math.sin(t * 9) > 0 ? 1 : 0;
+    const w = onSkyPlane(name, f, winRel(WIN_SKY)), gasp = Math.sin(t * 9) > 0 ? 1 : 0;
     card(c, `bird${gasp}${Math.sin(t * 14) > 0}`, 300, 300, (p) => fxBird(p, Math.sin(t * 14) > 0 ? 1 : 0, gasp), w[0] - 0.4, w[1] + 0.5, w[2] + 0.9, 0.9, 0.9);
-    card(c, "wfsmile", 200, 200, winFace("smile"), w[0], w[1], w[2] + 0.03, 0.47, 0.45);
   }
   if (name === "swell") {
     const u = (t * 0.9) % 1;
@@ -340,12 +341,12 @@ export const stage = (id: number, f: number, cam: CamInfo): Stage => {
   }
   if (name === "hole" || name === "attend") {
     const C = CABIN, worried = f >= HOLE + 12;
-    put(c, 40, YOU, "you", C[0] + 0.05, C[2] - 0.55, { mode: "sit", expr: name === "attend" ? (f < STOP ? "nervous" : "smile_closed") : worried ? "shock" : "smile", look: name === "hole" && worried ? -1 : 0, headTilt: 4 }, 0.45, 1, false);
+    put(c, 40, YOU, "you", C[0] - 0.45, C[2] - 0.95, { mode: "sit", expr: name === "attend" ? (f < STOP ? "nervous" : "smile_closed") : worried ? "shock" : "smile", look: name === "hole" && worried ? -1 : 0, headTilt: 4 }, 0.45, 1, false);
     card(c, "ring", 200, 200, fxRing, C[0] + 0.05, 1.18, C[2] - 1.53, 0.05, 0.05);
-    if (name === "hole" && f >= DING) card(c, `ding${(f - DING) % 12 < 6}`, 200, 200, (p) => fxDing(p, (f - DING) % 12 < 6), C[0] + 0.35, 2.05, C[2] - 0.8, 0.22, 0.22);
+    if (name === "hole" && f >= DING) card(c, `ding${(f - DING) % 12 < 6}`, 200, 200, (p) => fxDing(p, (f - DING) % 12 < 6), C[0] - 0.2, 2.0, C[2] - 0.95, 0.22, 0.22);
     if (name === "attend") {
       const u = clamp01((f - ATTEND) / 18);
-      put(c, 41, ATTENDANT, "fa", C[0] + 2.4 - 1.2 * u, C[2] + 0.35, { expr: f < STOP ? "neutral" : "stern", wave: f >= STOP ? q(0.6 + 0.2 * Math.sin(t * 4), 10) : undefined, look: -1 });
+      put(c, 41, ATTENDANT, "fa", C[0] - 0.3, C[2] + 0.9 - 1.05 * u, { expr: f < STOP ? "neutral" : "stern", wave: f >= STOP ? q(0.6 + 0.2 * Math.sin(t * 4), 10) : undefined, look: -1 });
     }
   }
   return out;

@@ -11,7 +11,7 @@ import { LIGHTS, LOOK, LightPreset } from "./lights";
 import { TONE, CHAR, LFB, untone } from "./shade";
 import { NOINK } from "./ink";
 import { Pool, Actor, Fx, stage } from "./cast";
-import { FPS, SHOTS, ShotDef, camAt, gy, V3, SKY, TARMAC, NEWS, HANGAR, PANEL, STREAM, DESK, MODERN, CABIN, FR, PLANE_SKY, PLANE_TAR, PLANE_TANK, PLANE_MOD, swellAt, pulseAt, LAND, SHRINK, smooth, easeOut, clamp01 } from "./story";
+import { FPS, SHOTS, ShotDef, camAt, gy, V3, SKY, TARMAC, NEWS, HANGAR, PANEL, STREAM, DESK, MODERN, CABIN, FR, PLANE_SKY, PLANE_TAR, PLANE_TANK, PLANE_MOD, swellAt, pulseAt, skyPose, LAND, SHRINK, smooth, easeOut, clamp01 } from "./story";
 
 const hh = (i: number, s = 0) => { const v = Math.sin(i * 127.1 + s * 311.7) * 43758.5453; return v - Math.floor(v); };
 const col = (hex: string) => lam("c" + hex, () => ({ color: hex }));
@@ -87,15 +87,14 @@ const makePlane = (round: boolean, livery: string, stripe: string, title: string
   const tail = new THREE.Mesh(new THREE.ConeGeometry(FR, 7, 32, 1, true).rotateZ(Math.PI / 2), metal); tail.position.x = -15.5; body.add(tail);
   g.add(body);
   if (wings) {
-    const wing = (s: number) => {
-      const sh = new THREE.Shape([new THREE.Vector2(0, 0), new THREE.Vector2(14, -6), new THREE.Vector2(14, -8.2), new THREE.Vector2(-1, -6.6)]);
-      const m = new THREE.Mesh(new THREE.ExtrudeGeometry(sh, { depth: 0.32, bevelEnabled: false }).rotateX(-Math.PI / 2), metal);
-      m.scale.set(1, 1, s); m.position.set(3.4, -0.9, 0); m.rotation.y = 0; return m;
-    };
-    // the shape is drawn in x (span) / y (chord): turn it so the span runs along z
-    for (const s of [1, -1]) { const w = wing(1); w.rotation.y = s > 0 ? -Math.PI / 2 : Math.PI / 2; w.scale.z = 1; w.position.set(3.4 - 0.5, -0.9, 0); if (s < 0) w.scale.x = -1; g.add(w);
-      // the Comet's engines sit buried in the wing roots: intakes at the leading edge
-      for (const k of [0, 1]) { const e = cyl(0.36, 3.2, dark, 2.6, -0.75, s * (2.0 + k * 0.85), "x"); g.add(e); g.add(cyl(0.3, 0.06, col("#16171b"), 4.22, -0.75, s * (2.0 + k * 0.85), "x")); } }
+    // wings: the plan shape in (x along the body, y along the span), laid flat (span -> z), swept back
+    for (const s of [1, -1]) {
+      const sh = new THREE.Shape([new THREE.Vector2(0, 0), new THREE.Vector2(-6.2, 14 * s), new THREE.Vector2(-8.0, 14 * s), new THREE.Vector2(-6.8, 0)]);
+      const w = new THREE.Mesh(new THREE.ExtrudeGeometry(sh, { depth: 0.3, bevelEnabled: false }).rotateX(Math.PI / 2), metal);
+      w.position.set(4.0, -0.7, 0); g.add(w);
+      // the Comet's engines are buried in the wing roots: two smooth fairings with intakes at the leading edge
+      for (const k of [0, 1]) { const z = s * (2.1 + k * 0.8); g.add(cyl(0.3, 3.4, col("#b8c0c9"), 2.7, -0.75, z, "x", 0.34), cyl(0.24, 0.05, col("#16171b"), 4.42, -0.75, z, "x")); }
+    }
     const fin = new THREE.Mesh(new THREE.ExtrudeGeometry(new THREE.Shape([new THREE.Vector2(0, 0), new THREE.Vector2(5, 0), new THREE.Vector2(1.6, 5.4), new THREE.Vector2(-0.6, 5.4)]), { depth: 0.24, bevelEnabled: false }), tailCol);
     fin.position.set(-17.5, 0.6, -0.12); g.add(fin);
     for (const s of [1, -1]) { const st = new THREE.Mesh(new THREE.ExtrudeGeometry(new THREE.Shape([new THREE.Vector2(0, 0), new THREE.Vector2(3.6, 0), new THREE.Vector2(1.4, 5), new THREE.Vector2(-0.4, 5)]), { depth: 0.18, bevelEnabled: false }).rotateX(Math.PI / 2), metal); st.position.set(-17.4, 0.6, 0); st.scale.y = s; if (s < 0) st.scale.z = -1; g.add(st); }
@@ -176,7 +175,7 @@ export class World {
       term.position.set(T[0] - 6, 0, T[2] - 34); sh(term); R.add(term);
       // boarding stairs at the front door
       const st = new THREE.Group(); for (let k = 0; k < 9; k++) st.add(box(1.2, 0.12, 0.42, M.metal, 0, 0.3 + k * 0.3, k * -0.36)); st.add(box(0.06, 1, 3.4, M.metal, 0.6, 2.2, -1.5), box(0.06, 1, 3.4, M.metal, -0.6, 2.2, -1.5), box(1.4, 0.5, 1.6, col("#c9a227"), 0, 0.25, 0.9));
-      st.position.set(T[0] + 8, 0, T[2] + 5.0); st.rotation.y = 0; sh(st); R.add(st);
+      st.position.set(T[0] + 8, 0, T[2] + 4.6); st.rotation.y = 0; sh(st); R.add(st);
       // the newsstand
       const N = new THREE.Group(); N.add(box(2.6, 1.0, 1.0, col("#8c3b4a"), 0, 0.5, -0.4), box(2.8, 0.12, 1.6, col("#c9a227"), 0, 2.5, -0.2), box(0.1, 2.5, 0.1, M.metal, -1.3, 1.25, -0.9), box(0.1, 2.5, 0.1, M.metal, 1.3, 1.25, -0.9), box(2.6, 1.4, 0.06, col("#5a3a22"), 0, 1.6, -0.9));
       N.position.set(NEWS[0], 0, NEWS[2]); sh(N); R.add(N);
@@ -193,7 +192,7 @@ export class World {
       const T = new THREE.Group(), fr = col("#3a4a5a");
       for (const x of [-14, 14]) for (const z of [-3.2, 3.2]) T.add(box(0.3, 4.8, 0.3, fr, x, 2.4, z));
       for (const z of [-3.2, 3.2]) T.add(box(28.3, 0.3, 0.3, fr, 0, 4.7, z), box(28.3, 0.3, 0.3, fr, 0, 0.15, z));
-      const water = new THREE.Mesh(new THREE.BoxGeometry(28, 4.3, 6.4), new THREE.MeshLambertMaterial({ color: "#6fc0e6", transparent: true, opacity: 0.32, depthWrite: false }));
+      const water = new THREE.Mesh(new THREE.BoxGeometry(28, 4.3, 6.4), new THREE.MeshLambertMaterial({ color: "#3f9ad0", transparent: true, opacity: 0.45, depthWrite: false }));
       water.position.y = 2.3; water.renderOrder = 2; water.castShadow = false; T.add(water);
       const surf = new THREE.Mesh(new THREE.PlaneGeometry(28, 6.4).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ map: tex("tankW", 512, 512, (g) => tankTex(g)), transparent: true, opacity: 0.55, depthWrite: false }));
       surf.position.y = 4.45; surf.renderOrder = 3; T.add(surf);
@@ -242,7 +241,7 @@ export class World {
         const glass = new THREE.Mesh(new THREE.CircleGeometry(0.15, 24).scale(1, 1.35, 1), new THREE.MeshBasicMaterial({ color: new THREE.Color(1.2, 1.35, 1.6) })); glass.position.set(x, 1.18, -1.58); Cg.add(glass);
         // seats (three abreast by the window)
         const seat = lam("seatW", () => ({ map: tex("seatW", 256, 256, seatTex) }));
-        for (const z of [-1.0, -0.4, 0.2]) Cg.add(box(0.5, 0.12, 0.5, seat, x - 0.6, 0.45, z), box(0.14, 0.9, 0.5, seat, x - 0.92, 0.9, z), box(0.5, 0.45, 0.06, col("#3a3d47"), x - 0.6, 0.22, z + 0.22));
+        for (const z of k === 1 ? [] : k === 0 ? [-1.0] : [-1.0, -0.4, 0.2]) Cg.add(box(0.5, 0.12, 0.5, seat, x - 0.6, 0.45, z), box(0.14, 0.9, 0.5, seat, x - 0.92, 0.9, z), box(0.5, 0.45, 0.06, col("#3a3d47"), x - 0.6, 0.22, z + 0.22));
       }
       Cg.position.set(C[0], 0, C[2]); sh(Cg); for (const o of [wall, wall2, ceil]) o.castShadow = false; R.add(Cg);
     }
@@ -266,8 +265,8 @@ export class World {
   private props(id: number, f: number) {
     const name = SHOTS[id - 1].name, sw = swellAt(id, f);
     // the cruise: a slow bank and bob; the hit rocks it
-    const bob = 0.25 * Math.sin(f / 26), roll = 0.04 * Math.sin(f / 33) + (name === "break" ? 0.06 * Math.sin((f - 111) * 0.9) * Math.exp(-(f - 111) / 30) : 0);
-    this.pSky.g.position.set(PLANE_SKY[0], PLANE_SKY[1] + bob, PLANE_SKY[2]); this.pSky.g.rotation.set(roll, 0, 0.02 * Math.sin(f / 41));
+    const { bob, roll } = skyPose(name, f);
+    this.pSky.g.position.set(PLANE_SKY[0], PLANE_SKY[1] + bob, PLANE_SKY[2]); this.pSky.g.rotation.set(roll, 0, 0);
     this.pSky.g.visible = ["cruise", "break", "windows", "fast", "quiet", "thin", "swell"].includes(name);
     if (name === "fast") this.pSky.g.position.x = PLANE_SKY[0] + 30 - 1.9 * (f - 300);
     this.pSky.body.scale.set(1, 1 + 0.12 * sw, 1 + 0.12 * sw);
