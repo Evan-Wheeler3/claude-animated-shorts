@@ -139,7 +139,8 @@ const S: Record<string, (l: number) => Shot> = {
   // "Eventually sinking to the ocean floor": the camera sinks with the line from mid-water down to the seabed framing
   // (lands just after "floor"), then the dry hold with a slow creep for "bathroom break" and the punchline
   s14_wreck: (l) => { const u = glide(l / (wf("s14_wreck", W.floor) + 14)), y = SEABED + 1.4 + 16 * (1 - u);
-    return dolly([-3, y, -2 - 6 * (1 - u)], [0, SEABED + 5.5 - 4 * (1 - u), 40], pushK(l - 40, 0.0012), { fov: 54 }); },
+    // the hold creeps by ZOOM, not dolly: a dolly toward the far wreck would carry the lens past the toilet
+    return { pos: [-3, y, -2 - 6 * (1 - u)], look: [0, SEABED + 5.5 - 4 * (1 - u), 40], fov: 54 - 4 * smooth((l - 40) / 200) }; },
 };
 /** impact kicks (bridge grammar: sign flips every frame, decays over 7 f), absolute frames: the eruption, the valve's
  *  catch (small), the blast on "blasting" (shot list: one controlled 0.15 s jolt, then recover) */
