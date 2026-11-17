@@ -18,7 +18,7 @@ import { grassHD, stoneHD, rep, planksHD } from "../../pipeline/paint";
 import { toonify } from "../../pipeline/props3d";
 import { waterMat, initWaterTextures, setWaterLook, WATER_DAY, grid, orient } from "../../pipeline/water";
 import { NOINK } from "../../pipeline/ink";
-import { createBarrel, createCrate, createRopeCoil, BARREL, barrelR } from "../../../videos/niagara-barrel/assets/niagara-props.js";
+import { createBarrel, createBarrelLid, createCrate, createRopeCoil, createRescueBoat, createDock, createHammer, createAnvil, createCoinPurse, createCoinStack, createBoulder, createLampPost, createRailing, createCatStandIn, BARREL, barrelR } from "../../../assets/props/holdup-props.js";
 
 export const C0 = new THREE.Vector3(0, 0, 600); // far from the Niagara pool shader's foam ring (world-xz based)
 const W = (x: number, y: number, z: number) => new THREE.Vector3(C0.x + x, C0.y + y, C0.z + z);
@@ -39,6 +39,7 @@ export const SCENARIOS: Scenario[] = [
   { key: "container", label: "inside a barrel, hands on the rim, cat on the rim", cam: cam([0.3, 1.75, 3.2], [0, 1.25, 0], 38) },
   { key: "lean", label: "leaning on a post", cam: cam([-0.4, 1.3, 3.6], [0.9, 0.95, 2 - 2], 38) },
   { key: "water", label: "barrel floating on waves", cam: cam([-7.0, 1.7, 15.6], [-8.6, -0.1, 11.4], 42) },
+  { key: "catalog_props", label: "ASSET CATALOG: shared props in the lit pipeline", cam: cam([0, 4.6, -0.4], [0, 0.2, -5.3], 54) },
   { key: "walk_motion", label: "MOTION: walking over bumps", cam: cam([-8.7, 1.05, 4.6], [-8.7, 0.55, 0], 50), motion: true },
   { key: "fall_motion", label: "MOTION: crate off a ledge, barrel down a ramp", cam: cam([9.4, 2.5, 11.5], [10.0, 0.9, 0], 52), motion: true },
 ];
@@ -100,6 +101,18 @@ export class LabWorld {
     this.barrelRoll = put(new THREE.Group().add(rb), 9, -1.5, 0, ["fall_motion"]);
     put(toonify(createRopeCoil()), 4.4, 1.9, 0, ["props"]);
     for (const o of [this.barrelSlope, this.crateBump, this.crateSeat, this.barrelIn]) this.settle(o, 0.42);
+    // catalog layout (z -4.5 .. -7.5 in front of the back wall): every shared prop, rested on the paving
+    const cat = (o: THREE.Object3D, x: number, z: number, yaw = 0, s = 1) => { o.scale.setScalar(s); put(o, x, z, yaw, ["catalog_props"]); this.ground.rest(o, 0.2); };
+    // rows going back (the 9:16 frame is tall): small props in front, boat, then crate/rope/rock/cat, then barrels + lamp
+    cat(toonify(createCoinStack(3)), -1.3, -3.3, 0, 3); cat(toonify(createCoinPurse()), -0.7, -3.3, 2.2, 2.2);
+    cat(toonify(createHammer()), -0.05, -3.4, 0.5, 1.6); cat(toonify(createAnvil()), 0.8, -3.35, 0.3);
+    const lid = toonify(createBarrelLid()); const lg = new THREE.Group(); lid.position.y = -1.325; lg.add(lid); cat(lg, 1.55, -3.3);
+    cat(toonify(createRescueBoat({ oarsIn: true })), 0, -4.5, Math.PI / 2);
+    cat(toonify(createCrate(0.55)), -1.5, -5.7, 0.3); cat(toonify(createRopeCoil()), -0.5, -5.7);
+    cat(toonify(createBoulder(0.4, 5, 0.55, 1)), 0.5, -5.7); cat(toonify(createCatStandIn()), 1.4, -5.6, -0.6);
+    cat(toonify(createBarrel({ seed: 3 })), -1.3, -7.0, 0.4); cat(toonify(createBarrel({ lid: false, seed: 5 })), 0.0, -7.0, 0.2);
+    cat(toonify(createLampPost()), 1.3, -7.2); cat(toonify(createRailing(3.2, 1.6, 1.0)), -1.6, -7.65);
+
     this.cards = new CardStage(R, this.snap ? this.ground : null);
   }
   /** BEFORE (snap:false) = props at y 0 as typed; AFTER = rested / aligned on the surface under them */

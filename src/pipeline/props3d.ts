@@ -1,4 +1,4 @@
-// Bridge between the renderer-agnostic prop library (videos/niagara-barrel/assets/niagara-props.js) and this world:
+// Bridge between the renderer-agnostic prop library (assets/props/holdup-props.js) and this world:
 // every named MeshStandardMaterial becomes the world's two-tone toon Lambert (shade.ts), wood gets painted grain,
 // iron a soft painted-metal highlight. Cached per material name + colour.
 import * as THREE from "three";

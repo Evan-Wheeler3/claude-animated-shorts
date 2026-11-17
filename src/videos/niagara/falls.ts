@@ -11,6 +11,8 @@ import { TAU, lerp, sstep, grid, orient, waterMat, initWaterTextures } from "../
 export { WATER_DAY, WATER_GOLD, setWaterLook, WU } from "../../pipeline/water";
 import { lam } from "../../pipeline/build";
 import { NOINK } from "../../pipeline/ink";
+import { mistTex, rainbowTex } from "../../pipeline/effects";
+export { mistTex };
 
 // ---------------- rock textures ----------------
 /** gorge wall: horizontal strata (dolomite cap, limestone, shale), vertical joints, talus at the foot. u = 30 m, v = 60 m */
@@ -54,30 +56,6 @@ const pebbleTex = () => ctex("nfPebble", 512, 512, (g, r) => {
 });
 
 // ---------------- mist ----------------
-/** soft painted mist billow (lit cream top, cool lavender belly), 512 x 512, alpha edges */
-export const mistTex = (seed: number, gold = false) => ctex(`nfMist${seed}${gold ? "g" : ""}`, 512, 512, (g, r) => {
-  const lit = gold ? "255,240,222" : "250,252,255", mid = gold ? "236,214,214" : "228,236,246", sh = gold ? "190,180,214" : "188,202,228";
-  const blobs: [number, number, number][] = [];
-  for (let k = 0; k < 9; k++) blobs.push([130 + r() * 250, 170 + r() * 200, 70 + r() * 75]);
-  blobs.push([256, 300, 150]);
-  for (const [x, y, rad] of blobs) {
-    const gr = g.createRadialGradient(x - rad * 0.25, y - rad * 0.35, rad * 0.1, x, y, rad);
-    gr.addColorStop(0, `rgba(${lit},0.95)`); gr.addColorStop(0.55, `rgba(${mid},0.9)`); gr.addColorStop(0.85, `rgba(${sh},0.6)`); gr.addColorStop(1, `rgba(${sh},0)`);
-    g.fillStyle = gr; g.beginPath(); g.arc(x, y, rad, 0, TAU); g.fill();
-  }
-});
-const rainbowTex = () => ctex("nfRainbow", 1024, 512, (g) => {
-  const cols = ["255,70,70", "255,160,60", "255,235,90", "90,210,110", "80,150,255", "150,100,230"];
-  cols.forEach((c, i) => {
-    const r0 = 440 - i * 16;
-    g.strokeStyle = `rgba(${c},0.85)`; g.lineWidth = 17; g.beginPath(); g.arc(512, 500, r0, Math.PI, TAU); g.stroke();
-  });
-  // fade the feet into the mist
-  g.globalCompositeOperation = "destination-out";
-  const gr = g.createLinearGradient(0, 260, 0, 512); gr.addColorStop(0, "rgba(0,0,0,0)"); gr.addColorStop(1, "rgba(0,0,0,1)");
-  g.fillStyle = gr; g.fillRect(0, 260, 1024, 252);
-});
-
 export type FallsSet = {
   mist: { m: THREE.Mesh; mat: THREE.MeshBasicMaterial; base: V3; size: number; k: number; op: number }[];
   rainbow: THREE.Mesh; mistMaps: Record<"day" | "golden", THREE.Texture[]>;

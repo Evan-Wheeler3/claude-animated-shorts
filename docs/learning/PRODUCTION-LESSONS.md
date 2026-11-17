@@ -3,6 +3,16 @@
 Each entry: what went wrong / why / how found / tried / worked / failed / next time. Video-specific detail lives in
 `videos/<name>/PRODUCTION-RETROSPECTIVE.md`; only reusable lessons belong here.
 
+## L11. Promote reusable work into shared homes, keep story paths working (pipeline integration)
+- Problem: generic props lived in a story's handoff file (`videos/niagara-barrel/assets/niagara-props.js`), effects
+  inside the Niagara set and crew, the narrator recipe only on another branch, so the next video would re-create them.
+- Solution: `assets/props/holdup-props.js` is the single source (the story file re-exports it, so Codex's paths still
+  work and `audit-props.mjs` fails if a re-export goes missing); `src/pipeline/effects.ts`; `scripts/voice/`;
+  `assets/ASSET-CATALOG.md` with in-engine previews (lab `catalog_props`).
+- Verification: re-rendered every lab scenario and Niagara shot after the moves; `scripts/compare_renders.py` against
+  the approved renders: pixel-identical (max 0.32/255 from new background props).
+- Next time: promote when a second video would need it; never copy (duplicates drift).
+
 ## L10. The QA lab caught regressions that the shots hid (fix pass)
 - The first IK pass hid Annie's hanging hands behind her own stout torso/skirt (neutral and walk poses). It looked fine
   in the Niagara shots (arms posed) and was only visible in the lab's neutral pose. Fix: hanging hands rest outside the

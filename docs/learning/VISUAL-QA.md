@@ -10,6 +10,7 @@ viewed at ~40 %). A shot is accepted only when every applicable line passes.
 | Types | `npx tsc --noEmit` | no output |
 | Camera paths | `node scripts/validate-paths.mjs` | every shot ok (step <= 0.6 m/f, turn <= 4 deg/f, roll <= 8 deg) |
 | Per-frame scene QA | `PROPS='{"qa":true}' node scripts/niagara-stills.mjs out/x all 0.5` | every `[QA]` line says `clean`, or each listed item is explained in the shot notes |
+| Regression vs approved renders | `python3 scripts/compare_renders.py <approved_dir> <new_dir>` | "regression clean" (mean |diff| <= 1.5/255), or every DIFF inspected and explained |
 | Character lab | `PROPS='{"qa":true}' node scripts/lab-stills.mjs out/lab/x all 0.5` | renders, QA clean except the known slope-gap demo |
 
 ## 1. Character anatomy (Look)

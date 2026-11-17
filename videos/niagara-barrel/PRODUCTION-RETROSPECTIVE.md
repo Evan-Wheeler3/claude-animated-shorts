@@ -1,7 +1,8 @@
 # Niagara Barrel: production retrospective (in progress)
 
-Status: Gate 1 stills approved (visual direction). Character / physics fix pass done, awaiting review (glow strength
-included). Gate 2 (voice, animation, full render) NOT started.
+Status: Gate 1 stills APPROVED; character anatomy, grounding/interaction fix pass APPROVED; glow option 2 ("subtle")
+APPROVED as the primary-character default (owner, 2026-11-17). Pipeline integration (shared assets, catalog, docs)
+committed. Gate 2 (voice, animation) in progress.
 
 ## 1. Project overview
 - 35-45 s Hold Up short about Annie Edson Taylor (Horseshoe Falls, 1901). Script `SCRIPT.md`, shots `SHOTLIST.md`.
@@ -66,12 +67,11 @@ validator; CharacterLab composition; main-character glow (per-card halo + presen
 
 ## 9. Outstanding limitations
 - Seated characters in long skirts read as standing in a front view (lab `props`).
-- Glow strength not final (awaiting the user's pick of off / subtle / strong).
 - Flat cards on slopes: soles are one line; mean-of-feet snapping leaves gaps up to ~5 cm on the lab bumps (reported by QA).
 - No prop-to-prop collision solver; props are placed deliberately and only their support is checked.
 - 2D cards cannot interleave with 3D geometry (a hand behind a rim with the arm in front).
 - The mist plume above the brink barely reads from A; E has no mist rising past the barrel yet.
-- Facts (age, 167 ft, cat test) still to be source-checked at the start of Gate 2.
+- Facts checked at the start of Gate 2: see FACT-CHECK.md (height and cat outcome softened in the script).
 
 ## 10. Recommendations for the next production
 - Start from `src/pipeline/` and the CharacterLab; register ground surfaces as you build the set.

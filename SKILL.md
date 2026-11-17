@@ -5,14 +5,30 @@ description: Make a ~55-70 s vertical cartoon story short in the "2D characters 
 
 # Cartoon 3D story short (three.js + Remotion)
 
-> Hold Up productions: start with `/CLAUDE.md` (12-step workflow) and `docs/learning/` (lessons, character anatomy,
-> physics/collisions, camera, visual QA). The shared runtime now lives in `src/pipeline/`; `templates/bridge/` is the
-> original bridge reference source.
+> Hold Up productions: start with `/CLAUDE.md` (entry point), `/PRODUCTION-PIPELINE.md` (ChatGPT -> Codex -> Claude
+> contract and gates) and `docs/learning/`. The shared runtime lives in `src/pipeline/`, the asset library in
+> `assets/` (`assets/ASSET-CATALOG.md`); `templates/bridge/` is the original bridge reference source.
 
-Proven example: **The Bridge That Fell for a Song**. It is an original 67 s short about the 1831 Broughton bridge and 74 soldiers marching in step.
-- Code: `src/videos/bridge/` of your Remotion project (composition `BridgeShort`, 1080x1920, 30 fps).
-- Script, voice and sound: `~/bridge-short/`.
-- Style research: `references/`.
+## Mandatory production requirements (every Hold Up video; details in the linked docs)
+1. **Reuse first.** Search `assets/ASSET-CATALOG.md` and `src/pipeline/` before building; promote new reusable work there.
+2. **Character construction** (`docs/learning/CHARACTER-ANATOMY.md`, `src/pipeline/toon.ts`): poses give HAND TARGETS
+   only; arms are solved by `ik2` with the shared `RIG` lengths (constant arm length, elbows out); arms are sleeves
+   with ink rims that emerge from the shoulder seam (`clipOut(torso)`), sleeve heads drawn last, cuff + ink-dot hand at
+   the wrist; skirts start at the torso's contour width with a wrapping `waistband`; trousers have a seat; hats are
+   `wornHat`-fitted to the head contour (brim back half behind, front half over the forehead) and turn with the head.
+3. **Grounding and contact** (`docs/learning/PHYSICS-AND-COLLISIONS.md`): register walkable surfaces in a `Ground`;
+   characters get x/z only and are snapped by `CardStage` with grounded, normal-aligned contact shadows (`blob`);
+   props are `ground.rest()`-ed (or `restAligned`); floating props read the water surface; no typed heights on terrain.
+4. **2D/3D interaction:** contact hands use camera-aware attachment (`toCard`, `ringGrips`); containers hold the card
+   in their axis plane, 6 cm toward the lens; seats use `FrontOpts.seat`; held props attach at the hand anchor.
+5. **Main-character glow:** primaries `glow: "subtle"` (owner-approved option 2); secondaries off; never `strong` by default.
+6. **Camera** (`docs/learning/CAMERA-AND-STAGING.md`): subject on the line to its landmark, near look points for
+   dolly pushes, everyone inside the narrow 9:16 width, >= 0.6 m from the lens.
+7. **QA before review** (`docs/learning/VISUAL-QA.md`): `node scripts/audit-props.mjs`, `npx tsc --noEmit`,
+   `node scripts/validate-paths.mjs <story.ts>`, stills with `PROPS='{"qa":true}'` (every `[QA]` line clean or
+   explained), CharacterLab after any `toon.ts` change, low-res motion proofs of risky sequences.
+8. **Evidence:** every visual fix gets a same-camera before/after render (`scripts/before_after.py`); nothing is called
+   fixed without an inspected render. Write `videos/<story-id>/PRODUCTION-RETROSPECTIVE.md` after each video.
 
 The style reference is a channel studied privately (`references/`: STYLE_BIBLE.md, reports/*.md, frames/).
 - Those videos are private study material. Never upload, publish or send them.
@@ -44,6 +60,8 @@ User rules that apply:
    - **Callback twist:** the ending.
    - Never describe on screen what the viewer already sees.
 3. **Voice.** Record or generate `voice.wav`, then make its word timings `words.json` (any speech-to-text with word times).
+   - Hold Up's established narrator: Kokoro ONNX `am_michael`, speed 1.32 (`scripts/voice/tts.py`), word times from
+     faster-whisper `small.en` (`scripts/voice/align.py`).
    - Put them in the project folder, e.g. `~/bridge-short/voice/`.
    - Hand-fix the word timings. Everything is timed to words.json.
 4. **Shot plan** in `story.ts`: copy `templates/bridge/` (the final bridge source, same as `src/videos/bridge/` of your Remotion project) to `src/videos/<name>/`, register a new composition next to `BridgeShort` in `src/Root.tsx`, and rename it.

@@ -3,7 +3,11 @@
 // (sampled: normals of outer-facing triangles must point away from the prop's vertical axis).
 // usage: node scripts/audit-props.mjs
 import * as THREE from "three";
-import * as P from "../videos/niagara-barrel/assets/niagara-props.js";
+import * as SHARED from "../assets/props/holdup-props.js";
+import * as NIAGARA from "../videos/niagara-barrel/assets/niagara-props.js";
+// the shared library plus the story file (which must still re-export everything: Codex handoff compatibility)
+const P = { ...SHARED, ...NIAGARA };
+for (const k of Object.keys(SHARED)) if (!(k in NIAGARA)) { console.log(`FAIL niagara-props.js no longer re-exports ${k}`); process.exitCode = 1; }
 
 const fns = Object.entries(P).filter(([k, v]) => typeof v === "function" && k.startsWith("create"));
 let bad = 0;

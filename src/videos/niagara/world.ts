@@ -18,7 +18,7 @@ import { toonify } from "../../pipeline/props3d";
 import { FPS, SHOTS, ShotDef, camAt, V3, LAND_Y, POOL_Y, PHI_M, RIM_L, RIM_R, DOCK, DOCK_Y, BARREL_AT_DOCK, BARREL_SHORE, BARREL_RESCUE, BARREL_HOOK, RUN_PHI, outward, lip } from "./story";
 import {
   BARREL, createBarrel, createBarrelLid, createRescueBoat, createRopeCoil, createHammer, createDock, createRailing, createLampPost, createCoinPurse, createCoinStack, createBoulder,
-} from "../../../videos/niagara-barrel/assets/niagara-props.js";
+} from "../../../assets/props/holdup-props.js";
 
 const V = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z);
 /** the lid is modelled in barrel space (origin = barrel bottom): re-centre it on its own disc */

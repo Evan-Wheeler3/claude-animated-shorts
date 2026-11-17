@@ -11,3 +11,4 @@ out/lab/*
 !out/lab/motion/
 !out/lab/*.jpg
 out/lab/check.jpg
+models/

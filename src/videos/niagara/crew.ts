@@ -2,11 +2,12 @@
 // pipeline/cast.ts CardStage snaps soles and contact shadows onto the real ground. Contacts with props use ATTACHMENT
 // points from the resolved prop positions (Anchors, set by world.ts after the props are rested on the ground).
 import * as THREE from "three";
-import { Pen, ANNIE, RIVERMAN, townsfolk, fxStars, fxRing, Expr, FrontOpts } from "../../pipeline/toon";
+import { spray } from "../../pipeline/effects";
+import { ANNIE, RIVERMAN, townsfolk, fxStars, fxRing, Expr, FrontOpts } from "../../pipeline/toon";
 import { person, catCard, blob, toCard, ringGrips, lidAt, q, CAT_SU, Stage, CamInfo, Place } from "../../pipeline/cast";
 import { SU, GlowLevel } from "../../pipeline/actors";
 import { SHOTS, ANNIE_BANK, BARREL_HOOK } from "./story";
-import { BARREL, barrelR } from "../../../videos/niagara-barrel/assets/niagara-props.js";
+import { BARREL, barrelR } from "../../../assets/props/holdup-props.js";
 
 /** resolved world positions of props the cast touches (barrel base centres after ground resting) */
 export type Anchors = { dock: THREE.Vector3; shore: THREE.Vector3; rescue: THREE.Vector3; brink: THREE.Vector3 };
@@ -82,10 +83,3 @@ export const stage = (id: number, t: number, cam: CamInfo, an: Anchors): Stage =
   return out;
 };
 
-/** a white spray puff (cartoon water burst, plum rim, soft-edged) on a 256 x 256 card */
-const spray = (p: Pen, seed: number) => {
-  const pts: [number, number, number][] = [[128, 140, 70], [80, 150, 45], [176, 150, 48], [110, 98, 40], [158, 104, 36]];
-  for (const [x, y, r] of pts) p.ell(x + (seed - 1) * 8, y, r, r * 0.85, "#2a2030", 0);
-  for (const [x, y, r] of pts) p.ell(x + (seed - 1) * 8, y, r - 6, r * 0.85 - 6, "#f4fbff", 0);
-  p.ell(118, 120, 30, 18, "#ffffff", 0);
-};
