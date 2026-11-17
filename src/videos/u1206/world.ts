@@ -380,7 +380,7 @@ export class World {
     if (this.sub.visible) {
       const p = subAt(key, f); this.sub.position.set(...p); this.sub.rotation.set(0, 0, 0);
       if (key === "s10_breach") { const k = l - BREACH_F; this.sub.rotation.x = -0.28 * (1 - smooth(k / 14)) - 0.02; } // bow-high burst, then levels off
-      if (key === "s12_scuttle") { const u = smooth(tl / 3.0); this.sub.position.y = SURF_KEEL - 0.4 - 2.0 * u; this.sub.rotation.set(-0.03 - 0.05 * u, 0, 0.03); } // stern settles first
+      if (key === "s12_scuttle") { const u = smooth(tl / 4.5); this.sub.position.y = SURF_KEEL - 0.4 - 2.0 * u; this.sub.rotation.set(-0.03 - 0.05 * u, 0, 0.03); } // stern settles first
       this.sub.traverse((o) => { if (o.name === "propeller") o.rotation.z = t * (key === "s12_scuttle" ? 0 : 4); });
     }
     this.aircraft.forEach((a, i) => { a.position.set(56 + i * 11 - 14 * tl, 46 + i * 4, 30 + i * 9 + 6 * tl); a.rotation.set(0, -1.2, 0.1); });

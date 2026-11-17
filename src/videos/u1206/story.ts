@@ -21,13 +21,14 @@ export const SEA_Y = 0;                 // exterior: ocean surface at y = 0; the
 export const DEPTH_KEEL = -46;          // "two hundred feet underwater" is SCHEMATIC: keel ~46 m below the surface
 export const SURF_KEEL = -4.3;          // surfaced: deck casing ~1.3 m proud of the water (hull centre at y -1.1)
 
-// ---------------- narration clock (seconds; words.json of the am_puck 1.15 read chosen by the owner, hand-checked) ----------------
+// ---------------- narration clock (seconds; words.json of the owner-revised script, am_puck 1.15, hand-checked) ----------------
 export const W = {
-  in: 0.0, n1945: 0.14, german: 1.4, was: 2.24, toilet: 3.58, u1206: 4.68, scotland: 6.34, twohundred: 7.1, underwater: 7.78,
-  its: 8.78, highpressure: 9.08, complicated: 10.38, flushing: 11.36, specialist: 12.52, then: 13.44, went: 14.26, wrong: 14.5,
-  instead: 15.52, seawater: 16.44, blasting: 16.94, it: 17.88, batteries: 18.36, releasing: 19.26, chlorine: 20.04, gas: 20.42,
-  the: 21.18, crew: 21.24, surface: 21.62, right: 22.9, allied: 23.48, aircraft: 23.76, spot: 24.28, submarine: 25.14,
-  damaged: 25.7, abandoned: 26.3, scuttled: 26.94, all: 27.9, bathroom: 28.6, worst: 30.22, flush: 30.3, history: 30.96, end: 31.61,
+  in: 0.0, n1945: 0.12, german: 1.4, was: 2.24, toilet: 3.58, u1206: 5.0, scotland: 6.58, twohundred: 7.34, underwater: 8.02,
+  its: 9.42, highpressure: 9.74, complicated: 11.04, flushing: 12.0, specialist: 13.18, one: 14.58, went: 15.56, wrong: 15.78,
+  instead: 16.9, seawater: 17.82, blasting: 18.3, water: 19.62, battery: 20.76, releasing: 21.88, chlorine: 22.76, gas: 23.14,
+  the: 24.4, crew: 24.46, surface: 24.84, and: 26.24, allied: 26.44, aircraft: 26.68, spot: 27.74, submarine: 29.67,
+  damaged: 30.56, abandoned: 31.12, eventually: 32.32, floor: 33.56, all: 34.52, bathroom: 35.38, worst: 37.36, flush: 37.56,
+  history: 38.24, end: 38.88,
 };
 const L = 2; // shots start / reactions land 2 frames before their word
 
@@ -36,21 +37,21 @@ export type Look = "interior" | "alarm" | "underwater" | "surface";
 export type ShotDef = { id: number; key: string; a: number; b: number; still: number; look: Look; critical: boolean };
 const SH: [string, number, number, Look, boolean][] = [ // key, start frame, still frame, look, critical preview
   ["s01_blast", 0, F(1.2), "interior", true],                         // the hook proves itself in the first 0.5 s
-  ["s02_hero", F(W.was) - L, F(3.4), "underwater", true],
-  ["s03_depth", F(W.u1206) - L, F(6.8), "underwater", false],
-  ["s04_captain", F(W.its) - L, F(10.0), "interior", true],
-  ["s05_specialist", F(W.flushing) - L, F(12.4), "interior", false],
-  ["s06_valve", F(W.then) - L, F(14.8), "interior", false],
-  ["s07_flood", F(W.instead) - L, F(17.1), "interior", true],
-  ["s08_cutaway", F(W.it) - L, F(18.8), "interior", true],
-  ["s09_gas", F(W.releasing) - L, F(20.5), "alarm", true],
-  ["s10a_blow", F(W.the) - L, F(21.6), "alarm", true],               // the captain hauls the blow valve
-  ["s10_breach", F(W.surface) + 10, F(W.surface) + 10 + 15, "surface", true],        // the boat breaks the surface (the pause after "surface")
-  ["s11_aircraft", F(W.allied) - L, F(24.5), "surface", false],
-  ["s12_scuttle", F(W.submarine) - L, F(26.8), "surface", true],
-  ["s14_wreck", F(W.all) - L, F(30.5), "underwater", true],           // both closing lines on the wreck (ending B)
+  ["s02_hero", F(W.was) - L, F(3.6), "underwater", true],
+  ["s03_depth", F(W.u1206) - L, F(7.4), "underwater", false],
+  ["s04_captain", F(W.its) - L, F(10.8), "interior", true],
+  ["s05_specialist", F(W.flushing) - L, F(13.0), "interior", false],
+  ["s06_valve", F(W.one) - L, F(16.0), "interior", false],
+  ["s07_flood", F(W.instead) - L, F(18.5), "interior", true],
+  ["s08_cutaway", F(W.water) - 4, F(20.9), "interior", true],           // "The water spilled into the battery room below"
+  ["s09_gas", F(W.releasing) - L, F(23.0), "alarm", true],
+  ["s10a_blow", F(W.gas) + 14, F(24.6), "alarm", true],                // the captain hauls the blow valve ("The crew had to surface")
+  ["s10_breach", F(W.surface) + 5, F(W.surface) + 5 + 15, "surface", true], // the boat breaks the surface in the pause
+  ["s11_aircraft", F(W.aircraft) - L, F(28.2), "surface", false],
+  ["s12_scuttle", F(W.submarine) - L, F(31.2), "surface", true],
+  ["s14_wreck", F(W.eventually) - L, F(37.0), "underwater", true],    // "Eventually sinking to the ocean floor" -> the end, on the wreck
 ];
-export const TOTAL = F(33.2); // the last word ends at 31.6 s; a dry 1.6 s hold on the end frame
+export const TOTAL = F(40.5); // the last word ends at 38.9 s; a dry 1.6 s hold on the end frame
 export const SHOTS: ShotDef[] = SH.map(([key, a, still, look, critical], i) => ({
   id: i + 1, key, a, b: i + 1 < SH.length ? SH[i + 1][1] : TOTAL, still, look, critical,
 }));
@@ -135,7 +136,10 @@ const S: Record<string, (l: number) => Shot> = {
   // 12 high-angle aftermath: crew rafts clear, slow push on the conning tower
   s12_scuttle: (l) => dolly([-30, 13, -22], [0, 1.5, 4], pushK(l, 0.0015), { fov: 48 }),
   // 14 ending B: low on the seabed; the toilet in the sand in front, the broken wreck behind; slow creep, static end
-  s14_wreck: (l) => dolly([-3, SEABED + 1.4, -2], [0, SEABED + 5.5, 40], pushK(l, 0.0012), { fov: 54 }),
+  // "Eventually sinking to the ocean floor": the camera sinks with the line from mid-water down to the seabed framing
+  // (lands just after "floor"), then the dry hold with a slow creep for "bathroom break" and the punchline
+  s14_wreck: (l) => { const u = glide(l / (wf("s14_wreck", W.floor) + 14)), y = SEABED + 1.4 + 16 * (1 - u);
+    return dolly([-3, y, -2 - 6 * (1 - u)], [0, SEABED + 5.5 - 4 * (1 - u), 40], pushK(l - 40, 0.0012), { fov: 54 }); },
 };
 /** impact kicks (bridge grammar: sign flips every frame, decays over 7 f), absolute frames: the eruption, the valve's
  *  catch (small), the blast on "blasting" (shot list: one controlled 0.15 s jolt, then recover) */
