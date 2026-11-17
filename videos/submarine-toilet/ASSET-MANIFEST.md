@@ -29,3 +29,18 @@ The visual models are stylized, as the owner permits. References below provide c
 ## Latest preview pass
 
 The exterior camera is rolled and closer, interior lighting is brighter, the front section ring was removed, and the room has a hidden `water-surface` mesh. These are review improvements, not production approval. A generic soldier remains a scale proxy. Updated stills were rendered through the real pipeline and visually inspected. The room remains sparse and the exterior lacks a convincing hull silhouette and fittings; toilet interaction, flowing water, and articulated controls remain untested.
+
+## Additional support assets — 2026-11-17
+
+All are original, stylized assets under the repo license; source is `assets/support.js` unless stated otherwise. Y up, metres. These are **review-needed experiments**, not approved production assets. `finish()` in `src/videos/submarine-toilet/materials.ts` applies the existing toon conversion and procedural finish.
+
+| ID | Factory / usage | Pivot and controls | Actual pipeline still | Limitations |
+|---|---|---|---|---|
+| surface ocean | review scene `src/videos/submarine-toilet/Preview.tsx` uses `waterMat(0)` and `createOceanCrests()` | water plane y=3.3; 1,800 m square; crest group | `previews/ocean.jpg` | flat water, fixed crests; no waves or sinking motion validated; water is assembled in review composition rather than standalone factory |
+| underwater | review scene, `createFish()`, `createBubbles()` | fish +X, ~1.31 m; bubble group base origin, ~3.93 m tall | `previews/underwater.jpg` | static background, fish and bubbles; no depth transition, seafloor or motion |
+| control room | `createControlRoom()` | floor centre; ~3.67 × 2.92 × 2.86 m; named removable walls, handwheels | `previews/control-room.jpg` | static staging; wheel pivots and hand contacts not motion-tested; periscope is a simplified prop |
+| battery room | `createBatteryRoom()` | floor centre; ~3.67 × 2.92 × 2.86 m; cell meshes and effect anchor | `previews/battery-room.jpg` | illustrative layout; gas effect and interaction not implemented |
+| flood | `createFloodEffects()` | floor centre; `water-level` and `water-jet` named separately | `previews/flood.jpg` | solid flat water, fixed spray; no convincing flow, animated surface or contact tests |
+| crew | `src/videos/submarine-toilet/cast.ts` exports `CREW`, `CAPTAIN` outfits for existing `person` card rig | standard card rig, feet solved by Ground | `previews/control-room.jpg`, `previews/staging.jpg` | recolours, not bespoke designs; pose/hand contact, hat fit and animation unverified |
+
+`node scripts/audit-submarine.mjs` passed finite position/normal and bounds checks for the original five support factories. It does not verify correct normals, contact, pivots, animation, visual quality, or performance under motion. The nine stills were rendered through the Remotion ink, lighting, grade and card pipeline and inspected at 540 × 960. The ocean shader appears mostly flat, flood is a hard-edged solid slab, and the simplified submarine and rooms fall short of the Niagara benchmark. No underwater descent or character interaction was animated. No corridor/hatch opening, gas, rescue/aircraft, seabed, or polished transition effect is supplied. Their need depends on the approved shots. The assets are available for review and iteration, not ready for production or an animation handoff.

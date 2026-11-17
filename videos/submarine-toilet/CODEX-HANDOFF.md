@@ -15,3 +15,7 @@ Accessible references were found and recorded in the manifest. An original gener
 ## Owner direction, latest
 
 The owner explicitly waived historical accuracy for the visual assets. Do not block art work on verifying the exact historical hull or plumbing. Maintain a clear distinction between stylized visual mechanism and factual claims in a future script. The owner has not approved the final assets, script, or shot list. Latest stills have brighter interior lighting, a larger exterior, and an unobstructed schematic section; they remain insufficiently detailed for production. `water-surface` is a hidden static mesh, not a finished effect.
+
+## Expanded set and effects review
+
+The owner requested the supporting ocean, water, fish and interiors. Added `assets/support.js`, `src/videos/submarine-toilet/cast.ts` and the corresponding preview scenes. See manifest for exact functions, previews and limitations. Actual Remotion stills: exterior, toilet, section, character staging, ocean, underwater, control room, flood and battery room. `npx tsc --noEmit` and finite/bounds audit passed. Visual inspection found flat ocean, schematic interiors and an opaque slab of flood water; no animation, sinking proof, collision or hand-contact checks were performed. Gas, functioning opening hatch/corridor and polished transitions are absent. Continue asset work before handing off animation. The script and shot list remain missing/unapproved. Owner's historical-accuracy waiver remains in force for visuals.

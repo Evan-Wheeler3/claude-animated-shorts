@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import {createSubmarine,createToilet,createCompartment,createSection} from '../videos/submarine-toilet/assets/submarine.js';
+import {createControlRoom,createBatteryRoom,createFloodEffects,createFish,createBubbles} from '../videos/submarine-toilet/assets/support.js';
 let errors=0;
-for(const [name,make] of Object.entries({exterior:createSubmarine,toilet:createToilet,compartment:createCompartment,section:createSection})) {
+for(const [name,make] of Object.entries({exterior:createSubmarine,toilet:createToilet,compartment:createCompartment,section:createSection,control:createControlRoom,battery:createBatteryRoom,flood:createFloodEffects,fish:createFish,bubbles:createBubbles})) {
  const root=make();root.updateMatrixWorld(true);let meshes=0,triangles=0;
  root.traverse(o=>{if(!o.isMesh)return;meshes++;const g=o.geometry,p=g.getAttribute('position'),n=g.getAttribute('normal');
   if(!p||!n){console.error(name,'missing position or normal');errors++;return}
