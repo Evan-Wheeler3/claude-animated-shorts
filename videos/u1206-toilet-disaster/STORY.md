@@ -3,12 +3,12 @@
 ```yaml
 story_id: u1206-toilet-disaster
 working_title: The Toilet That Doomed a Submarine
-script_status: draft
-codex_status: blocked
+script_status: approved
+codex_status: ready
 claude_status: not_started
 target_duration_seconds: 38-43
 format: 9:16
-owner_approved_script_at: null
+owner_approved_script_at: 2026-11-17
 ```
 
 ## Premise / hook
@@ -61,10 +61,10 @@ Use established Hold Up original toon pipeline and approved Niagara 2D-character
 - Do not merge or edit active Claude Niagara branch.
 
 ## Approval and open questions
-- Owner approval notes: user requested creation and push of story package; **this does not automatically constitute approval of narration or shots**
+- Owner approval notes: user requested creation and push of story package; owner explicitly approved narration and shotlist on 2026-11-17
 - Remaining factual question: particular operator/sequence of wrong valves is disputed; keep unnamed
 - Remaining creative questions: precise target duration, how much wartime threat to show, degree of toilet humor
-- Explicit go/no-go for Codex: **NO-GO until owner approves script and shotlist**. Asset *exploration* already exists separately, but not a production-ready handoff.
+- Explicit go/no-go for Codex: **GO for Codex asset creation**; visual asset approval is still required before Claude animation. Asset *exploration* already exists separately, but not a production-ready handoff.
 
 ## Deliverables
 - `STORY.md`: this brief, fact sheet and approval state
@@ -76,7 +76,7 @@ Use established Hold Up original toon pipeline and approved Niagara 2D-character
 
 ## Pre-Codex checklist
 - [x] Unique story-id/folder
-- [ ] Script reviewed and explicitly approved by owner
+- [x] Script reviewed and explicitly approved by owner
 - [ ] Narration recorded/timed to target
 - [x] Shotlist covers narrator beats
 - [x] Fact sheet identifies source support and uncertainty
