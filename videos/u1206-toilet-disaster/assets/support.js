@@ -38,9 +38,9 @@ export function createRaft(){const g=new T.Group();g.name='raft';const rim=mesh(
 /** Gas cue is a mobile graphic effect, not a claim about the appearance of chlorine. */
 export function createGasCue(){
  const g=new T.Group();g.name='gas-cue';const n=128,data=new Uint8Array(n*n*4);
- for(let y=0;y<n;y++)for(let x=0;x<n;x++){const dx=(x-n/2)/(n/2),dy=(y-n/2)/(n/2),d=Math.hypot(dx,dy),i=(y*n+x)*4;data[i]=190;data[i+1]=216;data[i+2]=120;data[i+3]=Math.round(95*Math.max(0,1-d)**2)}
+ for(let y=0;y<n;y++)for(let x=0;x<n;x++){const dx=(x-n/2)/(n/2),dy=(y-n/2)/(n/2),d=Math.hypot(dx,dy),i=(y*n+x)*4;data[i]=150;data[i+1]=205;data[i+2]=65;data[i+3]=Math.round(220*Math.max(0,1-d)**1.2)}
  const tex=new T.DataTexture(data,n,n,T.RGBAFormat);tex.needsUpdate=true;
- const mat=new T.SpriteMaterial({map:tex,transparent:true,depthWrite:false,opacity:.7});
+ const mat=new T.SpriteMaterial({map:tex,transparent:true,depthWrite:false,opacity:.85});
  for(let i=0;i<9;i++){const puff=new T.Sprite(mat);puff.position.set(Math.sin(i*2.3)*.35,.25+i*.14,Math.cos(i*2.1)*.2);puff.scale.setScalar(.6+(i%3)*.15);puff.name='gas-puff';g.add(puff)}
  g.userData={units:'m',pivot:'emission point',note:'schematic cue; animate opacity and position'};return g}
 /** Pivoted control lever for the surfacing control station. */
