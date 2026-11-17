@@ -1,0 +1,7 @@
+# Claude continuation — visual gate first
+
+Check out the exact Codex branch and commit provided by the owner; assets are not visible from another branch until explicitly checked out or integrated. Read AGENTS.md, PRODUCTION-PIPELINE.md, SKILL.md, `videos/u1206-toilet-disaster/STORY.md`, `SCRIPT.md`, `SHOTLIST.md`, `ASSET-MANIFEST.md`, and `CODEX-HANDOFF.md`. The owner explicitly approved narration and shot list. Some internal draft labels are stale: do not rewrite approved narration or shots without asking.
+
+The assets are preliminary and do not yet meet Niagara quality. Follow the manifest for existing files and missing effects. The user permits stylized submarine/pipe geometry; do not present hypothetical geometry or an invented valve sequence as a historical fact. Do not treat the rendered stills as owner-approved production assets. Do not redesign assets that the owner has subsequently approved except to resolve integration defects.
+
+Once the owner has approved the assets and authorized the next gate, render actual 9:16 scenes for the critical moments in the shot list and stop for owner review. Only after applicable approval create the three motion proofs, then final animation, voice, sound and render per PRODUCTION-PIPELINE.md. Do not alter the ongoing Niagara work, merge branches, or publish without explicit owner approval. The story base has no renderer; follow the handoff and coordinate a safe integration first.

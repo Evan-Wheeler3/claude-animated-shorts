@@ -1,0 +1,28 @@
+# Asset manifest — review needed
+
+Status: **work in progress; not Niagara quality or owner-approved production assets**. Original procedural Three.js geometry and generated texture code, under the repository MIT license. No third-party reference image or geometry embedded. Units: metres, Y up. Stylized designs per owner direction; fictional mechanism is not historical proof. The approved story and shot list remain unchanged.
+
+| ID | Factory/path | Bounds/pivot and controls | Actual pipeline still | Status and limitations |
+|---|---|---|---|---|
+| U-boat | `assets/submarine.js` `createSubmarine()` | 66 × 6.3 × 9 m; keel centre, bow +Z; propeller groups | `previews/exterior.jpg`, `underwater.jpg`, `ocean.jpg` | review-needed: simplified hull, deck and tower; no sinking/surface motion proof, no convincing wake |
+| Toilet | `assets/submarine.js` `createToilet()` | floor centre, 1.43 × 1.59 × 1.18 m including pipes; seat-hinge X, two wheels | `previews/toilet.jpg`, `flood.jpg` | review-needed: pipes terminate abruptly, jet and hand interaction untested; seat hinge tested for existence only |
+| Compartment | `createCompartment()` same file | floor centre; 3.21 × 2.82 × 2.71 m; removable side/back groups; numbered valve wheels Z; gauge needle pivot Z | `previews/staging.jpg`, `flood.jpg` | review-needed: cramped set is sparse; hatch is a decorative disk, not an opening; no crew contact proof |
+| Two-level cutaway | `createSection()` same file | 4.26 × 4.26 × 2.90 m, bottom centre | `previews/cutaway.jpg` | blocked: schematic room and cells, not a convincing section or visible flow path |
+| Control room | `assets/support.js` `createControlRoom()` | floor centre; 3.67 × 2.92 × 2.86 m; modular walls and wheels | `previews/control-room.jpg` | review-needed: generic staging; lever and grip not motion-tested |
+| Battery area | `createBatteryRoom()` same file | floor centre; 3.67 × 2.92 × 2.86 m; cells and anchor | `previews/battery-room.jpg` | review-needed: generic cells; gas cue weak in preview |
+| Water | `assets/water.js` `createWaterSurface()` | configurable x/z dimensions, height, amplitude, color and opacity; `update(seconds)` is stateless | `previews/ocean.jpg`, `flood.jpg` | review-needed: visibly regular waves, transparent layer has sharp perimeter; actual flow, splashes, buoyancy and intersections not validated |
+| Flood jet | `assets/support.js` `createFloodEffects()` | named `water-jet` and prior `water-level` | `previews/flood.jpg` | blocked: fixed arc and droplets, no directional flow animation or interaction; old level hidden in preview |
+| Sky/underwater/crew | `tools/Preview.tsx`, `tools/cast.ts`, shared `SkyRig` and character rig | crew 2D cards; outfit `CREW` / `CAPTAIN`; opt-in watch-cap patch in tools | `previews/underwater.jpg`, `crew-closeup.jpg` | review-needed: background and fish are static; crew hand grips, gloves and character motion not verified |
+| Aircraft / raft | `assets/support.js` `createAircraft()`, `createRaft()` | aircraft +Z, 7.8 × 1.63 × 6.8 m; raft origin waterline | `previews/ocean.jpg` (aircraft distant; raft not legible) | review-needed: abstract silhouettes; raft staging and crew contact missing |
+| Gas / warning | `createGasCue()`, `createWarningLamp()` in `assets/support.js` | gas emitter base; lamp wall pivot and `lamp-glow` | `previews/battery-room.jpg` (gas); lamp not rendered | blocked: gas too faint; lamp not rendered; animation not tested. Green is an illustrative cue, not a claim about gas appearance |
+| Lever / fish / bubbles | `createLever()`, `createFish()`, `createBubbles()` same file | lever Z shaft, fish +X, bubbles base | `previews/control-room.jpg`, `underwater.jpg` | review-needed: static tests only; no hand-to-lever or bubble motion proof |
+
+## Shot inventory
+
+01 valve, bowl, jet and sailor: partial; glove grip and blast absent. 02–03 exterior, ocean, light/depth cues: exterior and water preliminary, no convincing underwater light/depth. 04–06 captain, specialist, four valve controls and gauge: group pivots exist; interaction and rig proof absent. 07 pipe reversal, spray and door brace: not implemented. 08 battery cutaway with droplet path: incomplete. 09 gas and lamp: preliminary / unrendered lamp. 10 control and ascent: control prop exists; motion, splash absent. 11 aircraft and surfacing: simple aircraft, ocean, no attack splash. 12 raft and scuttling: raft model exists; no crew/raft or sinking proof. 13 seat wobble and drip: seat pivot exists, no proof/drip. 14 toilet/sub split-depth composition and bubble: components exist, no staged shot. Sound remains Claude's later work.
+
+## Rendering dependency and QA
+
+The approved story base `fefff8123fcc84d6adea73d6f0787c51856f3490` does not contain the `src/pipeline/` renderer or asset library. Tests used an isolated worktree at our earlier Codex commit `a090f70227f92483ff856856000d6ceda6828e80`, itself based on Claude's `93f2dbeeb2d74d85a0994e68519837bf945bad19`. No Claude branch was changed or merged. Integration with the final Niagara runtime is unverified and may require owner-controlled coordination. Overlay instructions and exact preview adapter are in `tools/README.md`.
+
+2026-11-17: `node tools/check-controls.mjs` (from story directory) passed valve/hinge/needle existence and water deterministic-time checks. `node tools/audit-submarine.mjs` passed finite position/normal and bounds checks; these are not full topology, normals direction, collision or quality tests. Isolated runtime `npx tsc --noEmit` passed. Actual 540 × 960 Remotion stills were rendered, inspected and committed. No animation/video, physical contact, flow reversal, visual quality approval, or full regression was completed.
