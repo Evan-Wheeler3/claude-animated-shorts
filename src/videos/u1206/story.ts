@@ -1,6 +1,9 @@
 // "U-1206 — The Toilet That Doomed a Submarine": shot table and camera keys.
 // GATE 2: every shot starts 2 frames before its narration word (videos/u1206-toilet-disaster/voice/words.json, Kokoro
-// am_michael 1.32, hand-checked); reactions land 0-3 frames before their word. Gate 1 approved 2026-11-17 (owner).
+// am_puck 1.15 — the owner's pick over the monotone house voice); reactions land 0-3 frames before their word.
+// Owner edit 2 (2026-11-17): the boat only goes down once (cruising -> surfaces with a breach -> scuttled -> wreck);
+// the surfacing is the captain hauling the blow valve + an above-water breach; the jet hits the sailor in the face;
+// the ending is ONE shot (B): the broken wreck on the seabed with the toilet in the foreground.
 // All motion inside a shot runs on the SHOT-LOCAL clock (frames since the shot's first frame) so re-timing a shot never
 // breaks its animation.
 // Camera grammar is the bridge/Niagara one: cuts on big reframes, creeping push-ins on holds, smootherstep glides.
@@ -18,13 +21,13 @@ export const SEA_Y = 0;                 // exterior: ocean surface at y = 0; the
 export const DEPTH_KEEL = -46;          // "two hundred feet underwater" is SCHEMATIC: keel ~46 m below the surface
 export const SURF_KEEL = -4.3;          // surfaced: deck casing ~1.3 m proud of the water (hull centre at y -1.1)
 
-// ---------------- narration clock (seconds; words.json, hand-fixed: Whisper merged "In 1945" and "and scuttled") ----------------
+// ---------------- narration clock (seconds; words.json of the am_puck 1.15 read chosen by the owner, hand-checked) ----------------
 export const W = {
-  in: 0.0, n1945: 0.2, german: 1.62, was: 2.48, toilet: 3.68, u1206: 4.52, scotland: 5.94, twohundred: 6.8, underwater: 7.44,
-  its: 8.18, highpressure: 8.48, complicated: 9.7, flushing: 10.92, specialist: 11.94, then: 12.56, went: 13.38, wrong: 13.6,
-  instead: 14.66, seawater: 15.82, blasting: 16.3, it: 17.14, batteries: 17.56, releasing: 18.62, chlorine: 19.38, gas: 19.78,
-  the: 20.44, crew: 20.5, surface: 21.02, right: 21.68, allied: 22.04, aircraft: 22.42, spot: 23.04, submarine: 23.74,
-  damaged: 24.28, abandoned: 24.98, scuttled: 25.75, all: 26.64, bathroom: 27.42, worst: 29.04, flush: 29.14, history: 29.9, end: 30.4,
+  in: 0.0, n1945: 0.14, german: 1.4, was: 2.24, toilet: 3.58, u1206: 4.68, scotland: 6.34, twohundred: 7.1, underwater: 7.78,
+  its: 8.78, highpressure: 9.08, complicated: 10.38, flushing: 11.36, specialist: 12.52, then: 13.44, went: 14.26, wrong: 14.5,
+  instead: 15.52, seawater: 16.44, blasting: 16.94, it: 17.88, batteries: 18.36, releasing: 19.26, chlorine: 20.04, gas: 20.42,
+  the: 21.18, crew: 21.24, surface: 21.62, right: 22.9, allied: 23.48, aircraft: 23.76, spot: 24.28, submarine: 25.14,
+  damaged: 25.7, abandoned: 26.3, scuttled: 26.94, all: 27.9, bathroom: 28.6, worst: 30.22, flush: 30.3, history: 30.96, end: 31.61,
 };
 const L = 2; // shots start / reactions land 2 frames before their word
 
@@ -33,22 +36,21 @@ export type Look = "interior" | "alarm" | "underwater" | "surface";
 export type ShotDef = { id: number; key: string; a: number; b: number; still: number; look: Look; critical: boolean };
 const SH: [string, number, number, Look, boolean][] = [ // key, start frame, still frame, look, critical preview
   ["s01_blast", 0, F(1.2), "interior", true],                         // the hook proves itself in the first 0.5 s
-  ["s02_hero", F(W.was) - L, F(3.3), "underwater", true],
-  ["s03_depth", F(W.u1206) - L, F(6.4), "underwater", false],
-  ["s04_captain", F(W.its) - L, F(9.4), "interior", true],
-  ["s05_specialist", F(W.flushing) - L, F(11.8), "interior", false],
-  ["s06_valve", F(W.then) - L, F(13.8), "interior", false],
-  ["s07_flood", F(W.instead) - L, F(16.5), "interior", true],
-  ["s08_cutaway", F(W.it) - L, F(18.0), "interior", true],
-  ["s09_gas", F(W.releasing) - L, F(19.6), "alarm", true],
-  ["s10a_control", F(W.the) - L, F(20.75), "alarm", false],
-  ["s10_surface", F(W.surface) - L, F(21.6), "underwater", false],
-  ["s11_aircraft", F(W.allied) - L, F(23.3), "surface", false],
-  ["s12_scuttle", F(W.submarine) - L, F(25.4), "surface", true],
-  ["s13_drip", F(W.all) - L, F(27.57), "interior", false],
-  ["s14_deadpan", F(W.worst) - L, F(30.6), "underwater", true],
+  ["s02_hero", F(W.was) - L, F(3.4), "underwater", true],
+  ["s03_depth", F(W.u1206) - L, F(6.8), "underwater", false],
+  ["s04_captain", F(W.its) - L, F(10.0), "interior", true],
+  ["s05_specialist", F(W.flushing) - L, F(12.4), "interior", false],
+  ["s06_valve", F(W.then) - L, F(14.8), "interior", false],
+  ["s07_flood", F(W.instead) - L, F(17.1), "interior", true],
+  ["s08_cutaway", F(W.it) - L, F(18.8), "interior", true],
+  ["s09_gas", F(W.releasing) - L, F(20.5), "alarm", true],
+  ["s10a_blow", F(W.the) - L, F(21.6), "alarm", true],               // the captain hauls the blow valve
+  ["s10_breach", F(W.surface) + 10, F(W.surface) + 10 + 15, "surface", true],        // the boat breaks the surface (the pause after "surface")
+  ["s11_aircraft", F(W.allied) - L, F(24.5), "surface", false],
+  ["s12_scuttle", F(W.submarine) - L, F(26.8), "surface", true],
+  ["s14_wreck", F(W.all) - L, F(30.5), "underwater", true],           // both closing lines on the wreck (ending B)
 ];
-export const TOTAL = F(32.0); // the last word ends at 30.4 s; a dry 1.6 s hold on the end frame
+export const TOTAL = F(33.2); // the last word ends at 31.6 s; a dry 1.6 s hold on the end frame
 export const SHOTS: ShotDef[] = SH.map(([key, a, still, look, critical], i) => ({
   id: i + 1, key, a, b: i + 1 < SH.length ? SH[i + 1][1] : TOTAL, still, look, critical,
 }));
@@ -69,13 +71,17 @@ export const BLAST_F = 10;
 /** shot 06: the handle catches on "went" and turns; the gauge kicks on "wrong" */
 export const CATCH_F = () => wf("s06_valve", W.went) - L;
 /** shot 07: the reversal: the bowl erupts on "seawater", full blast on "blasting" */
-export const FLOOD_F = () => wf("s07_flood", W.seawater) - L;
-/** shot 10a: the lever is thrown on "surface" (just before the cut outside) */
-export const LEVER_F = () => wf("s10a_control", W.crew) + 4;
-/** shot 14: the bubble leaves the bowl on "history" */
-export const BUBBLE_F = () => wf("s14_deadpan", W.history) - L;
+export const FLOOD_F = () => wf("s07_flood", W.blasting) - L - 9; // the stream grows 9 f, so it HITS HIS FACE on "blasting"
+/** shot 10a: the captain spins the blow valve from "crew" to "surface" */
+export const BLOW_F = () => wf("s10a_blow", W.crew);
+/** shot 10: the bow breaks the surface (local frame) */
+export const BREACH_F = 10;
+/** shot 14: the bubble leaves the toilet on "history" */
+export const BUBBLE_F = () => wf("s14_wreck", W.history) - L;
 /** sub travel along +z (bow) for the underwater shots, m/s */
-export const SUB_V = 1.2;
+export const SUB_V = 2.4; // visibly under way: the boat is HIDING, not sunk
+/** seabed of the ending (the wreck lies here) */
+export const SEABED = DEPTH_KEEL - 8;
 
 // ---------------- camera ----------------
 export type Cam = { pos: V3; look: V3; fov: number; roll: number };
@@ -92,10 +98,11 @@ export const subAt = (key: string, f: number): V3 => {
   switch (key) {
     case "s02_hero": return [0, DEPTH_KEEL, -6 + SUB_V * t];
     case "s03_depth": return [0, DEPTH_KEEL, -4 + SUB_V * t];
-    // a steep, quick climb that carries through the cut: the boat is already rising when the shot opens
-    case "s10_surface": { const u = 0.35 + 0.65 * smooth(t / 1.0); return [0, DEPTH_KEEL + (SURF_KEEL - 3 - DEPTH_KEEL) * u, -10 + 5 * t]; }
+    // breach: rises from below the surface, overshoots (bow high) and settles to its surfaced trim
+    case "s10_breach": { const k = lf(key, f), up = smooth(k / (BREACH_F + 8)), settle = k > BREACH_F + 8 ? Math.exp(-(k - BREACH_F - 8) / 10) * Math.sin((k - BREACH_F - 8) / 4) : 0;
+      return [0, SURF_KEEL - 9 + 9 * up + 0.8 * settle, -6 + 3 * t]; }
     case "s11_aircraft": case "s12_scuttle": return [0, SURF_KEEL, 0];
-    case "s14_deadpan": return [10, DEPTH_KEEL - 10 - 1.1 * t, 82];
+    case "s14_wreck": return [0, SEABED, 34];
     default: return [0, DEPTH_KEEL, 0];
   }
 };
@@ -119,18 +126,16 @@ const S: Record<string, (l: number) => Shot> = {
   s08_cutaway: (l) => { const u = smooth((l - 4) / 36); return { pos: C(SECT, [0.55, 2.4 - 0.3 * u, 14]), look: C(SECT, [0.35, 1.55 - 0.3 * u, 0]), fov: 23 }; },
   // 09 battery tops to claustrophobic MS: gas rising, crew recoils, the lamp flickers red
   s09_gas: (l) => dolly(C(BATT, [1.55, 1.95, -1.15]), C(BATT, [-0.6, 1.0, 0.45]), pushK(l, 0.0025), { fov: 64, roll: -0.04 }),
-  // 10a MS control station: the lever is thrown
-  s10a_control: (l) => dolly(C(CTRL, [1.4, 1.55, 1.5]), C(CTRL, [0.4, 1.3, -0.6]), pushK(l, 0.003), { fov: 56, roll: 0.03 }),
-  // 10 parallel to the climbing boat
-  s10_surface: (l) => { const s = subAt("s10_surface", l + shotByKey("s10_surface").a); return { pos: [-60, s[1] + 5, s[2] + 6], look: [0, s[1] + 7, s[2] + 6], fov: 56, roll: 0.05 }; },
+  // 10a MCU: the captain hauls the blow valve round, hard (alarm light)
+  s10a_blow: (l) => dolly(C(CTRL, [0.75, 1.5, 1.9]), C(CTRL, [-0.45, 1.25, -0.2]), pushK(l, 0.004), { fov: 50, roll: -0.04 }),
+  // 10 just above the water: the boat bursts up through the surface, bow first, and settles
+  s10_breach: (l) => dolly([-22, 2.4, 8], [0, 3.2, 26], pushK(l, 0.002), { fov: 54, roll: 0.03 }),
   // 11 surfaced wide; tilt up toward the aircraft on "aircraft", the boat stays in frame
   s11_aircraft: (l) => { const u = smooth((l - wf("s11_aircraft", W.aircraft) + 4) / 30); return { pos: [-34, 3.0, -14], look: [0, 3 + 12 * u, 6 + 4 * u], fov: 54 }; },
   // 12 high-angle aftermath: crew rafts clear, slow push on the conning tower
   s12_scuttle: (l) => dolly([-30, 13, -22], [0, 1.5, 4], pushK(l, 0.0015), { fov: 48 }),
-  // 13 CU back on the cold-open valve: one drip, the seat wobbles; stark stillness
-  s13_drip: (l) => dolly(C(COMP, [0.05, 0.95, 0.55]), C(COMP, [0.6, 0.72, -0.8]), pushK(l, 0.0012), { fov: 48 }),
-  // 14 split-depth gag: toilet foreground, the boat fading into the blue behind it; static end frame
-  s14_deadpan: () => ({ pos: [-3.2, DEPTH_KEEL - 1.4, 0], look: [2, DEPTH_KEEL - 4, 40], fov: 50 }),
+  // 14 ending B: low on the seabed; the toilet in the sand in front, the broken wreck behind; slow creep, static end
+  s14_wreck: (l) => dolly([-3, SEABED + 1.4, -2], [0, SEABED + 5.5, 40], pushK(l, 0.0012), { fov: 54 }),
 };
 /** impact kicks (bridge grammar: sign flips every frame, decays over 7 f), absolute frames: the eruption, the valve's
  *  catch (small), the blast on "blasting" (shot list: one controlled 0.15 s jolt, then recover) */
@@ -149,7 +154,7 @@ export const camAt = (id: number, f: number): Cam => {
 };
 
 /** the lone toilet of the end gag: on the camera's line, lower third */
-export const TOILET14: V3 = [-2.8, DEPTH_KEEL - 2.9, 3.4];
+export const TOILET14: V3 = [-3.3, DEPTH_KEEL - 8, 6.5]; // on the seabed (y = SEABED; rested on the sand at runtime)
 
 // ---------------- lens (cInf px at 1080; focus point) ----------------
 export const dofAt = (id: number, f = 0): { cInf: number; focus?: V3 } => {
@@ -164,9 +169,8 @@ export const dofAt = (id: number, f = 0): { cInf: number; focus?: V3 } => {
     case "s06_valve": return { cInf: 13, focus: C(COMP, [0.86, 0.9, -0.94]) };
     case "s07_flood": return { cInf: 8, focus: C(COMP, [-0.6, 1.3, -0.2]) };
     case "s09_gas": return { cInf: 9, focus: C(BATT, [-0.2, 1.3, 0.2]) };
-    case "s10a_control": return { cInf: 10, focus: C(CTRL, [0.55, 1.8, -0.62]) };
-    case "s13_drip": return { cInf: 12, focus: C(COMP, [0.86, 0.85, -0.94]) };
-    case "s14_deadpan": return { cInf: 7, focus: TOILET14 };
+    case "s10a_blow": return { cInf: 10, focus: C(CTRL, [-0.45, 1.5, -0.1]) };
+    case "s14_wreck": return { cInf: 6, focus: [TOILET14[0], TOILET14[1] + 0.6, TOILET14[2]] };
     default: return { cInf: 0 };
   }
 };

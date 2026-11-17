@@ -19,7 +19,7 @@ import {
   createCompartment, createSection, createBatteryRoom, createControlRoom, createLever, createSubmarine, createToilet, createAircraft, createRaft, createBubbles,
   createWarningLamp, createGasCue, createWaterSurface, createCutawayFlow, setValveAngle, setHatchAngle,
 } from "../../../videos/u1206-toilet-disaster/assets/index.js";
-import { FPS, SHOTS, V3, Look, COMP, SECT, BATT, CTRL, W, camAt, subAt, smooth, clamp01, lf, wf, BLAST_F, FLOOD_F, CATCH_F, LEVER_F, BUBBLE_F, SURF_KEEL, DEPTH_KEEL, TOILET14 } from "./story";
+import { FPS, SHOTS, V3, Look, COMP, SECT, BATT, CTRL, W, camAt, subAt, smooth, clamp01, lf, wf, BLAST_F, FLOOD_F, CATCH_F, BLOW_F, BREACH_F, BUBBLE_F, SURF_KEEL, DEPTH_KEEL, SEABED, TOILET14 } from "./story";
 
 const V = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z);
 const at = (o: V3, x: number, y: number, z: number) => V(o[0] + x, o[1] + y, o[2] + z);
@@ -30,8 +30,8 @@ const waveY = (w: Wave, level: number, x: number, z: number, t: number) => {
   const ph = (x / w.period) * 6.283 + t * 1.25, ph2 = (z / w.period) * 4.7 - t * 0.9;
   return level + w.amplitude * (Math.sin(ph) + 0.45 * Math.sin(ph2 + (x / w.period) * 1.7));
 };
-/** shot 13 (local frames): the drip lets go, then lands in the bowl */
-const DRIP_GO = 26, DRIP_LAND = 36; // lands on "break"
+/** shot 07: the sailor's card (room-local) and the point on his face the jet hits (6 cm toward the s07 camera) */
+const SAILOR07: V3 = [-0.8, 0, -0.78], FACE07: V3 = [-0.756, 1.5, -0.738];
 const OCEAN: Wave = { width: 900, amplitude: 0.32, period: 14 };
 /** life rafts on the camera side of the scuttled boat (s12 view line) */
 const RAFTS: [number, number][] = [[-17.5, -11.5], [-14.5, -14.5], [-10.5, -6.5]];
@@ -124,6 +124,49 @@ const makeGeyser = (pts: V3[]) => {
   return { group, curve, update };
 };
 
+/** ENDING B (owner: a cartoon gag, not a historical claim): keep only the triangles of `obj` whose centroid (in obj
+ *  space) lies on one side of a jagged cut across the hull at z = cut. Non-indexed copies, DoubleSide so the open
+ *  break shows the dark inside. Returns obj. */
+const breakHull = (obj: THREE.Object3D, cut: number, keepBow: boolean) => {
+  obj.updateMatrixWorld(true);
+  const inv = new THREE.Matrix4().copy(obj.matrixWorld).invert(), m = new THREE.Matrix4(), v = new THREE.Vector3();
+  const jag = (x: number, y: number) => 1.2 * Math.sin(x * 2.3 + y * 1.7) + 0.7 * Math.sin(y * 4.1 - x * 0.9);
+  obj.traverse((o) => {
+    const mesh = o as THREE.Mesh; if (!mesh.isMesh) return;
+    m.multiplyMatrices(inv, mesh.matrixWorld);
+    const g = mesh.geometry.index ? mesh.geometry.toNonIndexed() : mesh.geometry.clone(), names = Object.keys(g.attributes);
+    const sizes = names.map((n) => g.getAttribute(n).itemSize), pos = g.getAttribute("position");
+    // vertices as flat attribute records; z in boat space for each
+    type Vx = { a: number[]; z: number; x: number; y: number };
+    const vx = (i: number): Vx => { const a: number[] = []; names.forEach((n) => { const at = g.getAttribute(n); for (let j = 0; j < at.itemSize; j++) a.push(at.getComponent(i, j)); });
+      v.fromBufferAttribute(pos, i).applyMatrix4(m); return { a, z: v.z, x: v.x, y: v.y }; };
+    const mid = (p: Vx, q: Vx): Vx => ({ a: p.a.map((x, k) => (x + q.a[k]) / 2), z: (p.z + q.z) / 2, x: (p.x + q.x) / 2, y: (p.y + q.y) / 2 });
+    // long triangles (a 16 m lathe band, a 42 m deck box) are bisected along their longest-in-z edge until every
+    // triangle spans < 0.8 m of boat length, so the cut follows the jagged line instead of whole slabs
+    const stack: Vx[][] = [], out: Vx[][] = [];
+    for (let i = 0; i < pos.count; i += 3) stack.push([vx(i), vx(i + 1), vx(i + 2)]);
+    while (stack.length) {
+      const t = stack.pop()!, dz = [Math.abs(t[0].z - t[1].z), Math.abs(t[1].z - t[2].z), Math.abs(t[2].z - t[0].z)], e = dz.indexOf(Math.max(...dz));
+      if (dz[e] < 0.8 || out.length > 60000) { out.push(t); continue; }
+      const i0 = e, i1 = (e + 1) % 3, i2 = (e + 2) % 3, mm = mid(t[i0], t[i1]);
+      stack.push([t[i0], mm, t[i2]], [mm, t[i1], t[i2]]);
+    }
+    const keep = out.filter((t) => { const z = (t[0].z + t[1].z + t[2].z) / 3, x = (t[0].x + t[1].x + t[2].x) / 3, y = (t[0].y + t[1].y + t[2].y) / 3; return (z > cut + jag(x, y)) === keepBow; });
+    const res = new THREE.BufferGeometry();
+    let off = 0;
+    names.forEach((n, k) => {
+      const sz = sizes[k], arr = new Float32Array(keep.length * 3 * sz);
+      keep.forEach((t, ti) => t.forEach((p, vi) => { for (let j = 0; j < sz; j++) arr[(ti * 3 + vi) * sz + j] = p.a[off + j]; }));
+      res.setAttribute(n, new THREE.BufferAttribute(arr, sz)); off += sz;
+    });
+    mesh.geometry = res; mesh.visible = keep.length > 0;
+    const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+    const cl = mats.map((mt) => { const k = mt.clone(); k.onBeforeCompile = mt.onBeforeCompile; k.customProgramCacheKey = mt.customProgramCacheKey; k.side = THREE.DoubleSide; return k; });
+    mesh.material = cl.length === 1 ? cl[0] : cl;
+  });
+  return obj;
+};
+
 export class World {
   root = new THREE.Group();
   private sky: SkyRig;
@@ -141,6 +184,7 @@ export class World {
   private lamp: THREE.Group; private gasCue: THREE.Group;
   private aircraft: THREE.Group[] = []; private rafts: THREE.Group[] = [];
   private bubbles: THREE.Group; private loneToilet: THREE.Group;
+  private wreck = new THREE.Group(); private seabed!: THREE.Mesh; private snow!: THREE.Points; private blowWheel!: THREE.Object3D;
   private sets: { o: THREE.Object3D; keys: string[] }[] = [];
   private skyParts: THREE.Object3D[] = [];
   /** valve wheels of the compartment by role (world centre + number for setValveAngle/valveGripPoint) */
@@ -196,8 +240,9 @@ export class World {
     this.geysers = {
       // 01: straight up out of the bowl, curling over toward the lens / the sailor at screen-left
       s01_blast: makeGeyser([[bx, by, bz], [bx, 0.8, bz], [bx - 0.05, 1.3, bz + 0.1], [bx - 0.35, 1.25, bz + 0.5], [-0.45, 0.25, 0.3]]),
-      // 07: out of the bowl and over to the doorway, landing on the braced sailor's boots
-      s07_flood: makeGeyser([[bx, by, bz], [bx, 0.8, bz], [bx - 0.1, 1.3, bz - 0.1], [-0.55, 1.0, -0.85], [-1.1, 0.12, -0.9]]),
+      // 07 (owner note): out of the bowl, up and over — STRAIGHT INTO THE SAILOR'S FACE (ends 6 cm in front of his card,
+      // toward the s07 camera, at face height, so it reads as hitting him rather than passing behind)
+      s07_flood: makeGeyser([[bx, by, bz], [bx, 0.8, bz], [bx - 0.12, 1.32, bz - 0.08], [-0.3, 1.6, -0.68], [FACE07[0], FACE07[1], FACE07[2]]]),
     };
     for (const g of Object.values(this.geysers)) this.room.add(g.group);
     // valve wheels by role: the two on the toilet's pipes (low = right/brass line, high = left/outlet line)
@@ -250,14 +295,43 @@ export class World {
     this.bubbles = finish(createBubbles()); this.bubbles.scale.setScalar(2.4); R.add(this.bubbles);
     this.loneToilet = finish(createToilet()); R.add(this.loneToilet);
 
+    // ---- ending B: the seabed, the boat broken in two on it, rocks; the toilet rests on the sand in the foreground ----
+    const sand = new THREE.PlaneGeometry(260, 260, 90, 90).rotateX(-Math.PI / 2), sp = sand.getAttribute("position");
+    for (let i = 0; i < sp.count; i++) { const x = sp.getX(i), z = sp.getZ(i); sp.setY(i, 0.35 * Math.sin(x * 0.21 + z * 0.13) + 0.2 * Math.sin(z * 0.37 - x * 0.11)); }
+    sand.computeVertexNormals();
+    this.seabed = new THREE.Mesh(sand, twoTone(new THREE.MeshLambertMaterial({ color: "#c9b48a" }))); this.seabed.position.set(0, SEABED, 30);
+    this.seabed.receiveShadow = true; this.seabed.name = "seabed"; this.wreck.add(this.seabed);
+    const bow = breakHull(finish(createSubmarine()), 4, true), stern = breakHull(finish(createSubmarine()), 4, false);
+    // a tall diagonal for the vertical frame: the bow half juts up out of the sand nose-high (its broken end buried),
+    // the stern half lies flat behind it, angled away
+    bow.position.set(2, 0, -0.75); bow.rotation.set(-0.75, 0.15, 0.12);
+    stern.position.set(-6, 0, 10); stern.rotation.set(0.04, -0.55, 0.3);
+    const halves = new THREE.Group(); halves.add(bow, stern); halves.position.set(0, 0, 40); this.wreck.add(halves);
+    const rockMat = twoTone(new THREE.MeshLambertMaterial({ color: "#6f7a78" }));
+    for (let i = 0; i < 14; i++) { const r = new THREE.Mesh(new THREE.DodecahedronGeometry(0.4 + (i % 4) * 0.35, 0), rockMat); r.position.set(Math.sin(i * 7.1) * 18, 0, 16 + Math.cos(i * 3.3) * 18); r.rotation.set(i, i * 2, 0); r.scale.y = 0.6; r.castShadow = true; this.wreck.add(r); }
+    R.add(this.wreck); R.updateMatrixWorld(true);
+    const bed = new Ground().add(this.seabed);
+    halves.updateMatrixWorld(true); for (const h of [bow, stern]) { const box = new THREE.Box3().setFromObject(h), cx = (box.min.x + box.max.x) / 2, cz = (box.min.z + box.max.z) / 2; h.position.y += bed.heightAt(cx, cz, SEABED) - box.min.y - 0.6; } // bedded 0.6 m into the sand
+    for (const r of this.wreck.children) if ((r as THREE.Mesh).geometry?.type === "DodecahedronGeometry") bed.rest(r, 0.3, 0.15);
+    this.loneToilet.position.set(TOILET14[0], 0, TOILET14[2]); this.loneToilet.rotation.set(0.1, 0.9, -0.12); R.updateMatrixWorld(true); bed.rest(this.loneToilet, 0.3, 0.06);
+
+    // ---- marine snow: drifting specks around the underwater shots (gives the cruising boat visible speed) ----
+    const ns = 1400, sa = new Float32Array(ns * 3);
+    for (let i = 0; i < ns; i++) { sa[i * 3] = (Math.sin(i * 12.9898) * 43758.5453 % 1) * 70 - 35; sa[i * 3 + 1] = DEPTH_KEEL - 14 + ((i * 0.618) % 1) * 40; sa[i * 3 + 2] = ((i * 0.37) % 1) * 160 - 60; }
+    const sg = new THREE.BufferGeometry(); sg.setAttribute("position", new THREE.BufferAttribute(sa, 3));
+    this.snow = new THREE.Points(sg, new THREE.PointsMaterial({ color: untone("#bfe6ee"), size: 0.12, transparent: true, opacity: 0.55, depthWrite: false })); this.snow.layers.set(NOINK); R.add(this.snow);
+    // the control room's big hand-wheel on the column (the "blow" valve the captain hauls round)
+    this.control.traverse((o) => { if (o.name === "handwheel" && Math.abs(o.position.x + 0.7) < 0.01 && Math.abs(o.position.y - 1.5) < 0.01) this.blowWheel = o; });
+
     this.cards = new CardStage(R, this.ground);
-    const interior = ["s01_blast", "s04_captain", "s05_specialist", "s06_valve", "s07_flood", "s13_drip"];
+    const interior = ["s01_blast", "s04_captain", "s05_specialist", "s06_valve", "s07_flood"];
     this.sets.push({ o: this.room, keys: interior }, { o: roomEncl, keys: interior }, { o: this.section, keys: ["s08_cutaway"] },
       { o: this.battery, keys: ["s09_gas"] }, { o: battEncl, keys: ["s09_gas"] },
-      { o: this.control, keys: ["s10a_control"] }, { o: ctrlEncl, keys: ["s10a_control"] },
-      { o: this.sub, keys: ["s02_hero", "s03_depth", "s10_surface", "s11_aircraft", "s12_scuttle", "s14_deadpan"] },
-      { o: this.ocean.mesh, keys: ["s02_hero", "s03_depth", "s10_surface", "s11_aircraft", "s12_scuttle", "s14_deadpan"] },
-      { o: this.bubbles, keys: ["s02_hero", "s12_scuttle", "s14_deadpan"] }, { o: this.loneToilet, keys: ["s14_deadpan"] },
+      { o: this.control, keys: ["s10a_blow"] }, { o: ctrlEncl, keys: ["s10a_blow"] },
+      { o: this.sub, keys: ["s02_hero", "s03_depth", "s10_breach", "s11_aircraft", "s12_scuttle"] },
+      { o: this.ocean.mesh, keys: ["s10_breach", "s11_aircraft", "s12_scuttle"] },
+      { o: this.bubbles, keys: ["s02_hero", "s03_depth", "s12_scuttle"] }, { o: this.loneToilet, keys: ["s14_wreck"] },
+      { o: this.wreck, keys: ["s14_wreck"] }, { o: this.snow, keys: ["s02_hero", "s03_depth", "s14_wreck"] },
       ...this.aircraft.map((o) => ({ o, keys: ["s11_aircraft"] })), ...this.rafts.map((o) => ({ o, keys: ["s12_scuttle"] })));
   }
 
@@ -291,10 +365,10 @@ export class World {
     cam.layers.enable(NOINK);
     const focus = V(...c.look), fwd = focus.clone().sub(cam.position);
     for (const o of this.sets) o.o.visible = o.keys.includes(key);
-    const sun = this.applyLook(s.look, cam, scene, focus, fwd, key === "s03_depth" ? 260 : key === "s14_deadpan" ? 170 : undefined);
+    const sun = this.applyLook(s.look, cam, scene, focus, fwd, key === "s03_depth" ? 260 : key === "s14_wreck" ? 150 : undefined);
     // deep shots never see the surface; the surfacing shot sees it from below without world ink on the wave crests
     this.ocean.mesh.visible = this.ocean.mesh.visible && s.look === "surface";
-    this.ceiling.visible = key === "s03_depth" || key === "s10_surface"; // only shots that look up toward it; 200 ft down (02, 14) it is lost in the blue this.ceiling.position.x = cam.position.x; this.ceiling.position.z = cam.position.z;
+    this.ceiling.visible = key === "s03_depth"; // only shots that look up toward it; 200 ft down (02, 14) it is lost in the blue this.ceiling.position.x = cam.position.x; this.ceiling.position.z = cam.position.z;
     // light shafts: only underwater, slanted planes around the view, facing the camera about Y
     this.shafts.forEach((m, i) => {
       m.visible = s.look === "underwater";
@@ -306,17 +380,16 @@ export class World {
     this.ocean.update(t);
     if (this.sub.visible) {
       const p = subAt(key, f); this.sub.position.set(...p); this.sub.rotation.set(0, 0, 0);
-      if (key === "s10_surface") this.sub.rotation.x = -0.2;
+      if (key === "s10_breach") { const k = l - BREACH_F; this.sub.rotation.x = -0.28 * (1 - smooth(k / 14)) - 0.02; } // bow-high burst, then levels off
       if (key === "s12_scuttle") { const u = smooth(tl / 3.0); this.sub.position.y = SURF_KEEL - 0.4 - 2.0 * u; this.sub.rotation.set(-0.03 - 0.05 * u, 0, 0.03); } // stern settles first
-      if (key === "s14_deadpan") this.sub.rotation.set(0.1, 1.15, 0.04);
       this.sub.traverse((o) => { if (o.name === "propeller") o.rotation.z = t * (key === "s12_scuttle" ? 0 : 4); });
     }
     this.aircraft.forEach((a, i) => { a.position.set(56 + i * 11 - 14 * tl, 46 + i * 4, 30 + i * 9 + 6 * tl); a.rotation.set(0, -1.2, 0.1); });
     const raftAt = RAFTS;
     this.rafts.forEach((r, i) => { const [x, z] = raftAt[i]; r.position.set(x, waveY(OCEAN, 0, x, z, t) - 0.06, z); r.rotation.set(0.05 * Math.sin(t + i), i, 0.05 * Math.cos(t * 1.3 + i)); });
-    if (key === "s14_deadpan") { this.bubbles.position.set(12, DEPTH_KEEL - 6, 70); this.bubbles.scale.setScalar(5); }
-    else { this.bubbles.position.set(2, key === "s12_scuttle" ? -1.5 : DEPTH_KEEL + 7, 6); this.bubbles.scale.setScalar(2.4); }
-    if (key === "s14_deadpan") { this.loneToilet.position.set(...TOILET14); this.loneToilet.rotation.set(0.1, 0.9, -0.06); }
+    // bubbles: a propeller wash trailing the cruising boat (02/03); the scuttling boat's air (12)
+    if (key === "s12_scuttle") { this.bubbles.position.set(2, -1.5, 6); this.bubbles.scale.setScalar(2.4); }
+    else if (this.sub.visible) { const p = subAt(key, f), u = (tl * 0.8) % 1; this.bubbles.position.set(p[0], p[1] + 2.4 + 2 * u, p[2] - 33 - 4 * u); this.bubbles.scale.setScalar(1.6); }
     // ---- interior posing (Codex controls: setValveAngle / setHatchAngle) ----
     const blastK = key === "s01_blast" ? (l - BLAST_F) / FPS : key === "s07_flood" ? (l - FLOOD_F()) / FPS : -1;
     // 01: the sailor's wheel jerks a dangerous half-turn just before the eruption
@@ -325,13 +398,13 @@ export class World {
     let low = 0;
     if (key === "s05_specialist") low = -0.25 * smooth((l - 22) / 20);
     if (key === "s06_valve") { const c = CATCH_F(), k = l - c; low = -0.25 - (k < 0 ? 0.02 * smooth(l / 10) : 0.55 * (1 - Math.exp(-k / 2.5)) + 0.08 * Math.exp(-k / 3) * Math.sin(k * 1.4)); }
-    if (key === "s13_drip") low = -0.8;
     setValveAngle(this.room, this.wheel.low, low);
     // the gauge needle jumps on "wrong" (06) and sits pinned afterwards (07, 13)
     const needle = this.room.getObjectByName("gauge-needle-pivot");
-    if (needle) { const k = key === "s06_valve" ? l - wf("s06_valve", W.wrong) + 2 : key === "s07_flood" || key === "s13_drip" ? 99 : -1; needle.rotation.z = k < 0 ? -0.7 : -0.7 + 1.9 * (1 - Math.exp(-k / 2)) + 0.12 * Math.exp(-k / 4) * Math.sin(k * 1.8); }
-    // 10a: the lever is thrown (pivot Z): up -> down in 5 frames
-    this.lever.rotation.z = 0.45 - 0.9 * smooth((l - LEVER_F()) / 5);
+    if (needle) { const k = key === "s06_valve" ? l - wf("s06_valve", W.wrong) + 2 : key === "s07_flood" ? 99 : -1; needle.rotation.z = k < 0 ? -0.7 : -0.7 + 1.9 * (1 - Math.exp(-k / 2)) + 0.12 * Math.exp(-k / 4) * Math.sin(k * 1.8); }
+    // 10a: the captain spins the blow valve hard (one and a half turns, accelerating) from "crew" to "surface"
+    this.lever.rotation.z = 0.45;
+    if (this.blowWheel) this.blowWheel.rotation.z = key === "s10a_blow" ? -3 * Math.PI * smooth((l - BLOW_F()) / 16) ** 1.4 : 0;
     // 07: the flood rises from a film to boot depth once the bowl erupts
     // (the floor stays DRY until the bowl erupts: no water may appear before its source)
     const fl = smooth((l - FLOOD_F() - 6) / 40);
@@ -341,8 +414,7 @@ export class World {
     this.floodWater.mesh.visible = key === "s07_flood" && l > FLOOD_F() + 6; this.floodWater.update(t);
     this.deckWater.update(t); this.flow.update(t);
     const lampOn = Math.sin(t * 9) > -0.2; (this.lamp.getObjectByName("lamp-glow") as THREE.Mesh).visible = lampOn;
-    // 13: the single drip lands in the bowl at DRIP_LAND; the seat answers with a small decaying wobble
-    const seat = this.room.getObjectByName("seat-hinge"); if (seat) { const k = l - DRIP_LAND; seat.rotation.x = key === "s13_drip" && k > 0 ? -0.07 * Math.exp(-k / 9) * Math.sin(k * 0.9) : 0; }
+
     this.root.updateMatrixWorld(true);
     // ---- cast + effects ----
     const right = V(0, 0, 0).setFromMatrixColumn(cam.matrixWorld, 0);
@@ -412,16 +484,18 @@ export class World {
         break;
       }
       case "s07_flood": {
-        // braced in the doorway: one hand on the hatch frame, recoils on "blasting"
-        const jolt = smooth((l - wf("s07_flood", W.blasting) + 2) / 4), p = at(COMP, -0.8, 0, -0.78), frame = at(COMP, -0.85 + 0.5, 1.25, -1.2); // the hatch ring's right jamb, at shoulder height (the left one hides behind his body from this camera)
-        P(2, CREW, "sailor", p, { mode: "stand", expr: l < FLOOD_F() ? "worried" : "shock", pose: "grip", hands: grip(p, null, frame), tilt: -2 - 5 * jolt });
+        // braced in the doorway (hand on the hatch ring); the jet comes out of the bowl and hits him IN THE FACE on
+        // "blasting": eyes squeezed, knocked back a step, water pouring off him onto the floor
+        const hitF = FLOOD_F() + 9, hit = l >= hitF, kb = smooth((l - hitF) / 5);
+        const p = at(COMP, SAILOR07[0] - 0.05 * kb, 0, SAILOR07[2]), frame = at(COMP, -0.85 + 0.5, 1.25, -1.2);
+        P(2, CREW, "sailor", p, { mode: "stand", expr: l < FLOOD_F() ? "worried" : hit ? "pained" : "shock", pose: "grip", hands: grip(p, null, frame), tilt: -2 - 7 * kb, headTilt: -6 * kb });
         const gk = (l - FLOOD_F()) / FPS;
-        if (gk > 0) {
-          for (let k = 0; k < 3; k++) { const a = k * 2.1 + l * 0.3; puff(COMP[0] + 0.35 + Math.cos(a) * 0.3, 0.7, -0.55 + Math.sin(a) * 0.25, 0.25 * smooth(gk / 0.2), k); }
-          if (gk > 0.3) { // the stream reaches the doorway: splash at the boots
-            const end = this.room.localToWorld(this.geysers.s07_flood.curve.getPointAt(1).clone()), u = (((gk - 0.3) * 1.6) % 1);
-            splash(end.x, COMP[1] + 0.16, end.z, 0.9, u); for (let k = 0; k < 3; k++) puff(end.x + 0.1 * k, 0.32 + 0.1 * k, end.z + 0.05, 0.3, k);
-          }
+        if (gk > 0) for (let k = 0; k < 3; k++) { const a = k * 2.1 + l * 0.3; puff(COMP[0] + 0.35 + Math.cos(a) * 0.3, 0.7, -0.55 + Math.sin(a) * 0.25, 0.25 * smooth(gk / 0.2), k); }
+        if (hit) {
+          const face = at(COMP, ...FACE07), h = l - hitF;
+          for (let k = 0; k < 5; k++) { const a = k * 1.3 + h * 0.5, r = 0.12 + 0.05 * ((h + k) % 3); puff(face.x + Math.cos(a) * r, face.y + Math.sin(a) * r * 0.8, face.z + 0.05, 0.22 + 0.04 * (k % 2), k); } // splash crown at the face
+          for (let k = 0; k < 6; k++) { const u = ((h / 12 + k / 6) % 1); out.fx.push({ key: "drop", cw: 128, ch: 192, draw: fxDrop, x: face.x - 0.12 + 0.05 * k, y: face.y - 0.2 - 1.2 * u * u, z: face.z + 0.04, w: 0.04, h: 0.06 }); } // pouring off him
+          const u = ((h / FPS) * 1.6) % 1; splash(p.x + 0.05, COMP[1] + 0.16, p.z + 0.1, 0.8, u);
         }
         break;
       }
@@ -439,10 +513,23 @@ export class World {
         }
         break;
       }
-      case "s10a_control": {
-        // a sailor throws the surfacing lever: the hand rides the knob through the throw
-        const p = at(CTRL, 0.15, 0, -0.35);
-        P(2, CREW, "sailor", p, { mode: "stand", expr: l < LEVER_F() ? "determined" : "shock", pose: "grip", hands: grip(p, this.knob(), null), tilt: l < LEVER_F() ? 0 : -4 });
+      case "s10a_blow": {
+        // the captain hauls the blow valve round: both hands stay on the wheel's right-hand rim (hand-over-hand on a
+        // spinning wheel), he leans into it; the alarm light is still on
+        const p = at(CTRL, 0.12, 0, -0.05), c = this.blowWheel.getWorldPosition(V(0, 0, 0)), r = 0.23, haul = smooth((l - BLOW_F()) / 16);
+        const rimAt = (deg: number) => V(c.x + r * Math.cos((deg * Math.PI) / 180), c.y + r * Math.sin((deg * Math.PI) / 180), c.z + 0.04);
+        const wob = 18 * Math.sin(l * 0.9) * haul;
+        P(1, CAPTAIN, "captain", p, { mode: "stand", expr: haul > 0.2 ? "determined" : "stern", pose: "grip", hands: grip(p, rimAt(70 + wob), rimAt(-25 - wob)), tilt: -4 - 6 * haul }, { glow: "subtle" });
+        break;
+      }
+      case "s10_breach": {
+        // the breach: white water bursts along the hull as it breaks the surface, then a spreading foam rim
+        const k = l - BREACH_F; if (k < 0) break;
+        const p = subAt(key, l + SHOTS[SHOTS.findIndex((x) => x.key === key)].a);
+        // water-blue splash crowns sheeting off the hull at the waterline (bow first), white spray low down, then foam
+        for (let i = 0; i < 6; i++) { const z = p[2] + 30 - i * 9, u = clamp01((k - i * 2) / 22); if (u > 0 && u < 1) splash(-2.6, 3.4, z, 9 + 3 * (i === 0 ? 1 : 0), u); }
+        for (let i = 0; i < 8; i++) { const z = p[2] + 28 - i * 7, u = clamp01((k - i * 1.5) / 18); if (u > 0) puff(-3.2, 0.4 + 0.8 * Math.sin(Math.PI * u), z, 1.6 + 1.4 * u, i); }
+        if (this.inp.qa) console.warn(`[QA] breach fx ${out.fx.length} sub z ${p[2].toFixed(1)} y ${p[1].toFixed(1)}`);
         break;
       }
       case "s12_scuttle": {
@@ -456,15 +543,11 @@ export class World {
         for (let k = 0; k < 6; k++) puff(-1 + Math.sin(k * 2) * 2.4, 0.4 + (k % 2) * 0.3, -8 + k * 3.2, 2.4, k);
         break;
       }
-      case "s13_drip": {
-        // ONE drip: it swells under the wheel, lets go and falls toward the bowl (lands at DRIP_LAND)
-        const d = this.rim(this.wheel.low, -1), u = clamp01((l - DRIP_GO) / (DRIP_LAND - DRIP_GO)), sw = smooth(l / DRIP_GO);
-        if (l < DRIP_LAND) out.fx.push({ key: "drop", cw: 128, ch: 192, draw: fxDrop, x: d.x + 0.02, y: d.y - 0.1 - 0.42 * u * u, z: d.z + 0.03, w: 0.045 * (0.5 + 0.5 * sw), h: 0.07 * (0.5 + 0.5 * sw) });
-        break;
-      }
-      case "s14_deadpan": {
-        const u = (l - BUBBLE_F()) / 40; if (u < 0) break; // one bubble, on "history"
-        out.fx.push({ key: "bubble", cw: 160, ch: 160, draw: fxBubbleRing, x: TOILET14[0] + 0.05, y: TOILET14[1] + 0.75 + 0.9 * u, z: TOILET14[2], w: 0.12, h: 0.12 });
+      case "s14_wreck": {
+        // ONE bubble leaves the toilet bowl on "history" and wobbles up
+        const u = (l - BUBBLE_F()) / 40; if (u < 0) break;
+        const b = this.loneToilet.localToWorld(V(0, 0.6, 0));
+        out.fx.push({ key: "bubble", cw: 160, ch: 160, draw: fxBubbleRing, x: b.x + 0.04 * Math.sin(u * 9), y: b.y + 1.0 * u, z: b.z, w: 0.13, h: 0.13 });
         break;
       }
     }

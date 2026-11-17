@@ -2,61 +2,67 @@
  {
   "i": 0,
   "a": 0.0,
-  "b": 4.05,
+  "b": 4.305,
   "text": "In 1945, a German submarine was brought down by its own toilet."
  },
  {
   "i": 1,
-  "a": 4.5,
-  "b": 8.05,
+  "a": 4.755,
+  "b": 8.664,
   "text": "U-1206 was hiding off Scotland, two hundred feet underwater."
  },
  {
   "i": 2,
-  "a": 8.15,
-  "b": 12.468,
+  "a": 8.764,
+  "b": 13.388,
   "text": "Its new high-pressure toilet was so complicated, flushing it could require a specialist."
  },
  {
   "i": 3,
-  "a": 12.567,
-  "b": 14.015,
-  "text": "Then the flushing system went wrong."
+  "a": 13.488,
+  "b": 14.932,
+  "text": "Then, the flushing system went wrong."
  },
  {
   "i": 4,
-  "a": 14.665,
-  "b": 17.039,
+  "a": 15.532,
+  "b": 17.843,
   "text": "Instead of going out, seawater came blasting in."
  },
  {
   "i": 5,
-  "a": 17.139,
-  "b": 20.309,
+  "a": 17.943,
+  "b": 21.038,
   "text": "It reached the batteries below, releasing poisonous chlorine gas."
  },
  {
   "i": 6,
-  "a": 20.409,
-  "b": 23.567,
-  "text": "The crew had to surface\u2014right where Allied aircraft could spot them."
+  "a": 21.138,
+  "b": 22.204,
+  "text": "The crew had to surface\u2014"
  },
  {
   "i": 7,
-  "a": 23.667,
-  "b": 26.093,
-  "text": "The submarine was damaged, abandoned, and scuttled."
+  "a": 23.204,
+  "b": 24.983,
+  "text": "right where Allied aircraft could spot them."
  },
  {
   "i": 8,
-  "a": 26.643,
-  "b": 28.227,
-  "text": "All because of a bathroom break."
+  "a": 25.083,
+  "b": 27.511,
+  "text": "The submarine was damaged, abandoned, and scuttled."
  },
  {
   "i": 9,
-  "a": 28.928,
-  "b": 30.402,
-  "text": "Worst flush in naval history."
+  "a": 28.061,
+  "b": 29.415,
+  "text": "All because of a bathroom break."
+ },
+ {
+  "i": 10,
+  "a": 30.115,
+  "b": 31.615,
+  "text": "Worst! flush in naval history."
  }
 ]
