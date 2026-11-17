@@ -23,3 +23,7 @@ The owner requested the supporting ocean, water, fish and interiors. Added `asse
 ## Crew cap adjustment
 
 The owner found the cap bills confusing. The captain and crew now use the opt-in `subcap` watch cap in `src/pipeline/toon.ts`: a folded band with no projecting bill. Only the new preset is selected by the story outfits. Regenerated `staging.jpg`, `control-room.jpg` and `flood.jpg` through Remotion. `npx tsc --noEmit` passed; the existing `hats_a` and `hats_b` lab stills rendered pixel-identically to `out/lab/compare/after_hats_a.jpg` and `after_hats_b.jpg`. This does not constitute full pose/motion QA or owner approval of the other assets.
+
+## Eyebrow clarification
+
+The owner found the eyebrows confusing. The story-specific `subcap` now sits higher and opts into shorter, lower eyebrows, with separate brow strokes and clear space below the cap. Front and side card code retain existing behavior for all other hats. Regenerated the three crew scenes and added `previews/crew-closeup.jpg` for direct inspection; `npx tsc --noEmit` passed. The close-up is a diagnostic still, not an approved shot. Full character-pose and motion regression remains outstanding.
