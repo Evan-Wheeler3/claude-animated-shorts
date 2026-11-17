@@ -1,0 +1,3 @@
+# Claude continuation — blocked
+
+Check out the exact Codex branch and commit named in the handoff. Read AGENTS.md, PRODUCTION-PIPELINE.md, SKILL.md, STORY.md, ASSET-MANIFEST.md and CODEX-HANDOFF.md. This branch contains only an unapproved preliminary asset experiment and diagnostic renders; do not use it as production-ready art or depict its speculative plumbing as fact. Finish reference research, rebuild and verify assets and actual in-engine stills, and stop for owner visual approval. SCRIPT.md and SHOTLIST.md are missing and the script is draft: do not start animation or full production until the owner approves a verified script and shot list. Do not modify Claude's ongoing Niagara work or merge branches without owner approval.
