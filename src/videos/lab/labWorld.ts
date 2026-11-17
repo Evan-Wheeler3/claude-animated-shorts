@@ -30,10 +30,10 @@ export const POSES: [string, string][] = [["stand", "neutral"], ["walk", "walkin
 export const SCENARIOS: Scenario[] = [
   { key: "lineup", label: "body types, outfits, hats", cam: cam([-0.7, 1.5, 4.6], [-0.7, 0.9, -4], 46) },
   ...POSES.map(([k, l]) => ({ key: "pose_" + k, label: l, cam: cam([0.4, 1.15, 3.9], [0.4, 0.8, 0], 38) })),
-  { key: "hats_a", label: "headwear A, level", cam: cam([0, 1.48, 3.3], [0, 1.4, 0], 36) },
-  { key: "hats_b", label: "headwear B, level", cam: cam([0, 1.48, 3.3], [0, 1.4, 0], 36) },
-  { key: "hats_a_tilt", label: "headwear A, tilted heads", cam: cam([0, 1.48, 3.3], [0, 1.4, 0], 36) },
-  { key: "hats_b_tilt", label: "headwear B, tilted heads", cam: cam([0, 1.48, 3.3], [0, 1.4, 0], 36) },
+  { key: "hats_a", label: "headwear A, level", cam: cam([0, 1.5, 4.4], [0, 1.38, 0], 34) },
+  { key: "hats_b", label: "headwear B, level", cam: cam([0, 1.5, 4.4], [0, 1.38, 0], 34) },
+  { key: "hats_a_tilt", label: "headwear A, tilted heads", cam: cam([0, 1.5, 4.4], [0, 1.38, 0], 34) },
+  { key: "hats_b_tilt", label: "headwear B, tilted heads", cam: cam([0, 1.5, 4.4], [0, 1.38, 0], 34) },
   { key: "terrain", label: "flat, bumps, slope, step", cam: cam([-3.6, 1.5, 5.4], [-3.8, 0.45, 0.6], 48) },
   { key: "props", label: "props on slope / bumps, sitting on a crate", cam: cam([3.7, 1.6, 6.4], [3.9, 0.6, 0.6], 56) },
   { key: "container", label: "inside a barrel, hands on the rim, cat on the rim", cam: cam([0.3, 1.75, 3.2], [0, 1.25, 0], 38) },
@@ -204,7 +204,7 @@ export class LabWorld {
     } else if (key.startsWith("hats")) {
       const b = key.startsWith("hats_b"), tilt = key.endsWith("tilt");
       const cast: Outfit[] = b ? [townsfolk(1), soldier(0), { ...RIVERMAN[1], hat: "hair", hair: "#5a3b2a" }] : [ANNIE, RIVERMAN[0], RIVERMAN[2]];
-      cast.forEach((o, i) => P(30 + i, o, -0.46 + i * 0.46, 0, { mode: "stand", expr: "smile", headTilt: tilt ? [-12, 10, -9][i] : 0, seed: 1 + i }, o === ANNIE ? 0.95 : 1));
+      cast.forEach((o, i) => P(30 + i, o, -0.66 + i * 0.66, 0, { mode: "stand", expr: "smile", headTilt: tilt ? [-12, 10, -9][i] : 0, seed: 1 + i }, o === ANNIE ? 0.95 : 1));
     } else if (key === "terrain" || key === "walk_motion") {
       if (key === "terrain") {
         P(40, RIVERMAN[0], -6.0, 0.3, { mode: "stand", expr: "smile" });               // on bumps
