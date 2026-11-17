@@ -301,17 +301,16 @@ export class World {
     sand.computeVertexNormals();
     this.seabed = new THREE.Mesh(sand, twoTone(new THREE.MeshLambertMaterial({ color: "#c9b48a" }))); this.seabed.position.set(0, SEABED, 30);
     this.seabed.receiveShadow = true; this.seabed.name = "seabed"; this.wreck.add(this.seabed);
-    const bow = breakHull(finish(createSubmarine()), 4, true), stern = breakHull(finish(createSubmarine()), 4, false);
-    // a tall diagonal for the vertical frame: the bow half juts up out of the sand nose-high (its broken end buried),
-    // the stern half lies flat behind it, angled away
-    bow.position.set(2, 0, -0.75); bow.rotation.set(-0.75, 0.15, 0.12);
-    stern.position.set(-6, 0, 10); stern.rotation.set(0.04, -0.55, 0.3);
-    const halves = new THREE.Group(); halves.add(bow, stern); halves.position.set(0, 0, 40); this.wreck.add(halves);
+    // owner review: ONLY the half lying flat on the seabed is shown (the stern half; the upright half is gone). Its
+    // broken end is the "missing chunk"; no second half, no view down the inside.
+    const wreckHalf = breakHull(finish(createSubmarine()), 4, false);
+    wreckHalf.position.set(-6, 0, 10); wreckHalf.rotation.set(0.04, -0.55, 0.3);
+    const halves = new THREE.Group(); halves.add(wreckHalf); halves.position.set(0, 0, 40); this.wreck.add(halves);
     const rockMat = twoTone(new THREE.MeshLambertMaterial({ color: "#6f7a78" }));
     for (let i = 0; i < 14; i++) { const r = new THREE.Mesh(new THREE.DodecahedronGeometry(0.4 + (i % 4) * 0.35, 0), rockMat); r.position.set(Math.sin(i * 7.1) * 18, 0, 16 + Math.cos(i * 3.3) * 18); r.rotation.set(i, i * 2, 0); r.scale.y = 0.6; r.castShadow = true; this.wreck.add(r); }
     R.add(this.wreck); R.updateMatrixWorld(true);
     const bed = new Ground().add(this.seabed);
-    halves.updateMatrixWorld(true); for (const h of [bow, stern]) { const box = new THREE.Box3().setFromObject(h), cx = (box.min.x + box.max.x) / 2, cz = (box.min.z + box.max.z) / 2; h.position.y += bed.heightAt(cx, cz, SEABED) - box.min.y - 0.6; } // bedded 0.6 m into the sand
+    halves.updateMatrixWorld(true); { const box = new THREE.Box3().setFromObject(wreckHalf), cx = (box.min.x + box.max.x) / 2, cz = (box.min.z + box.max.z) / 2; wreckHalf.position.y += bed.heightAt(cx, cz, SEABED) - box.min.y - 0.6; } // bedded 0.6 m into the sand
     for (const r of this.wreck.children) if ((r as THREE.Mesh).geometry?.type === "DodecahedronGeometry") bed.rest(r, 0.3, 0.15);
     this.loneToilet.position.set(TOILET14[0], 0, TOILET14[2]); this.loneToilet.rotation.set(0.1, 0.9, -0.12); R.updateMatrixWorld(true); bed.rest(this.loneToilet, 0.3, 0.06);
 
