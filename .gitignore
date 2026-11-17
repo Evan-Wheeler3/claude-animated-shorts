@@ -1,0 +1,6 @@
+node_modules/
+out/*
+!out/niagara-barrel/
+out/niagara-barrel/*
+!out/niagara-barrel/previews/
+.remotion-tmp/
