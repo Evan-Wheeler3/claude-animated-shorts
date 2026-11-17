@@ -9,9 +9,9 @@ import { useThree } from "@react-three/fiber";
 import { EffectComposer } from "@react-three/postprocessing";
 import { BlendFunction, BloomEffect, ToneMappingEffect, ToneMappingMode } from "postprocessing";
 import { World } from "./world";
-import { InkPass, noInkFallback } from "./ink";
-import { LensBlur } from "./lensblur";
-import { GradeEffect, GRADES, GRADE_STRENGTH, gradeFor } from "./grade";
+import { InkPass, noInkFallback } from "../../pipeline/ink";
+import { LensBlur } from "../../pipeline/lensblur";
+import { GradeEffect, GRADES, GRADE_STRENGTH, gradeFor } from "../../pipeline/grade";
 import { TOTAL, SHOTS, layersAt, dofAt } from "./story";
 
 export const NIAGARA_FRAMES = TOTAL;

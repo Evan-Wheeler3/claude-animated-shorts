@@ -1,6 +1,13 @@
 node_modules/
+.remotion-tmp/
 out/*
 !out/niagara-barrel/
 out/niagara-barrel/*
 !out/niagara-barrel/previews/
-.remotion-tmp/
+!out/niagara-barrel/fixpass/
+!out/lab/
+out/lab/*
+!out/lab/compare/
+!out/lab/motion/
+!out/lab/*.jpg
+out/lab/check.jpg

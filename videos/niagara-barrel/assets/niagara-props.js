@@ -380,3 +380,18 @@ export function createLampPost() {
   g.add(mesh(new THREE.ConeGeometry(0.22, 0.2, 6), ironM, [0, 3.35, 0]));
   return g;
 }
+/** planked shipping crate (seat / step / falling-object tests), size s, origin at the bottom centre */
+export function createCrate(s = 0.5, seed = 6) {
+  const g = new THREE.Group(); g.name = 'Crate'; const r = rng(seed), planks = [[], []], n = 4, gap = 0.008;
+  for (const [ax, sign] of [['x', 1], ['x', -1], ['z', 1], ['z', -1]]) for (let i = 0; i < n; i++) {
+    const w = s / n - gap, y = (i + 0.5) * (s / n), off = sign * (s / 2 - 0.0125);
+    const geo = ax === 'x' ? new THREE.BoxGeometry(0.025, w, s).translate(off, y, 0) : new THREE.BoxGeometry(s - 0.05, w, 0.025).translate(0, y, off);
+    planks[r() < 0.6 ? 0 : 1].push(geo);
+  }
+  for (let i = 0; i < n; i++) planks[i % 2].push(new THREE.BoxGeometry(s / n - gap, 0.025, s - 0.01).translate(-s / 2 + (i + 0.5) * (s / n), s - 0.0125, 0));
+  g.add(mesh(merge(planks[0]), mat('oak')), mesh(merge(planks[1]), mat('oakDark')));
+  for (const x of [-1, 1]) for (const z of [-1, 1]) g.add(mesh(new THREE.BoxGeometry(0.05, s, 0.05), mat('oakDark'), [x * (s / 2 - 0.02), s / 2, z * (s / 2 - 0.02)]));
+  g.add(mesh(new THREE.BoxGeometry(s - 0.06, s - 0.06, s - 0.06), mat('jointDark', '#2a1a12'), [0, s / 2, 0]));
+  g.userData = { size: s, seatY: s };
+  return g;
+}

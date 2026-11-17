@@ -59,21 +59,24 @@ vec3 outgoingLight = diffuseColor.rgb * tintK;
 `;
 
 const DECL = "#include <common>\nuniform vec3 uCharTint; uniform float uCharShade; uniform float uGrad; uniform float uBodyGrad; uniform vec3 uSideTint;"
-  + " uniform float uGradK; uniform float uGradKB; uniform float uTintK; uniform float uNorm; uniform float uGain; uniform float uPx;";
+  + " uniform float uGradK; uniform float uGradKB; uniform float uTintK; uniform float uNorm; uniform float uGain; uniform float uPx; uniform float uPresence;";
 /** card-only constants (not per light): gradient share, tint share, overall gain (calibrated: faces ~.93 V) */
 export const CARD_K = { uGradK: { value: GRAD_K }, uGradKB: { value: GRAD_KB }, uTintK: { value: TINT_K }, uNorm: { value: 0.7 }, uGain: { value: 1.03 }, uPx: { value: 0.5 } }; // uPx = render height / 1920 (set per draw in cast.ts)
 
 /** MeshLambertMaterial -> lit card: no emissive, scene tint, bright floor, side gradient toward the sun. */
-export function cardShade(m: THREE.MeshLambertMaterial) {
+/** per-card "presence" (0..1): a tiny lift in brightness and saturation for primary characters (main-character glow,
+ *  CHARACTER-ANATOMY.md). Each card owns its uniform, so it is set per character, not globally. */
+export function cardShade(m: THREE.MeshLambertMaterial, presence: { value: number } = { value: 0 }) {
   m.emissive.set(0x000000); m.emissiveIntensity = 0; m.emissiveMap = null;
   m.onBeforeCompile = (sh) => {
-    Object.assign(sh.uniforms, CHAR, CARD_K);
+    Object.assign(sh.uniforms, CHAR, CARD_K, { uPresence: presence });
     sh.fragmentShader = sh.fragmentShader
       .replace("#include <common>", DECL)
       .replace("#include <lights_fragment_begin>", "float sunVis = 1.0;\n" + LFB)
-      .replace("vec3 outgoingLight = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse + totalEmissiveRadiance;", CARD);
+      .replace("vec3 outgoingLight = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse + totalEmissiveRadiance;", CARD
+        + "\n{ float lum = dot( outgoingLight, vec3( 0.2126, 0.7152, 0.0722 ) ); outgoingLight = mix( vec3( lum ), outgoingLight, 1.0 + 0.08 * uPresence ) * ( 1.0 + 0.035 * uPresence ); }");
   };
-  m.customProgramCacheKey = () => "card9";
+  m.customProgramCacheKey = () => "card10";
   return m;
 }
 

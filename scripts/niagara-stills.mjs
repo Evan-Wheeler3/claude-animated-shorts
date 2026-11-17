@@ -1,6 +1,7 @@
 // Gate-1 preview stills of the real Niagara scene (Remotion + three.js), adapted from templates/scripts/bridge-stills.mjs
 // for a Linux / headless container (Playwright's Chromium, SwiftShader GL).
 // usage: node scripts/niagara-stills.mjs <outDir> [shotKey,shotKey|all] [scale] [frameOverride]
+//   env PROPS='{"qa":true,"glow":"strong"}' adds inputProps; TAG=prefix_ names the files; CAM='{pos,look,fov}' overrides the camera
 //   writes <outDir>/<shotKey>.jpg for each shot (A_hook, B_annie, ...) at its SHOTS[].still frame
 import fs from "node:fs";
 import path from "node:path";
@@ -18,12 +19,15 @@ const t0 = Date.now();
 const serveUrl = await bundle({ entryPoint: path.resolve("src/index.ts"), publicDir: path.resolve("public") });
 console.log("bundled", ((Date.now() - t0) / 1000).toFixed(1) + "s");
 const composition = await selectComposition({ serveUrl, id: "NiagaraShort", browserExecutable, chromiumOptions });
-const onBrowserLog = (l) => { if (l.type === "error" || l.type === "warning") console.log(`[${l.type}]`, l.text.slice(0, 400)); };
+const onBrowserLog = (l) => {
+  if (l.text.startsWith("[QA]")) { console.log(l.text); return; }
+  if ((l.type === "error" || l.type === "warning") && !/swiftshader|toNonIndexed|GPU stall/i.test(l.text)) console.log(`[${l.type}]`, l.text.slice(0, 400));
+};
 for (const [key, still] of want) {
   const t1 = Date.now(), frame = frameOverride ? Number(frameOverride) : still;
   const output = path.join(outDir, `${process.env.TAG ?? ""}${key}.jpg`);
   await renderStill({ composition, serveUrl, frame, output, imageFormat: "jpeg", jpegQuality: 92, scale: Number(scale),
     browserExecutable, chromiumOptions, timeoutInMilliseconds: 600000, onBrowserLog,
-    inputProps: { ...(Number(scale) < 1 ? { post: { dpr: Number(scale) } } : {}), ...(process.env.CAM ? { cam: JSON.parse(process.env.CAM) } : {}) } });
+    inputProps: { ...(Number(scale) < 1 ? { post: { dpr: Number(scale) } } : {}), ...(process.env.CAM ? { cam: JSON.parse(process.env.CAM) } : {}), ...(process.env.PROPS ? JSON.parse(process.env.PROPS) : {}) } });
   console.log("still", key, frame, ((Date.now() - t1) / 1000).toFixed(1) + "s", "->", output);
 }

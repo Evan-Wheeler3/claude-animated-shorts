@@ -121,6 +121,12 @@ export class Pen {
     const [x, y] = this.P(cx, cy);
     this.g.beginPath(); this.g.arc(x, y, r, 0, Math.PI * 2); this.g.fillStyle = fill; this.g.fill();
   }
+  /** draw everything OUTSIDE a closed shape (even-odd clip against a huge rectangle) */
+  clipOut(pts: P2[], fn: () => void) {
+    const g = this.g; g.save(); g.beginPath(); g.rect(-1e5, -1e5, 2e5, 2e5);
+    pts.forEach((q, i) => { const [x, y] = this.P(q[0], q[1]); if (i) g.lineTo(x, y); else g.moveTo(x, y); });
+    g.closePath(); g.clip("evenodd"); fn(); g.restore();
+  }
   /** draw with a closed shape as clip */
   clip(pts: P2[], fn: () => void) { const g = this.g; g.save(); this.path(pts, true); g.clip(); fn(); g.restore(); }
   /** flat fill + soft crescent on the side away from the light (light = canvas angle the light comes FROM).
@@ -194,6 +200,48 @@ const taper = (p: Pen, a: P2, b: P2, wa: number, wb: number, col = INK) => {
   p.poly([[a[0] + nx * wa / 2, a[1] + ny * wa / 2], [b[0] + nx * wb / 2, b[1] + ny * wb / 2],
     [b[0] - nx * wb / 2, b[1] - ny * wb / 2], [a[0] - nx * wa / 2, a[1] - ny * wa / 2]], col, 0);
   p.dot(a[0], a[1], wa / 2, col); p.dot(b[0], b[1], wb / 2, col);
+};
+
+// ---------------- rig (construction rules, docs/learning/CHARACTER-ANATOMY.md) ----------------
+/** one set of proportions for every pose; lengths in head-heights (HH), widths in u (1 % of the head width) */
+export const RIG = {
+  shoulderDrop: 0.17, // shoulder joint below the chin
+  shoulderIn: 0.88,   // joint at 88 % of the torso half width at that height: inside the silhouette, so the seam hides the root
+  upperArm: 0.44, foreArm: 0.42, // bone lengths: hanging hand ends ~0.82 HH below the shoulder (hip level)
+  armW: 4.4, rimW: 1.25, // sleeve fill + ink rim each side (total ~0.07 W: still a cartoon stick arm)
+  waist: 0.38,        // waist line above the torso bottom (skirts, waistbands, hands-on-hips)
+  hipW: 0.17,         // trouser seat half width in W
+};
+/** horizontal span [xmin, xmax] of a closed contour at height y (null when the line misses it) */
+export const spanAt = (pts: P2[], y: number): [number, number] | null => {
+  let lo = Infinity, hi = -Infinity;
+  for (let i = 0; i < pts.length; i++) {
+    const [x0, y0] = pts[i], [x1, y1] = pts[(i + 1) % pts.length];
+    if ((y0 - y) * (y1 - y) > 0 || y0 === y1) continue;
+    const x = x0 + ((x1 - x0) * (y - y0)) / (y1 - y0);
+    lo = Math.min(lo, x); hi = Math.max(hi, x);
+  }
+  return lo <= hi ? [lo, hi] : null;
+};
+/** two-bone IK in the drawing plane: shoulder S reaching for H with bones l1 / l2. The elbow bends toward `out`
+ *  (+1 = screen right). Out-of-reach targets clamp to a straight arm along the same line (arm length never changes). */
+export const ik2 = (S: P2, H: P2, l1: number, l2: number, out: number): { e: P2; h: P2 } => {
+  let dx = H[0] - S[0], dy = H[1] - S[1], d = Math.hypot(dx, dy) || 1e-6;
+  const max = (l1 + l2) * 0.998, min = Math.abs(l1 - l2) + 1;
+  const dd = clamp(d, min, max);
+  const h: P2 = [S[0] + (dx / d) * dd, S[1] + (dy / d) * dd];
+  dx = h[0] - S[0]; dy = h[1] - S[1]; d = dd;
+  const a = Math.acos(clamp((l1 * l1 + d * d - l2 * l2) / (2 * l1 * d), -1, 1)), base = Math.atan2(dy, dx);
+  const c1: P2 = [S[0] + l1 * Math.cos(base + a), S[1] + l1 * Math.sin(base + a)], c2: P2 = [S[0] + l1 * Math.cos(base - a), S[1] + l1 * Math.sin(base - a)];
+  const mx = (S[0] + h[0]) / 2, score = (e: P2) => (e[0] - mx) * out + 0.25 * (e[1] - (S[1] + h[1]) / 2); // outward, then down
+  return { e: score(c1) >= score(c2) ? c1 : c2, h };
+};
+/** a waistband that wraps a round body: top and bottom edges sag `sag` at the centre (we look down on it a little),
+ *  ends land exactly on the given edges, ink rim */
+export const waistband = (p: Pen, x0: number, x1: number, y: number, h: number, sag: number, fill: string, rim: number) => {
+  const top: P2[] = [], bot: P2[] = [];
+  for (let i = 0; i <= 16; i++) { const t = i / 16, x = x0 + (x1 - x0) * t, s = sag * (1 - (2 * t - 1) ** 2); top.push([x, y - h / 2 + s]); bot.push([x, y + h / 2 + s]); }
+  p.poly([...top, ...bot.reverse()], fill, rim);
 };
 
 // ---------------- contours ----------------
@@ -376,6 +424,28 @@ const hatBehind = (p: Pen, o: Outfit, H: Blob, cx: number, hc: number, light: nu
   p.inkRing(bb, ow * 0.85, thick);
 };
 
+/** HEADWEAR FIT (CHARACTER-ANATOMY.md "Headwear"): a worn hat is built from the HEAD CONTOUR, not fixed widths.
+ *  bandY  = where the band meets the head (fraction of HH below the crown); the band's ends are the contour's span
+ *           there x `fit`, joined by a sagging arc (the band wraps a round head);
+ *  crown  = rises `ht` from the band, top half width x `top`;
+ *  brim   = ellipse `brim` x band half width: its BACK half is drawn before the crown (behind), its FRONT half after
+ *           (over the forehead). Everything is rotated with the head (R about the head centre). Returns the band ends. */
+const wornHat = (p: Pen, hp: P2[], R: (pts: P2[]) => P2[], cx: number, crown: number, HH: number, u: number, light: number, ow: number,
+  o: { bandK: number; fit: number; ht: number; top: number; brim: number; brimT: number; col: string; brimCol?: string; dx?: number; band?: [string, number] }) => {
+  const by = crown + o.bandK * HH, sp = spanAt(hp, by) ?? [cx - 50 * u, cx + 50 * u];
+  const mid = (sp[0] + sp[1]) / 2 + (o.dx ?? 0), hw = ((sp[1] - sp[0]) / 2) * o.fit, sag = 0.035 * HH;
+  const base: P2[] = []; for (let i = 0; i <= 12; i++) { const t = i / 12; base.push([mid - hw + 2 * hw * t, by + sag * (1 - (2 * t - 1) ** 2)]); }
+  const tw = hw * o.top, body = R([...base.reverse(), [mid - tw, by - o.ht], [mid - tw * 0.92, by - o.ht - 0.02 * HH], [mid + tw * 0.92, by - o.ht - 0.02 * HH], [mid + tw, by - o.ht]]);
+  const [bx, bcy] = R([[mid, by + sag * 0.6]])[0], deg = (Math.atan2(R([[mid + 1, by]])[0][1] - R([[mid, by]])[0][1], R([[mid + 1, by]])[0][0] - R([[mid, by]])[0][0]) * 180) / Math.PI;
+  const brimCol = o.brimCol ?? shade(o.col, 0.85);
+  if (o.brim > 0) p.ell(bx, bcy, hw * o.brim, o.brimT * HH, brimCol, ow, 180, 360, deg); // back half, behind the crown
+  p.shadedFill(body, o.col, mul(o.col, SH_FELT), light, hw, 0.4);
+  if (o.band) p.clip(body, () => p.band(R([[mid - hw * 1.3, by - o.band![1] * HH], [mid + hw * 1.3, by - o.band![1] * HH]]), o.band![0], 0.06 * HH, 0.8 * u));
+  p.poly(body, null, ow);
+  if (o.brim > 0) p.ell(bx, bcy, hw * o.brim, o.brimT * HH, brimCol, ow, 0, 180, deg); // front half, over the forehead
+  return { mid, by, hw };
+};
+
 const hatOn = (p: Pen, o: Outfit, hp: P2[], H: Blob, cx: number, hc: number, light: number, seed: number, facing: number, side: boolean) => {
   const W = 2 * H.a, HH = 2 * H.b, u = W / 100, crown = hc - H.b, ow = 0.85 * 5 * u;
   const a = H.rot + rad(4 * (rnd(seed, 20) - 0.5)); // tilt with the head, +-2 deg extra
@@ -386,24 +456,22 @@ const hatOn = (p: Pen, o: Outfit, hp: P2[], H: Blob, cx: number, hc: number, lig
     return base;
   };
   if (o.hat === "shako" || o.hat === "shako_tall") {
-    const tall = o.hat === "shako_tall", yb = crown + 0.25 * HH, ht = (tall ? 0.66 : 0.56) * HH, wb = 46 * u, wt = 52 * u;
-    const body = R([...sag(yb, wb).reverse(), [cx - wt, yb - ht], [cx + wt, yb - ht]]);
-    p.shadedFill(body, "#3a3d47", "#24262d", light, wt, 0.4);
-    if (tall) p.clip(body, () => p.band(R([[cx - wt - 5 * u, yb - ht + 0.07 * HH], [cx + wt + 5 * u, yb - ht + 0.07 * HH]]), "#e8c45a", 0.06 * HH, 1.5 * u));
-    p.poly(body, null, ow);
-    const deg = (a * 180) / Math.PI;
+    const tall = o.hat === "shako_tall";
     if (side) {
-      p.poly(R([[cx + 36 * u, yb - 1 * u], [cx + 60 * u, yb + 8 * u], [cx + 34 * u, yb + 6 * u]]), "#16171b", 2.5 * u);
-      const [tx, ty] = R([[cx + 24 * u, yb - ht - 6 * u]])[0];
+      const { mid, by, hw } = wornHat(p, hp, R, cx, crown, HH, u, light, ow, { bandK: 0.27, fit: 1.03, ht: (tall ? 0.66 : 0.56) * HH, top: 1.1, brim: 0, brimT: 0, col: "#3a3d47", band: tall ? ["#e8c45a", (tall ? 0.6 : 0.5)] : undefined });
+      p.poly(R([[mid + hw * 0.7, by - 1 * u], [mid + hw * 1.25, by + 8 * u], [mid + hw * 0.66, by + 6 * u]]), "#16171b", 2.5 * u);
+      const [tx, ty] = R([[mid + hw * 0.4, by - (tall ? 0.66 : 0.56) * HH - 6 * u]])[0];
       p.ell(tx, ty, 7 * u, 7 * u, "#2b7a4b", 2.5 * u);
     } else {
-      const [px, py] = R([[cx + 3 * u * facing, yb + 3 * u]])[0];
-      p.ell(px, py, 34 * u, 0.045 * HH, "#16171b", 2.5 * u, 0, 180, deg); // peak
-      const [bx, by] = R([[cx, yb - 0.45 * ht]])[0];
-      p.ell(bx, by, 7 * u, 6 * u, tall ? "#e8c45a" : "#c9ccd2", 2 * u, 0, 360, deg); // badge plate
-      p.arc(bx, by, 3.5 * u, 2.8 * u, 200, 500, 1.6 * u);
-      const [tx, ty] = R([[cx, yb - ht - 6 * u]])[0];
-      p.ell(tx, ty, 7 * u, 7 * u, "#2b7a4b", 2.5 * u); // green tuft
+      const ht = (tall ? 0.66 : 0.56) * HH;
+      const { mid, by, hw } = wornHat(p, hp, R, cx, crown, HH, u, light, ow, { bandK: 0.27, fit: 1.03, ht, top: 1.1, brim: 0, brimT: 0, col: "#3a3d47", band: tall ? ["#e8c45a", 0.6] : undefined });
+      const deg = (a * 180) / Math.PI, [px, py] = R([[mid + 3 * u * facing, by + 3 * u]])[0];
+      p.ell(px, py, hw * 0.74, 0.045 * HH, "#16171b", 2.5 * u, 0, 180, deg); // peak over the brow
+      const [bx, bly] = R([[mid, by - 0.45 * ht]])[0];
+      p.ell(bx, bly, 7 * u, 6 * u, tall ? "#e8c45a" : "#c9ccd2", 2 * u, 0, 360, deg);
+      p.arc(bx, bly, 3.5 * u, 2.8 * u, 200, 500, 1.6 * u);
+      const [tx, ty] = R([[mid, by - ht - 6 * u]])[0];
+      p.ell(tx, ty, 7 * u, 7 * u, "#2b7a4b", 2.5 * u);
     }
   } else if (o.hat === "annie") {
     // parted hair over the forehead (cut like "hair" but higher), then a small dark hat with a ribbon and a feather
@@ -421,22 +489,18 @@ const hatOn = (p: Pen, o: Outfit, hp: P2[], H: Blob, cx: number, hc: number, lig
       p.stroke([[px - s * 14 * u, py + 9 * u], [px - s * 30 * u, cut - 4 * u]], 1.4 * u, mix(hair, "#ffffff", 0.35)); // grey streak
       p.stroke([[px + s * 12 * u, py + 8 * u], [px + s * 30 * u, cut - 6 * u]], 1.2 * u);
     }
-    const hat = o.hatCol ?? "#2e2a36", rib = o.ribbon ?? "#8c3b4a", hy = crown + 0.02 * HH, ht = 0.17 * HH, w0 = 0.22 * W, w1 = 0.19 * W;
-    const ha = a - rad(9), Rh = (pts: P2[]) => rotPts(pts, ha, cx + 6 * u, hy);
-    const body = Rh([[cx - w0 + 8 * u, hy], [cx - w1 + 8 * u, hy - ht], [cx + w1 + 8 * u, hy - ht], [cx + w0 + 8 * u, hy]]);
-    p.shadedFill(body, hat, mul(hat, SH_FELT), light, w0, 0.4);
-    p.clip(body, () => p.band(Rh([[cx - w0, hy - 0.05 * HH], [cx + w0 + 16 * u, hy - 0.05 * HH]]), rib, 0.06 * HH, 0.8 * u));
-    p.poly(body, null, ow);
-    const [bx, by] = Rh([[cx + 8 * u, hy + 1 * u]])[0];
-    p.ell(bx, by, 0.36 * W, 0.045 * HH, shade(hat, 0.85), ow, 0, 360, (ha * 180) / Math.PI);
-    // feather: a cream curl rising off the back of the hat
-    // a short cream plume tucked in the band at the back (leaf shape + quill), not a loop
-    const base: P2 = [cx - w1 + 2 * u, hy - 0.5 * ht], tipP: P2 = [cx - w1 - 16 * u, hy - ht - 14 * u];
-    const mid = lerp2(base, tipP, 0.5), nx = -(tipP[1] - base[1]), ny = tipP[0] - base[0], nl = Math.hypot(nx, ny);
-    const plume = Rh([base, [mid[0] + (nx / nl) * 7 * u, mid[1] + (ny / nl) * 7 * u], tipP, [mid[0] - (nx / nl) * 5 * u, mid[1] - (ny / nl) * 5 * u]]);
+    // small felt hat WORN on the pompadour: band on the hair contour (hair sits ~4 % outside the skull), tipped
+    // forward with the head, brim front over the hairline, plume tucked in the band at the back
+    const hairHp = hp.map(([x, y]) => [cx + (x - cx) * 1.04, hc + (y - hc) * 1.04] as P2);
+    const hat = o.hatCol ?? "#2e2a36", rib = o.ribbon ?? "#8c3b4a";
+    const { mid, by, hw } = wornHat(p, hairHp, R, cx, crown, HH, u, light, ow, { bandK: 0.075, fit: 1.0, ht: 0.17 * HH, top: 0.88, brim: 1.38, brimT: 0.045, col: hat, dx: (side ? 6 : 3 * (facing || 1)) * u, band: [rib, 0.045] });
+    const base = R([[mid - hw * 0.72, by - 0.1 * HH]])[0], tipP = R([[mid - hw * 1.12, by - 0.27 * HH]])[0];
+    const md = lerp2(base, tipP, 0.5), nx = -(tipP[1] - base[1]), ny = tipP[0] - base[0], nl = Math.hypot(nx, ny);
+    const plume: P2[] = [base, [md[0] + (nx / nl) * 7 * u, md[1] + (ny / nl) * 7 * u], tipP, [md[0] - (nx / nl) * 5 * u, md[1] - (ny / nl) * 5 * u]];
     p.poly(curve(plume[0], plume[1], plume[2], 8).concat(curve(plume[2], plume[3], plume[0], 8)), "#efe3c4", 2.2 * u);
-    p.stroke(Rh([base, lerp2(base, tipP, 0.8)]), 1.2 * u);
-    p.dot(bx + 0.18 * W * Math.cos(ha), by - 0.12 * HH, 4 * u, rib);
+    p.stroke([base, lerp2(base, tipP, 0.8)], 1.2 * u);
+    const [rx, ry] = R([[mid + hw * 0.55, by - 0.05 * HH]])[0];
+    p.dot(rx, ry, 4 * u, rib);
   } else if (o.hat === "cap" || o.hat === "hair") {
     const cut = crown + (o.hat === "cap" ? 0.3 : 0.42) * HH;
     const keep = (x: number, y: number) => y < cut || (side && o.hat === "hair" && x < cx - 6 * u && y < hc + 0.42 * H.b);
@@ -460,18 +524,12 @@ const hatOn = (p: Pen, o: Outfit, hp: P2[], H: Blob, cx: number, hc: number, lig
       const deg = (a * 180) / Math.PI;
       if (side) p.poly(R([[cx + 40 * u, cut - 2 * u], [cx + 74 * u, cut + 4 * u], [cx + 40 * u, cut + 6 * u]]), shade(col, 0.8), ow);
       else {
-        const s = facing || (rnd(seed, 21) < 0.5 ? -1 : 1), [px, py] = R([[cx + s * 4 * u, cut + 1.5 * u]])[0];
-        p.ell(px, py, 32 * u, 0.06 * HH, shade(col, 0.8), ow, 0, 180, deg);
+        const s = facing || (rnd(seed, 21) < 0.5 ? -1 : 1), sp = spanAt(hp, cut) ?? [cx - 40 * u, cx + 40 * u], [px, py] = R([[cx + s * 4 * u, cut + 1.5 * u]])[0];
+        p.ell(px, py, ((sp[1] - sp[0]) / 2) * 0.72, 0.06 * HH, shade(col, 0.8), ow, 0, 180, deg); // peak spans the brow it shades
       }
     }
   } else if (o.hat === "tophat") {
-    const yb = crown + 0.22 * HH, ht = 0.8 * HH, wb = 0.31 * W, wt = 0.33 * W, col = "#2e2a36";
-    const body = R([...sag(yb, wb).reverse(), [cx - wt, yb - ht], [cx + wt, yb - ht]]);
-    p.shadedFill(body, col, mul(col, SH_FELT), light, wt, 0.4);
-    p.clip(body, () => p.band(R([[cx - wt - 4 * u, yb - 0.13 * HH], [cx + wt + 4 * u, yb - 0.13 * HH]]), shade(o.jacket, 0.9), 0.14 * HH, 0.8 * u));
-    p.poly(body, null, ow);
-    const [bx, by] = R([[cx, yb + 1 * u]])[0];
-    p.ell(bx, by, 0.45 * W, 0.05 * HH, "#1d1b22", ow, 0, 360, (a * 180) / Math.PI);
+    wornHat(p, hp, R, cx, crown, HH, u, light, ow, { bandK: 0.24, fit: 0.98, ht: 0.78 * HH, top: 1.06, brim: 1.42, brimT: 0.055, col: "#2e2a36", brimCol: "#1d1b22", band: [shade(o.jacket, 0.9), 0.1] });
   } else if (o.hat === "bonnet") {
     const [bx, by] = R([[cx + (side ? 6 * u : 0), crown + 0.16 * HH]])[0];
     p.arc(bx, by, 0.5 * W, 0.2 * HH, 200, 340, 7 * u, BONNET_BRIM);
@@ -497,7 +555,12 @@ export type FrontOpts = {
   prop?: Prop; tilt?: number; headTilt?: number; wave?: number;
   /** Niagara arm poses: hands on hips, point up-right, both up, clasped, gripping a rim in front, palms-up shrug,
    *  holding the empty purse out; gripY = rim height (design units) for "grip" */
-  pose?: "hips" | "point" | "up" | "clasp" | "grip" | "shrug" | "purse"; gripY?: number;
+  pose?: "hips" | "point" | "up" | "clasp" | "cross" | "grip" | "shrug" | "purse" | "hold" | "reach"; gripY?: number;
+  /** contact targets for the [screen-left, screen-right] hands in FINAL canvas units (scene attachment points,
+   *  see pipeline/cast.ts toCard); they override the pose for that hand. The IK keeps arm lengths constant. */
+  hands?: [P2 | null, P2 | null];
+  /** sit: hip height above the soles in design units (default .32 HH = sitting on the ground) */
+  seat?: number;
   /** canvas angle the key light comes FROM (painted crescent + thick outline side) */
   light?: number; facing?: -1 | 0 | 1; seed?: number;
 };
@@ -515,7 +578,7 @@ export const bodyFront = (p: Pen, o: Outfit, opts: FrontOpts) => {
   const tall = (1 + Bd.torso + Bd.legs) * HH, sole = 975;
   // body bob 5 % (march) / 3 % (stroll) of the height, lowest at contact (phase 0 and 0.5)
   const bob = mode === "march" ? 0.025 * tall * Math.cos(2 * two * phase) : mode === "stroll" ? 0.015 * tall * Math.cos(2 * two * phase) : 0;
-  const torsoBot = mode === "sit" ? sole - 0.2 * HH : sole - Bd.legs * HH + bob;
+  const torsoBot = mode === "sit" ? sole - (opts.seat ?? 0.32 * HH) + 0.12 * HH : sole - Bd.legs * HH + bob;
   const chin = torsoBot - Bd.torso * HH, hc = chin - H.b, crown = hc - H.b, hipY = torsoBot - 0.12 * HH;
   const thick = thickAngle(light), ow = 5 * u;
   const legCol = mix(o.pants, INK, 0.55), armCol = mix(o.jacket, INK, 0.5), footCol = o.boots;
@@ -561,52 +624,86 @@ export const bodyFront = (p: Pen, o: Outfit, opts: FrontOpts) => {
   const T: Blob = { a: ((Bd.tw / 2) * W) / 1.06, b: 0.5 * (torsoBot - (chin - 0.25 * HH)), nTop: 2.2, nBot: 2.6, egg: o.build === "stout" ? 0.17 : 0.12,
     asym: 0.04 * facing, rot: 0, noise: 0.006, seed: seed + 7 };
   const tcx = 300 + 3 * u * facing, tcy = torsoBot - T.b, tp = blobPts(tcx, tcy, T);
-  const sh = (side: number): P2 => [tcx + side * 0.85 * T.a, chin + 0.12 * HH];
-  const hang = (side: number, fwd: number): [P2, P2, P2] => {
-    const S = sh(side), ex = tcx + side * (1.12 * T.a + 4 * u);
-    const hx = ex + side * 3 * u - side * 6 * u * Math.max(0, fwd) + side * 4 * u * Math.max(0, -fwd);
-    return [S, [ex, S[1] + 0.48 * HH], [hx, chin + 1.04 * HH - Math.abs(fwd) * 9 * u]];
-  };
+  // ---- rig: anchors read off the actual torso contour (CHARACTER-ANATOMY.md) ----
+  const shY = chin + RIG.shoulderDrop * HH, shSpan = spanAt(tp, shY) ?? [tcx - T.a, tcx + T.a];
+  const sh = (side: number): P2 => [tcx + side * RIG.shoulderIn * (side > 0 ? shSpan[1] - tcx : tcx - shSpan[0]), shY];
+  const l1 = RIG.upperArm * HH, l2 = RIG.foreArm * HH;
+  const wy = torsoBot - RIG.waist * HH, wSpan = spanAt(tp, wy) ?? [tcx - T.a, tcx + T.a];
   const sw = mode === "march" || mode === "stroll" ? Math.sin(two * phase) : 0;
-  // rifle at the order: butt by the right hip, held by the hanging right hand, muzzle past the crown
   const R0: P2 = [300 + 47 * u, torsoBot + 0.12 * HH], R1: P2 = [300 + 64 * u, crown - 0.32 * HH];
   const rifle = !!o.rifle && (mode === "march" || mode === "stand" || mode === "stroll");
-  type Arm = { pts: [P2, P2, P2]; front: boolean };
-  const arms: Arm[] = [];
-  if (mode === "sit") for (const side of [-1, 1]) arms.push({ pts: [sh(side), [tcx + side * (1.1 * T.a + 6 * u), sh(side)[1] + 0.4 * HH], [tcx + side * (1.2 * T.a + 10 * u), torsoBot + 0.04 * HH]], front: false });
-  else if (mode === "fall") for (const side of [-1, 1]) arms.push({ pts: [sh(side), [tcx + side * (1.15 * T.a + 12 * u), sh(side)[1] - 0.25 * HH], [tcx + side * (1.3 * T.a + 24 * u), sh(side)[1] - 0.68 * HH]], front: false });
-  else if (opts.pose) {
-    const S0 = sh(-1), S1 = sh(1), wy = torsoBot - 0.3 * HH;
-    for (const side of [-1, 1]) {
-      const S = side < 0 ? S0 : S1, ps = opts.pose === "point" && side > 0 ? "point" : opts.pose === "point" ? "hips" : opts.pose;
-      if (ps === "hips") arms.push({ pts: [S, [tcx + side * (1.32 * T.a + 14 * u), S[1] + 0.36 * HH], [tcx + side * 0.86 * T.a, wy]], front: true });
-      else if (ps === "point") arms.push({ pts: [S, [tcx + 1.25 * T.a + 18 * u, S[1] - 0.18 * HH], [tcx + 1.45 * T.a + 40 * u, S[1] - 0.62 * HH]], front: false });
-      else if (ps === "up") arms.push({ pts: [S, [tcx + side * (1.2 * T.a + 16 * u), S[1] - 0.25 * HH], [tcx + side * (1.15 * T.a + 22 * u), S[1] - 0.75 * HH]], front: false });
-      else if (ps === "clasp") arms.push({ pts: [S, [tcx + side * (1.15 * T.a + 6 * u), S[1] + 0.4 * HH], [tcx + side * 5 * u, S[1] + 0.32 * HH]], front: true });
-      else if (ps === "grip") { const gy = opts.gripY ?? torsoBot; arms.push({ pts: [S, [tcx + side * (1.3 * T.a + 10 * u), (S[1] + gy) / 2], [tcx + side * (1.25 * T.a + 18 * u), gy]], front: true }); }
-      else if (ps === "shrug") arms.push({ pts: [S, [tcx + side * (1.25 * T.a + 6 * u), S[1] + 0.4 * HH], [tcx + side * (1.5 * T.a + 26 * u), S[1] + 0.22 * HH]], front: false });
-      else if (ps === "purse") arms.push(side > 0 ? { pts: [S, [tcx + 1.1 * T.a + 8 * u, S[1] + 0.42 * HH], [tcx + 0.55 * T.a, S[1] + 0.5 * HH]], front: true } : { pts: hang(-1, 0), front: false });
-    }
-  } else {
-    arms.push({ pts: prop === "shako" ? hang(-1, 0) : hang(-1, -sw), front: false });
-    if (rifle) {
-      const G = lerp2(R0, R1, 0.1);
-      arms.push({ pts: [sh(1), [tcx + 1.12 * T.a + 5 * u, sh(1)[1] + 0.45 * HH], G], front: false });
-    } else if (wave !== undefined) {
-      const S = sh(1);
-      arms.push({ pts: [S, [tcx + 1.1 * T.a + 10 * u + 3 * u * wave, S[1] - 0.22 * HH], [tcx + 1.18 * T.a + 16 * u + 12 * u * wave, S[1] - 0.6 * HH]], front: false });
-    } else if (prop === "icecream") {
-      const S = sh(1);
-      arms.push({ pts: [S, [tcx + 1.05 * T.a + 4 * u, S[1] + 0.45 * HH], [tcx + 0.5 * T.a, S[1] + 0.4 * HH]], front: true });
-    } else if (Array.isArray(prop)) {
-      const S = sh(1), k = clamp(prop[1], 0, 1);
-      const E = lerp2([tcx + 1.1 * T.a + 10 * u, S[1] - 0.15 * HH], [tcx + 1.2 * T.a + 10 * u, S[1] + 0.3 * HH], k);
-      const Hd = lerp2([tcx + 1.15 * T.a + 14 * u, S[1] - 0.55 * HH], [tcx + 1.45 * T.a + 22 * u, S[1] + 0.35 * HH], k);
-      arms.push({ pts: [S, E, Hd], front: true });
-    } else arms.push({ pts: hang(1, sw), front: false });
+  // hand targets per side (index 0 = screen-left arm), in the body frame; null = hang
+  // a hanging hand rests just OUTSIDE the body's silhouette at its height (torso, or the skirt / dress flare), so it is
+  // never hidden behind the body; walking swings it a little forward/back (foreshortened in a front view)
+  // skirt silhouette (built here, before the arms, so hanging hands can clear its REAL edge)
+  const hem = mode === "sit" ? sole - 0.3 * HH : sole - 0.1 * HH, hwS = mode === "sit" ? 0.55 * W : 0.52 * W;
+  const skirtEdge = (side: number, y: number) => {
+    const t = clamp((y - wy) / (hem - wy), 0, 1), w0 = side > 0 ? wSpan[1] - tcx : tcx - wSpan[0];
+    const tor = spanAt(tp, y), tw = tor ? (side > 0 ? tor[1] - tcx : tcx - tor[0]) + 1.5 * u : 0;
+    return tcx + side * Math.max(w0 + 0.5 * u + (hwS - w0) * t ** 1.35, tw);
+  };
+  const outer = (side: number, y: number) => {
+    const t = spanAt(tp, y), tw = t ? (side > 0 ? t[1] : t[0]) : sh(side)[0];
+    const sk = o.skirt && mode !== "fall" && y > wy ? skirtEdge(side, y) : tw;
+    return side > 0 ? Math.max(tw, sk) : Math.min(tw, sk);
+  };
+  const hang = (side: number, fwd = 0): P2 => { const S = sh(side), y = S[1] + 0.8 * HH - 0.05 * HH * Math.abs(fwd); return [outer(side, y) + side * (0.075 * HH + 0.03 * HH * Math.max(0, -fwd * side)), y]; };
+  const T2: (P2 | null)[] = [null, null];
+  const pose = opts.pose;
+  for (const [i, side] of [[0, -1], [1, 1]] as const) {
+    const S = sh(side);
+    let h: P2 | null = null;
+    if (mode === "sit") h = [tcx + side * (T.a + 0.12 * HH), torsoBot + 0.02 * HH];
+    else if (mode === "fall") h = [S[0] + side * 0.42 * HH, S[1] - 0.62 * HH];
+    else if (pose) {
+      const ps = pose === "point" ? (side > 0 ? "point" : "hips") : pose === "purse" || pose === "hold" ? (side > 0 ? "hold" : "hang") : pose;
+      if (ps === "hips") h = [side > 0 ? wSpan[1] + 0.01 * HH : wSpan[0] - 0.01 * HH, wy - 0.04 * HH];
+      else if (ps === "point") h = [S[0] + 0.5 * HH, S[1] - 0.66 * HH];
+      else if (ps === "up") h = [S[0] + side * 0.32 * HH, S[1] - 0.78 * HH];
+      else if (ps === "clasp") h = [tcx + side * 0.05 * HH, S[1] + 0.6 * HH];
+      else if (ps === "cross") h = [tcx - side * 0.3 * HH, S[1] + (side > 0 ? 0.42 : 0.5) * HH];
+      else if (ps === "grip") h = [tcx + side * (T.a + 0.16 * HH), opts.gripY ?? torsoBot];
+      else if (ps === "shrug") h = [S[0] + side * 0.55 * HH, S[1] + 0.3 * HH];
+      else if (ps === "hold") h = [S[0] - 0.02 * HH, S[1] + 0.55 * HH];
+      else if (ps === "reach") h = side > 0 ? [S[0] + 0.82 * HH, S[1] + 0.1 * HH] : hang(side); // only the reaching hand moves
+      else h = hang(side);
+    } else if (side > 0 && rifle) h = lerp2(R0, R1, 0.1);
+    else if (side > 0 && wave !== undefined) h = [S[0] + 0.3 * HH + 0.06 * HH * wave, S[1] - 0.66 * HH];
+    else if (side > 0 && prop === "icecream") h = [tcx + 0.5 * T.a, S[1] + 0.42 * HH];
+    else if (side > 0 && Array.isArray(prop)) { const k = clamp(prop[1], 0, 1); h = lerp2([S[0] + 0.3 * HH, S[1] - 0.6 * HH], [S[0] + 0.6 * HH, S[1] + 0.32 * HH], k); }
+    else h = hang(side, side > 0 ? sw : -sw);
+    T2[i] = h;
   }
-  const drawArm = (a: Arm) => { p.stroke(curve(a.pts[0], a.pts[1], a.pts[2]), 5.2 * u, armCol); p.dot(a.pts[2][0], a.pts[2][1], 5.5 * u); };
-  // behind the body: rifle, sword, arms
+  // explicit contact targets (attachment points from the scene, final canvas units) win; undo the body rotation
+  if (opts.hands) opts.hands.forEach((hd, i) => {
+    if (!hd) return;
+    const th = -rad(A), dx = hd[0] - 300, dy = hd[1] - hipY;
+    T2[i] = [300 + dx * Math.cos(th) - dy * Math.sin(th), hipY + dx * Math.sin(th) + dy * Math.cos(th)];
+  });
+  type Arm2 = { S: P2; E: P2; H: P2; side: number; front: boolean };
+  const arms: Arm2[] = [-1, 1].map((side, i) => {
+    const S = sh(side), { e, h } = ik2(S, T2[i]!, l1, l2, side);
+    const sp = spanAt(tp, h[1]);
+    // in front of the body when the hand ends over the torso (hips, clasp, cross, hold, grip near the body)
+    const front = !!sp && h[0] > sp[0] - 0.04 * HH && h[0] < sp[1] + 0.04 * HH && mode !== "sit";
+    return { S, E: e, H: h, side, front };
+  });
+  const sleeve = mix(o.jacket, mul(o.jacket, SH_CLOTH), 0.35), cuff = mul(o.jacket, SH_CLOTH);
+  const aw = RIG.armW * u, rw = RIG.rimW * u;
+  const armPath = (a: Arm2) => curve(a.S, a.E, a.H, 14);
+  const strokeArm = (pts: P2[]) => { p.stroke(pts, aw + 2 * rw, INK); p.stroke(pts, aw, sleeve); };
+  /** arm = sleeve tube with an ink rim; the shoulder root is never drawn over the torso (it emerges from the seam),
+   *  a front forearm is drawn over the torso; cuff band, then the ink-dot hand just past the wrist */
+  const drawArm2 = (a: Arm2) => {
+    const pts = armPath(a);
+    p.clipOut(tp, () => strokeArm(pts));
+    if (a.front) p.clip(tp, () => strokeArm(pts.slice(Math.floor(pts.length * 0.45))));
+    const n = pts.length, w0 = pts[n - 3], w1 = pts[n - 1], dx = w1[0] - w0[0], dy = w1[1] - w0[1], dl = Math.hypot(dx, dy) || 1;
+    const c0: P2 = [w1[0] - (dx / dl) * 5 * u, w1[1] - (dy / dl) * 5 * u], c1: P2 = [w1[0] - (dx / dl) * 1.5 * u, w1[1] - (dy / dl) * 1.5 * u];
+    p.stroke([c0, c1], aw + 2 * rw + 1.2 * u, INK); p.stroke([c0, c1], aw + 1.2 * u, cuff);
+    p.dot(w1[0] + (dx / dl) * 2.5 * u, w1[1] + (dy / dl) * 2.5 * u, 5.5 * u);
+  };
+  // behind the body: rifle, sword, back arms
   if (rifle) {
     p.band([R0, R1], "#7a4b2a", 5 * u, 1.5 * u, "round");
     p.band([lerp2(R0, R1, 0.6), R1], "#8d949c", 2.4 * u, 1.2 * u, "round");
@@ -615,23 +712,30 @@ export const bodyFront = (p: Pen, o: Outfit, opts: FrontOpts) => {
     const s0: P2 = [tcx - 0.75 * T.a, torsoBot - 0.2 * HH];
     p.band([s0, [s0[0] - Math.sin(rad(25)) * 0.8 * HH, s0[1] + Math.cos(rad(25)) * 0.8 * HH]], "#c9ccd2", 3 * u, 1.2 * u, "round");
   }
-  for (const a of arms) if (!a.front) drawArm(a);
+  // trouser seat: the pants rise into the coat so the legs have hips to hang from (hidden under skirts/dresses)
+  if (!o.skirt && !o.dress && mode !== "fall") {
+    const hw = RIG.hipW * W, y0 = torsoBot - 0.18 * HH, y1 = hipY + 0.1 * HH;
+    const seat: P2[] = [[tcx - hw, y0], [tcx + hw, y0], [tcx + hw * 0.92, y1], [tcx, y1 + 0.02 * HH], [tcx - hw * 0.92, y1]];
+    p.poly(seat, mix(o.pants, INK, 0.35), 0);
+  }
+  for (const a of arms) if (!a.front) drawArm2(a);
   // torso / dress: shaded fill -> clothing clipped to it -> thick-thin ink ring
   if (o.skirt && mode !== "fall") {
-    // 1901 walking skirt: blouse torso (o.jacket), then a bell skirt from the waist to the ankles over it, waistband,
-    // pin-tuck placket. Sitting shortens it to the knees' line.
+    // 1901 walking skirt tucked at the waist: blouse torso (o.jacket), then a bell skirt whose top edge IS the torso's
+    // width at the waist (read off the contour, so nothing bulges past it), widening at least as fast as the torso
+    // below; a waistband that wraps the body (curved, ends on the skirt edges, no overhang).
     p.gradFill(tp, o.jacket, mul(o.jacket, SH_CLOTH), light);
-    p.clip(tp, () => { p.stroke([[tcx, chin + 0.1 * HH], [tcx, torsoBot - 0.3 * HH]], 1.6 * u, mul(o.jacket, SH_CLOTH)); for (let i = 0; i < 3; i++) p.dot(tcx, chin + 0.2 * HH + i * 0.14 * HH, 2.2 * u, shade(o.jacket, 0.72)); });
+    p.clip(tp, () => { p.stroke([[tcx, chin + 0.1 * HH], [tcx, wy]], 1.6 * u, mul(o.jacket, SH_CLOTH)); for (let i = 0; i < 3; i++) p.dot(tcx, chin + 0.2 * HH + i * 0.14 * HH, 2.2 * u, shade(o.jacket, 0.72)); });
     p.inkRing(tp, ow, thick);
-    const wy = torsoBot - 0.4 * HH, hem = mode === "sit" ? sole - 0.3 * HH : sole - 0.1 * HH, ww = 0.86 * T.a, hw = mode === "sit" ? 0.55 * W : 0.52 * W;
+    const hw = hwS, edge = skirtEdge;
     const sk: P2[] = [];
-    for (let i = 0; i <= 10; i++) { const t = i / 10; sk.push([tcx + ww + (hw - ww) * t ** 1.6, wy + (hem - wy) * t]); }
-    for (let i = 0; i <= 14; i++) { const t = i / 14, x = tcx + hw - 2 * hw * t; sk.push([x, hem + 2.5 * u * Math.sin(t * Math.PI * 5)]); }
-    for (let i = 10; i >= 0; i--) { const t = i / 10; sk.push([tcx - ww - (hw - ww) * t ** 1.6, wy + (hem - wy) * t]); }
+    for (let i = 0; i <= 14; i++) { const y = wy + ((hem - wy) * i) / 14; sk.push([edge(1, y), y]); }
+    for (let i = 1; i < 14; i++) { const t = i / 14, x = edge(1, hem) - (edge(1, hem) - edge(-1, hem)) * t; sk.push([x, hem + 2.5 * u * Math.sin(t * Math.PI * 5)]); }
+    for (let i = 14; i >= 0; i--) { const y = wy + ((hem - wy) * i) / 14; sk.push([edge(-1, y), y]); }
     p.gradFill(sk, o.skirt, mul(o.skirt, SH_CLOTH), light, 0.3);
-    p.clip(sk, () => { for (const k of [-0.5, 0, 0.5]) p.stroke([[tcx + k * ww, wy + 0.1 * HH], [tcx + k * hw * 1.05, hem - 4 * u]], 1.5 * u, mul(o.skirt!, SH_CLOTH)); });
+    p.clip(sk, () => { for (const k of [-0.5, 0, 0.5]) p.stroke([[tcx + k * (wSpan[1] - wSpan[0]) * 0.45, wy + 0.1 * HH], [tcx + k * hw * 1.05, hem - 4 * u]], 1.5 * u, mul(o.skirt!, SH_CLOTH)); });
     p.inkRing(sk, ow, thick);
-    p.band([[tcx - ww - 2 * u, wy + 1 * u], [tcx + ww + 2 * u, wy + 1 * u]], o.waist ?? shade(o.skirt, 0.7), 0.07 * HH, 1.4 * u);
+    waistband(p, edge(-1, wy), edge(1, wy), wy, 0.075 * HH, 0.02 * HH, o.waist ?? shade(o.skirt, 0.7), 1.4 * u);
   } else if (dress) {
     const D: Blob = { a: 0.5 * W * 0.98, b: 0.5 * ((sole - 0.35 * HH) - (chin - 0.2 * HH)), nTop: 2.0, nBot: 3.0, egg: 0.35, asym: 0.03 * facing, rot: 0, noise: 0.006, seed: seed + 9 };
     const dp = blobPts(300, sole - 0.35 * HH - D.b, D);
@@ -659,37 +763,38 @@ export const bodyFront = (p: Pen, o: Outfit, opts: FrontOpts) => {
     if (o.sash) { const s = facing || 1; p.poly([[tcx + s * 0.55 * T.a, torsoBot - 0.3 * HH], [tcx + s * 0.75 * T.a, torsoBot + 0.05 * HH], [tcx + s * 0.45 * T.a, torsoBot + 0.02 * HH]], o.sash, 1.6 * u); }
     p.inkRing(tp, ow, thick);
   }
-  if (o.puff) for (const side of [-1, 1]) { // leg-of-mutton sleeve heads
-    const [sx, sy] = sh(side), pf = blobPts(sx + side * 6 * u, sy + 0.1 * HH, { a: 0.12 * W, b: 0.17 * HH, nTop: 2, nBot: 2.2, egg: -0.1, asym: 0, rot: rad(side * 12), noise: 0.01, seed: seed + 20 + side });
-    p.gradFill(pf, o.jacket, mul(o.jacket, SH_CLOTH), light);
-    p.inkRing(pf, ow * 0.85, thick);
-    p.arc(sx + side * 6 * u, sy + 0.1 * HH, 0.07 * W, 0.1 * HH, side > 0 ? 200 : -20, side > 0 ? 260 : 40, 1.4 * u);
-  }
   if (o.collar) { // high collar band under the chin + cameo brooch
     const cb: P2[] = rrect(300 - 0.15 * W, chin - 0.07 * HH, 300 + 0.15 * W, chin + 0.09 * HH, 4 * u);
     p.poly(cb, o.collar, 3.2 * u);
     for (const k of [-0.07, 0.07]) p.stroke([[300 + k * W, chin - 0.04 * HH], [300 + k * W, chin + 0.07 * HH]], 1.2 * u, shade(o.collar, 0.8));
     if (o.brooch) { p.ell(300, chin + 0.13 * HH, 5.5 * u, 6.5 * u, o.brooch, 2 * u); p.ell(300, chin + 0.13 * HH, 2.4 * u, 3.2 * u, "#f3e6d8", 0); }
   }
-  // in front of the body: hands holding props
-  for (const a of arms) if (a.front) {
-    drawArm(a);
-    const [hx, hy] = a.pts[2];
-    if (prop === "icecream") {
-      p.poly([[hx - 8 * u, hy - 12 * u], [hx + 8 * u, hy - 12 * u], [hx, hy + 7 * u]], "#e0a35a", 1.8 * u);
-      p.ell(hx, hy - 19 * u, 11 * u, 10 * u, "#f7c6d9", 2.2 * u);
-      p.dot(hx, hy, 5.5 * u);
-    } else if (Array.isArray(prop)) {
-      const ang = rad(-70 + 105 * clamp(prop[1], 0, 1));
-      const Rh = (pts: P2[]) => rotPts(pts, ang, hx, hy);
-      p.band(Rh([[hx, hy + 12 * u], [hx, hy - 44 * u]]), "#8a5a34", 5 * u, 1.5 * u, "round");
-      p.poly(Rh([[hx - 12 * u, hy - 58 * u], [hx + 20 * u, hy - 58 * u], [hx + 20 * u, hy - 42 * u], [hx - 12 * u, hy - 42 * u]]), "#7d848c", 2.2 * u);
-      p.dot(hx, hy, 5.5 * u);
-    }
+  // in front of the body: front arms (forearms over the torso), then the sleeve heads on top of every arm root
+  for (const a of arms) if (a.front) drawArm2(a);
+  if (o.puff) for (const a of arms) { // leg-of-mutton sleeve heads: centred on the joint, hanging along the upper arm
+    const dir = Math.atan2(a.E[1] - a.S[1], a.E[0] - a.S[0]), c: P2 = [a.S[0] + Math.cos(dir) * 0.09 * HH, a.S[1] + Math.sin(dir) * 0.09 * HH];
+    const pf = blobPts(c[0], c[1], { a: 0.115 * W, b: 0.16 * HH, nTop: 2, nBot: 2.2, egg: -0.1, asym: 0, rot: dir - Math.PI / 2, noise: 0.01, seed: seed + 20 + a.side });
+    p.gradFill(pf, o.jacket, mul(o.jacket, SH_CLOTH), light);
+    p.inkRing(pf, ow * 0.85, thick);
+    p.arc(c[0], c[1], 0.06 * W, 0.09 * HH, a.side > 0 ? 200 : -20, a.side > 0 ? 260 : 40, 1.4 * u);
   }
-  if (opts.pose === "point") { const a = arms.find((x) => !x.front && x.pts[2][1] < chin)!; if (a) { const [hx, hy] = a.pts[2]; p.stroke([[hx, hy], [hx + 6 * u, hy - 12 * u]], 3.2 * u); } }
-  if (opts.pose === "purse") { // the empty purse dangling from the right hand, held up for inspection
-    const a = arms.find((x) => x.front)!, [hx, hy] = a.pts[2];
+  const hand = (side: number) => { const a = arms.find((x) => x.side === side)!, pts = armPath(a), w0 = pts[pts.length - 3], w1 = pts[pts.length - 1], dl = Math.hypot(w1[0] - w0[0], w1[1] - w0[1]) || 1; return [w1[0] + ((w1[0] - w0[0]) / dl) * 2.5 * u, w1[1] + ((w1[1] - w0[1]) / dl) * 2.5 * u] as P2; };
+  // held props attach to the hand anchor
+  if (prop === "icecream") {
+    const [hx, hy] = hand(1);
+    p.poly([[hx - 8 * u, hy - 12 * u], [hx + 8 * u, hy - 12 * u], [hx, hy + 7 * u]], "#e0a35a", 1.8 * u);
+    p.ell(hx, hy - 19 * u, 11 * u, 10 * u, "#f7c6d9", 2.2 * u);
+    p.dot(hx, hy, 5.5 * u);
+  } else if (Array.isArray(prop)) {
+    const [hx, hy] = hand(1), ang = rad(-70 + 105 * clamp(prop[1], 0, 1));
+    const Rh = (pts: P2[]) => rotPts(pts, ang, hx, hy);
+    p.band(Rh([[hx, hy + 12 * u], [hx, hy - 44 * u]]), "#8a5a34", 5 * u, 1.5 * u, "round");
+    p.poly(Rh([[hx - 12 * u, hy - 58 * u], [hx + 20 * u, hy - 58 * u], [hx + 20 * u, hy - 42 * u], [hx - 12 * u, hy - 42 * u]]), "#7d848c", 2.2 * u);
+    p.dot(hx, hy, 5.5 * u);
+  }
+  if (pose === "point") { const [hx, hy] = hand(1), a = arms[1], d = Math.atan2(a.H[1] - a.E[1], a.H[0] - a.E[0]); p.stroke([[hx, hy], [hx + Math.cos(d) * 13 * u, hy + Math.sin(d) * 13 * u]], 3.2 * u); }
+  if (pose === "purse") { // the empty purse hangs from the right hand by its cord
+    const [hx, hy] = hand(1);
     p.stroke([[hx, hy], [hx - 2 * u, hy + 10 * u]], 1.8 * u, "#d8b67a");
     const k = 1.7, bag: P2[] = [[hx - 9 * k * u, hy + 10 * u], [hx + 7 * k * u, hy + 10 * u], [hx + 13 * k * u, hy + (10 + 14 * k) * u], [hx + 8 * k * u, hy + (10 + 22 * k) * u], [hx - 10 * k * u, hy + (10 + 21 * k) * u], [hx - 14 * k * u, hy + (10 + 12 * k) * u]];
     p.poly(bag, "#7e4a33", 2.4 * u); p.stroke([[hx - 7 * k * u, hy + 15 * u], [hx + 7 * k * u, hy + 15 * u]], 1.8 * u, "#d8b67a");
@@ -697,7 +802,7 @@ export const bodyFront = (p: Pen, o: Outfit, opts: FrontOpts) => {
     p.dot(hx, hy, 5.5 * u);
   }
   if (prop === "shako") { // carried by the left hand
-    const [hx, hy] = arms[0].pts[2];
+    const [hx, hy] = hand(-1);
     p.poly([[hx - 14 * u, hy + 3 * u], [hx + 14 * u, hy + 3 * u], [hx + 16 * u, hy + 30 * u], [hx - 16 * u, hy + 30 * u]], "#3a3d47", 2.2 * u);
     p.ell(hx, hy + 31 * u, 3.5 * u, 3.5 * u, "#2b7a4b", 1.5 * u);
     p.dot(hx, hy, 5.5 * u);

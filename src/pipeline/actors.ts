@@ -7,8 +7,17 @@ import { NOINK } from "./ink";
 import { cardShade, blobMaterial, CARD_K } from "./cardshade";
 
 // ---------------- canvas pool ----------------
-type Entry = { cv: HTMLCanvasElement; tex: THREE.CanvasTexture; w: number; h: number };
-export type Req = { key: string; w: number; h: number; k: number; draw: (p: Pen) => void; tex?: THREE.CanvasTexture };
+type Entry = { cv: HTMLCanvasElement; tex: THREE.CanvasTexture; w: number; h: number; glow?: { cv: HTMLCanvasElement; tex: THREE.CanvasTexture } };
+export type Req = { key: string; w: number; h: number; k: number; draw: (p: Pen) => void; tex?: THREE.CanvasTexture; glow?: boolean; glowTex?: THREE.CanvasTexture };
+/** soft silhouette for the main-character glow: the drawing's alpha, blurred, filled white (tinted by the material) */
+const makeGlow = (e: Entry) => {
+  const cv = document.createElement("canvas"); cv.width = e.w; cv.height = e.h;
+  const g = cv.getContext("2d")!, blur = Math.max(2, (e.w / 600) * 16); // ~16 design units = 3.5 cm at the 2.16 m card
+  g.filter = `blur(${blur.toFixed(1)}px)`; g.drawImage(e.cv, 0, 0); g.filter = "none";
+  g.globalCompositeOperation = "source-in"; g.fillStyle = "#ffffff"; g.fillRect(0, 0, e.w, e.h);
+  const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace;
+  return { cv, tex };
+};
 const makeEntry = (w: number, h: number): Entry => {
   const cv = document.createElement("canvas");
   cv.width = w; cv.height = h;
@@ -20,8 +29,8 @@ export class Pool {
   private live = new Map<string, Entry>();
   private free: Entry[] = [];
   private reqs: Req[] = [];
-  req(key: string, w: number, h: number, k: number, draw: (p: Pen) => void) {
-    const r: Req = { key: `${w}x${h}|${key}`, w, h, k, draw };
+  req(key: string, w: number, h: number, k: number, draw: (p: Pen) => void, glow = false) {
+    const r: Req = { key: `${w}x${h}|${key}`, w, h, k, draw, glow };
     this.reqs.push(r);
     return r;
   }
@@ -34,13 +43,15 @@ export class Pool {
       if (!e) {
         const r = rs[0], i = this.free.findIndex((x) => x.w === r.w && x.h === r.h);
         e = i >= 0 ? this.free.splice(i, 1)[0] : makeEntry(r.w, r.h);
+        e.glow = undefined;
         const g = e.cv.getContext("2d")!;
         g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, e.w, e.h); g.setTransform(r.k, 0, 0, r.k, 0, 0);
         r.draw(new Pen(g));
         e.tex.needsUpdate = true;
         this.live.set(key, e);
       }
-      for (const r of rs) r.tex = e.tex;
+      if (rs.some((r) => r.glow) && !e.glow) e.glow = makeGlow(e);
+      for (const r of rs) { r.tex = e.tex; r.glowTex = e.glow?.tex; }
     }
     this.reqs = [];
   }
@@ -57,10 +68,27 @@ const ROOTS = new Set<THREE.Object3D>();
 
 /** lit flat character: cardShade() material, receives shadows (dims to the bright floor only), casts its silhouette
  *  when world.ts says so (golden). Drawn after the contact blobs (renderOrder 1). */
+/** MAIN-CHARACTER GLOW presets (opacity of the soft halo card; presence = card lift). "subtle" is the requested
+ *  default for primaries pending review; secondaries get "off". */
+export const GLOW = {
+  off: { halo: 0, presence: 0 },
+  subtle: { halo: 0.16, presence: 0.5 },
+  strong: { halo: 0.34, presence: 1.0 },
+};
+export type GlowLevel = keyof typeof GLOW | { halo: number; presence: number };
+/** halo tint per light: warm white by day, peach at golden hour, cool for night scenes */
+export const GLOW_TINT: Record<string, string> = { day: "#fff3dc", golden: "#ffd7a6", night: "#cfe0ff" };
+
 export class Actor {
   mesh: THREE.Mesh; mat: THREE.MeshLambertMaterial; dmat: THREE.MeshDepthMaterial; r: Req | null = null;
+  glow: THREE.Mesh; glowMat: THREE.MeshBasicMaterial; presence = { value: 0 };
   constructor(parent: THREE.Object3D, geo: THREE.BufferGeometry = BODY) {
-    this.mat = cardShade(new THREE.MeshLambertMaterial({ map: blank, alphaTest: 0.5, side: THREE.DoubleSide }));
+    this.mat = cardShade(new THREE.MeshLambertMaterial({ map: blank, alphaTest: 0.5, side: THREE.DoubleSide }), this.presence);
+    // the halo: same card, blurred silhouette, additive, a few cm BEHIND the character (depth-tested, so it only shows
+    // outside the outline and never washes over the face); NOINK, no depth write
+    this.glowMat = new THREE.MeshBasicMaterial({ map: blank, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide, opacity: 0, fog: true });
+    this.glow = new THREE.Mesh(geo, this.glowMat); this.glow.visible = false; this.glow.layers.set(NOINK); this.glow.renderOrder = 2; this.glow.rotation.order = "YXZ";
+    parent.add(this.glow);
     this.mat.alphaToCoverage = false; // A2C + MSAA left 1 px sky-depth seams on blurred far cards (POST)
     this.dmat = new THREE.MeshDepthMaterial({ depthPacking: THREE.RGBADepthPacking, map: blank, alphaTest: 0.5, side: THREE.DoubleSide });
     this.mesh = new THREE.Mesh(geo, this.mat);
@@ -72,7 +100,17 @@ export class Actor {
     parent.add(this.mesh);
     ROOTS.add(parent);
   }
-  bind() { const t = this.r?.tex; if (t) { this.mat.map = t; this.dmat.map = t; } }
+  bind() { const t = this.r?.tex; if (t) { this.mat.map = t; this.dmat.map = t; } if (this.r?.glowTex) { this.glowMat.map = this.r.glowTex; this.glowMat.needsUpdate = true; } }
+  /** pose the halo with the card (call after the card transform is set); level from GLOW, tint from GLOW_TINT */
+  setGlow(level: GlowLevel, tint: string, cam: THREE.Vector3) {
+    const g = typeof level === "string" ? GLOW[level] : level;
+    this.presence.value = g.presence;
+    this.glow.visible = this.mesh.visible && g.halo > 0;
+    if (!this.glow.visible) return;
+    const back = this.mesh.position.clone().sub(cam).setY(0).normalize().multiplyScalar(0.04);
+    this.glow.position.copy(this.mesh.position).add(back); this.glow.rotation.copy(this.mesh.rotation); this.glow.scale.copy(this.mesh.scale);
+    this.glowMat.opacity = g.halo; this.glowMat.color.set(tint);
+  }
 }
 /** unlit effect card: hard cut-out (ink drawings), soft see-through (dust, mist) or a multiply ground blob */
 export class Fx {
