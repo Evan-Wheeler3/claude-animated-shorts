@@ -364,15 +364,16 @@ const mouth = (p: Pen, kind: MouthK, mx: number, my: number, u: number, k = 1) =
 /** face v2 (front / 3-4). u = 1 % of the head path width W. Eyes 26u apart on the centre line, brows 20u up, mouth 20u
  *  down, everything slid toward the facing side. No blush, no catchlights. */
 const faceFront = (p: Pen, cx: number, cy: number, W: number, expr: Expr, facing: number, look: number, lid: number, brim: boolean,
-  skin: string, moustache?: string, stout = false, age = false) => {
+  skin: string, moustache?: string, stout = false, age = false, watchcap = false) => {
   const u = W / 100, F = FACE[expr], fx = cx + 7 * u * facing;
   const ex = (F.eye[0] === "shock" ? 12 : 13) * u, ey = cy;
   for (const side of [-1, 1]) {
     const x = fx + side * ex;
     const kind = eyeKind(F.eye[(facing ? side === facing : side > 0) ? 1 : 0], lid);
     eye(p, kind, x, ey, u, side, look, skin);
-    const [dI, dO] = F.brow, by = ey - (brim ? 17 : 20) * u;
+    const [dI, dO] = watchcap ? F.brow.map(v => clamp(v, -3, 3)) : F.brow, by = ey - (watchcap ? 13 : brim ? 17 : 20) * u;
     if (kind === "shock" || kind === "shockHalf") p.arc(x, by - 6 * u, 9 * u, 3 * u, 200, 340, 4 * u);
+    else if (watchcap) p.stroke([[x - 6 * u, by + (side < 0 ? dO : dI) * u], [x + 6 * u, by + (side < 0 ? dI : dO) * u]], 2.6 * u);
     else taper(p, [x - side * 8.5 * u, by + dI * u], [x + side * 8.5 * u, by + dO * u], 5 * u, 2.5 * u);
   }
   const mx = cx + 8 * u * facing, my = cy + 20 * u;
@@ -389,12 +390,13 @@ const faceFront = (p: Pen, cx: number, cy: number, W: number, expr: Expr, facing
 };
 
 /** profile face (facing screen-right): one eye, brow, nose tick, mouth near the front edge; no skin bump nose, no ear */
-const faceSide = (p: Pen, hx: number, hy: number, W: number, expr: Expr, lid: number, brim: boolean, skin: string, moustache?: string, stout = false) => {
+const faceSide = (p: Pen, hx: number, hy: number, W: number, expr: Expr, lid: number, brim: boolean, skin: string, moustache?: string, stout = false, watchcap = false) => {
   const u = W / 100, F = FACE[expr], ex = hx + 27 * u, ey = hy;
   const kind = eyeKind(F.eye[1], lid);
   eye(p, kind, ex, ey, u, 1, 0.6, skin);
-  const by = ey - (brim ? 17 : 20) * u, [dI, dO] = F.brow;
+  const by = ey - (watchcap ? 13 : brim ? 17 : 20) * u, [dI, dO] = watchcap ? F.brow.map(v => clamp(v, -3, 3)) : F.brow;
   if (kind === "shock" || kind === "shockHalf") p.arc(ex, by - 6 * u, 9 * u, 3 * u, 200, 340, 4 * u);
+  else if (watchcap) p.stroke([[ex - 6 * u, by + dO * u], [ex + 6 * u, by + dI * u]], 2.6 * u);
   else taper(p, [ex + 8 * u, by + dI * u], [ex - 7 * u, by - u + dO * u], 5 * u, 2.5 * u);
   p.stroke([[hx + 44 * u, hy + 4 * u], [hx + 47.5 * u, hy + 9 * u], [hx + 43 * u, hy + 10 * u]], 3 * u);
   mouth(p, F.mouth, hx + 33 * u, hy + 21 * u, u, 0.62);
@@ -503,8 +505,8 @@ const hatOn = (p: Pen, o: Outfit, hp: P2[], H: Blob, cx: number, hc: number, lig
     p.stroke([base, lerp2(base, tipP, 0.8)], 1.2 * u);
     const [rx, ry] = R([[mid + hw * 0.55, by - 0.05 * HH]])[0];
     p.dot(rx, ry, 4 * u, rib);
-  } else if (o.hat === "cap" || o.hat === "hair") {
-    const cut = crown + (o.hat === "cap" ? 0.3 : 0.42) * HH;
+  } else if (o.hat === "cap" || o.hat === "subcap" || o.hat === "hair") {
+    const cut = crown + (o.hat === "subcap" ? 0.18 : o.hat === "cap" ? 0.3 : 0.42) * HH;
     const keep = (x: number, y: number) => y < cut || (side && o.hat === "hair" && x < cx - 6 * u && y < hc + 0.42 * H.b);
     // start the arc at the first kept point after a dropped one, so the kept run is contiguous and the cut closes it
     const n = hp.length, startIdx = Math.max(0, hp.findIndex(([x, y], i) => keep(x, y) && !keep(hp[(i + n - 1) % n][0], hp[(i + n - 1) % n][1])));
@@ -515,12 +517,19 @@ const hatOn = (p: Pen, o: Outfit, hp: P2[], H: Blob, cx: number, hc: number, lig
       const [x0, y0] = arc[arc.length - 1], [x1, y1] = arc[0];
       for (let i = 1; i < 6; i++) arc.push([x0 + ((x1 - x0) * i) / 6, y0 + ((y1 - y0) * i) / 6 + (i % 2 ? 4 * u : 0)]);
     }
-    const col = o.hat === "cap" ? o.cap! : o.hair!;
+    const col = o.hat === "cap" || o.hat === "subcap" ? o.cap! : o.hair!;
     p.shadedFill(arc, col, mul(col, SH_FELT), light, H.a, 0.35);
     p.poly(arc, null, ow);
     if (o.hat === "hair") {
       const s = side ? -1 : facing || 1;
       p.stroke([[cx + s * 10 * u, cut - 30 * u], [cx + s * 2 * u, cut - 12 * u]], 1.2 * u);
+    }
+    if (o.hat === "subcap") {
+      // A turned-up watch-cap band: no projecting peak to cross the face.
+      const sp = spanAt(hp, cut) ?? [cx - 40 * u, cx + 40 * u];
+      const left = sp[0] + 3 * u, right = sp[1] - 3 * u;
+      p.stroke(R([[left, cut - 9 * u], [cx, cut - 6 * u], [right, cut - 9 * u]]), 3 * u, shade(col, 0.65));
+      p.stroke(R([[left, cut - 5 * u], [cx, cut - 2 * u], [right, cut - 5 * u]]), 1.6 * u, mix(col, "#ffffff", 0.22));
     }
     if (o.hat === "cap") {
       const deg = (a * 180) / Math.PI;
@@ -821,8 +830,8 @@ export const bodyFront = (p: Pen, o: Outfit, opts: FrontOpts) => {
   p.shadedFill(hp, skin, mul(skin, SH_SKIN), light, H.a);
   p.inkRing(hp, ow, thick);
   hatOn(p, o, hp, H, 300, hc, light, seed, facing, false);
-  const brim = !!o.hat && o.hat !== "hair" && o.hat !== "bonnet" && o.hat !== "cap";
-  faceFront(p, 300, hc, W, expr, facing, look, lid, brim, skin, o.moustache, o.build === "stout", !!o.age);
+  const brim = !!o.hat && o.hat !== "hair" && o.hat !== "bonnet" && o.hat !== "cap" && o.hat !== "subcap";
+  faceFront(p, 300, hc, W, expr, facing, look, lid, brim, skin, o.moustache, o.build === "stout", !!o.age, o.hat === "subcap");
   if (o.plaster) { // a sticking plaster crossed over a small cut at the temple
     for (const a of [-0.55, 0.55]) p.poly(rotPts(rrect(300 + 0.27 * W - 13 * u, hc - 0.2 * HH - 4 * u, 300 + 0.27 * W + 13 * u, hc - 0.2 * HH + 4 * u, 2 * u), a, 300 + 0.27 * W, hc - 0.2 * HH), "#f2d6b3", 1.6 * u);
   }
@@ -947,8 +956,8 @@ export const bodySide = (p: Pen, o: Outfit, opts: SideOpts) => {
   p.shadedFill(hp, skin, mul(skin, SH_SKIN), light, H.a);
   p.inkRing(hp, ow, thick);
   hatOn(p, o, hp, H, hx, hc, light, seed, 1, true);
-  const brim = !!o.hat && o.hat !== "hair" && o.hat !== "bonnet" && o.hat !== "cap";
-  faceSide(p, hx, hc, W, expr, lid, brim, skin, o.moustache, o.build === "stout");
+  const brim = !!o.hat && o.hat !== "hair" && o.hat !== "bonnet" && o.hat !== "cap" && o.hat !== "subcap";
+  faceSide(p, hx, hc, W, expr, lid, brim, skin, o.moustache, o.build === "stout", o.hat === "subcap");
   p.rot = null;
 };
 
