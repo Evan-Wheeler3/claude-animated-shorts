@@ -26,8 +26,12 @@ shot list (`SHOTLIST.md`) are unchanged.
 - Hand contact is computed per camera: the valve-rim point is projected along the view ray into the card plane.
 
 ## Known limitations to judge (not fixed yet)
-- The Codex blast is a solid tube with hard edges (shots 01 and 07). It needs a softer stream before Gate 2.
-- 07: the sailor's bracing hand on the door frame does not show. The blast lands near his boots, not on them.
+- **Owner review 1 (fixed):** the water seemed to shoot out of the air above the toilet. The Codex
+  `createAnimatedBlast` arc started 25 cm above the rim. It is replaced in shots 01 and 07 by a story-scoped geyser
+  (`makeGeyser` in world.ts). The water now starts inside the bowl, rises straight out of it with foam at the rim, then
+  arcs. In 01 the camera sits just above rim height so the bowl opening shows. The stream is still a solid tube; it
+  will be softened in Gate 2.
+- 07: the sailor's bracing hand on the door frame does not show. The stream lands just in front of his boots.
 - 05/06: the hand dot meets the rim. 06 is a locked ECU, so the gauge needle is out of frame.
 - 09: the warning lamp shows but has little glow. Cells and shade look purple under the alarm light.
 - 11: the boat is cropped at the bottom of the frame mid-tilt, and only one aircraft is in frame.

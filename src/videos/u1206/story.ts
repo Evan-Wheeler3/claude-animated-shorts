@@ -77,7 +77,7 @@ export const subAt = (key: string, f: number): V3 => {
 const C = (o: V3, p: V3): V3 => add(o, p);
 const S: Record<string, (f: number) => Shot> = {
   // 01 ECU low angle on the valve, bowl visible; snap-push toward the jet on the blast, then hold
-  s01_blast: (f) => { const k = smooth((f - BLAST_F - 2) / 5); return dolly(C(COMP, [0.0, 0.42, 1.3]), C(COMP, [0.12, 0.88, -0.7]), 1 - 0.12 * k, { fov: 68, roll: 0.05 }); },
+  s01_blast: (f) => { const k = smooth((f - BLAST_F - 2) / 5); return dolly(C(COMP, [0.05, 0.8, 1.3]), C(COMP, [0.15, 0.85, -0.7]), 1 - 0.12 * k, { fov: 68, roll: 0.05 }); }, // just above rim height: the bowl opening (the source) stays visible
   // 02 underwater 3/4 from slightly below, tilting up as the hull passes
   s02_hero: (f) => { const s = subAt("s02_hero", f); return dolly([-34, DEPTH_KEEL + 1, s[2] + 34], [s[0], DEPTH_KEEL + 4 + 0.03 * (f - F(1.6)), s[2] + 6], pushK(f, F(1.6), 0.0015), { fov: 55, roll: -0.03 }); },
   // 03 side profile, deep water; the hazy surface light far above (tilt up toward it)

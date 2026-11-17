@@ -17,7 +17,7 @@ import { finish } from "./materials";
 import { CREW, CAPTAIN } from "./cast";
 import {
   createCompartment, createSection, createBatteryRoom, createSubmarine, createToilet, createAircraft, createRaft, createBubbles,
-  createWarningLamp, createGasCue, createWaterSurface, createAnimatedBlast, createCutawayFlow, setValveAngle, setHatchAngle,
+  createWarningLamp, createGasCue, createWaterSurface, createCutawayFlow, setValveAngle, setHatchAngle,
 } from "../../../videos/u1206-toilet-disaster/assets/index.js";
 import { FPS, SHOTS, V3, Look, COMP, SECT, BATT, camAt, subAt, smooth, clamp01, BLAST_F, FLOOD_F, SURF_KEEL, DEPTH_KEEL, TOILET14 } from "./story";
 
@@ -70,6 +70,46 @@ const fxDrop = (p: Pen) => { p.poly([[64, 20], [96, 120], [64, 168], [32, 120]].
 /** a rising bubble ring, 160 x 160 */
 const fxBubbleRing = (p: Pen) => { p.ell(80, 80, 60, 60, "#d9f6ff", 9); p.ell(80, 80, 44, 44, "#3c8cb0", 0); p.ell(60, 58, 14, 10, "#ffffff", 0); };
 
+/** the toilet geyser (Gate 1 owner note: the water must visibly come OUT OF THE BOWL, not out of the air above it).
+ *  Room-local curve that starts inside the bowl below the rim, rises straight out of it, then arcs to its target.
+ *  Tapered stream + pale core revealed along its length (draw range) + droplets riding the curve; t = seconds since
+ *  the blast started (< 0 = hidden). Story-scoped replacement for the Codex createAnimatedBlast arc, which began 25 cm
+ *  above the rim. */
+const BOWL_SRC: V3 = [0.35, 0.36, -0.55]; // inside the bowl (lathe inner floor ~0.32 m, rim ~0.57 m), room-local
+const makeGeyser = (pts: V3[]) => {
+  const group = new THREE.Group(), curve = new THREE.CatmullRomCurve3(pts.map((p) => V(...p)), false, "centripetal");
+  const SEG = 64, RAD = 12;
+  const tube = (r0: number, r1: number, r2: number, col: string) => {
+    const g = new THREE.TubeGeometry(curve, SEG, 1, RAD, false), pos = g.getAttribute("position");
+    for (let i = 0; i < pos.count; i++) {
+      const seg = Math.floor(i / (RAD + 1)), u = seg / SEG, c = curve.getPointAt(u);
+      const r = u < 0.35 ? r0 + (r1 - r0) * (u / 0.35) : r1 + (r2 - r1) * ((u - 0.35) / 0.65);
+      pos.setXYZ(i, c.x + (pos.getX(i) - c.x) * r, c.y + (pos.getY(i) - c.y) * r, c.z + (pos.getZ(i) - c.z) * r);
+    }
+    g.computeVertexNormals();
+    const m = new THREE.Mesh(g, twoTone(new THREE.MeshLambertMaterial({ color: col }))); m.layers.set(NOINK); group.add(m); return m;
+  };
+  // TubeGeometry samples by arc length (getPointAt) for its rings: the per-ring centres above match
+  const stream = tube(0.075, 0.1, 0.06, "#52c6dc"), core = tube(0.035, 0.05, 0.025, "#e8fbf6");
+  const foam = new THREE.Mesh(new THREE.TorusGeometry(0.3, 0.05, 8, 32), twoTone(new THREE.MeshLambertMaterial({ color: "#e8fbf6" })));
+  foam.rotation.x = Math.PI / 2; foam.position.set(BOWL_SRC[0], 0.6, BOWL_SRC[2]); foam.layers.set(NOINK); group.add(foam); // churn just inside the rim
+  const dropMat = twoTone(new THREE.MeshLambertMaterial({ color: "#7fd2ea" })), drops: THREE.Mesh[] = [];
+  for (let i = 0; i < 14; i++) { const d = new THREE.Mesh(new THREE.SphereGeometry(0.035 + (i % 3) * 0.012, 10, 8), dropMat); d.layers.set(NOINK); group.add(d); drops.push(d); }
+  const idx = stream.geometry.index!.count;
+  const update = (t: number) => {
+    group.visible = t > 0;
+    if (!group.visible) return;
+    const grow = smooth(t / 0.3), n = Math.max(6, Math.round((idx * grow) / (RAD * 6)) * RAD * 6);
+    stream.geometry.setDrawRange(0, n); core.geometry.setDrawRange(0, n);
+    foam.scale.setScalar(0.85 + 0.15 * Math.sin(t * 20));
+    drops.forEach((d, i) => {
+      const u = (((t * 0.9 + i / 14) % 1) + 1) % 1; d.visible = u < grow;
+      const c = curve.getPointAt(Math.min(1, u)); d.position.set(c.x + Math.sin(i * 4.1 + t * 5) * 0.09 * u, c.y + 0.05 * Math.sin(i * 2.3), c.z + Math.cos(i * 3.7 + t * 4) * 0.09 * u);
+    });
+  };
+  return { group, curve, update };
+};
+
 export class World {
   root = new THREE.Group();
   private sky: SkyRig;
@@ -82,7 +122,7 @@ export class World {
   private sub: THREE.Group; private ocean: { mesh: THREE.Mesh; update: (t: number) => void };
   private floodWater: { mesh: THREE.Mesh; update: (t: number) => void };
   private deckWater: { mesh: THREE.Mesh; update: (t: number) => void };
-  private blast: { group: THREE.Group; update: (t: number) => void }; private blastPivot = new THREE.Group();
+  private geysers: Record<string, ReturnType<typeof makeGeyser>> = {};
   private flow: { group: THREE.Group; update: (t: number) => void };
   private lamp: THREE.Group; private gasCue: THREE.Group;
   private aircraft: THREE.Group[] = []; private rafts: THREE.Group[] = [];
@@ -128,13 +168,17 @@ export class World {
       g.position.set(...o); return g;
     };
     const roomEncl = encl(COMP, 3.2, 2.7, 2.7); R.add(roomEncl);
-    // flood: an interior water surface bounded by the room walls, and the Codex blast re-aimed at the doorway (pivot = connector)
+    // flood: an interior water surface bounded by the room walls, and the geyser out of the bowl (one aim per shot)
     this.floodWater = createWaterSurface({ width: 3.1, depth: 2.62, segments: 36, level: 0.16, amplitude: 0.035, period: 0.7, color: "#3e9fb8", opacity: 0.8 });
     twoTone(this.floodWater.mesh.material as THREE.MeshLambertMaterial); this.floodWater.mesh.layers.set(NOINK); this.room.add(this.floodWater.mesh);
-    this.blast = createAnimatedBlast(); finish(this.blast.group);
-    this.blastPivot.position.set(0.35, 0.84, -0.6); this.blast.group.position.set(-0.35, -0.84, 0.6);
-    this.blastPivot.add(this.blast.group); this.room.add(this.blastPivot);
-    this.blast.group.traverse((o) => { if ((o as THREE.Mesh).isMesh) o.layers.set(NOINK); }); // tubes carry no world ink (hard rims read as plastic)
+    const [bx, by, bz] = BOWL_SRC;
+    this.geysers = {
+      // 01: straight up out of the bowl, curling over toward the lens / the sailor at screen-left
+      s01_blast: makeGeyser([[bx, by, bz], [bx, 0.8, bz], [bx - 0.05, 1.3, bz + 0.1], [bx - 0.35, 1.25, bz + 0.5], [-0.45, 0.25, 0.3]]),
+      // 07: out of the bowl and over to the doorway, landing on the braced sailor's boots
+      s07_flood: makeGeyser([[bx, by, bz], [bx, 0.8, bz], [bx - 0.1, 1.3, bz - 0.1], [-0.55, 1.0, -0.85], [-1.1, 0.12, -0.9]]),
+    };
+    for (const g of Object.values(this.geysers)) this.room.add(g.group);
     // valve wheels by role: the two on the toilet's pipes (low = right/brass line, high = left/outlet line)
     R.updateMatrixWorld(true);
     const wheels: { n: number; p: THREE.Vector3; toilet: boolean }[] = [];
@@ -249,9 +293,7 @@ export class World {
     const blastK = key === "s01_blast" ? (f - BLAST_F) / FPS : key === "s07_flood" ? (f - FLOOD_F) / FPS + 1.2 : -1;
     setValveAngle(this.room, this.wheel.low, key === "s01_blast" ? -1.6 * smooth((f - BLAST_F + 8) / 8) : key === "s06_valve" ? -0.6 : 0);
     setHatchAngle(this.room, 0);
-    this.blastPivot.visible = blastK > 0;
-    this.blastPivot.rotation.set(0, key === "s07_flood" ? -1.0 : 0, 0); this.blastPivot.scale.setScalar(key === "s07_flood" ? 1.12 : 1);
-    this.blast.update(Math.max(0, blastK));
+    for (const [k, g] of Object.entries(this.geysers)) { g.update(k === key ? blastK : -1); }
     this.floodWater.mesh.visible = key === "s07_flood"; this.floodWater.update(t);
     this.deckWater.update(t); this.flow.update(t);
     const lampOn = Math.sin(t * 9) > -0.2; (this.lamp.getObjectByName("lamp-glow") as THREE.Mesh).visible = lampOn;
@@ -296,7 +338,8 @@ export class World {
       case "s01_blast": {
         const p = at(COMP, -0.5, 0, -0.45), u = clamp01((f - BLAST_F) / 10);
         P(2, CREW, "sailor", p, { mode: "stand", expr: u > 0 ? "shock" : "worried", pose: u > 0 ? "up" : undefined, tilt: u > 0 ? -7 : 0 });
-        if (u > 0) for (let k = 0; k < 4; k++) puff(COMP[0] + 0.35 - 0.12 * k, 1.05 + 0.06 * k, -0.45 + 0.12 * k, 0.32 + 0.06 * k, k);
+        // spray bursts AT THE RIM (the source), not in mid-air
+        if (u > 0) for (let k = 0; k < 4; k++) { const a = k * 1.7; puff(COMP[0] + 0.35 + Math.cos(a) * 0.3, 0.62 + 0.03 * k, -0.55 + Math.sin(a) * 0.25, 0.2 + 0.04 * k, k); }
         break;
       }
       case "s04_captain": {
@@ -317,7 +360,8 @@ export class World {
       case "s07_flood": {
         const p = at(COMP, -1.2, 0, -0.95), frame = at(COMP, -0.85 - 0.5, 1.35, -1.2);
         P(2, CREW, "sailor", p, { mode: "stand", expr: "shock", pose: "grip", hands: grip(p, frame, null), tilt: -5 });
-        const end = this.blast.group.localToWorld(V(-0.4, 0.26, 0.35)), u = ((t * 1.6) % 1);
+        const end = this.room.localToWorld(this.geysers.s07_flood.curve.getPointAt(1).clone()), u = ((t * 1.6) % 1);
+        for (let k = 0; k < 3; k++) { const a = k * 2.1; puff(COMP[0] + 0.35 + Math.cos(a) * 0.3, 0.7, -0.55 + Math.sin(a) * 0.25, 0.25, k); }
         splash(end.x, COMP[1] + 0.16, end.z, 0.9, u); for (let k = 0; k < 3; k++) puff(end.x + 0.1 * k, 0.32 + 0.1 * k, end.z + 0.05, 0.3, k);
         break;
       }
