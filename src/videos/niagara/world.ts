@@ -15,7 +15,7 @@ import { GlowLevel } from "../../pipeline/actors";
 import { stage, Anchors, CAST_GLOW } from "./crew";
 import { buildFalls, FallsSet, setWaterLook, WATER_DAY, WATER_GOLD, curtainAt } from "./falls";
 import { toonify } from "../../pipeline/props3d";
-import { FPS, SHOTS, ShotDef, camAt, V3, LAND_Y, POOL_Y, PHI_M, RIM_L, RIM_R, DOCK, DOCK_Y, BARREL_AT_DOCK, BARREL_SHORE, BARREL_RESCUE, BARREL_HOOK, RUN_PHI, outward, lip } from "./story";
+import { FPS, SHOTS, ShotDef, camAt, V3, LAND_Y, POOL_Y, PHI_M, RIM_L, RIM_R, DOCK, DOCK_Y, BARREL_AT_DOCK, BARREL_SHORE, BARREL_RESCUE, RUN_PHI, outward, lip, barrelRun, SHEET_T, riverY, smooth, LID_POP_F } from "./story";
 import {
   BARREL, createBarrel, createBarrelLid, createRescueBoat, createRopeCoil, createHammer, createDock, createRailing, createLampPost, createCoinPurse, createCoinStack, createBoulder,
 } from "../../../assets/props/holdup-props.js";
@@ -26,7 +26,7 @@ const centred = (lid: THREE.Object3D) => { const g = new THREE.Group(); lid.posi
 /** depth of the ballasted barrel below the waterline (m) */
 const DRAFT = 0.62;
 /** fall parameter k on the sheet where it is `out` metres beyond the lip (bisection on the curtain function) */
-const brinkK = (s: number, out: number) => {
+export const brinkK = (s: number, out: number) => {
   const l = lip(s * PHI_M); let a = 0, b = 0.4;
   for (let i = 0; i < 30; i++) { const m = (a + b) / 2, p = curtainAt(s, m).p; if (Math.hypot(p[0] - l[0], p[2] - l[2]) < out) a = m; else b = m; }
   return (a + b) / 2;
@@ -51,6 +51,9 @@ export class World {
   private props: { name: string; o: THREE.Object3D; r: number; sink?: number }[] = [];
   private anchors!: Anchors;
   private brink = V(0, 0, 0);
+  private impact = V(0, 0, 0);
+  private runBarrel!: THREE.Group;
+  private lidR!: THREE.Group; private lidTop = V(0, 0, 0); private lidRest = V(0, 0, 0);
   private ray = new THREE.Raycaster();
   private inp = getInputProps() as Props;
 
@@ -100,54 +103,65 @@ export class World {
     dock.position.set(DOCK[0] - 0.5, LAND_Y - 3.0, DOCK[2]); dock.rotation.y = -Math.PI / 2; Rt.add(dock);
     Rt.updateMatrixWorld(true); this.ground.add(dock); // the deck is walkable: Annie, barrel, rope and hammer rest on it
     const barrelDock = this.rest("barrel@dock", toonify(createBarrel({ seed: 3 })), BARREL_AT_DOCK[0], BARREL_AT_DOCK[2], 0.5, 0.42);
+    const barrelDockOpen = this.rest("barrelOpen@dock", toonify(createBarrel({ lid: false, seed: 3 })), BARREL_AT_DOCK[0], BARREL_AT_DOCK[2], 0.5, 0.42);
     this.rest("rope@dock", toonify(createRopeCoil()), BARREL_AT_DOCK[0] + 0.85, BARREL_AT_DOCK[2] - 0.75, 0, 0.3);
     this.rest("hammer@dock", toonify(createHammer()), BARREL_AT_DOCK[0] - 0.55, BARREL_AT_DOCK[2] - 0.55, 0.9, 0.15);
-    this.only(barrelDock, ["C_barrel"]);
+    this.only(barrelDock, ["seal"]); this.only(barrelDockOpen, ["cat_in", "climb", "strap"]);
 
-    // ---- in the rapids (A) and over the brink (E) ----
-    // FLOATING: the barrel's waterline is read off the actual river surface (waves included); the anvil ballast keeps
-    // it upright with ~0.62 m below the water (DRAFT)
-    const barrelHook = toonify(createBarrel({ seed: 3 }));
-    const wy = this.water.heightAt(BARREL_HOOK[0], BARREL_HOOK[2], BARREL_HOOK[1] + 0.62, 20);
-    barrelHook.position.set(BARREL_HOOK[0], wy - DRAFT, BARREL_HOOK[2]); barrelHook.rotation.set(0.1, 0.4, -0.07); Rt.add(barrelHook);
-    this.only(barrelHook, ["A_hook"]);
-    // RIDING THE SHEET: the barrel's centre sits ON the computed curtain surface just past the brink, its axis tipped
-    // toward the fall, sunk 35 % of its radius into the sheet so it neither hovers in front of the water nor vanishes
-    const barrelBrink = toonify(createBarrel({ seed: 3 }));
-    const sB = RUN_PHI / PHI_M, sheetK = brinkK(sB, 2.2), cA = V(...curtainAt(sB, sheetK).p), cB = V(...curtainAt(sB, sheetK + 0.01).p);
-    const down = cB.clone().sub(cA).normalize(), o = outward(RUN_PHI), inward = V(-o[0], 0, -o[1]);
-    const nrm = down.clone().cross(inward.clone().cross(V(0, 1, 0))).normalize(); if (nrm.dot(inward) < 0) nrm.negate(); // sheet normal, facing the bowl
-    const axisUp = V(0, 1, 0).lerp(down.clone().negate(), 0.35).add(inward.clone().multiplyScalar(0.55)).normalize();
-    barrelBrink.quaternion.setFromUnitVectors(V(0, 1, 0), axisUp).multiply(new THREE.Quaternion().setFromAxisAngle(V(0, 1, 0), 0.4));
-    const centre = cA.clone().addScaledVector(nrm, BARREL.RB * 0.65);
-    barrelBrink.position.copy(centre).addScaledVector(axisUp, -BARREL.H / 2); Rt.add(barrelBrink);
-    this.brink = centre;
-    this.only(barrelBrink, ["E_plunge"]);
+    // ---- THE barrel on its run: one object posed every frame from story.barrelRun (river -> brink -> sheet -> pool).
+    // A pivot group at the barrel's CENTRE so tumbling never shifts it; floats on the measured water surface.
+    const rb = toonify(createBarrel({ seed: 3 })); rb.position.y = -BARREL.H / 2;
+    this.runBarrel = new THREE.Group().add(rb); Rt.add(this.runBarrel);
+    this.only(this.runBarrel, ["hook_wide", "hook_barrel", "barrel_cu", "current", "brink", "drop"]);
+    this.brink = V(...curtainAt(RUN_PHI / PHI_M, 0.02).p);
+    this.impact = V(...curtainAt(RUN_PHI / PHI_M, 1).p); this.impact.y = POOL_Y;
 
-    // ---- lower-river shore: cat test (D), rescue (F), purse (G) ----
+    // ---- lower-river shore: cat test, rescue, purse ----
     // RESTING: every shore prop is put down on the pebble mesh under its footprint (Ground.rest)
     const barrelCat = this.rest("barrel@shore", toonify(createBarrel({ lid: false, seed: 3 })), BARREL_SHORE[0], BARREL_SHORE[2], 0.3, 0.42);
-    // the lid leans on the barrel: its lowest edge on the pebbles, its face against the staves (centre .5 m out)
+    // the lid leans on the barrel: its lowest edge on the pebbles, its face against the staves
     const lidCat = centred(toonify(createBarrelLid()));
     lidCat.rotation.set(0.1, 0.5, 1.32); lidCat.position.set(BARREL_SHORE[0] + 0.68, 0, BARREL_SHORE[2] + 0.3); Rt.add(lidCat); this.ground.rest(lidCat, 0.05);
     this.props.push({ name: "lid@shore", o: lidCat, r: 0.05 });
-    this.only(barrelCat, ["D_cat"]); this.only(lidCat, ["D_cat"]);
+    this.only(barrelCat, ["cat_alive"]); this.only(lidCat, ["cat_alive"]);
     const barrelRescue = this.rest("barrel@rescue", toonify(createBarrel({ lid: false, seed: 5 })), BARREL_RESCUE[0], BARREL_RESCUE[2], -0.5, 0.42);
-    this.only(barrelRescue, ["F_rescue", "G_purse"]);
+    this.only(barrelRescue, ["rescue_open", "rescue_alive", "problem", "fortune", "purse"]);
+    // the rescue lid: on the barrel until it is pried off on "opened", then it flips over onto the pebbles beside it
+    this.lidR = centred(toonify(createBarrelLid())); Rt.add(this.lidR);
+    this.lidTop = V(barrelRescue.position.x, barrelRescue.position.y + BARREL.H - 0.045 + 0.003, barrelRescue.position.z);
+    const lx = barrelRescue.position.x - 0.8, lz = barrelRescue.position.z + 0.45;
+    this.lidRest = V(lx, this.ground.heightAt(lx, lz, barrelRescue.position.y) + 0.025, lz);
+    this.only(this.lidR, ["rescue_open", "rescue_alive", "problem", "fortune", "purse"]);
     // FLOATING: the boat is beached half in the water: keel on the pebbles where they are, waterline elsewhere
     const boat = toonify(createRescueBoat({ oarsIn: true }));
     boat.position.set(BARREL_RESCUE[0] + 0.9, POOL_Y - 0.05, BARREL_RESCUE[2] - 4.6); boat.rotation.set(0.04, 2.6, 0.06); Rt.add(boat);
     this.ground.rest(boat, 0.5, 0.06);
-    const lidG = centred(toonify(createBarrelLid())); // the sawn-off lid laid back on the rim, the takings on it
-    const top = barrelRescue.position.y + BARREL.H + 0.02, lx = barrelRescue.position.x, lz = barrelRescue.position.z;
-    lidG.position.set(lx, top, lz); lidG.rotation.set(0.03, 0.6, -0.02); Rt.add(lidG);
-    const coins = toonify(createCoinStack(2)); coins.position.set(lx + 0.1, top + 0.02, lz + 0.14); coins.scale.setScalar(2.2); Rt.add(coins);
-    const purse = toonify(createCoinPurse()); purse.position.set(lx - 0.12, top + 0.02, lz + 0.08); purse.rotation.y = 2.2; purse.scale.setScalar(1.6); Rt.add(purse);
     this.rest("rock@shore", toonify(createBoulder(0.55, 9, 0.5, 2)), BARREL_RESCUE[0] + 1.6, BARREL_RESCUE[2] + 0.9, 0, 0.3, 0.12);
-    this.only(lidG, ["G_purse"]); this.only(coins, ["G_purse"]); this.only(purse, ["G_purse"]);
     this.rest("rope@shore", toonify(createRopeCoil(3, 0.22)), BARREL_SHORE[0] - 0.4, BARREL_SHORE[2] + 1.6, 0, 0.25);
-    this.anchors = { dock: barrelDock.position.clone(), shore: barrelCat.position.clone(), rescue: barrelRescue.position.clone(), brink: this.brink.clone() };
+    this.anchors = { dock: barrelDock.position.clone(), shore: barrelCat.position.clone(), rescue: barrelRescue.position.clone(), brink: this.brink.clone(), river: V(0, 0, 0), impact: this.impact.clone() };
+  }
 
+  /** pose the run barrel for frame f of shot `key` (story.barrelRun); returns its centre */
+  private poseRun(key: string, f: number) {
+    const r = barrelRun(key, f), o = outward(RUN_PHI), inward = V(-o[0], 0, -o[1]), side = V(0, 1, 0).cross(inward).normalize();
+    const g = this.runBarrel, c = V(0, 0, 0), q = new THREE.Quaternion(), yaw = new THREE.Quaternion().setFromAxisAngle(V(0, 1, 0), 0.4 + 0.6 * r.t);
+    if (r.mode === "river") {
+      const l = lip(r.phi), ou = outward(r.phi), x = l[0] + ou[0] * r.d, z = l[2] + ou[1] * r.d;
+      const wy = this.water.heightAt(x, z, riverY(r.d), 20);
+      const pitch = 0.55 * smooth(1 - r.d / 6); // tips forward as the water curls over the brink
+      q.setFromEuler(new THREE.Euler(0.1 * Math.sin(2.1 * r.t), 0, 0.08 * Math.sin(1.7 * r.t + 1)));
+      q.premultiply(new THREE.Quaternion().setFromAxisAngle(side, pitch)).multiply(yaw);
+      c.set(x, wy - DRAFT + BARREL.H / 2, z);
+    } else if (r.mode === "sheet") {
+      const s = RUN_PHI / PHI_M, k = Math.min(1, (r.tl / SHEET_T) ** (1 / 1.35)), p = curtainAt(s, k).p;
+      c.set(p[0], p[1], p[2]).addScaledVector(inward, 0.6 * smooth(r.tl / 0.25)).y += BARREL.H * 0.3 * (1 - smooth(r.tl / 0.4));
+      q.setFromAxisAngle(side, 0.55 + 2.1 * r.tl).multiply(yaw); // tumbling end over end as it falls
+    } else {
+      c.copy(this.impact).addScaledVector(inward, 1.5 * smooth(r.tp)); c.y = POOL_Y - 0.2 + 0.15 * Math.sin(r.tp * 4);
+      q.setFromAxisAngle(side, 0.55 + 2.1 * SHEET_T).multiply(yaw);
+    }
+    g.position.copy(c); g.quaternion.copy(q);
+    return c;
   }
 
   /** add a prop and rest it on the ground under its footprint; tracked for the QA support check */
@@ -179,7 +193,7 @@ export class World {
     const focus = V(...c.look);
     cam.layers.enable(NOINK);
     const sunDir = this.shotSun(id, s);
-    this.sky.update(cam, scene, s.light, sunDir, focus, { fogNear: 140, fogFar: 900 });
+    this.sky.update(cam, scene, s.light, sunDir, focus, s.key === "hook_wide" ? { fogNear: 320, fogFar: 1500 } : { fogNear: 140, fogFar: 900 }); // the aerial sees 300 m: keep it crisp
     // ---- water + mist ----
     setWaterLook(s.light === "golden" ? WATER_GOLD : WATER_DAY, t);
     this.falls.mist.forEach((mm, i) => {
@@ -190,9 +204,15 @@ export class World {
       mm.mat.map = this.falls.mistMaps[s.light][i % 4];
     });
     const rb = this.falls.rainbow;
-    rb.visible = s.key === "A_hook";
+    rb.visible = s.key === "hook_wide" || s.key === "hook_barrel";
     if (rb.visible) { rb.position.set(14, POOL_Y + 14, 22); rb.scale.set(110, 55, 1); rb.quaternion.copy(cam.quaternion); }
     for (const o of this.byShot) o.o.visible = o.keys.includes(s.key);
+    if (this.runBarrel.visible) this.anchors.river = this.poseRun(s.key, f);
+    if (this.lidR.visible) { // pried off on "opened": a 10-frame hop and flip onto the pebbles
+      const u = Math.max(0, Math.min(1, (f - LID_POP_F) / 10)), e = smooth(u);
+      this.lidR.position.lerpVectors(this.lidTop, this.lidRest, e); this.lidR.position.y += 0.7 * Math.sin(Math.PI * u);
+      this.lidR.rotation.set(Math.PI * 2 * e * 0.5 * (1 - e) * 0 + (u > 0 ? -0.15 * Math.sin(Math.PI * u) : 0), 0.6, Math.PI * 2 * e);
+    }
     // ---- cast + effects (grounded by CardStage) ----
     const right = V(0, 0, 0).setFromMatrixColumn(cam.matrixWorld, 0);
     const st = stage(id, t, { pos: cam.position, right, sun: sunDir, light: s.light }, this.anchors);

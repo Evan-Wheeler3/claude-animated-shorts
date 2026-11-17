@@ -2,6 +2,7 @@
 on branch claude/sleepy-brown-kbctlr, generalised). One line of the script per sentence; 0.1 s gaps; peak 0.89.
 usage: python3 scripts/voice/tts.py <lines.txt> <out.wav> [voice=am_michael] [speed=1.32]
   lines.txt: one spoken sentence per line (no stage directions). Pronunciation fixes go in SAY below.
+             A trailing "[pause 0.3]" adds that many seconds of silence after the line (dramatic beat).
   writes out.wav (24 kHz mono) and out_sents.json (sentence start/end seconds)."""
 import sys, json, numpy as np, soundfile as sf
 from kokoro_onnx import Kokoro
@@ -17,11 +18,14 @@ def trim(x, thr=0.004):
     idx = np.where(np.abs(x) > thr)[0]
     return x[max(0, idx[0] - 240): idx[-1] + 720] if len(idx) else x
 sr = 24000; parts = []; sents = []; t = 0.0
+import re
 for i, l in enumerate(lines):
+    m = re.search(r"\s*\[pause ([0-9.]+)\]$", l); extra = float(m.group(1)) if m else 0.0
+    l = l[:m.start()] if m else l
     say = l
     for a, b in SAY.items(): say = say.replace(a, b)
     x, sr = k.create(say.replace('"', ""), voice=v, speed=speed, lang="en-us"); x = trim(x.astype(np.float32))
-    gap = np.zeros(int(sr * 0.1), np.float32)
+    gap = np.zeros(int(sr * (0.1 + extra)), np.float32)
     sents.append({"i": i, "a": round(t, 3), "b": round(t + len(x) / sr, 3), "text": l})
     parts += [x, gap]; t += (len(x) + len(gap)) / sr
 y = np.concatenate(parts[:-1]); y = y / np.abs(y).max() * 0.89

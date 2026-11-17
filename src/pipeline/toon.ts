@@ -22,6 +22,8 @@ export type Outfit = {
   build?: Build;
   /** Niagara additions: long skirt colour (blouse = jacket), high collar, leg-of-mutton sleeves, crow's feet, hat colours */
   skirt?: string; collar?: string; puff?: boolean; age?: boolean; hatCol?: string; ribbon?: string; brooch?: string; waist?: string;
+  /** leather harness straps crossed over the torso (Annie strapped into the barrel); sticking plaster on the head */
+  harness?: string; plaster?: boolean;
 };
 type P2 = [number, number];
 
@@ -769,6 +771,10 @@ export const bodyFront = (p: Pen, o: Outfit, opts: FrontOpts) => {
     for (const k of [-0.07, 0.07]) p.stroke([[300 + k * W, chin - 0.04 * HH], [300 + k * W, chin + 0.07 * HH]], 1.2 * u, shade(o.collar, 0.8));
     if (o.brooch) { p.ell(300, chin + 0.13 * HH, 5.5 * u, 6.5 * u, o.brooch, 2 * u); p.ell(300, chin + 0.13 * HH, 2.4 * u, 3.2 * u, "#f3e6d8", 0); }
   }
+  if (o.harness) p.clip(tp, () => { // two straps from the shoulders crossing to the hips, a buckle where they cross
+    for (const sd of [-1, 1]) p.band([[tcx - sd * 0.8 * T.a, chin + 0.05 * HH], [tcx + sd * 0.85 * T.a, wy + 0.1 * HH]], o.harness!, 6 * u, 1.6 * u);
+    p.poly(rrect(tcx - 6 * u, (chin + wy) / 2 - 1 * u, tcx + 6 * u, (chin + wy) / 2 + 10 * u, 2 * u), "#c9a24a", 1.6 * u);
+  });
   // in front of the body: front arms (forearms over the torso), then the sleeve heads on top of every arm root
   for (const a of arms) if (a.front) drawArm2(a);
   if (o.puff) for (const a of arms) { // leg-of-mutton sleeve heads: centred on the joint, hanging along the upper arm
@@ -786,7 +792,7 @@ export const bodyFront = (p: Pen, o: Outfit, opts: FrontOpts) => {
     p.ell(hx, hy - 19 * u, 11 * u, 10 * u, "#f7c6d9", 2.2 * u);
     p.dot(hx, hy, 5.5 * u);
   } else if (Array.isArray(prop)) {
-    const [hx, hy] = hand(1), ang = rad(-70 + 105 * clamp(prop[1], 0, 1));
+    const [hx, hy] = hand(1), ang = rad(-70 + 200 * clamp(prop[1], 0, 1)); // raised (head up-left) .. struck (head down-right on the target)
     const Rh = (pts: P2[]) => rotPts(pts, ang, hx, hy);
     p.band(Rh([[hx, hy + 12 * u], [hx, hy - 44 * u]]), "#8a5a34", 5 * u, 1.5 * u, "round");
     p.poly(Rh([[hx - 12 * u, hy - 58 * u], [hx + 20 * u, hy - 58 * u], [hx + 20 * u, hy - 42 * u], [hx - 12 * u, hy - 42 * u]]), "#7d848c", 2.2 * u);
@@ -817,6 +823,9 @@ export const bodyFront = (p: Pen, o: Outfit, opts: FrontOpts) => {
   hatOn(p, o, hp, H, 300, hc, light, seed, facing, false);
   const brim = !!o.hat && o.hat !== "hair" && o.hat !== "bonnet" && o.hat !== "cap";
   faceFront(p, 300, hc, W, expr, facing, look, lid, brim, skin, o.moustache, o.build === "stout", !!o.age);
+  if (o.plaster) { // a sticking plaster crossed over a small cut at the temple
+    for (const a of [-0.55, 0.55]) p.poly(rotPts(rrect(300 + 0.27 * W - 13 * u, hc - 0.2 * HH - 4 * u, 300 + 0.27 * W + 13 * u, hc - 0.2 * HH + 4 * u, 2 * u), a, 300 + 0.27 * W, hc - 0.2 * HH), "#f2d6b3", 1.6 * u);
+  }
   p.rot = null;
 };
 
@@ -1214,4 +1223,42 @@ export const cat = (p: Pen, opts: CatOpts = {}) => {
     }
     for (const dx of [-16, 8, 28]) p.poly([[hcx + dx - 12, hcy - 94], [hcx + dx, hcy - 122], [hcx + dx + 10, hcy - 94]], FUR, 6);
   }
+};
+
+
+// ---------------- Niagara effects (generic enough to reuse: peek cutaway, thought bubble, coin) ----------------
+/** cartoon cutaway "peek hole" on a 400 x 400 card: a ragged dark opening with a character's worried eyes in it */
+export const fxPeek = (p: Pen, worried = true, blink = 0) => {
+  const pts: P2[] = [];
+  for (let i = 0; i < 40; i++) { const a = (i / 40) * Math.PI * 2, r = 150 + 10 * Math.sin(i * 2.7) + 6 * Math.cos(i * 5.1); pts.push([200 + r * Math.cos(a), 200 + r * 0.82 * Math.sin(a)]); }
+  p.poly(pts, "#1b1218", 12);
+  p.clip(pts, () => {
+    p.ell(200, 235, 120, 95, "#fbe7cf", 0); // the face, close behind the hole
+    p.ell(200, 150, 140, 60, "#8a7768", 0); // hair line
+    for (const sd of [-1, 1]) {
+      if (blink >= 1) p.stroke([[200 + sd * 50 - 16, 218], [200 + sd * 50 + 16, 218]], 9);
+      else { p.ell(200 + sd * 50, 218, worried ? 13 : 15, worried ? 18 : 21, INK, 0); }
+      taper(p, [200 + sd * 26, 182 + (worried ? -10 : 0)], [200 + sd * 74, 186 + (worried ? 12 : 0)], 12, 6);
+    }
+    if (worried) p.ell(300, 175, 9, 14, "#9fd4ff", 4); // sweat drop
+  });
+};
+/** thought bubble with a heap of gold coins (a "plan to get rich"), 500 x 420 card */
+export const fxBubble = (p: Pen, pop = 1) => {
+  const k = Math.max(0.01, pop);
+  for (const [x, y, r] of [[95, 395, 16], [140, 352, 26]] as const) p.ell(x, y, r * k, r * k, "#ffffff", 7);
+  const cloud: P2[] = [];
+  for (let i = 0; i < 60; i++) { const a = (i / 60) * Math.PI * 2, r = 1 + 0.09 * Math.cos(a * 7); cloud.push([290 + 185 * k * r * Math.cos(a), 170 + 125 * k * r * Math.sin(a)]); }
+  p.poly(cloud, "#ffffff", 9);
+  if (pop < 0.7) return;
+  for (const [x, y] of [[220, 230], [265, 230], [310, 230], [355, 230], [242, 205], [287, 205], [332, 205], [265, 180], [310, 180], [288, 155]] as const) {
+    p.ell(x, y, 26, 12, "#e2b743", 5); p.ell(x, y - 3, 18, 7, "#f6d873", 0);
+  }
+  for (const [x, y] of [[180, 120], [395, 110], [410, 230]] as const) { p.stroke([[x - 14, y], [x + 14, y]], 5, "#f6d873"); p.stroke([[x, y - 14], [x, y + 14]], 5, "#f6d873"); }
+};
+/** one gold coin seen at an angle (spin 0..1 = edge-on .. face-on), 120 x 120 card */
+export const fxCoin = (p: Pen, spin = 1) => {
+  const rx = 10 + 42 * Math.abs(spin);
+  p.ell(60, 60, rx, 52, "#e2b743", 6);
+  if (rx > 24) p.ell(60, 60, rx * 0.7, 36, "#f6d873", 0);
 };

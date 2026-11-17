@@ -117,7 +117,9 @@ export class CardStage {
       if (G && p.ground !== false) {
         const fx = right.x * 0.11 * sc, fz = right.z * 0.11 * sc, top = p.groundTop ?? 200;
         const a = G.hit(p.x - fx, p.z - fz, top), b = G.hit(p.x + fx, p.z + fz, top);
-        if (!a || !b) this.qa.push(`no ground under ${p.name ?? p.key.slice(0, 24)} at (${p.x.toFixed(2)}, ${p.z.toFixed(2)})`);
+        // one foot over a gap (between deck planks) still stands on the other one; report only when both miss
+        if (!a && !b) this.qa.push(`no ground under ${p.name ?? p.key.slice(0, 24)} at (${p.x.toFixed(2)}, ${p.z.toFixed(2)})`);
+        else if (!a || !b) p.y = (a ?? b)!.y;
         else {
           p.y = (a.y + b.y) / 2;
           const gap = Math.abs(a.y - b.y) / 2;

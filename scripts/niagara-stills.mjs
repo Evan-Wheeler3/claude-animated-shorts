@@ -13,7 +13,12 @@ const [outDir = "out/niagara-barrel/previews", which = "all", scale = "1", frame
 fs.mkdirSync(outDir, { recursive: true });
 const browserExecutable = process.env.CHROME || "/opt/pw-browsers/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell";
 const chromiumOptions = { gl: "swangle" };
-const SHOTS = [["A_hook", 40], ["B_annie", 200], ["C_barrel", 330], ["D_cat", 500], ["E_plunge", 720], ["F_rescue", 940], ["G_purse", 1150]];
+// shots and their still frames come from the story module itself (bundled with the local esbuild), never a copy
+const { execFileSync } = await import("node:child_process");
+const storyOut = path.join(tmp, "stills-story.mjs");
+execFileSync("node_modules/.bin/esbuild", ["src/videos/niagara/story.ts", "--bundle", "--format=esm", "--platform=node", `--outfile=${storyOut}`, "--log-level=error"]);
+const story = await import(storyOut + "?" + Date.now());
+const SHOTS = story.SHOTS.map((s) => [s.key, s.still]);
 const want = which === "all" ? SHOTS : SHOTS.filter(([k]) => which.split(",").some((w) => k.startsWith(w)));
 const t0 = Date.now();
 const serveUrl = await bundle({ entryPoint: path.resolve("src/index.ts"), publicDir: path.resolve("public") });
