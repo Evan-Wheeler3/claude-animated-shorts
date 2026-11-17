@@ -48,8 +48,9 @@ const LOOKS: Record<Exclude<Look, "surface">, LookDef> = {
 };
 
 /** soft vertical light shaft (additive), 64 x 512 */
-const shaftTex = () => ctex("u1206Shaft2", 64, 512, (g) => {
-  const gr = g.createLinearGradient(0, 0, 0, 512); gr.addColorStop(0, "rgba(255,255,255,0)"); gr.addColorStop(0.18, "rgba(255,255,255,0.85)"); gr.addColorStop(0.45, "rgba(255,255,255,0.5)"); gr.addColorStop(1, "rgba(255,255,255,0)");
+// (owner review: shafts must start AT THE SURFACE, brightest there, and fade with depth; they never begin mid-water)
+const shaftTex = () => ctex("u1206Shaft3", 64, 512, (g) => {
+  const gr = g.createLinearGradient(0, 0, 0, 512); gr.addColorStop(0, "rgba(255,255,255,0.95)"); gr.addColorStop(0.35, "rgba(255,255,255,0.45)"); gr.addColorStop(1, "rgba(255,255,255,0)");
   g.fillStyle = gr; g.fillRect(0, 0, 64, 512);
   g.globalCompositeOperation = "destination-in";
   const gx = g.createLinearGradient(0, 0, 64, 0); gx.addColorStop(0, "rgba(0,0,0,0)"); gx.addColorStop(0.5, "rgba(0,0,0,1)"); gx.addColorStop(1, "rgba(0,0,0,0)");
@@ -58,6 +59,17 @@ const shaftTex = () => ctex("u1206Shaft2", 64, 512, (g) => {
 
 // ---------------- cartoon FX drawn with the shared Pen (plum ink, flat fills) ----------------
 /** a yellow-green gas billow (illustrative colour cue, not a claim about chlorine's appearance) on 256 x 256 */
+/** the sea surface seen from below: pale, with soft caustic ripple lines (512 x 512, tiled) */
+const ceilingTex = () => ctex("u1206Ceiling2", 512, 512, (g, r) => {
+  g.fillStyle = "#ffffff"; g.fillRect(0, 0, 512, 512);
+  g.lineCap = "round";
+  for (let k = 0; k < 70; k++) {
+    const x = r() * 512, y = r() * 512, w = 30 + r() * 70, a = r() * Math.PI;
+    g.strokeStyle = `rgba(150,195,210,${0.12 + r() * 0.12})`; g.lineWidth = 4 + r() * 6; g.beginPath();
+    for (const ox of [-512, 0, 512]) for (const oy of [-512, 0, 512]) { g.moveTo(x + ox, y + oy); g.quadraticCurveTo(x + ox + Math.cos(a) * w * 0.5 + 12, y + oy + Math.sin(a) * w * 0.5 - 12, x + ox + Math.cos(a) * w, y + oy + Math.sin(a) * w); }
+    g.stroke();
+  }
+});
 const fxGas = (p: Pen, seed: number) => {
   const pts: [number, number, number][] = [[128, 150, 64], [78, 158, 44], [178, 156, 46], [104, 104, 42], [156, 100, 40], [128, 70, 30]];
   const j = (k: number) => Math.sin(seed * 12.9 + k * 7.1) * 7;
@@ -119,7 +131,7 @@ export class World {
   private cards: CardStage;
   private inp = getInputProps() as Props;
   private dome: THREE.Mesh; private domeMat: THREE.ShaderMaterial;
-  private shafts: THREE.Mesh[] = [];
+  private shafts: THREE.Mesh[] = []; private ceiling!: THREE.Mesh;
   private room: THREE.Group; private section: THREE.Group; private battery: THREE.Group; private control: THREE.Group; private lever: THREE.Group;
   private sub: THREE.Group; private ocean: { mesh: THREE.Mesh; update: (t: number) => void };
   private floodWater: { mesh: THREE.Mesh; update: (t: number) => void };
@@ -150,7 +162,14 @@ export class World {
     this.dome = new THREE.Mesh(new THREE.SphereGeometry(900, 32, 16), this.domeMat);
     this.dome.renderOrder = -1; this.dome.frustumCulled = false; this.dome.layers.set(NOINK); R.add(this.dome);
     const sm = new THREE.MeshBasicMaterial({ map: shaftTex(), color: new THREE.Color(0.55, 0.85, 0.9), transparent: true, opacity: 0.16, blending: THREE.AdditiveBlending, depthWrite: false, fog: false, side: THREE.DoubleSide });
-    for (let i = 0; i < 9; i++) { const m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), sm); m.layers.set(NOINK); m.renderOrder = 3; this.shafts.push(m); R.add(m); }
+    // shaft planes have their origin at the TOP edge, so they hang from the surface and tilt about it
+    const shaftGeo = new THREE.PlaneGeometry(1, 1).translate(0, -0.5, 0);
+    for (let i = 0; i < 9; i++) { const m = new THREE.Mesh(shaftGeo, sm); m.layers.set(NOINK); m.renderOrder = 3; this.shafts.push(m); R.add(m); }
+    // the surface from below (underwater looks only): a bright rippled ceiling at the waterline; the lit ocean mesh is
+    // for above-water shots
+    const ct = ceilingTex(); ct.repeat.set(60, 60);
+    this.ceiling = new THREE.Mesh(new THREE.PlaneGeometry(1200, 1200).rotateX(Math.PI / 2), new THREE.MeshBasicMaterial({ map: ct, color: untone("#a6dfe9"), side: THREE.FrontSide, depthWrite: false, fog: true }));
+    this.ceiling.position.y = -0.05; this.ceiling.layers.set(NOINK); this.ceiling.renderOrder = -0.5; R.add(this.ceiling);
 
     // ---- toilet compartment (Codex createCompartment) + enclosure so interior shots never see sky ----
     this.room = finish(createCompartment()); this.room.position.set(...COMP); R.add(this.room);
@@ -274,14 +293,14 @@ export class World {
     for (const o of this.sets) o.o.visible = o.keys.includes(key);
     const sun = this.applyLook(s.look, cam, scene, focus, fwd, key === "s03_depth" ? 260 : key === "s14_deadpan" ? 170 : undefined);
     // deep shots never see the surface; the surfacing shot sees it from below without world ink on the wave crests
-    this.ocean.mesh.visible = this.ocean.mesh.visible && key !== "s02_hero" && key !== "s03_depth" && key !== "s14_deadpan";
-    this.ocean.mesh.layers.set(s.look === "underwater" ? NOINK : 0);
+    this.ocean.mesh.visible = this.ocean.mesh.visible && s.look === "surface";
+    this.ceiling.visible = key === "s03_depth" || key === "s10_surface"; // only shots that look up toward it; 200 ft down (02, 14) it is lost in the blue this.ceiling.position.x = cam.position.x; this.ceiling.position.z = cam.position.z;
     // light shafts: only underwater, slanted planes around the view, facing the camera about Y
     this.shafts.forEach((m, i) => {
       m.visible = s.look === "underwater";
       if (!m.visible) return;
       const a = i * 2.4 + 0.5, r = 14 + (i % 3) * 9, cx = c.look[0] + Math.cos(a) * r, cz = c.look[2] + Math.sin(a) * r;
-      m.position.set(cx, -55, cz); m.scale.set(4 + (i % 3) * 3, 110, 1); m.lookAt(cam.position.x, -55, cam.position.z); m.rotateZ(0.12 * Math.sin(i * 1.7));
+      m.position.set(cx, -0.1, cz); m.scale.set(4 + (i % 3) * 3, 75 + (i % 4) * 10, 1); m.lookAt(cam.position.x, -0.1, cam.position.z); m.rotateZ(0.1 * Math.sin(i * 1.7)); // hangs from the surface
     });
     // ---- exterior posing ----
     this.ocean.update(t);
