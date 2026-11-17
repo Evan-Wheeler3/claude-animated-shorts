@@ -37,7 +37,7 @@ const Inner: React.FC<{ id: number }> = ({ id }) => {
   const cam = camera as THREE.PerspectiveCamera;
   const target = world.update(id, f, cam, scene);
   noInkFallback(world.root);
-  const d = dofAt(id);
+  const d = dofAt(id, f);
   cam.getWorldDirection(fwd);
   if (d.focus) fpt.set(...d.focus); else fpt.copy(target);
   fx.lens.focus = Math.max(0.3, fpt.sub(cam.position).dot(fwd));

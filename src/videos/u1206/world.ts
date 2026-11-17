@@ -16,10 +16,10 @@ import { ctex } from "../../pipeline/paint";
 import { finish } from "./materials";
 import { CREW, CAPTAIN } from "./cast";
 import {
-  createCompartment, createSection, createBatteryRoom, createSubmarine, createToilet, createAircraft, createRaft, createBubbles,
+  createCompartment, createSection, createBatteryRoom, createControlRoom, createLever, createSubmarine, createToilet, createAircraft, createRaft, createBubbles,
   createWarningLamp, createGasCue, createWaterSurface, createCutawayFlow, setValveAngle, setHatchAngle,
 } from "../../../videos/u1206-toilet-disaster/assets/index.js";
-import { FPS, SHOTS, V3, Look, COMP, SECT, BATT, camAt, subAt, smooth, clamp01, BLAST_F, FLOOD_F, SURF_KEEL, DEPTH_KEEL, TOILET14 } from "./story";
+import { FPS, SHOTS, V3, Look, COMP, SECT, BATT, CTRL, W, camAt, subAt, smooth, clamp01, lf, wf, BLAST_F, FLOOD_F, CATCH_F, LEVER_F, BUBBLE_F, SURF_KEEL, DEPTH_KEEL, TOILET14 } from "./story";
 
 const V = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z);
 const at = (o: V3, x: number, y: number, z: number) => V(o[0] + x, o[1] + y, o[2] + z);
@@ -30,6 +30,8 @@ const waveY = (w: Wave, level: number, x: number, z: number, t: number) => {
   const ph = (x / w.period) * 6.283 + t * 1.25, ph2 = (z / w.period) * 4.7 - t * 0.9;
   return level + w.amplitude * (Math.sin(ph) + 0.45 * Math.sin(ph2 + (x / w.period) * 1.7));
 };
+/** shot 13 (local frames): the drip lets go, then lands in the bowl */
+const DRIP_GO = 26, DRIP_LAND = 36; // lands on "break"
 const OCEAN: Wave = { width: 900, amplitude: 0.32, period: 14 };
 /** life rafts on the camera side of the scuttled boat (s12 view line) */
 const RAFTS: [number, number][] = [[-17.5, -11.5], [-14.5, -14.5], [-10.5, -6.5]];
@@ -118,7 +120,7 @@ export class World {
   private inp = getInputProps() as Props;
   private dome: THREE.Mesh; private domeMat: THREE.ShaderMaterial;
   private shafts: THREE.Mesh[] = [];
-  private room: THREE.Group; private section: THREE.Group; private battery: THREE.Group;
+  private room: THREE.Group; private section: THREE.Group; private battery: THREE.Group; private control: THREE.Group; private lever: THREE.Group;
   private sub: THREE.Group; private ocean: { mesh: THREE.Mesh; update: (t: number) => void };
   private floodWater: { mesh: THREE.Mesh; update: (t: number) => void };
   private deckWater: { mesh: THREE.Mesh; update: (t: number) => void };
@@ -214,6 +216,12 @@ export class World {
     this.gasCue.visible = !!(getInputProps() as { codexGas?: boolean }).codexGas;
     this.ground.add(this.battery.getObjectByName("floor")!);
 
+    // ---- control room (Codex createControlRoom + createLever at Codex's review placement) + enclosure ----
+    this.control = finish(createControlRoom()); this.control.position.set(...CTRL); R.add(this.control);
+    const ctrlEncl = encl(CTRL, 3.6, 2.8, 2.8); R.add(ctrlEncl);
+    this.lever = finish(createLever()); this.lever.position.set(0.55, 1.35, -0.66); this.control.add(this.lever);
+    this.ground.add(this.control.getObjectByName("floor")!);
+
     // ---- exterior: the boat, the ocean, aircraft, rafts, bubbles; the lone toilet of the end gag ----
     this.sub = finish(createSubmarine()); R.add(this.sub);
     this.ocean = createWaterSurface({ width: OCEAN.width, depth: OCEAN.width, segments: 180, level: 0, amplitude: OCEAN.amplitude, period: OCEAN.period, color: "#21789a" });
@@ -227,6 +235,7 @@ export class World {
     const interior = ["s01_blast", "s04_captain", "s05_specialist", "s06_valve", "s07_flood", "s13_drip"];
     this.sets.push({ o: this.room, keys: interior }, { o: roomEncl, keys: interior }, { o: this.section, keys: ["s08_cutaway"] },
       { o: this.battery, keys: ["s09_gas"] }, { o: battEncl, keys: ["s09_gas"] },
+      { o: this.control, keys: ["s10a_control"] }, { o: ctrlEncl, keys: ["s10a_control"] },
       { o: this.sub, keys: ["s02_hero", "s03_depth", "s10_surface", "s11_aircraft", "s12_scuttle", "s14_deadpan"] },
       { o: this.ocean.mesh, keys: ["s02_hero", "s03_depth", "s10_surface", "s11_aircraft", "s12_scuttle", "s14_deadpan"] },
       { o: this.bubbles, keys: ["s02_hero", "s12_scuttle", "s14_deadpan"] }, { o: this.loneToilet, keys: ["s14_deadpan"] },
@@ -255,7 +264,7 @@ export class World {
   private skyMesh(on: boolean) { for (const o of this.skyParts) o.visible = on && !(o as THREE.Sprite).isSprite; }
 
   update(id: number, f: number, cam: THREE.PerspectiveCamera, scene: THREE.Scene) {
-    const t = f / FPS, s = SHOTS[id - 1], key = s.key;
+    const t = f / FPS, s = SHOTS[id - 1], key = s.key, l = f - s.a, tl = l / FPS; // l / tl: shot-local frames / seconds
     const dbg = this.inp.cam;
     const c = dbg ? { pos: dbg.pos, look: dbg.look, fov: dbg.fov ?? 50, roll: 0 } : camAt(id, f);
     cam.position.set(...c.pos); cam.up.set(0, 1, 0); cam.lookAt(...c.look); cam.rotateZ(c.roll);
@@ -279,30 +288,47 @@ export class World {
     if (this.sub.visible) {
       const p = subAt(key, f); this.sub.position.set(...p); this.sub.rotation.set(0, 0, 0);
       if (key === "s10_surface") this.sub.rotation.x = -0.2;
-      if (key === "s12_scuttle") { const u = smooth((t - 31) / 3.9); this.sub.position.y = SURF_KEEL - 0.4 - 2.0 * u; this.sub.rotation.set(-0.03 - 0.05 * u, 0, 0.03); } // stern settles first
+      if (key === "s12_scuttle") { const u = smooth(tl / 3.0); this.sub.position.y = SURF_KEEL - 0.4 - 2.0 * u; this.sub.rotation.set(-0.03 - 0.05 * u, 0, 0.03); } // stern settles first
       if (key === "s14_deadpan") this.sub.rotation.set(0.1, 1.15, 0.04);
       this.sub.traverse((o) => { if (o.name === "propeller") o.rotation.z = t * (key === "s12_scuttle" ? 0 : 4); });
     }
-    this.aircraft.forEach((a, i) => { a.position.set(48 + i * 11 - 9 * (t - 27.6), 46 + i * 4, 34 + i * 9 + 4 * (t - 27.6)); a.rotation.set(0, -1.2, 0.1); });
+    this.aircraft.forEach((a, i) => { a.position.set(56 + i * 11 - 14 * tl, 46 + i * 4, 30 + i * 9 + 6 * tl); a.rotation.set(0, -1.2, 0.1); });
     const raftAt = RAFTS;
     this.rafts.forEach((r, i) => { const [x, z] = raftAt[i]; r.position.set(x, waveY(OCEAN, 0, x, z, t) - 0.06, z); r.rotation.set(0.05 * Math.sin(t + i), i, 0.05 * Math.cos(t * 1.3 + i)); });
     if (key === "s14_deadpan") { this.bubbles.position.set(12, DEPTH_KEEL - 6, 70); this.bubbles.scale.setScalar(5); }
     else { this.bubbles.position.set(2, key === "s12_scuttle" ? -1.5 : DEPTH_KEEL + 7, 6); this.bubbles.scale.setScalar(2.4); }
     if (key === "s14_deadpan") { this.loneToilet.position.set(...TOILET14); this.loneToilet.rotation.set(0.1, 0.9, -0.06); }
     // ---- interior posing (Codex controls: setValveAngle / setHatchAngle) ----
-    const blastK = key === "s01_blast" ? (f - BLAST_F) / FPS : key === "s07_flood" ? (f - FLOOD_F) / FPS + 1.2 : -1;
-    setValveAngle(this.room, this.wheel.low, key === "s01_blast" ? -1.6 * smooth((f - BLAST_F + 8) / 8) : key === "s06_valve" ? -0.6 : 0);
+    const blastK = key === "s01_blast" ? (l - BLAST_F) / FPS : key === "s07_flood" ? (l - FLOOD_F()) / FPS : -1;
+    // 01: the sailor's wheel jerks a dangerous half-turn just before the eruption
+    setValveAngle(this.room, this.wheel.high, key === "s01_blast" ? -Math.PI * smooth(l / 8) : 0);
+    // 05: the specialist starts a careful turn once the hand arrives; 06: it catches on "went" and lurches
+    let low = 0;
+    if (key === "s05_specialist") low = -0.25 * smooth((l - 22) / 20);
+    if (key === "s06_valve") { const c = CATCH_F(), k = l - c; low = -0.25 - (k < 0 ? 0.02 * smooth(l / 10) : 0.55 * (1 - Math.exp(-k / 2.5)) + 0.08 * Math.exp(-k / 3) * Math.sin(k * 1.4)); }
+    if (key === "s13_drip") low = -0.8;
+    setValveAngle(this.room, this.wheel.low, low);
+    // the gauge needle jumps on "wrong" (06) and sits pinned afterwards (07, 13)
+    const needle = this.room.getObjectByName("gauge-needle-pivot");
+    if (needle) { const k = key === "s06_valve" ? l - wf("s06_valve", W.wrong) + 2 : key === "s07_flood" || key === "s13_drip" ? 99 : -1; needle.rotation.z = k < 0 ? -0.7 : -0.7 + 1.9 * (1 - Math.exp(-k / 2)) + 0.12 * Math.exp(-k / 4) * Math.sin(k * 1.8); }
+    // 10a: the lever is thrown (pivot Z): up -> down in 5 frames
+    this.lever.rotation.z = 0.45 - 0.9 * smooth((l - LEVER_F()) / 5);
+    // 07: the flood rises from a film to boot depth once the bowl erupts
+    // (the floor stays DRY until the bowl erupts: no water may appear before its source)
+    const fl = smooth((l - FLOOD_F() - 6) / 40);
+    this.floodWater.mesh.position.y = 0.005 + 0.155 * fl;
     setHatchAngle(this.room, 0);
     for (const [k, g] of Object.entries(this.geysers)) { g.update(k === key ? blastK : -1); }
-    this.floodWater.mesh.visible = key === "s07_flood"; this.floodWater.update(t);
+    this.floodWater.mesh.visible = key === "s07_flood" && l > FLOOD_F() + 6; this.floodWater.update(t);
     this.deckWater.update(t); this.flow.update(t);
     const lampOn = Math.sin(t * 9) > -0.2; (this.lamp.getObjectByName("lamp-glow") as THREE.Mesh).visible = lampOn;
-    const seat = this.room.getObjectByName("seat-hinge"); if (seat) seat.rotation.x = key === "s13_drip" ? -0.06 * Math.sin(t * 9) : 0;
+    // 13: the single drip lands in the bowl at DRIP_LAND; the seat answers with a small decaying wobble
+    const seat = this.room.getObjectByName("seat-hinge"); if (seat) { const k = l - DRIP_LAND; seat.rotation.x = key === "s13_drip" && k > 0 ? -0.07 * Math.exp(-k / 9) * Math.sin(k * 0.9) : 0; }
     this.root.updateMatrixWorld(true);
     // ---- cast + effects ----
     const right = V(0, 0, 0).setFromMatrixColumn(cam.matrixWorld, 0);
     const ci: CamInfo = { pos: cam.position, right, sun, light: "day" };
-    const st = this.stage(key, t, f, ci);
+    const st = this.stage(key, t, l, ci);
     this.cards.render(st, cam, right, "day", false);
     if (this.inp.qa) console.warn(`[QA] ${key} f${f}: ${this.cards.qa.length ? this.cards.qa.join(" | ") : "cards grounded"}`);
     return focus;
@@ -314,7 +340,10 @@ export class World {
     return w.localToWorld(V(Math.sign(side) * r, 0, 0.04));
   }
 
-  private stage(key: string, t: number, f: number, cam: CamInfo): Stage {
+  /** knob of the control lever (world) */
+  private knob() { return this.lever.localToWorld(V(0, 0.6, 0.08)); }
+
+  private stage(key: string, t: number, l: number, cam: CamInfo): Stage {
     const out: Stage = { places: [], fx: [] };
     const P = (i: number, o: typeof CREW, name: string, p: THREE.Vector3, fo: FrontOpts, extra: Partial<Place> = {}, scale = 1) => {
       out.places.push(person(cam, i, o, name, p.x, p.y, p.z, { blink: lidAt(t, i), seed: i, ...fo }, scale, { name, ...extra }));
@@ -336,45 +365,65 @@ export class World {
       out.fx.push({ key: `splash${q(u, 20)}`, cw: 800, ch: 800, draw: (p) => fxSplash(p, q(u, 20)), x, y, z, w, h: w });
     switch (key) {
       case "s01_blast": {
-        const p = at(COMP, -0.5, 0, -0.45), u = clamp01((f - BLAST_F) / 10);
-        P(2, CREW, "sailor", p, { mode: "stand", expr: u > 0 ? "shock" : "worried", pose: u > 0 ? "up" : undefined, tilt: u > 0 ? -7 : 0 });
+        // before: hand on the left wheel as it jerks; at the eruption he lets go and lunges back (6 frames)
+        const u = clamp01((l - BLAST_F) / 6), p = at(COMP, -0.4 - 0.05 * smooth(u), 0, -0.5 + 0.12 * smooth(u)); // lunge back, kept in frame
+        P(2, CREW, "sailor", p, u > 0
+          ? { mode: "stand", expr: "shock", pose: "up", tilt: -9 * smooth(u) }
+          : { mode: "stand", expr: "worried", pose: "grip", hands: grip(p, null, this.rim(this.wheel.high, -1)) });
         // spray bursts AT THE RIM (the source), not in mid-air
-        if (u > 0) for (let k = 0; k < 4; k++) { const a = k * 1.7; puff(COMP[0] + 0.35 + Math.cos(a) * 0.3, 0.62 + 0.03 * k, -0.55 + Math.sin(a) * 0.25, 0.2 + 0.04 * k, k); }
+        if (u > 0) for (let k = 0; k < 4; k++) { const a = k * 1.7 + l * 0.3; puff(COMP[0] + 0.35 + Math.cos(a) * 0.3, 0.62 + 0.03 * k, -0.55 + Math.sin(a) * 0.25, (0.2 + 0.04 * k) * (0.6 + 0.4 * u), k); }
         break;
       }
       case "s04_captain": {
-        const p = at(COMP, -0.62, 0, -0.32);
-        P(1, CAPTAIN, "captain", p, { mode: "stand", expr: "worried", look: 0.6, tilt: 6, headTilt: -4 }, { glow: "subtle" });
+        // he eyes the pipes, then leans down toward the bowl on "complicated" (comic hold after)
+        const p = at(COMP, -0.62, 0, -0.32), lean = smooth((l - wf("s04_captain", W.complicated) + 2) / 10);
+        P(1, CAPTAIN, "captain", p, { mode: "stand", expr: lean > 0.5 ? "nervous" : "worried", look: 0.6 - 0.3 * lean, tilt: 2 + 8 * lean, headTilt: -4 - 4 * lean }, { glow: "subtle" });
         break;
       }
       case "s05_specialist": {
-        const p = at(COMP, 1.2, 0, -0.66);
-        P(3, CREW, "specialist", p, { mode: "stand", expr: "determined", pose: "grip", hands: grip(p, this.rim(this.wheel.low, 1), null) });
+        // two steps: the hand threads in from the chest to the wheel's rim (frames 4-20), then holds and turns it
+        const p = at(COMP, 1.2, 0, -0.66), rim = this.rim(this.wheel.low, 1), k = smooth((l - 4) / 16);
+        const start = V(p.x - 0.12, 1.15, p.z + 0.1), tgt = start.clone().lerp(rim, k); tgt.y += 0.06 * Math.sin(Math.PI * k);
+        P(3, CREW, "specialist", p, { mode: "stand", expr: "determined", pose: "grip", hands: grip(p, tgt, null) });
         break;
       }
       case "s06_valve": {
-        const p = at(COMP, 1.2, 0, -0.66);
-        P(3, CREW, "specialist", p, { mode: "stand", expr: "nervous", pose: "grip", hands: grip(p, this.rim(this.wheel.low, 1), null) });
+        const p = at(COMP, 1.2, 0, -0.66), wrong = l >= wf("s06_valve", W.wrong) - 2;
+        P(3, CREW, "specialist", p, { mode: "stand", expr: wrong ? "shock" : "nervous", pose: "grip", hands: grip(p, this.rim(this.wheel.low, 1), null) });
         break;
       }
       case "s07_flood": {
-        const p = at(COMP, -1.2, 0, -0.95), frame = at(COMP, -0.85 - 0.5, 1.35, -1.2);
-        P(2, CREW, "sailor", p, { mode: "stand", expr: "shock", pose: "grip", hands: grip(p, frame, null), tilt: -5 });
-        const end = this.room.localToWorld(this.geysers.s07_flood.curve.getPointAt(1).clone()), u = ((t * 1.6) % 1);
-        for (let k = 0; k < 3; k++) { const a = k * 2.1; puff(COMP[0] + 0.35 + Math.cos(a) * 0.3, 0.7, -0.55 + Math.sin(a) * 0.25, 0.25, k); }
-        splash(end.x, COMP[1] + 0.16, end.z, 0.9, u); for (let k = 0; k < 3; k++) puff(end.x + 0.1 * k, 0.32 + 0.1 * k, end.z + 0.05, 0.3, k);
+        // braced in the doorway: one hand on the hatch frame, recoils on "blasting"
+        const jolt = smooth((l - wf("s07_flood", W.blasting) + 2) / 4), p = at(COMP, -0.8, 0, -0.78), frame = at(COMP, -0.85 + 0.5, 1.25, -1.2); // the hatch ring's right jamb, at shoulder height (the left one hides behind his body from this camera)
+        P(2, CREW, "sailor", p, { mode: "stand", expr: l < FLOOD_F() ? "worried" : "shock", pose: "grip", hands: grip(p, null, frame), tilt: -2 - 5 * jolt });
+        const gk = (l - FLOOD_F()) / FPS;
+        if (gk > 0) {
+          for (let k = 0; k < 3; k++) { const a = k * 2.1 + l * 0.3; puff(COMP[0] + 0.35 + Math.cos(a) * 0.3, 0.7, -0.55 + Math.sin(a) * 0.25, 0.25 * smooth(gk / 0.2), k); }
+          if (gk > 0.3) { // the stream reaches the doorway: splash at the boots
+            const end = this.room.localToWorld(this.geysers.s07_flood.curve.getPointAt(1).clone()), u = (((gk - 0.3) * 1.6) % 1);
+            splash(end.x, COMP[1] + 0.16, end.z, 0.9, u); for (let k = 0; k < 3; k++) puff(end.x + 0.1 * k, 0.32 + 0.1 * k, end.z + 0.05, 0.3, k);
+          }
+        }
         break;
       }
       case "s09_gas": {
-        const a = at(BATT, -1.5, 0, 0.55), b = at(BATT, -0.35, 0, 1.2);
-        P(2, CREW, "sailor", a, { mode: "stand", expr: "shock", pose: "up", tilt: -8 });
-        P(4, CREW, "sailor2", b, { mode: "stand", expr: "pained", pose: "clasp", tilt: 6 });
+        // gas thickens from the vents through the shot; the crew recoil on "chlorine"
+        const rec = smooth((l - wf("s09_gas", W.chlorine) + 2) / 8), dens = 0.5 + 0.5 * smooth(l / 30);
+        const a = at(BATT, -1.5 - 0.1 * rec, 0, 0.55), b = at(BATT, -0.35, 0, 1.2 + 0.08 * rec);
+        P(2, CREW, "sailor", a, { mode: "stand", expr: rec > 0.5 ? "shock" : "worried", pose: rec > 0.5 ? "up" : undefined, tilt: -8 * rec });
+        P(4, CREW, "sailor2", b, { mode: "stand", expr: rec > 0.5 ? "pained" : "nervous", pose: "clasp", tilt: 6 * rec });
         // billows leave the cell vents and rise/spread (cells at x -1.1..1, z -.75..75; tops at 0.87 m)
         for (let k = 0; k < 7; k++) {
-          const u = ((t * 0.3 + k / 7) % 1), cx = BATT[0] - 1.1 + (k % 4) * 0.7 + 0.12 * Math.sin(k * 2.1 + t * 2), cz = -0.75 + (k % 3) * 0.75;
-          const sz = 0.28 + 0.55 * u;
+          const u = ((t * 0.3 + k / 7) % 1), cx = BATT[0] - 1.1 + (k % 3) * 0.7 + 0.12 * Math.sin(k * 2.1 + t * 2), cz = -0.75 + ((k + 1) % 3) * 0.75; // only cells in front of the lens (x <= 0.3): none of the billows may sweep past the camera
+          const sz = (0.28 + 0.55 * u) * dens;
           out.fx.push({ key: `gas${k % 4}`, cw: 256, ch: 256, draw: (p) => fxGas(p, k % 4), soft: true, x: cx, y: 0.98 + 0.9 * u, z: cz, w: sz, h: sz * 0.9 });
         }
+        break;
+      }
+      case "s10a_control": {
+        // a sailor throws the surfacing lever: the hand rides the knob through the throw
+        const p = at(CTRL, 0.15, 0, -0.35);
+        P(2, CREW, "sailor", p, { mode: "stand", expr: l < LEVER_F() ? "determined" : "shock", pose: "grip", hands: grip(p, this.knob(), null), tilt: l < LEVER_F() ? 0 : -4 });
         break;
       }
       case "s12_scuttle": {
@@ -389,12 +438,13 @@ export class World {
         break;
       }
       case "s13_drip": {
-        const d = this.rim(this.wheel.low, -1), u = ((t * 0.9) % 1);
-        out.fx.push({ key: "drop", cw: 128, ch: 192, draw: fxDrop, x: d.x + 0.02, y: d.y - 0.12 - 0.5 * u * u, z: d.z + 0.03, w: 0.045, h: 0.07 });
+        // ONE drip: it swells under the wheel, lets go and falls toward the bowl (lands at DRIP_LAND)
+        const d = this.rim(this.wheel.low, -1), u = clamp01((l - DRIP_GO) / (DRIP_LAND - DRIP_GO)), sw = smooth(l / DRIP_GO);
+        if (l < DRIP_LAND) out.fx.push({ key: "drop", cw: 128, ch: 192, draw: fxDrop, x: d.x + 0.02, y: d.y - 0.1 - 0.42 * u * u, z: d.z + 0.03, w: 0.045 * (0.5 + 0.5 * sw), h: 0.07 * (0.5 + 0.5 * sw) });
         break;
       }
       case "s14_deadpan": {
-        const u = ((t * 0.5) % 1);
+        const u = (l - BUBBLE_F()) / 40; if (u < 0) break; // one bubble, on "history"
         out.fx.push({ key: "bubble", cw: 160, ch: 160, draw: fxBubbleRing, x: TOILET14[0] + 0.05, y: TOILET14[1] + 0.75 + 0.9 * u, z: TOILET14[2], w: 0.12, h: 0.12 });
         break;
       }
