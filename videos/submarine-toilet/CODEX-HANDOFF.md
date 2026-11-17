@@ -19,3 +19,7 @@ The owner explicitly waived historical accuracy for the visual assets. Do not bl
 ## Expanded set and effects review
 
 The owner requested the supporting ocean, water, fish and interiors. Added `assets/support.js`, `src/videos/submarine-toilet/cast.ts` and the corresponding preview scenes. See manifest for exact functions, previews and limitations. Actual Remotion stills: exterior, toilet, section, character staging, ocean, underwater, control room, flood and battery room. `npx tsc --noEmit` and finite/bounds audit passed. Visual inspection found flat ocean, schematic interiors and an opaque slab of flood water; no animation, sinking proof, collision or hand-contact checks were performed. Gas, functioning opening hatch/corridor and polished transitions are absent. Continue asset work before handing off animation. The script and shot list remain missing/unapproved. Owner's historical-accuracy waiver remains in force for visuals.
+
+## Crew cap adjustment
+
+The owner found the cap bills confusing. The captain and crew now use the opt-in `subcap` watch cap in `src/pipeline/toon.ts`: a folded band with no projecting bill. Only the new preset is selected by the story outfits. Regenerated `staging.jpg`, `control-room.jpg` and `flood.jpg` through Remotion. `npx tsc --noEmit` passed; the existing `hats_a` and `hats_b` lab stills rendered pixel-identically to `out/lab/compare/after_hats_a.jpg` and `after_hats_b.jpg`. This does not constitute full pose/motion QA or owner approval of the other assets.
