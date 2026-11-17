@@ -77,3 +77,14 @@ validator; CharacterLab composition; main-character glow (per-card halo + presen
 - Start from `src/pipeline/` and the CharacterLab; register ground surfaces as you build the set.
 - Stage cameras by computing the line subject -> landmark, then confirm on a 0.5-scale still.
 - Run tools (audit, tsc, validate-paths, QA stills) before asking for review; include before/after for every fix.
+
+## Render system (local rendering task)
+- The final render now runs on the owner's Mac: `npm run render -- --story niagara-barrel` (LOCAL-RENDERING.md).
+  Story registered in `render.config.mjs`; the composition plays the committed mix `public/niagara-barrel/mix.m4a`.
+- Tested here on real Niagara frames: doctor READY (1089 frames, 36.3 s mix = picture); 540p preview of 552-600 with
+  audio, QA PASS; 1440 x 2560 sample 459-482 interrupted mid-render, resumed from the kept chunk, stitched + muxed, QA
+  PASS, look intact. Failure cases caught: missing mix, truncated MP4, unknown story.
+- Container speed (software GL, 4 cores): 20-28 s per 1440 x 2560 still; 0.095 fps at concurrency 2, 0.079 at 3.
+  Mac benchmark pending (`npm run bench -- --story niagara-barrel`).
+- Still open before the final: owner review of the river->falls and rescue motion proofs / 540p preview, then
+  animation approval.

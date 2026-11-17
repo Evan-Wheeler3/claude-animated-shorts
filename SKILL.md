@@ -27,6 +27,9 @@ description: Make a ~55-70 s vertical cartoon story short in the "2D characters 
 7. **QA before review** (`docs/learning/VISUAL-QA.md`): `node scripts/audit-props.mjs`, `npx tsc --noEmit`,
    `node scripts/validate-paths.mjs <story.ts>`, stills with `PROPS='{"qa":true}'` (every `[QA]` line clean or
    explained), CharacterLab after any `toon.ts` change, low-res motion proofs of risky sequences.
+9. **Rendering:** Claude prepares (animation, narration, mix, previews, `npm run doctor`); the owner's Mac renders the
+   final with `npm run render -- --story <id>` (LOCAL-RENDERING.md). A full-length final render in Claude's cloud
+   environment is an exception that needs the owner's explicit authorization. New videos: register in `render.config.mjs`.
 8. **Evidence:** every visual fix gets a same-camera before/after render (`scripts/before_after.py`); nothing is called
    fixed without an inspected render. Write `videos/<story-id>/PRODUCTION-RETROSPECTIVE.md` after each video.
 
@@ -94,7 +97,8 @@ User rules that apply:
    - Set `BRIDGE_ENTRY=src/sandboxes/<n>/index.tsx` to render a sandbox copy.
    - Make side-by-sides against reference frames with `python scripts/sbs_sheet.py out.jpg --ours ... --ref ...`.
    - Send them to an Opus max verifier: 1-3 images, a ≤200-word verdict.
-10. **Final render.**
+10. **Final render** (now done on the owner's Mac: `npm run render -- --story <id>`, see LOCAL-RENDERING.md; the raw
+    Remotion commands below are the fallback).
     - `npx remotion render src/index.ts <Comp> out/<name>/video.mp4 --codec h264 --crf 16 --scale 1.3333`
     - Mux with `-map 0:v:0 -map 1:a:0` (Remotion writes a silent audio track).
     - QA: `python scripts/short_qa.py final.mp4 out/<name>/qa shots.json` checks every frame for black, white, frozen and pop frames, plus loudness and sheets.

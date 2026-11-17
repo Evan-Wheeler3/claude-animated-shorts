@@ -8,8 +8,9 @@ Concise index; the linked files are authoritative. Do not copy them here.
 2. `SKILL.md`: rendering standards, look values and the **mandatory production requirements** section.
 3. `PROMPTING.md`, `CAMERA-DIRECTION.md`, `SHORTS-STORYTELLING.md`, `references/STYLE_BIBLE.md`.
 4. `docs/learning/` (`README.md` is the index): lessons, character anatomy, physics/collisions, camera, visual QA.
-5. `assets/ASSET-CATALOG.md`: reuse before building. Shared runtime: `src/pipeline/`; QA stage: `src/videos/lab/`.
-6. For the story: `videos/<story-id>/` (STORY.md, SCRIPT.md, SHOTLIST.md, ASSET-MANIFEST.md, CODEX-HANDOFF.md,
+5. `LOCAL-RENDERING.md`: preview / render / qa / bench commands (`scripts/holdup.mjs`, registry `render.config.mjs`).
+6. `assets/ASSET-CATALOG.md`: reuse before building. Shared runtime: `src/pipeline/`; QA stage: `src/videos/lab/`.
+7. For the story: `videos/<story-id>/` (STORY.md, SCRIPT.md, SHOTLIST.md, ASSET-MANIFEST.md, CODEX-HANDOFF.md,
    CLAUDE-PROMPT.md, PRODUCTION-RETROSPECTIVE.md) and the previous videos' retrospectives.
 
 ## Precedence when instructions disagree
@@ -29,11 +30,14 @@ Concise index; the linked files are authoritative. Do not copy them here.
    QA stills (`PROPS='{"qa":true}'`), CharacterLab (`node scripts/lab-stills.mjs out/lab/x all 0.5`) after toon changes.
 5. Gate 1: real in-engine stills -> inspect -> owner approval. Stop.
 6. Gate 2: voice + word timings, animation, low-res motion proofs of risky sequences -> inspect -> fix.
-7. Gate 3: sound, final 1440 x 2560 render, `scripts/short_qa.py`, visual QA. No publishing without authorization.
+7. Gate 3: sound + mix (`public/<id>/mix.m4a`), register the story in `render.config.mjs`, `npm run doctor`, 540p
+   previews (`npm run preview`) for owner review; commit everything render-ready. The OWNER renders the final on their
+   Mac (`npm run render -- --story <id>`, LOCAL-RENDERING.md) and runs `npm run qa`. A full-length final render in the
+   cloud needs the owner's explicit authorization. No publishing without authorization.
 8. Retrospective from `docs/learning/VIDEO-RETROSPECTIVE-TEMPLATE.md`; promote reusable lessons/code/assets.
 
 ## Rules
 - Preserve the approved look; fix systems, not single shots. Never claim a fix without an inspected render.
 - Work on a `claude/...` branch; never write into a Codex branch; open a PR, the owner merges.
 - Do not edit `src/pipeline/legacy/` (frozen before/after references) or `templates/` (bridge reference).
-- Rendering here is headless software GL: 0.5 scale for iteration, full scale for deliverables.
+- Rendering here is headless software GL (~18 s per 1440 x 2560 frame): stills, short previews and motion proofs only.

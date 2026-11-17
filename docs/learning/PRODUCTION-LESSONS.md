@@ -3,6 +3,16 @@
 Each entry: what went wrong / why / how found / tried / worked / failed / next time. Video-specific detail lives in
 `videos/<name>/PRODUCTION-RETROSPECTIVE.md`; only reusable lessons belong here.
 
+## L12. Final renders belong on the owner's machine; make the project render-ready instead
+- Problem: software GL in the cloud container renders a 1440 x 2560 frame in ~18 s (~5 h for a 36 s short), and every
+  hour spends Claude's session. A killed render produced nothing.
+- Solution: `render.config.mjs` registry + `scripts/holdup.mjs` (doctor / preview / render / qa / bench / audio): chunked,
+  verified, resumable final renders; atomic stitch + audio mux; automatic QA (JS loudness meter because Remotion's bundled
+  ffmpeg has no ebur128); per-machine benchmark. LOCAL-RENDERING.md is the owner's guide.
+- Verified: doctor on the real composition; 540p preview with audio; a 1440 x 2560 sample interrupted mid-chunk and
+  resumed (1 chunk reused), stitched, muxed, QA PASS; missing-mix, truncated-file and unknown-story failures caught.
+- Pending: Mac benchmark numbers (GPU ANGLE/Metal vs software, concurrency, VideoToolbox).
+
 ## L11. Promote reusable work into shared homes, keep story paths working (pipeline integration)
 - Problem: generic props lived in a story's handoff file (`videos/niagara-barrel/assets/niagara-props.js`), effects
   inside the Niagara set and crew, the narrator recipe only on another branch, so the next video would re-create them.

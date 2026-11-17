@@ -59,7 +59,8 @@ viewed at ~40 %). A shot is accepted only when every applicable line passes.
 
 ## 11. Render quality
 - No NaN black pixels, no white frames, no shimmering ink on far geometry, no banding in sky/mist.
-- `scripts/short_qa.py` on the final MP4: no black/white/frozen/pop frames, loudness in range.
+- `npm run qa -- --story <id>` on the final MP4 (runs automatically after `npm run render`): every line PASS, any WARN
+  explained (e.g. an intended impact shake). The older `templates/scripts/short_qa.py` remains for per-frame stats.
 
 ## 12. Final animation quality
 - Every sentence has a readable visual; punchlines land within 0-3 frames before their word.

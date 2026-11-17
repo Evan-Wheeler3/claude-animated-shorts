@@ -5,7 +5,13 @@
   "description": "Hold Up cartoon 3D shorts (three.js inside Remotion)",
   "scripts": {
     "studio": "remotion studio src/index.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "doctor": "node scripts/holdup.mjs doctor",
+    "preview": "node scripts/holdup.mjs preview",
+    "render": "node scripts/holdup.mjs render",
+    "qa": "node scripts/holdup.mjs qa",
+    "bench": "node scripts/holdup.mjs bench",
+    "audio": "node scripts/holdup.mjs audio"
   },
   "dependencies": {
     "@react-three/fiber": "8.17.10",

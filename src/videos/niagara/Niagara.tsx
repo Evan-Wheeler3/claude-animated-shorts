@@ -3,7 +3,7 @@
 // NEUTRAL tone map -> grade, MSAA 4; every pixel parameter scales with the output height / 1920.
 import React, { useEffect, useMemo } from "react";
 import * as THREE from "three";
-import { AbsoluteFill, getInputProps, useCurrentFrame } from "remotion";
+import { AbsoluteFill, Audio, getInputProps, staticFile, useCurrentFrame } from "remotion";
 import { ThreeCanvas } from "@remotion/three";
 import { useThree } from "@react-three/fiber";
 import { EffectComposer } from "@react-three/postprocessing";
@@ -75,6 +75,9 @@ export const NiagaraShort: React.FC = () => {
   return (
     <AbsoluteFill style={{ background: "#cfe3f2" }}>
       {layersAt(f).map((l, i) => <ShotView key={i ? "over" : "base"} id={l.id} alpha={l.alpha} />)}
+      {/* final mix (videos/niagara-barrel/audio/make.py -> npm run audio): Studio and preview renders play it; the
+          final render renders picture muted and muxes this file over the stitched chunks (scripts/holdup.mjs) */}
+      <Audio src={staticFile("niagara-barrel/mix.m4a")} />
     </AbsoluteFill>
   );
 };
