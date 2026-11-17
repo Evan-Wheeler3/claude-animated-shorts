@@ -6,7 +6,7 @@ function mesh(g,m,parent,x=0,y=0,z=0){const a=new T.Mesh(g,m);a.position.set(x,y
 function box(p,m,x,y,z,w,h,d){return mesh(new T.BoxGeometry(w,h,d),m,p,x,y,z)}
 function cylinder(p,m,x,y,z,r,h,axis='y'){let a=mesh(new T.CylinderGeometry(r,r,h,20),m,p,x,y,z);if(axis==='z')a.rotation.x=Math.PI/2;if(axis==='x')a.rotation.z=Math.PI/2;return a}
 function pipe(p,m,points,r=.045){const curve=new T.CatmullRomCurve3(points.map(a=>new T.Vector3(...a)),false,'centripetal');return mesh(new T.TubeGeometry(curve,48,r,8,false),m,p)}
-function wheel(p,x,y,z,r=.22){let g=new T.Group();g.position.set(x,y,z);p.add(g);let rim=mesh(new T.TorusGeometry(r,.024,8,24),M.red,g);for(let i=0;i<4;i++){let s=box(g,M.red,0,0,0,r*1.8,.025,.035);s.rotation.z=i*Math.PI/4}cylinder(g,M.brass,0,0,.03,.055,.09,'z');g.name='valve-wheel';return g}
+function wheel(p,x,y,z,r=.22){let g=new T.Group();g.position.set(x,y,z);p.add(g);let rim=mesh(new T.TorusGeometry(r,.024,8,24),M.red,g);for(let i=0;i<4;i++){let s=box(g,M.red,0,0,0,r*1.8,.025,.035);s.rotation.z=i*Math.PI/4}cylinder(g,M.brass,0,0,.03,.055,.09,'z');g.name='valve-wheel';g.userData={axis:'Z',rimRadius:r};return g}
 function bolts(p,z,y,span,n){for(let i=0;i<n;i++)cylinder(p,M.brass,-span/2+i*span/(n-1),y,z,.018,.025,'z')}
 export function createToilet(){const g=new T.Group();g.name='pressure-toilet';
  // Hollow bowl made as a lathed cross-section; the inner surface remains visible.
@@ -19,12 +19,19 @@ export function createToilet(){const g=new T.Group();g.name='pressure-toilet';
 export function createCompartment(){let g=new T.Group();g.name='compartment';
  let floor=box(g,M.floor,0,-.06,0,3.2,.12,2.7);floor.name='floor';
  for(let x=-1.5;x<1.6;x+=.25)box(g,M.edge,x,.005,0,.018,.012,2.65);
- let back=new T.Group();back.name='removable-back-wall';g.add(back);box(back,M.hull,0,1.35,-1.3,3.2,2.7,.12);
- for(let x of [-1.48,-.75,0,.75,1.48])box(back,M.edge,x,1.35,-1.22,.055,2.6,.06);
+ let back=new T.Group();back.name='removable-back-wall';g.add(back);
+ // Real opening cut into the wall; the separate door pivots at its left edge.
+ const wallShape=new T.Shape();wallShape.moveTo(-1.6,0);wallShape.lineTo(1.6,0);wallShape.lineTo(1.6,2.7);wallShape.lineTo(-1.6,2.7);wallShape.closePath();
+ const opening=new T.Path();opening.absarc(-.85,1.35,.47,0,Math.PI*2,true);wallShape.holes.push(opening);
+ const wall=mesh(new T.ExtrudeGeometry(wallShape,{depth:.12,bevelEnabled:false,curveSegments:32}),M.hull,back,0,0,-1.36);wall.name='bulkhead-with-opening';
+ for(let x of [-1.48,0,.75,1.48])box(back,M.edge,x,1.35,-1.22,.055,2.6,.06);
+ for(let y of [.38,2.32])box(back,M.edge,-.75,y,-1.22,.055,.7,.06);
  for(let y of [.22,2.42]){box(back,M.deck,0,y,-1.21,3.1,.075,.06);bolts(back,-1.16,y,2.9,16)}
  let side=new T.Group();side.name='removable-side-wall';g.add(side);box(side,M.hull,-1.56,1.35,0,.1,2.7,2.7);
  for(let z of [-1.15,-.4,.4,1.15])box(side,M.edge,-1.49,1.35,z,.05,2.6,.06);
- let hatch=new T.Group();hatch.name='hatch';back.add(hatch);cylinder(hatch,M.edge,-.85,1.35,-1.18,.56,.12,'z');cylinder(hatch,M.deck,-.85,1.35,-1.09,.47,.08,'z');wheel(hatch,-.85,1.35,-1.02,.22);
+ const frame=mesh(new T.TorusGeometry(.5,.045,10,40),M.edge,back,-.85,1.35,-1.21);frame.name='hatch-frame';
+ let hatch=new T.Group();hatch.name='hatch-hinge';hatch.position.set(-1.36,1.35,-1.19);hatch.userData.axis='Y';back.add(hatch);
+ cylinder(hatch,M.edge,.51,0,0,.46,.10,'z');cylinder(hatch,M.deck,.51,0,.07,.39,.05,'z');wheel(hatch,.51,0,.12,.20);
  let toilet=createToilet();toilet.position.set(.35,0,-.55);g.add(toilet);
  for(let i=0;i<3;i++){let y=1.35+i*.29;pipe(back,M.brass,[[.7,y,-1.18],[1.0,y,-1.14],[1.28,y,-1.14]],.025);wheel(back,1.05,y,-1.02,.08)}
  cylinder(back,M.edge,.1,2.05,-1.14,.2,.08,'z');cylinder(back,M.ivory,.1,2.05,-1.08,.16,.03,'z');let needle=new T.Group();needle.name='gauge-needle-pivot';needle.position.set(.1,2.05,-1.05);back.add(needle);box(needle,M.red,0,.06,0,.015,.12,.02);needle.rotation.z=-.7;
