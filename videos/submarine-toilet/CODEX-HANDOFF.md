@@ -11,3 +11,7 @@ Network reference request to uboat.net returned HTTP 403. Obtain accessible sour
 ## Subsequent iteration
 
 Accessible references were found and recorded in the manifest. An original generated metal finish, simplified deck and casing detail, and an illustrative section have been added; all four stills were rerendered and inspected with the same command. `npx tsc --noEmit` and `node scripts/audit-submarine.mjs` passed; the latter checks only finite attributes and bounds, not complete geometry quality. The new section's foreground rings obscure the set, and neither its staging nor the exterior meets the requested quality bar. The toilet remains speculative. These are still work-in-progress; do not commence Claude animation from this package. Once production assets and verified approved story/shot list exist, use CLAUDE-PROMPT.md and the staged preview/approval gates there.
+
+## Owner direction, latest
+
+The owner explicitly waived historical accuracy for the visual assets. Do not block art work on verifying the exact historical hull or plumbing. Maintain a clear distinction between stylized visual mechanism and factual claims in a future script. The owner has not approved the final assets, script, or shot list. Latest stills have brighter interior lighting, a larger exterior, and an unobstructed schematic section; they remain insufficiently detailed for production. `water-surface` is a hidden static mesh, not a finished effect.

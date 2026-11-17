@@ -1,6 +1,8 @@
 # Asset manifest — work in progress, not approved
 
-All assets are original procedural Three.js code in `assets/submarine.js`, under the repository license. Units are metres, Y up. These are **not production quality** and are not historically verified. Materials are named flat standard materials, converted with the existing `toonify`; bespoke painted textures have not been created. Preliminary attachment geometry was not used.
+**Owner direction (2026-11-17):** historical fidelity of the assets is not required. Treat the hull, plumbing, and section as stylized interpretations. The remaining blockers concern visual quality, animation affordances and QA; unverified geometry is not a blocker. Any factual claims in a future script still require review.
+
+All assets are original procedural Three.js code in `assets/submarine.js`, under the repository license. Units are metres, Y up. These are **not production quality** and are not historically verified. Materials are named standard materials; the review renderer applies the original procedural metal finish in `materials.ts` and the shared wood treatment. Preliminary attachment geometry was not used.
 
 | ID | Function / path | Scale and pivot | Review still | Status / limitations |
 |---|---|---|---|---|
@@ -12,7 +14,7 @@ Valve wheels and propellers are named groups but animation pivots and connection
 
 ## References and uncertainty
 
-The proposed source https://uboat.net/types/viic.htm could not be retrieved (network proxy returned HTTP 403). No historical dimensions, hull features, or toilet configuration have been verified for this model. Research primary or reputable museum/technical references for the Type VIIC/41 U-1206 exterior and the specific high-pressure system before building a factual visual. Confirm licensing and cite consulted material, not merely suggested URLs. The cause and sequence remain unverified. Do not promote the geometry or script to approved on this evidence.
+The visual models are stylized, as the owner permits. References below provide context only; the plumbing and mechanism are not evidence for a factual account. The cause and sequence remain unverified for any future script.
 
 ## Reference and iteration update
 
@@ -23,3 +25,7 @@ The proposed source https://uboat.net/types/viic.htm could not be retrieved (net
 `createSection()` now offers a schematic section, with illustrative battery cells below an accessible compartment; it is not a verified longitudinal U-1206 cutaway. `src/videos/submarine-toilet/materials.ts` applies an original deterministic painted-metal texture in the preview renderer, and the wooden deck uses the shared toon material treatment. The unconverted asset uses named standard materials; use `finish()` to apply the same finish. The updated exterior has schematic saddle tanks, deck, vents and wintergarten. All assets remain **blocked**: the exterior is still too small in frame and too schematic, the ringed section is sparse and visually confusing, the interior remains dark, and the toilet arrangement and operating sequence are unverified.
 
 `node scripts/audit-submarine.mjs` checks finite position/normal attributes and bounding boxes only: exterior 8,664, toilet 5,232, compartment 12,800, section 16,796 triangles. It does not establish normals orientation, closed surfaces, contact, collisions, valid pivots, or visual quality.
+
+## Latest preview pass
+
+The exterior camera is rolled and closer, interior lighting is brighter, the front section ring was removed, and the room has a hidden `water-surface` mesh. These are review improvements, not production approval. A generic soldier remains a scale proxy. Updated stills were rendered through the real pipeline and visually inspected. The room remains sparse and the exterior lacks a convincing hull silhouette and fittings; toilet interaction, flowing water, and articulated controls remain untested.

@@ -28,7 +28,9 @@ export function createCompartment(){let g=new T.Group();g.name='compartment';
  let toilet=createToilet();toilet.position.set(.35,0,-.55);g.add(toilet);
  for(let i=0;i<3;i++){let y=1.35+i*.29;pipe(back,M.brass,[[.7,y,-1.18],[1.0,y,-1.14],[1.28,y,-1.14]],.025);wheel(back,1.05,y,-1.02,.08)}
  cylinder(back,M.edge,.1,2.05,-1.14,.2,.08,'z');cylinder(back,M.ivory,.1,2.05,-1.08,.16,.03,'z');let needle=box(back,M.red,.1,2.08,-1.05,.015,.12,.02);needle.rotation.z=-.7;
- g.userData={units:'m',pivot:'floor centre',waterAnchor:[0,.08,0]};return g}
+ // A hideable water surface gives animation a clean attachment point; hidden for dry previews.
+ const water=box(g,mat('water','#4bacc0'),0,.1,0,3.05,.035,2.55);water.name='water-surface';water.visible=false;
+ g.userData={units:'m',pivot:'floor centre',waterAnchor:[0,.1,0]};return g}
 export function createSubmarine(){let g=new T.Group();g.name='type-viic-inspired-exterior';
  // Long turned pressure hull, fine ends and raised free-flooding upper casing.
  const pts=[[-33,0],[-32,.55],[-29,1.45],[-24,2.3],[-17,2.9],[-7,3.15],[9,3.15],[20,2.8],[28,1.9],[32,.75],[33,0]].map(([z,r])=>new T.Vector2(r,z));
@@ -54,7 +56,7 @@ export function createSection(){
  const section=new T.Group();section.name='illustrative-section';
  const room=createCompartment();room.position.y=1;section.add(room);
  // A ring at each end makes the pressure-hull cross section legible with the near wall removed.
- for(const z of [-1.42,1.42]){const rib=mesh(new T.TorusGeometry(2.05,.08,10,48),M.edge,section,0,2.05,z);rib.name='pressure-hull-rib'}
+ for(const z of [-1.42]){const rib=mesh(new T.TorusGeometry(2.05,.08,10,48),M.edge,section,0,2.05,z);rib.name='pressure-hull-rib'}
  box(section,M.lower,0,.07,0,3.3,.14,2.8);
  for(let x of [-1.05,-.35,.35,1.05]) for(let z of [-.75,0,.75]){
   const cell=box(section,M.dark,x,.48,z,.56,.74,.6);cell.name='illustrative-battery';
