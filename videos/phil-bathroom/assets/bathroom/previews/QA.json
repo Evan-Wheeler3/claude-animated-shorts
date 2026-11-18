@@ -1,0 +1,141 @@
+{
+  "Bathroom_Reveal.glb": {
+    "validatorErrors": 0,
+    "validatorWarnings": 4,
+    "validatorMessages": {
+      "NODE_SKINNED_MESH_NON_ROOT": 4
+    },
+    "meshes": 199,
+    "skinned": 4,
+    "morphs": 46,
+    "materialImages": 196,
+    "triangles": 37099,
+    "clips": [
+      {
+        "name": "Phil_Rig",
+        "duration": 5.0333333015441895,
+        "tracks": 240
+      },
+      {
+        "name": "Phil_Face",
+        "duration": 5.0333333015441895,
+        "tracks": 1
+      },
+      {
+        "name": "Homeowner_Rig",
+        "duration": 5.0333333015441895,
+        "tracks": 240
+      },
+      {
+        "name": "Homeowner_Face",
+        "duration": 5.0333333015441895,
+        "tracks": 1
+      },
+      {
+        "name": "Camera_Bathroom_Reveal",
+        "duration": 5.0333333015441895,
+        "tracks": 2
+      }
+    ],
+    "sampledTrack": [
+      {
+        "time": 0,
+        "cameraPosition": [
+          -1.0299999713897705,
+          1.3200000524520874,
+          1.8600000143051147
+        ],
+        "philSideEye": 0,
+        "homeownerBrow": 0
+      },
+      {
+        "time": 2.5,
+        "cameraPosition": [
+          -0.6222083568572998,
+          1.3173929452896118,
+          2.1958353519439697
+        ],
+        "philSideEye": 0,
+        "homeownerBrow": 0
+      },
+      {
+        "time": 4.25,
+        "cameraPosition": [
+          -0.2919999957084656,
+          1.315000057220459,
+          2.4600000381469727
+        ],
+        "philSideEye": 0.6299999952316284,
+        "homeownerBrow": 0.3400000035762787
+      },
+      {
+        "time": 4.75,
+        "cameraPosition": [
+          -0.2919999957084656,
+          1.315000057220459,
+          2.4600000381469727
+        ],
+        "philSideEye": 0.6299999952316284,
+        "homeownerBrow": 0.3400000035762787
+      }
+    ]
+  },
+  "Bathroom_Set.glb": {
+    "validatorErrors": 0,
+    "validatorWarnings": 0,
+    "validatorMessages": {},
+    "meshes": 185,
+    "skinned": 0,
+    "morphs": 0,
+    "materialImages": 182,
+    "triangles": 21402,
+    "clips": []
+  },
+  "Bathroom_Cast.glb": {
+    "validatorErrors": 0,
+    "validatorWarnings": 4,
+    "validatorMessages": {
+      "NODE_SKINNED_MESH_NON_ROOT": 4
+    },
+    "meshes": 14,
+    "skinned": 4,
+    "morphs": 46,
+    "materialImages": 14,
+    "triangles": 15697,
+    "clips": [
+      {
+        "name": "Phil_Rig",
+        "duration": 5.0333333015441895,
+        "tracks": 240
+      },
+      {
+        "name": "Phil_Face",
+        "duration": 5.0333333015441895,
+        "tracks": 1
+      },
+      {
+        "name": "Homeowner_Rig",
+        "duration": 5.0333333015441895,
+        "tracks": 240
+      },
+      {
+        "name": "Homeowner_Face",
+        "duration": 5.0333333015441895,
+        "tracks": 1
+      }
+    ]
+  },
+  "Phil_Standing_Rig.glb": {
+    "validatorErrors": 0,
+    "validatorWarnings": 2,
+    "validatorMessages": {
+      "NODE_SKINNED_MESH_NON_ROOT": 2
+    },
+    "meshes": 2,
+    "skinned": 2,
+    "morphs": 23,
+    "materialImages": 2,
+    "triangles": 6995,
+    "clips": []
+  }
+}

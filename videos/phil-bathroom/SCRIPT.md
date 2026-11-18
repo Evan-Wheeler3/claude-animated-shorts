@@ -1,0 +1,33 @@
+Your neighbor Phil keeps breaking into your house to use your bathroom.
+
+And worst of all, he never flushes.
+
+So you install a deadbolt.
+
+But Phil just climbs through the window.
+
+You install metal bars. Phil files through them.
+
+So you board up every window. But now your house looks like it’s from Detroit.
+
+And Phil drives straight through your garage.
+
+This madness needs to stop!
+
+So you buy a highly trained guard dog.
+
+But Phil brings him a rotisserie chicken.
+
+The dog’s name is now Gregory.
+
+You build a twelve-foot concrete wall.
+
+But Phil did pole vault in high school.
+
+So you spend your entire life savings turning your house into a maximum-security fortress.
+
+Steel doors. Laser sensors. Armed guards.
+
+There’s absolutely no way Phil’s getting in now.
+
+Time to relax.
