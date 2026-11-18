@@ -63,7 +63,7 @@ const ShotView: React.FC<{ id: number; alpha: number }> = ({ id, alpha }) => (
 export const U1206Short: React.FC = () => {
   const f = useCurrentFrame();
   return (<AbsoluteFill style={{ background: "#1b5f80" }}>{layersAt(f).map((l, i) => <ShotView key={i ? "over" : "base"} id={l.id} alpha={l.alpha} />)}
-    {/* narration (videos/u1206-toilet-disaster/voice/voice.wav, copied to public/); no sound design or music yet */}
-    <Audio src={staticFile("u1206-toilet-disaster/voice.wav")} />
+    {/* final mix: narration + SFX + score (videos/u1206-toilet-disaster/audio/make.py -> mix.wav, encoded to public/) */}
+    <Audio src={staticFile("u1206-toilet-disaster/mix.m4a")} />
   </AbsoluteFill>);
 };

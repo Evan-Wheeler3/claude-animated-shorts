@@ -1,0 +1,148 @@
+{
+ "FPS": 30,
+ "TOTAL": 1218,
+ "shots": [
+  {
+   "key": "s01_blast",
+   "a": 0,
+   "b": 64
+  },
+  {
+   "key": "s02_hero",
+   "a": 64,
+   "b": 134
+  },
+  {
+   "key": "s03_depth",
+   "a": 134,
+   "b": 250
+  },
+  {
+   "key": "s04_captain",
+   "a": 250,
+   "b": 328
+  },
+  {
+   "key": "s05_specialist",
+   "a": 328,
+   "b": 402
+  },
+  {
+   "key": "s06_valve",
+   "a": 402,
+   "b": 480
+  },
+  {
+   "key": "s07_flood",
+   "a": 480,
+   "b": 567
+  },
+  {
+   "key": "s08_cutaway",
+   "a": 567,
+   "b": 660
+  },
+  {
+   "key": "s09_gas",
+   "a": 660,
+   "b": 736
+  },
+  {
+   "key": "s10a_blow",
+   "a": 736,
+   "b": 778
+  },
+  {
+   "key": "s10_breach",
+   "a": 778,
+   "b": 811
+  },
+  {
+   "key": "s11_aircraft",
+   "a": 811,
+   "b": 899
+  },
+  {
+   "key": "s12_scuttle",
+   "a": 899,
+   "b": 972
+  },
+  {
+   "key": "s14_wreck",
+   "a": 972,
+   "b": 1218
+  }
+ ],
+ "words": {
+  "in": 1,
+  "n1945": 4,
+  "german": 34,
+  "was": 66,
+  "toilet": 110,
+  "u1206": 136,
+  "scotland": 187,
+  "twohundred": 208,
+  "underwater": 232,
+  "its": 252,
+  "highpressure": 263,
+  "complicated": 299,
+  "flushing": 330,
+  "specialist": 377,
+  "one": 404,
+  "went": 457,
+  "wrong": 465,
+  "instead": 482,
+  "seawater": 511,
+  "blasting": 540,
+  "water": 571,
+  "battery": 616,
+  "releasing": 662,
+  "chlorine": 704,
+  "gas": 722,
+  "the": 737,
+  "crew": 748,
+  "surface": 773,
+  "and": 796,
+  "allied": 800,
+  "aircraft": 813,
+  "spot": 849,
+  "submarine": 901,
+  "damaged": 931,
+  "abandoned": 952,
+  "eventually": 974,
+  "floor": 1034,
+  "all": 1046,
+  "bathroom": 1073,
+  "worst": 1122,
+  "flush": 1131,
+  "history": 1151,
+  "end": 1169
+ },
+ "BATT": [
+  1080,
+  0,
+  0
+ ],
+ "BLAST_F": 10,
+ "BREACH_F": 10,
+ "COMP": [
+  1000,
+  0,
+  0
+ ],
+ "CTRL": [
+  1120,
+  0,
+  0
+ ],
+ "DEPTH_KEEL": -46,
+ "SEABED": -54,
+ "SEA_Y": 0,
+ "SECT": [
+  1040,
+  0,
+  0
+ ],
+ "SUB_V": 2.4,
+ "SURF_KEEL": -4.3
+}
