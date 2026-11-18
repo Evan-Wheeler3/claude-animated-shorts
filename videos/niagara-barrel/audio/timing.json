@@ -1,0 +1,188 @@
+{
+ "FPS": 30,
+ "TOTAL": 1089,
+ "shots": [
+  {
+   "key": "hook_wide",
+   "a": 0,
+   "b": 66
+  },
+  {
+   "key": "hook_barrel",
+   "a": 66,
+   "b": 138
+  },
+  {
+   "key": "barrel_cu",
+   "a": 138,
+   "b": 177
+  },
+  {
+   "key": "annie",
+   "a": 177,
+   "b": 274
+  },
+  {
+   "key": "cat_in",
+   "a": 274,
+   "b": 326
+  },
+  {
+   "key": "cat_alive",
+   "a": 326,
+   "b": 388
+  },
+  {
+   "key": "climb",
+   "a": 388,
+   "b": 431
+  },
+  {
+   "key": "strap",
+   "a": 431,
+   "b": 459
+  },
+  {
+   "key": "seal",
+   "a": 459,
+   "b": 490
+  },
+  {
+   "key": "current",
+   "a": 490,
+   "b": 552
+  },
+  {
+   "key": "brink",
+   "a": 552,
+   "b": 596
+  },
+  {
+   "key": "drop",
+   "a": 596,
+   "b": 657
+  },
+  {
+   "key": "rescue_open",
+   "a": 657,
+   "b": 704
+  },
+  {
+   "key": "rescue_alive",
+   "a": 704,
+   "b": 837
+  },
+  {
+   "key": "problem",
+   "a": 837,
+   "b": 879
+  },
+  {
+   "key": "fortune",
+   "a": 879,
+   "b": 933
+  },
+  {
+   "key": "purse",
+   "a": 933,
+   "b": 1089
+  }
+ ],
+ "words": {
+  "falls": 121,
+  "inside": 140,
+  "barrel": 159,
+  "annie": 191,
+  "plan": 243,
+  "rich": 258,
+  "first": 276,
+  "cat": 317,
+  "by": 328,
+  "alive": 368,
+  "so": 390,
+  "climbed": 398,
+  "strapped": 433,
+  "lid": 470,
+  "sealed": 473,
+  "then": 492,
+  "edge": 541,
+  "down": 567,
+  "more": 598,
+  "feet": 619,
+  "when": 646,
+  "finally": 659,
+  "opened": 671,
+  "annie2": 708,
+  "alive2": 715,
+  "survived": 739,
+  "minor": 803,
+  "but": 832,
+  "problem": 859,
+  "fortune": 919,
+  "and": 935,
+  "barely": 940,
+  "money": 962,
+  "turns": 986,
+  "waterfall": 1015,
+  "rich2": 1066,
+  "it": 1082
+ },
+ "ANNIE_BANK": [
+  -79.6,
+  3.2,
+  47
+ ],
+ "BARREL_AT_DOCK": [
+  -89.6,
+  2.6,
+  -204.8
+ ],
+ "BARREL_BRINK": [
+  -63.73002904568356,
+  -1.6,
+  -44.62424674811138
+ ],
+ "BARREL_HOOK": [
+  -76.18114011887623,
+  -0.5452809321842352,
+  -53.34260858064728
+ ],
+ "BARREL_RESCUE": [
+  -56.2,
+  -50.55,
+  137
+ ],
+ "BARREL_SHORE": [
+  -55.7,
+  -50.55,
+  127.6
+ ],
+ "CH_W": 92,
+ "DOCK": [
+  -92,
+  3.2,
+  -205
+ ],
+ "DOCK_Y": 2.6,
+ "DROP": 51,
+ "FLASH_AT": -100,
+ "HAMMER_HITS": [
+  465,
+  475
+ ],
+ "IMPACT_F": 653,
+ "LAND_Y": 3.2,
+ "LID_POP_F": 672,
+ "LIP_F": 565,
+ "PHI_M": 1.7453292519943295,
+ "POOL_Y": -51,
+ "R": 80,
+ "RIVER_V": 9,
+ "RUN_PHI": -0.9599310885968813,
+ "SHEET_T": 2.934205710490698,
+ "SHORE": [
+  -56,
+  -50.55,
+  128
+ ]
+}

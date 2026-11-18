@@ -1,6 +1,6 @@
 # Codex repository instructions — Hold Up
 
-This is an **agent entry point**. Read `PRODUCTION-PIPELINE.md` and `CODEX-WORKFLOW.md` before working on a story. Read `SKILL.md`, `PROMPTING.md`, `references/STYLE_BIBLE.md` and current `docs/learning/*` if present.
+This is an **agent entry point**. Read `PRODUCTION-PIPELINE.md` and `CODEX-WORKFLOW.md` before working on a story. Read `SKILL.md`, `PROMPTING.md`, `references/STYLE_BIBLE.md` and current `docs/learning/*` if present. Before modelling anything, search `assets/ASSET-CATALOG.md` (shared props, characters, materials, effects; shared runtime in `src/pipeline/`) and reuse or adapt; add catalog rows + in-engine previews for new reusable assets.
 
 When the owner says **“Proceed with Codex next steps on <story-id>”**, find `videos/<story-id>/STORY.md` and follow the exact workflow. **Do not ask the owner to paste a story already in the repo.** Confirm its script/shot list and approved status. Never guess a story-id.
 
