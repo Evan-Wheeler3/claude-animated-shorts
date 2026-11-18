@@ -1,131 +1,131 @@
 {
  "FPS": 30,
- "TOTAL": 1089,
+ "TOTAL": 1063,
  "shots": [
   {
    "key": "hook_wide",
    "a": 0,
-   "b": 66
+   "b": 50
   },
   {
    "key": "hook_barrel",
-   "a": 66,
-   "b": 138
+   "a": 50,
+   "b": 113
   },
   {
    "key": "barrel_cu",
-   "a": 138,
-   "b": 177
+   "a": 113,
+   "b": 151
   },
   {
    "key": "annie",
-   "a": 177,
-   "b": 274
+   "a": 151,
+   "b": 257
   },
   {
    "key": "cat_in",
-   "a": 274,
-   "b": 326
+   "a": 257,
+   "b": 317
   },
   {
    "key": "cat_alive",
-   "a": 326,
-   "b": 388
+   "a": 317,
+   "b": 373
   },
   {
    "key": "climb",
-   "a": 388,
-   "b": 431
+   "a": 373,
+   "b": 419
   },
   {
    "key": "strap",
-   "a": 431,
-   "b": 459
+   "a": 419,
+   "b": 462
   },
   {
    "key": "seal",
-   "a": 459,
-   "b": 490
+   "a": 462,
+   "b": 491
   },
   {
    "key": "current",
-   "a": 490,
-   "b": 552
+   "a": 491,
+   "b": 559
   },
   {
    "key": "brink",
-   "a": 552,
-   "b": 596
+   "a": 559,
+   "b": 592
   },
   {
    "key": "drop",
-   "a": 596,
-   "b": 657
+   "a": 592,
+   "b": 664
   },
   {
    "key": "rescue_open",
-   "a": 657,
+   "a": 664,
    "b": 704
   },
   {
    "key": "rescue_alive",
    "a": 704,
-   "b": 837
+   "b": 827
   },
   {
    "key": "problem",
-   "a": 837,
-   "b": 879
+   "a": 827,
+   "b": 858
   },
   {
    "key": "fortune",
-   "a": 879,
-   "b": 933
+   "a": 858,
+   "b": 907
   },
   {
    "key": "purse",
-   "a": 933,
-   "b": 1089
+   "a": 907,
+   "b": 1063
   }
  ],
  "words": {
-  "falls": 121,
-  "inside": 140,
-  "barrel": 159,
-  "annie": 191,
-  "plan": 243,
-  "rich": 258,
-  "first": 276,
-  "cat": 317,
-  "by": 328,
-  "alive": 368,
-  "so": 390,
-  "climbed": 398,
-  "strapped": 433,
-  "lid": 470,
-  "sealed": 473,
-  "then": 492,
-  "edge": 541,
-  "down": 567,
-  "more": 598,
-  "feet": 619,
+  "falls": 105,
+  "inside": 115,
+  "barrel": 137,
+  "annie": 175,
+  "plan": 231,
+  "rich": 246,
+  "first": 259,
+  "cat": 308,
+  "by": 319,
+  "alive": 362,
+  "so": 375,
+  "climbed": 389,
+  "strapped": 421,
+  "lid": 473,
+  "sealed": 478,
+  "then": 493,
+  "edge": 555,
+  "down": 569,
+  "more": 593,
+  "feet": 630,
   "when": 646,
-  "finally": 659,
-  "opened": 671,
-  "annie2": 708,
-  "alive2": 715,
-  "survived": 739,
-  "minor": 803,
-  "but": 832,
-  "problem": 859,
-  "fortune": 919,
-  "and": 935,
-  "barely": 940,
-  "money": 962,
-  "turns": 986,
-  "waterfall": 1015,
-  "rich2": 1066,
-  "it": 1082
+  "finally": 666,
+  "opened": 678,
+  "annie2": 707,
+  "alive2": 721,
+  "survived": 743,
+  "minor": 799,
+  "but": 824,
+  "problem": 848,
+  "fortune": 896,
+  "and": 909,
+  "barely": 921,
+  "money": 950,
+  "turns": 964,
+  "waterfall": 994,
+  "rich2": 1046,
+  "it": 1058
  },
  "ANNIE_BANK": [
   -79.6,
@@ -170,10 +170,10 @@
   465,
   475
  ],
- "IMPACT_F": 653,
+ "IMPACT_F": 655,
  "LAND_Y": 3.2,
- "LID_POP_F": 672,
- "LIP_F": 565,
+ "LID_POP_F": 679,
+ "LIP_F": 567,
  "PHI_M": 1.7453292519943295,
  "POOL_Y": -51,
  "R": 80,

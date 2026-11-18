@@ -36,27 +36,27 @@ export const ANNIE_BANK: V3 = [-79.6, LAND_Y, 47];         // Table Rock promena
 export const DOCK: V3 = [-CH_W, LAND_Y, -205];             // timber landing upstream (launch)
 export const SHORE: V3 = [-56, POOL_Y + 0.45, 128];      // pebble shore of the lower river (cat test / rescue)
 
-// ---------------- narration clock (videos/niagara-barrel/voice/words.json, Kokoro am_michael 1.32) ----------------
+// ---------------- narration clock (videos/niagara-barrel/voice/words.json, the owner's cloned voice) ----------------
 // Every frame below comes from a word onset: F(seconds) = frame. Reactions land 0-3 frames before their word.
 export const F = (sec: number) => Math.round(sec * FPS);
 export const W = {
-  falls: 4.02, inside: 4.68, barrel: 5.3, annie: 6.36, plan: 8.1, rich: 8.6, first: 9.2, cat: 10.58, by: 10.94, alive: 12.28,
-  so: 13.0, climbed: 13.28, strapped: 14.44, lid: 15.66, sealed: 15.78, then: 16.4, edge: 18.02, down: 18.9, more: 19.92, feet: 20.64,
-  when: 21.52, finally: 21.98, opened: 22.38, annie2: 23.6, alive2: 23.82, survived: 24.64, minor: 26.78, but: 27.72, problem: 28.64,
-  fortune: 30.62, and: 31.16, barely: 31.34, money: 32.06, turns: 32.88, waterfall: 33.84, rich2: 35.54, it: 36.06,
+  falls: 3.49, inside: 3.82, barrel: 4.55, annie: 5.83, plan: 7.71, rich: 8.19, first: 8.62, cat: 10.25, by: 10.62, alive: 12.05,
+  so: 12.5, climbed: 12.97, strapped: 14.02, lid: 15.78, sealed: 15.94, then: 16.42, edge: 18.5, down: 18.96, more: 19.75, feet: 21.01,
+  when: 21.54, finally: 22.2, opened: 22.59, annie2: 23.58, alive2: 24.03, survived: 24.77, minor: 26.64, but: 27.46, problem: 28.25,
+  fortune: 29.88, and: 30.3, barely: 30.7, money: 31.68, turns: 32.14, waterfall: 33.13, rich2: 34.86, it: 35.26,
 };
-export const TOTAL = F(36.17) + 4; // the video ends on the last word
+export const TOTAL = F(35.29) + 4; // the video ends on the last word
 
 // ---------------- shots ----------------
 export type Light = "day" | "golden";
 export type ShotDef = { id: number; key: string; a: number; b: number; light: Light; still: number; sunAz?: number; sunEl?: number };
 const SH: [string, number, number, number, number][] = [ // key, start frame, still frame, sun az, sun el
-  ["hook_wide", 0, 30, 125, 42], ["hook_barrel", 66, 110, 120, 40], ["barrel_cu", F(W.inside) - 2, F(5.4), 120, 40],
-  ["annie", F(5.9), F(8.7), 140, 34], ["cat_in", F(W.first) - 2, F(10.4), 135, 34], ["cat_alive", F(W.by) - 2, F(12.4), 150, 38],
-  ["climb", F(W.so) - 2, F(13.9), 135, 32], ["strap", F(W.strapped) - 2, F(15.0), 135, 32], ["seal", F(15.3), F(15.9), 135, 32],
-  ["current", F(W.then) - 2, F(17.3), 120, 36], ["brink", F(18.4), F(19.0), 120, 30], ["drop", F(19.85), F(20.6), 120, 34],
-  ["rescue_open", F(W.finally) - 2, F(22.6), 140, 30], ["rescue_alive", F(23.45), F(25.6), 140, 30], ["problem", F(27.9), F(28.8), 145, 30],
-  ["fortune", F(29.3), F(30.7), 150, 32], ["purse", F(W.and) - 2, F(33.5), 145, 30],
+  ["hook_wide", 0, 23, 125, 42], ["hook_barrel", 50, 94, 120, 40], ["barrel_cu", F(W.inside) - 2, F(4.63), 120, 40],
+  ["annie", F(5.02), F(8.26), 140, 34], ["cat_in", F(W.first) - 2, F(10.09), 135, 34], ["cat_alive", F(W.by) - 2, F(12.13), 150, 38],
+  ["climb", F(W.so) - 2, F(13.66), 135, 32], ["strap", F(W.strapped) - 2, F(15.22), 135, 32], ["seal", F(15.4), F(16.03), 135, 32],
+  ["current", F(W.then) - 2, F(17.62), 120, 36], ["brink", F(18.62), F(19.11), 120, 30], ["drop", F(19.72), F(20.95), 120, 34],
+  ["rescue_open", F(W.finally) - 2, F(22.8), 140, 30], ["rescue_alive", F(23.48), F(25.72), 140, 30], ["problem", F(27.55), F(28.33), 145, 30],
+  ["fortune", F(28.6), F(29.94), 150, 32], ["purse", F(W.and) - 2, F(32.88), 145, 30],
 ];
 export const SHOTS: ShotDef[] = SH.map(([key, a, still, sunAz, sunEl], i) => ({ id: i + 1, key, a, b: i + 1 < SH.length ? SH[i + 1][1] : TOTAL, light: "day", still, sunAz, sunEl }));
 export const XFADE: Record<number, number> = {};
