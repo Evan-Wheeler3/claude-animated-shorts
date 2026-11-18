@@ -13,6 +13,7 @@
 | [Bathroom motion proof](assets/bathroom/previews/ThreeJS_Motion_Proof.mp4) | Approved renderer look and timing in a silent sample |
 | [Pole-vault concept](refs/Pole_Vault_Concept.png) | Concept still for silhouette and lighting |
 | [Bathroom manifest and credits](assets/bathroom/ASSET-MANIFEST.md) | Coordinate systems, rig/pivot details, validation, and source credits |
+| [House_Exterior.glb](assets/exterior/House_Exterior.glb) | S03–S07 and S11–S15 exterior in meters, Y up, with front wall at Z=0. Includes the hinged front door and centered deadbolt turnpiece, openable side sash, bottom-pivoted bars, centered garage panels, yard wall and lamp, and fortress dressing. To reveal the window upgrades or fortress group after loading, restore its scale to (1, 1, 1). Meshes and tiled textures are original. glTF Validator reported zero errors and warnings. Three.js load and render proofs: [front three-quarter](assets/qa/previews/House_Exterior_Front.png), [wall at dusk](assets/qa/previews/House_Exterior_Wall_Dusk.png). |
 
 Keep the included license notices with the reused assets. Use the full GLB alone for S16. Reuse set and rig exports separately for other shots. The shipped rig uses real-world meters, and the bathroom asset folder’s manifest describes its axes and origins.
 
