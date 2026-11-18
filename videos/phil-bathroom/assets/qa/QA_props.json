@@ -1,0 +1,346 @@
+{
+  "threeRevision": 177,
+  "assets": {
+    "Car_Sedan.glb": {
+      "bytes": 2698724,
+      "validatorErrors": 0,
+      "validatorWarnings": 0,
+      "sizeMeters": [
+        2.0440000002384187,
+        1.456928063203769,
+        4.714922197281842
+      ],
+      "textureSizes": [
+        [
+          512,
+          512
+        ],
+        [
+          512,
+          512
+        ],
+        [
+          512,
+          512
+        ],
+        [
+          512,
+          512
+        ],
+        [
+          512,
+          512
+        ]
+      ],
+      "namedNodes": [
+        "Car_Sedan",
+        "Floorpan",
+        "Carpet",
+        "Driver_Body",
+        "Mirror_Housing",
+        "Passenger_Body",
+        "Mirror_Housing",
+        "Hood",
+        "Trunk_Lid",
+        "Front_Bumper",
+        "Rear_Bumper",
+        "Lower_Intake",
+        "Grille_Surround",
+        "Rear_License_Plate",
+        "Headlight_L",
+        "Taillight_L",
+        "Headlight_R",
+        "Taillight_R",
+        "Roof",
+        "Headliner",
+        "Window_FL",
+        "Window_RL",
+        "Front_Door_Trim",
+        "Rear_Door_Trim",
+        "Window_FR",
+        "Window_RR",
+        "Front_Door_Trim",
+        "Rear_Door_Trim",
+        "Windshield",
+        "Rear_Glass",
+        "Dashboard",
+        "Instrument_Binnacle",
+        "Center_Stack",
+        "Center_Console",
+        "Gear_Lever",
+        "Driver_Seat",
+        "Seat_Cushion",
+        "Seat_Back",
+        "Headrest",
+        "Passenger_Seat",
+        "Seat_Cushion",
+        "Seat_Back",
+        "Headrest",
+        "Rear_Seat_Cushion",
+        "Rear_Seat_Back",
+        "Driver_Seat_Anchor",
+        "Steering_Wheel",
+        "Steering_Rim",
+        "Wheel_FL",
+        "Wheel_FR",
+        "Wheel_RL",
+        "Wheel_RR"
+      ],
+      "metrics": {
+        "seatedHeadroomMeters": 0.09719680795214836,
+        "hipToCrownMeters": 0.75,
+        "shoulderToNearRimMeters": 0.6143289021363068,
+        "emptySeatAnchor": true,
+        "emissiveLamps": true
+      }
+    },
+    "Rotisserie_Tray.glb": {
+      "bytes": 995912,
+      "validatorErrors": 0,
+      "validatorWarnings": 0,
+      "sizeMeters": [
+        0.30000001192092896,
+        0.1520000002384186,
+        0.2199999988079071
+      ],
+      "textureSizes": [
+        [
+          512,
+          512
+        ],
+        [
+          512,
+          512
+        ]
+      ],
+      "namedNodes": [
+        "Rotisserie_Tray",
+        "Tray_Base",
+        "Roast_Chicken",
+        "Tray_Lid"
+      ],
+      "metrics": {}
+    },
+    "Newspaper_Folded.glb": {
+      "bytes": 372700,
+      "validatorErrors": 0,
+      "validatorWarnings": 0,
+      "sizeMeters": [
+        0.2918999958597124,
+        0.3799999952316284,
+        0.009098326360551362
+      ],
+      "textureSizes": [
+        [
+          512,
+          512
+        ]
+      ],
+      "namedNodes": [
+        "Newspaper_Folded",
+        "Newsprint",
+        "Center_Fold"
+      ],
+      "metrics": {}
+    },
+    "Vault_Pole.glb": {
+      "bytes": 599168,
+      "validatorErrors": 0,
+      "validatorWarnings": 0,
+      "sizeMeters": [
+        0.03099999949336052,
+        4.900000095367432,
+        0.03099999949336052
+      ],
+      "textureSizes": [
+        [
+          512,
+          512
+        ],
+        [
+          512,
+          512
+        ]
+      ],
+      "namedNodes": [
+        "Vault_Pole",
+        "Fiberglass_Shaft",
+        "Tip_Cap",
+        "Tape_Grip_1",
+        "Tape_Grip_2",
+        "Upper_Plug"
+      ],
+      "metrics": {}
+    },
+    "Metal_File.glb": {
+      "bytes": 987300,
+      "validatorErrors": 0,
+      "validatorWarnings": 0,
+      "sizeMeters": [
+        0.03200000151991844,
+        0.32349999880790714,
+        0.029999999329447746
+      ],
+      "textureSizes": [
+        [
+          512,
+          512
+        ],
+        [
+          512,
+          512
+        ],
+        [
+          512,
+          512
+        ]
+      ],
+      "namedNodes": [
+        "Metal_File",
+        "Grip",
+        "Ferrule",
+        "File_Blade"
+      ],
+      "metrics": {}
+    },
+    "Claw_Hammer.glb": {
+      "bytes": 902972,
+      "validatorErrors": 0,
+      "validatorWarnings": 0,
+      "sizeMeters": [
+        0.1529714473271404,
+        0.2849999952763319,
+        0.04600000008940697
+      ],
+      "textureSizes": [
+        [
+          512,
+          512
+        ],
+        [
+          512,
+          512
+        ],
+        [
+          512,
+          512
+        ]
+      ],
+      "namedNodes": [
+        "Claw_Hammer",
+        "Handle",
+        "Grip",
+        "Hammer_Head",
+        "Strike_Face"
+      ],
+      "metrics": {}
+    },
+    "Screwdriver.glb": {
+      "bytes": 901748,
+      "validatorErrors": 0,
+      "validatorWarnings": 0,
+      "sizeMeters": [
+        0.03815999835729599,
+        0.23649999967217444,
+        0.035999998450279236
+      ],
+      "textureSizes": [
+        [
+          512,
+          512
+        ],
+        [
+          512,
+          512
+        ],
+        [
+          512,
+          512
+        ]
+      ],
+      "namedNodes": [
+        "Screwdriver",
+        "Red_Grip",
+        "Collar",
+        "Shaft",
+        "Blade_Tip"
+      ],
+      "metrics": {}
+    },
+    "Account_Statement.glb": {
+      "bytes": 265908,
+      "validatorErrors": 0,
+      "validatorWarnings": 0,
+      "sizeMeters": [
+        0.20999999344348907,
+        0.296999990940094,
+        0.001410000001769513
+      ],
+      "textureSizes": [
+        [
+          512,
+          512
+        ]
+      ],
+      "namedNodes": [
+        "Account_Statement",
+        "Statement_Card",
+        "Statement_Print"
+      ],
+      "metrics": {}
+    },
+    "Plywood_Board.glb": {
+      "bytes": 1114076,
+      "validatorErrors": 0,
+      "validatorWarnings": 0,
+      "sizeMeters": [
+        1.2999999523162842,
+        0.23999999463558197,
+        0.02139999998454005
+      ],
+      "textureSizes": [
+        [
+          512,
+          512
+        ],
+        [
+          512,
+          512
+        ],
+        [
+          512,
+          512
+        ]
+      ],
+      "namedNodes": [
+        "Plywood_Board",
+        "Plywood",
+        "Nail_Head_1",
+        "Nail_Head_2"
+      ],
+      "metrics": {}
+    }
+  },
+  "previews": [
+    {
+      "file": "Car_34.png",
+      "width": 1080,
+      "height": 1920
+    },
+    {
+      "file": "Car_Driver.png",
+      "width": 1080,
+      "height": 1080
+    },
+    {
+      "file": "Props_Sheet.png",
+      "width": 1280,
+      "height": 2000
+    },
+    {
+      "file": "Statement_Close.png",
+      "width": 1080,
+      "height": 1920
+    }
+  ]
+}
