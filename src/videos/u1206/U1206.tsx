@@ -2,7 +2,7 @@
 // bloom -> NEUTRAL tone map -> grade, MSAA 4. GATE 1: no audio yet (Gate 3 adds public/u1206-toilet-disaster/mix.m4a).
 import React, { useEffect, useMemo } from "react";
 import * as THREE from "three";
-import { AbsoluteFill, getInputProps, useCurrentFrame } from "remotion";
+import { AbsoluteFill, Audio, getInputProps, staticFile, useCurrentFrame } from "remotion";
 import { ThreeCanvas } from "@remotion/three";
 import { useThree } from "@react-three/fiber";
 import { EffectComposer } from "@react-three/postprocessing";
@@ -62,5 +62,8 @@ const ShotView: React.FC<{ id: number; alpha: number }> = ({ id, alpha }) => (
 
 export const U1206Short: React.FC = () => {
   const f = useCurrentFrame();
-  return (<AbsoluteFill style={{ background: "#1b5f80" }}>{layersAt(f).map((l, i) => <ShotView key={i ? "over" : "base"} id={l.id} alpha={l.alpha} />)}</AbsoluteFill>);
+  return (<AbsoluteFill style={{ background: "#1b5f80" }}>{layersAt(f).map((l, i) => <ShotView key={i ? "over" : "base"} id={l.id} alpha={l.alpha} />)}
+    {/* narration (videos/u1206-toilet-disaster/voice/voice.wav, copied to public/); no sound design or music yet */}
+    <Audio src={staticFile("u1206-toilet-disaster/voice.wav")} />
+  </AbsoluteFill>);
 };

@@ -16,7 +16,7 @@ const serveUrl = await bundle({ entryPoint: path.resolve("src/index.ts"), public
 const composition = await selectComposition({ serveUrl, id, browserExecutable, chromiumOptions, inputProps });
 const t0 = Date.now(); let last = 0;
 await renderMedia({ composition, serveUrl, codec: "h264", crf: Number(process.env.CRF ?? 18), outputLocation: out, frameRange: [Number(from), Number(to)], scale: Number(scale),
-  browserExecutable, chromiumOptions, inputProps, concurrency: Number(conc), timeoutInMilliseconds: 900000, muted: true,
+  browserExecutable, chromiumOptions, inputProps, concurrency: Number(conc), timeoutInMilliseconds: 900000, muted: process.env.MUTED === "1", // compositions with an <Audio> track render with sound; MUTED=1 for silent chunks
   onBrowserLog: (l) => { if (l.text.startsWith("[QA]") && !l.text.endsWith("clean")) console.log(l.text); },
   onProgress: ({ renderedFrames }) => { if (renderedFrames - last >= 25) { last = renderedFrames; console.log(`frames ${renderedFrames} ${((Date.now() - t0) / 1000).toFixed(0)}s`); } } });
 console.log("done", out, ((Date.now() - t0) / 1000).toFixed(0) + "s");
