@@ -8,7 +8,7 @@
     "stills": "node scripts/stills.mjs",
     "typecheck": "tsc --noEmit",
     "animatic": "remotion render src/index.ts PhilShort ../../../out/phil-bathroom/animatic.mp4 --public-dir=../assets --width=360 --height=640 --codec=h264 --crf=26",
-    "final": "remotion render src/index.ts PhilShort ../../../out/phil-bathroom/video.mp4 --public-dir=../assets --scale=1.3333 --codec=h264 --crf=16"
+    "final": "remotion render src/index.ts PhilShort ../../../out/phil-bathroom/video.mp4 --public-dir=../assets --width=1440 --height=2560 --codec=h264 --crf=16 --gl=angle"
   },
   "dependencies": {
     "@remotion/bundler": "4.0.545",
