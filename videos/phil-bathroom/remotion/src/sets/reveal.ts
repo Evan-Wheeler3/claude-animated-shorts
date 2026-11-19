@@ -1,8 +1,10 @@
 // S16 bathroom reveal. Port of videos/phil-bathroom/assets/bathroom/SCENE_INIT.mjs (the owner-approved setup):
-// same lights, same lamp settings, same shadow flags, one mixer for all five clips, supplied camera.
+// same lights, same lamp settings, same shadow flags, one mixer for all five clips. The camera follows S16_CAM
+// (owner-requested close-up -> slow zoom out, below) instead of the supplied camera clip.
 // Do not retune these values: they are what matches ThreeJS_Bathroom_Reveal.png / ThreeJS_Motion_Proof.mp4.
 import * as THREE from "three";
 import { loadGLB } from "../lib/load";
+import type { CamKey } from "../lib/cam";
 
 export type RevealSet = {
   scene: THREE.Scene;
@@ -63,3 +65,17 @@ export async function loadReveal(url: string): Promise<RevealSet> {
   };
   return { scene, camera, setFrame };
 }
+
+/**
+ * S16 camera (owner note 2026-11-19), keyed on the FITTED frame of S16 (0 = cut in):
+ * tight close-up on the homeowner's face and shoulders through the sigh and "Time to relax", then a slow zoom out
+ * (dolly back + widen) that only just reveals Phil on the toilet at the right edge, then a creeping hold for the
+ * side-eye, blink and the cue. Replaces the supplied camera clip; the rig and face clips run unchanged.
+ * Heads (scene coords): homeowner (-0.67, 0.85, -0.06), Phil (0.42, 1.22, -0.46).
+ */
+export const S16_CAM: CamKey[] = [
+  { f: 0, pos: [-0.3, 0.99, 0.74], look: [-0.68, 0.81, -0.06], fov: 40 },
+  { f: 78, pos: [-0.305, 0.985, 0.7], look: [-0.68, 0.81, -0.06], fov: 39.5 },
+  { f: 178, pos: [-0.47, 1.22, 2.2], look: [-0.27, 1.0, -0.2], fov: 53 },
+  { f: 224, pos: [-0.467, 1.217, 2.16], look: [-0.27, 1.0, -0.2], fov: 53 },
+];

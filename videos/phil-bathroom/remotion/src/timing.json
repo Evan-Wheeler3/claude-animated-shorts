@@ -1,7 +1,8 @@
 {
  "fps": 30,
- "total": 1513,
+ "total": 1583,
  "voiceOffsetFrames": 0,
+ "s16Pre": 74,
  "shots": [
   {
    "id": "S01",
@@ -41,14 +42,14 @@
   {
    "id": "S05",
    "from": 329,
-   "to": 416,
+   "to": 417,
    "designFrom": 284,
    "designTo": 354,
    "line": 4
   },
   {
    "id": "S06",
-   "from": 416,
+   "from": 417,
    "to": 550,
    "designFrom": 354,
    "designTo": 477,
@@ -106,7 +107,7 @@
   {
    "id": "S12",
    "from": 930,
-   "to": 990,
+   "to": 989,
    "designFrom": 855,
    "designTo": 945,
    "line": 12,
@@ -116,15 +117,15 @@
   },
   {
    "id": "S13",
-   "from": 990,
-   "to": 1163,
+   "from": 989,
+   "to": 1162,
    "designFrom": 945,
    "designTo": 1045,
    "line": 13
   },
   {
    "id": "S14",
-   "from": 1163,
+   "from": 1162,
    "to": 1265,
    "designFrom": 1045,
    "designTo": 1114,
@@ -133,21 +134,21 @@
   {
    "id": "S15",
    "from": 1265,
-   "to": 1362,
+   "to": 1358,
    "designFrom": 1114,
    "designTo": 1190,
    "line": 15
   },
   {
    "id": "S16",
-   "from": 1362,
-   "to": 1513,
+   "from": 1358,
+   "to": 1583,
    "designFrom": 1190,
    "designTo": 1341,
    "line": 16,
    "keyStill": 138,
    "keyLabel": "payoff",
-   "keyFrame": 1500
+   "keyFrame": 1570
   }
  ]
 }

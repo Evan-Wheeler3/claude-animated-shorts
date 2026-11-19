@@ -1,5 +1,7 @@
 # Narration — LOCKED (owner-approved fallback voice B)
 
+**Revision 2026-11-19 (owner note):** the last line now opens with a pause and a sigh. The original take is cut after "…getting in now." and followed by 0.55 s of silence, then a voice-B clone (Qwen3-TTS 1.7B Base, cloned from the first 8 s of the take) of "Ahhh… Time to relax.", placed 3 dB under the narration. The new line is low and slow (about 78 Hz, against about 200 Hz for the old, irritated reading). Total length is 49.6 s. In `words.json`, the sigh is at 45.66 s and "Time to relax" runs 47.28–48.68 s.
+
 **Status:** `voice.wav` is the owner-approved narrator take: Qwen3-TTS 1.7B VoiceDesign "voice B" (a low, lightly gravelly, sardonic late-30s storyteller), reading the approved `SCRIPT.md`. Post-processing:
 - every silence over 0.3 s shrunk to 0.22 s (0.6 s kept before "Time to relax")
 - 1.18× pitch-preserving tempo

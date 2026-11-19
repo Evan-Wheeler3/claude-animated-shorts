@@ -6,7 +6,8 @@ import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { AbsoluteFill, Html5Audio, continueRender, delayRender, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { shotAt, REVEAL_CUES } from "./shots";
-import { loadReveal, type RevealSet } from "./sets/reveal";
+import { applyCam } from "./lib/cam";
+import { loadReveal, S16_CAM, type RevealSet } from "./sets/reveal";
 import { loadBathroom, type BathroomSet } from "./sets/bathroom";
 import { loadExterior, type ExteriorSet } from "./sets/exterior";
 
@@ -38,7 +39,7 @@ export const PhilShort: React.FC = () => {
     });
   }, [loadHandle]);
 
-  const { shot, local } = shotAt(frame);
+  const { shot, local, fitted } = shotAt(frame);
   const black = shot.id === "S16" && local >= REVEAL_CUES.blackFrom;
 
   useEffect(() => {
@@ -58,7 +59,9 @@ export const PhilShort: React.FC = () => {
     r.setSize(width, height, false);
     let scene: THREE.Scene, camera: THREE.Camera;
     if (shot.set === "reveal") {
-      sets.reveal.setFrame(local, width, height);
+      sets.reveal.setFrame(Math.max(0, local), width, height); // pre-roll holds the supplied clips at frame 0
+      applyCam(sets.reveal.camera, S16_CAM, fitted, width / height); // owner-requested close-up -> slow zoom out
+      sets.reveal.scene.updateMatrixWorld(true);
       ({ scene, camera } = sets.reveal);
     } else if (shot.set === "bathroom") {
       ({ scene, camera } = sets.bathroom.pose(shot.id, local, width / height));
@@ -67,7 +70,7 @@ export const PhilShort: React.FC = () => {
     }
     r.render(scene, camera);
     continueRender(handle);
-  }, [sets, frame, width, height, shot, local, black]);
+  }, [sets, frame, width, height, shot, local, fitted, black]);
 
   return (
     <AbsoluteFill style={{ backgroundColor: "black" }}>

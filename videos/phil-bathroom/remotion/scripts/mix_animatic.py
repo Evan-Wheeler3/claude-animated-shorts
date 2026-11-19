@@ -25,8 +25,8 @@ def load(p):
 
 def fitted(shot, frame):
     s = shots[shot]
-    if shot == "S16":
-        return s["from"] + (frame - s["designFrom"])
+    if shot == "S16":  # supplied clips start after the close-up pre-roll; the room tone starts at the cut
+        return s["from"] if frame == s["designFrom"] else s["from"] + timing["s16Pre"] + (frame - s["designFrom"])
     k = (s["to"] - s["from"]) / (s["designTo"] - s["designFrom"])
     return s["from"] + round((frame - s["designFrom"]) * k)
 
@@ -40,7 +40,12 @@ for line in open(os.path.join(EP, "assets", "audio", "cues.md")):
     m = re.match(r"\|\s*(S\d\d_[\w.]+\.wav)\s*\|\s*(S\d\d)\s*\|\s*(\d+)\s*\|", line)
     if m:
         rows.append((m.group(1), m.group(2), int(m.group(3))))
+# S15_sigh is dropped since 2026-11-19: the narrator now sighs at the top of S16 (owner note) and two sighs would clash
+SKIP = {"S15_sigh.wav"}
 for name, shot, frame in rows:
+    if name in SKIP:
+        report.append(f"| {name} | {shot} | {frame} | — | — | dropped (narrator sighs in S16) |")
+        continue
     y = load(os.path.join(EP, "assets", "audio", "sfx", name))
     f = fitted(shot, frame)
     gain = -3.0 if name == "S16_fart.wav" else -6.0

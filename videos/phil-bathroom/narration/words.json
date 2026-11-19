@@ -47,11 +47,11 @@
  {
   "word": "use",
   "start": 2.74,
-  "end": 3.0
+  "end": 2.98
  },
  {
   "word": "your",
-  "start": 3.0,
+  "start": 2.98,
   "end": 3.24
  },
  {
@@ -82,11 +82,11 @@
  {
   "word": "he",
   "start": 5.0,
-  "end": 5.2
+  "end": 5.22
  },
  {
   "word": "never",
-  "start": 5.2,
+  "start": 5.22,
   "end": 5.84
  },
  {
@@ -176,7 +176,7 @@
  },
  {
   "word": "Phil",
-  "start": 12.64,
+  "start": 12.66,
   "end": 12.78
  },
  {
@@ -196,17 +196,17 @@
  },
  {
   "word": "so",
-  "start": 13.98,
+  "start": 14.0,
   "end": 14.22
  },
  {
   "word": "you",
   "start": 14.22,
-  "end": 14.4
+  "end": 14.38
  },
  {
   "word": "board",
-  "start": 14.4,
+  "start": 14.38,
   "end": 14.64
  },
  {
@@ -237,11 +237,11 @@
  {
   "word": "your",
   "start": 16.26,
-  "end": 16.5
+  "end": 16.48
  },
  {
   "word": "house",
-  "start": 16.5,
+  "start": 16.48,
   "end": 16.84
  },
  {
@@ -282,21 +282,21 @@
  {
   "word": "drives",
   "start": 18.88,
-  "end": 19.18
+  "end": 19.16
  },
  {
   "word": "straight",
-  "start": 19.18,
+  "start": 19.16,
   "end": 19.58
  },
  {
   "word": "through",
   "start": 19.58,
-  "end": 19.84
+  "end": 19.82
  },
  {
   "word": "your",
-  "start": 19.84,
+  "start": 19.82,
   "end": 20.04
  },
  {
@@ -306,7 +306,7 @@
  },
  {
   "word": "This",
-  "start": 20.74,
+  "start": 20.72,
   "end": 20.88
  },
  {
@@ -337,16 +337,16 @@
  {
   "word": "you",
   "start": 22.76,
-  "end": 22.96
+  "end": 22.98
  },
  {
   "word": "buy",
-  "start": 22.96,
-  "end": 23.18
+  "start": 22.98,
+  "end": 23.2
  },
  {
   "word": "a",
-  "start": 23.18,
+  "start": 23.2,
   "end": 23.38
  },
  {
@@ -437,11 +437,11 @@
  {
   "word": "You",
   "start": 28.58,
-  "end": 29.1
+  "end": 29.06
  },
  {
   "word": "build",
-  "start": 29.1,
+  "start": 29.06,
   "end": 29.34
  },
  {
@@ -472,11 +472,11 @@
  {
   "word": "but",
   "start": 31.1,
-  "end": 31.32
+  "end": 31.34
  },
  {
   "word": "Phil",
-  "start": 31.32,
+  "start": 31.34,
   "end": 31.52
  },
  {
@@ -511,7 +511,7 @@
  },
  {
   "word": "So",
-  "start": 33.1,
+  "start": 33.06,
   "end": 33.22
  },
  {
@@ -532,11 +532,11 @@
  {
   "word": "entire",
   "start": 33.86,
-  "end": 34.24
+  "end": 34.22
  },
  {
   "word": "life",
-  "start": 34.24,
+  "start": 34.22,
   "end": 34.56
  },
  {
@@ -586,7 +586,7 @@
  },
  {
   "word": "Steel",
-  "start": 38.86,
+  "start": 38.84,
   "end": 38.94
  },
  {
@@ -606,7 +606,7 @@
  },
  {
   "word": "armed",
-  "start": 41.12,
+  "start": 41.1,
   "end": 41.38
  },
  {
@@ -652,21 +652,26 @@
  {
   "word": "now.",
   "start": 44.5,
-  "end": 44.9
+  "end": 44.94
  },
  {
-  "word": "Time",
-  "start": 45.52,
-  "end": 45.74
+  "word": "Ah,",
+  "start": 45.66,
+  "end": 46.3
+ },
+ {
+  "word": "time",
+  "start": 47.28,
+  "end": 47.78
  },
  {
   "word": "to",
-  "start": 45.74,
-  "end": 46.04
+  "start": 47.78,
+  "end": 48.16
  },
  {
   "word": "relax.",
-  "start": 46.04,
-  "end": 46.36
+  "start": 48.16,
+  "end": 48.68
  }
 ]
