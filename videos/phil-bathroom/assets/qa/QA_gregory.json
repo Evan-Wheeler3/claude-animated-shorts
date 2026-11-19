@@ -1,0 +1,158 @@
+{
+  "asset": "Gregory_Pug_Rig.glb",
+  "bytes": 9625636,
+  "validator": {
+    "numErrors": 0,
+    "numWarnings": 4,
+    "numInfos": 6,
+    "numHints": 0,
+    "messages": [
+      {
+        "code": "MESH_PRIMITIVE_GENERATED_TANGENT_SPACE",
+        "message": "Material requires a tangent space but the mesh primitive does not provide it. Runtime-generated tangent space may be non-portable across implementations.",
+        "severity": 1,
+        "pointer": "/meshes/0/primitives/0/material"
+      },
+      {
+        "code": "UNUSED_OBJECT",
+        "message": "This object may be unused.",
+        "severity": 2,
+        "pointer": "/meshes/0/primitives/1/attributes/TEXCOORD_0"
+      },
+      {
+        "code": "UNUSED_OBJECT",
+        "message": "This object may be unused.",
+        "severity": 2,
+        "pointer": "/meshes/0/primitives/2/attributes/TEXCOORD_0"
+      },
+      {
+        "code": "MESH_PRIMITIVE_GENERATED_TANGENT_SPACE",
+        "message": "Material requires a tangent space but the mesh primitive does not provide it. Runtime-generated tangent space may be non-portable across implementations.",
+        "severity": 1,
+        "pointer": "/meshes/0/primitives/3/material"
+      },
+      {
+        "code": "UNUSED_OBJECT",
+        "message": "This object may be unused.",
+        "severity": 2,
+        "pointer": "/meshes/0/primitives/4/attributes/TEXCOORD_0"
+      },
+      {
+        "code": "UNUSED_OBJECT",
+        "message": "This object may be unused.",
+        "severity": 2,
+        "pointer": "/meshes/0/primitives/5/attributes/TEXCOORD_0"
+      },
+      {
+        "code": "UNUSED_OBJECT",
+        "message": "This object may be unused.",
+        "severity": 2,
+        "pointer": "/meshes/0/primitives/6/attributes/TEXCOORD_0"
+      },
+      {
+        "code": "MESH_PRIMITIVE_GENERATED_TANGENT_SPACE",
+        "message": "Material requires a tangent space but the mesh primitive does not provide it. Runtime-generated tangent space may be non-portable across implementations.",
+        "severity": 1,
+        "pointer": "/meshes/1/primitives/0/material"
+      },
+      {
+        "code": "MESH_PRIMITIVE_GENERATED_TANGENT_SPACE",
+        "message": "Material requires a tangent space but the mesh primitive does not provide it. Runtime-generated tangent space may be non-portable across implementations.",
+        "severity": 1,
+        "pointer": "/meshes/2/primitives/0/material"
+      },
+      {
+        "code": "UNUSED_OBJECT",
+        "message": "This object may be unused.",
+        "severity": 2,
+        "pointer": "/meshes/2/primitives/1/attributes/TEXCOORD_0"
+      }
+    ],
+    "truncated": false
+  },
+  "three": "177",
+  "bones": [
+    "Pug_Root",
+    "Pug_Spine0",
+    "Pug_Spine1",
+    "Pug_Neck",
+    "Pug_Head",
+    "Pug_Jaw",
+    "Pug_Tail0",
+    "Pug_Tail1",
+    "Pug_Ear_L",
+    "Pug_Ear_R",
+    "Pug_FrontLeg_L0",
+    "Pug_FrontLeg_L1",
+    "Pug_FrontLeg_L2",
+    "Pug_FrontLeg_R0",
+    "Pug_FrontLeg_R1",
+    "Pug_FrontLeg_R2",
+    "Pug_HindLeg_L0",
+    "Pug_HindLeg_L1",
+    "Pug_HindLeg_L2",
+    "Pug_HindLeg_R0",
+    "Pug_HindLeg_R1",
+    "Pug_HindLeg_R2"
+  ],
+  "morphs": [
+    "Blink",
+    "Sniff",
+    "EyesLeft",
+    "EyesRight"
+  ],
+  "clipFramesAt30Fps": {
+    "Idle_Alert": 60,
+    "Sniff": 30,
+    "Scoot_Forward": 15,
+    "Sit": 12,
+    "Blink": 4
+  },
+  "nodes": [
+    "Gregory_Body",
+    "Pug_Collar",
+    "Gregory_Tag"
+  ],
+  "floorHeightsMeters": {
+    "rest": {
+      "Pug_FrontLeg_L2": 0,
+      "Pug_FrontLeg_R2": 0,
+      "Pug_HindLeg_L2": 0,
+      "Pug_HindLeg_R2": 0
+    },
+    "sit": {
+      "Pug_FrontLeg_L2": 0,
+      "Pug_FrontLeg_R2": 0,
+      "Pug_HindLeg_L2": 0,
+      "Pug_HindLeg_R2": 0
+    }
+  },
+  "scootTravelMeters": 0.45,
+  "stanceSamples": 16,
+  "maxStanceSlideMeters": 2e-8,
+  "rendering": {
+    "toneMapping": "ACES Filmic",
+    "exposure": 1.25,
+    "outputColorSpace": "sRGB",
+    "previews": {
+      "Gregory_34.png": {
+        "width": 1080,
+        "height": 1920
+      },
+      "Gregory_Sit_Tag.png": {
+        "width": 1080,
+        "height": 1920
+      },
+      "Gregory_Scale.png": {
+        "width": 1080,
+        "height": 1920
+      },
+      "Gregory_Motion.mp4": {
+        "width": 360,
+        "height": 640,
+        "fps": 30,
+        "seconds": 3
+      }
+    }
+  }
+}
