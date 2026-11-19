@@ -1,0 +1,122 @@
+{
+  "threeRevision": "177",
+  "width": 1080,
+  "height": 1920,
+  "previews": [
+    "Guards_Front.png",
+    "Guards_FaceCU.png",
+    "Guards_Lineup.png"
+  ],
+  "guards": {
+    "Guard_A": {
+      "bytes": 4022080,
+      "validatorVersion": "2.0.0-dev.3.10",
+      "errors": 0,
+      "warnings": 2,
+      "warningCodes": [
+        "NODE_SKINNED_MESH_NON_ROOT",
+        "NODE_SKINNED_MESH_NON_ROOT"
+      ],
+      "boneCount": 80,
+      "morphCount": 23,
+      "footY": -6.268246199869765e-8,
+      "textureSizes": [
+        [
+          1024,
+          512
+        ],
+        [
+          768,
+          768
+        ],
+        [
+          768,
+          768
+        ],
+        [
+          1024,
+          1024
+        ]
+      ],
+      "clips": 0,
+      "seam": {
+        "shoulders": {
+          "edges": 758,
+          "maxGrowthMeters": 0.012621210283053082,
+          "maxRatio": 3.2188393481750865,
+          "seamPairs": 50,
+          "maxSeamGapMeters": 0
+        },
+        "elbow": {
+          "edges": 816,
+          "maxGrowthMeters": 0.01830018991783776,
+          "maxRatio": 1.565344346701577,
+          "seamPairs": 16,
+          "maxSeamGapMeters": 0
+        },
+        "neckAndCollar": {
+          "edges": 1947,
+          "maxGrowthMeters": 0.005917333513858494,
+          "maxRatio": 1.4497643258826707,
+          "seamPairs": 39,
+          "maxSeamGapMeters": 0
+        }
+      }
+    },
+    "Guard_B": {
+      "bytes": 4282616,
+      "validatorVersion": "2.0.0-dev.3.10",
+      "errors": 0,
+      "warnings": 2,
+      "warningCodes": [
+        "NODE_SKINNED_MESH_NON_ROOT",
+        "NODE_SKINNED_MESH_NON_ROOT"
+      ],
+      "boneCount": 80,
+      "morphCount": 23,
+      "footY": -6.268246199869765e-8,
+      "textureSizes": [
+        [
+          1024,
+          1024
+        ],
+        [
+          768,
+          768
+        ],
+        [
+          768,
+          768
+        ],
+        [
+          1024,
+          1024
+        ]
+      ],
+      "clips": 0,
+      "seam": {
+        "shoulders": {
+          "edges": 708,
+          "maxGrowthMeters": 0.010328426470668041,
+          "maxRatio": 3.2188393481750865,
+          "seamPairs": 50,
+          "maxSeamGapMeters": 0
+        },
+        "elbow": {
+          "edges": 816,
+          "maxGrowthMeters": 0.01830018991783776,
+          "maxRatio": 1.565344346701577,
+          "seamPairs": 16,
+          "maxSeamGapMeters": 0
+        },
+        "neckAndCollar": {
+          "edges": 1985,
+          "maxGrowthMeters": 0.006067058303512656,
+          "maxRatio": 1.3462845100077505,
+          "seamPairs": 40,
+          "maxSeamGapMeters": 0
+        }
+      }
+    }
+  }
+}
