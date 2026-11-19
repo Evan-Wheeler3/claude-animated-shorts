@@ -4,7 +4,7 @@
 // Renderer settings follow the approved bathroom proof: ACES filmic, exposure 1.25, sRGB out, soft shadows.
 import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
-import { AbsoluteFill, continueRender, delayRender, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, Html5Audio, continueRender, delayRender, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { shotAt, REVEAL_CUES } from "./shots";
 import { loadReveal, type RevealSet } from "./sets/reveal";
 import { loadBathroom, type BathroomSet } from "./sets/bathroom";
@@ -71,6 +71,8 @@ export const PhilShort: React.FC = () => {
 
   return (
     <AbsoluteFill style={{ backgroundColor: "black" }}>
+      {/* temp animatic mix: locked narration + Codex temp SFX on the fitted cut (scripts/mix_animatic.py) */}
+      <Html5Audio src={staticFile("audio/mix_animatic.wav")} />
       {black ? null : <canvas ref={canvas} width={width} height={height} style={{ width: "100%", height: "100%" }} />}
     </AbsoluteFill>
   );

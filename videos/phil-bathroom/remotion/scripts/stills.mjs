@@ -12,7 +12,9 @@ const root = path.resolve(here, "..");
 const [outDir, frameArg = "keys", scale = "0.5"] = process.argv.slice(2);
 if (!outDir) throw new Error("usage: node scripts/stills.mjs <outDir> <frames|keys> [scale]");
 fs.mkdirSync(outDir, { recursive: true });
-const KEYS = { 40: "S01_hook", 535: "S07_garage", 657: "S08_gregory", 782: "S10_gregory-tag", 900: "S12_vault-apex", 1328: "S16_payoff" };
+// Gate 1 key stills: fitted frames from src/timing.json (regenerate with scripts/fit-timing.mjs)
+const timing = JSON.parse(fs.readFileSync(path.join(root, "src/timing.json"), "utf8"));
+const KEYS = Object.fromEntries(timing.shots.filter((s) => s.keyFrame !== undefined).map((s) => [s.keyFrame, `${s.id}_${s.keyLabel}`]));
 const frames = process.env.COMP && process.env.COMP !== "PhilShort" ? [0] : frameArg === "keys" ? Object.keys(KEYS).map(Number) : frameArg.split(",").map(Number);
 const HS = "/opt/pw-browsers/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell";
 const inputProps = JSON.parse(process.env.PROPS || "{}");

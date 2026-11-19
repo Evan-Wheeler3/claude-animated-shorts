@@ -1,0 +1,153 @@
+{
+ "fps": 30,
+ "total": 1513,
+ "voiceOffsetFrames": 0,
+ "shots": [
+  {
+   "id": "S01",
+   "from": 0,
+   "to": 124,
+   "designFrom": 0,
+   "designTo": 108,
+   "line": 0,
+   "keyStill": 40,
+   "keyLabel": "hook",
+   "keyFrame": 46
+  },
+  {
+   "id": "S02",
+   "from": 124,
+   "to": 205,
+   "designFrom": 108,
+   "designTo": 174,
+   "line": 1
+  },
+  {
+   "id": "S03",
+   "from": 205,
+   "to": 257,
+   "designFrom": 174,
+   "designTo": 219,
+   "line": 2
+  },
+  {
+   "id": "S04",
+   "from": 257,
+   "to": 329,
+   "designFrom": 219,
+   "designTo": 284,
+   "line": 3
+  },
+  {
+   "id": "S05",
+   "from": 329,
+   "to": 416,
+   "designFrom": 284,
+   "designTo": 354,
+   "line": 4
+  },
+  {
+   "id": "S06",
+   "from": 416,
+   "to": 550,
+   "designFrom": 354,
+   "designTo": 477,
+   "line": 5
+  },
+  {
+   "id": "S07",
+   "from": 550,
+   "to": 673,
+   "designFrom": 477,
+   "designTo": 597,
+   "line": 6,
+   "keyStill": 58,
+   "keyLabel": "garage",
+   "keyFrame": 609
+  },
+  {
+   "id": "S08",
+   "from": 673,
+   "to": 746,
+   "designFrom": 597,
+   "designTo": 672,
+   "line": 8,
+   "keyStill": 60,
+   "keyLabel": "gregory",
+   "keyFrame": 731
+  },
+  {
+   "id": "S09",
+   "from": 746,
+   "to": 810,
+   "designFrom": 672,
+   "designTo": 738,
+   "line": 9
+  },
+  {
+   "id": "S10",
+   "from": 810,
+   "to": 854,
+   "designFrom": 738,
+   "designTo": 792,
+   "line": 10,
+   "keyStill": 44,
+   "keyLabel": "gregory-tag",
+   "keyFrame": 846
+  },
+  {
+   "id": "S11",
+   "from": 854,
+   "to": 930,
+   "designFrom": 792,
+   "designTo": 855,
+   "line": 11
+  },
+  {
+   "id": "S12",
+   "from": 930,
+   "to": 990,
+   "designFrom": 855,
+   "designTo": 945,
+   "line": 12,
+   "keyStill": 45,
+   "keyLabel": "vault-apex",
+   "keyFrame": 960
+  },
+  {
+   "id": "S13",
+   "from": 990,
+   "to": 1163,
+   "designFrom": 945,
+   "designTo": 1045,
+   "line": 13
+  },
+  {
+   "id": "S14",
+   "from": 1163,
+   "to": 1265,
+   "designFrom": 1045,
+   "designTo": 1114,
+   "line": 14
+  },
+  {
+   "id": "S15",
+   "from": 1265,
+   "to": 1362,
+   "designFrom": 1114,
+   "designTo": 1190,
+   "line": 15
+  },
+  {
+   "id": "S16",
+   "from": 1362,
+   "to": 1513,
+   "designFrom": 1190,
+   "designTo": 1341,
+   "line": 16,
+   "keyStill": 138,
+   "keyLabel": "payoff",
+   "keyFrame": 1500
+  }
+ ]
+}
