@@ -3,8 +3,8 @@
 // Motion here is BLOCKING for the low-res animatic: readable poses and contacts on the right frames, not final animation.
 import * as THREE from "three";
 import { staticFile } from "remotion";
-import { buildExterior, PORCH_Y, WALL_H } from "./exteriorBuild";
-import { makeExtra, makeHomeowner, makePhil, B, type Rig } from "../lib/rig";
+import { buildExterior, upgradeExterior, PORCH_Y, WALL_H, type PugExtras } from "./exteriorBuild";
+import { makeGuard, makeHomeowner, makePhil, B, type Rig } from "../lib/rig";
 import { applyCam, lerp, ramp, type CamKey, type V3 } from "../lib/cam";
 import { crouch, face, handsFront, kneeUp, legs, look, seated, stand, walk } from "../lib/poses";
 import { label } from "../lib/tex";
@@ -28,6 +28,8 @@ function skyTexture(key: string, top: string, mid: string, horizon: string, clou
 export async function loadExterior(): Promise<ExteriorSet> {
   const scene = new THREE.Scene();
   const X = buildExterior(scene);
+  const U = await upgradeExterior(X, staticFile);
+  const XP = X as typeof X & PugExtras;
 
   // ---------- sky + fog ----------
   const skyDay = skyTexture("day", "#4f7fc4", "#86a9d8", "#c9d6e2", 0.05);
@@ -114,27 +116,11 @@ export async function loadExterior(): Promise<ExteriorSet> {
   const [phil, home, g1, g2] = await Promise.all([
     makePhil(staticFile),
     makeHomeowner(staticFile),
-    makeExtra(staticFile, "#28324a", true),
-    makeExtra(staticFile, "#28324a", true),
+    makeGuard(staticFile, "A"),
+    makeGuard(staticFile, "B"),
   ]);
   const cast: Rig[] = [phil, home, g1, g2];
   cast.forEach((r) => scene.add(r.root));
-  // guard caps (placeholder wardrobe so the two guards read as uniformed and apart from the homeowner)
-  for (const g of [g1, g2]) {
-    const cap = new THREE.Group();
-    const capM = new THREE.MeshStandardMaterial({ color: 0x1c2233, roughness: 0.8 });
-    const crown = new THREE.Mesh(new THREE.SphereGeometry(0.105, 18, 10, 0, Math.PI * 2, 0, Math.PI / 2), capM);
-    crown.scale.set(1, 0.75, 1.1);
-    const brim = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 0.012, 18, 1, false, -Math.PI / 2, Math.PI), capM);
-    brim.position.set(0, 0, 0.06);
-    brim.scale.set(1, 1, 0.9);
-    cap.add(crown, brim);
-    g.bone(B.head).add(cap);
-    cap.position.set(0.1, 0.0, 0);
-    cap.rotation.set(0, Math.PI / 2, -Math.PI / 2);
-    cap.userData.isCap = true;
-  }
-
   const camera = new THREE.PerspectiveCamera(50, 9 / 16, 0.03, 400);
   const place = (r: Rig, p: V3, ryDeg: number) => {
     r.root.visible = true;
@@ -145,33 +131,47 @@ export async function loadExterior(): Promise<ExteriorSet> {
   const D2R = THREE.MathUtils.degToRad;
 
   /** place the pole so its tip sits on `tip` and it passes through `through` */
-  function aimPole(tip: V3, through: V3, len = 5.4) {
+  function aimPole(tip: V3, through: V3, len = 5.4) { // Vault_Pole.glb: pivot at the tip, 4.9 m along +Y
     X.pole.visible = true;
     X.pole.position.set(...tip);
     const dir = new THREE.Vector3(...through).sub(new THREE.Vector3(...tip)).normalize();
     X.pole.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir);
-    X.pole.scale.set(1, len / 4.6, 1);
+    X.pole.scale.set(1, len / 4.9, 1);
   }
 
   /** pug: position on the ground plane, yaw, sit 0..1, head yaw/pitch (deg), blink 0..1 */
   let tagOn = false; // GREGORY tag only reads once he has switched sides (S10)
-  function pug(p: V3, ry: number, sit = 0, headYaw = 0, headPitch = 0, blink = 0) {
+  const worldTurn = (o: THREE.Object3D, axis: THREE.Vector3, deg: number) => {
+    const pq = o.parent!.getWorldQuaternion(new THREE.Quaternion());
+    const wq = o.getWorldQuaternion(new THREE.Quaternion());
+    wq.premultiply(new THREE.Quaternion().setFromAxisAngle(axis, D2R(deg)));
+    o.quaternion.copy(pq.invert().multiply(wq));
+    o.updateMatrixWorld(true);
+  };
+  /** Gregory (Codex rig): one body clip sampled at `t` (root motion included), optional Blink overlay, head aim on top. */
+  function pug(p: V3, ry: number, o: { clip?: "Idle_Alert" | "Sniff" | "Scoot_Forward" | "Sit"; t?: number; blink?: number; headYaw?: number; headPitch?: number } = {}) {
     X.pug.visible = true;
     X.tag.visible = tagOn;
     X.pug.position.set(...p);
     X.pug.rotation.set(0, D2R(ry), 0);
-    // sit = rotate the body about the hind feet
-    const piv = new THREE.Vector3(0, 0.03, -0.13);
-    const q = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), -0.62 * sit);
-    X.pugBody.quaternion.copy(q);
-    X.pugBody.position.copy(piv).sub(piv.clone().applyQuaternion(q));
-    X.legs[0].rotation.x = X.legs[1].rotation.x = 0.62 * sit; // front legs stay vertical
-    X.legs[2].rotation.x = X.legs[3].rotation.x = -1.0 * sit; // hind legs fold forward under the rump
-    X.head.rotation.set(D2R(headPitch + 30 * sit), D2R(headYaw), 0);
-    X.lids.forEach((l) => {
-      l.visible = blink > 0.05;
-      l.scale.set(1, 0.02 + 0.98 * blink, 0.8);
-    });
+    const mx = XP.pugMixer, clips = XP.pugClips;
+    mx.stopAllAction();
+    const play = (name: string, t: number) => {
+      const a = clips[name];
+      a.reset();
+      a.setLoop(THREE.LoopOnce, 1);
+      a.clampWhenFinished = true;
+      a.play();
+      a.time = Math.min(Math.max(0, t), a.getClip().duration - 1e-4);
+    };
+    const clip = o.clip ?? "Idle_Alert";
+    play(clip, clip === "Idle_Alert" ? (o.t ?? 0) % 2 : (o.t ?? 0));
+    if (o.blink) play("Blink", o.blink * 0.066);
+    mx.update(0);
+    X.pug.updateMatrixWorld(true);
+    const q = X.pug.getWorldQuaternion(new THREE.Quaternion());
+    if (o.headYaw) worldTurn(XP.pugHead, new THREE.Vector3(0, 1, 0).applyQuaternion(q), o.headYaw);
+    if (o.headPitch) worldTurn(XP.pugHead, new THREE.Vector3(1, 0, 0).applyQuaternion(q), o.headPitch);
   }
 
   function hideAll() {
@@ -181,15 +181,13 @@ export async function loadExterior(): Promise<ExteriorSet> {
     });
     for (const o of [X.pug, X.tray, X.pole, X.fileTool, X.hammer, X.screwdriver, X.statement, X.car, X.bars, X.boards, X.frontBoards, X.fortress, X.steelDoor]) o.visible = false;
     X.doorPivot.visible = true;
-    X.sash.position.y = 0;
-    X.turnpiece.rotation.z = 0;
+    U.reset(); // sash, bars, steel door, turnpiece, fortress back to their GLB rest
     X.garagePanels.forEach((g, i) => {
       g.position.copy(X.garageRest[i].p);
       g.rotation.copy(X.garageRest[i].r);
       g.visible = true;
     });
     X.debris.forEach((d) => (d.visible = false));
-    X.barMeshes.forEach((b) => (b.rotation.set(0, 0, 0), (b.position.y = X.SW.sill + X.SW.h / 2)));
     (X.sensor.material as THREE.MeshStandardMaterial).emissiveIntensity = 0;
     sensorGlow.intensity = 0;
   }
@@ -211,26 +209,26 @@ export async function loadExterior(): Promise<ExteriorSet> {
       // deadbolt: two screwdriver taps, match cut (f 20) to the homeowner's thumb rotating the bolt to the stop
       houseState(3);
       const tp = X.turnpiece.getWorldPosition(new THREE.Vector3());
-      place(home, [X.doorX + 0.85, PORCH_Y, 0.45], 230);
+      place(home, [X.doorX + 0.62, PORCH_Y, -0.55], 15); // inside the front door (thumb-turn is on the interior face)
       stand(home);
       if (f < 20) {
         X.screwdriver.visible = true;
-        X.screwdriver.position.set(tp.x + 0.02, tp.y - 0.04, tp.z + 0.09 + 0.02 * Math.abs(Math.sin(f * 0.6)));
-        X.screwdriver.rotation.set(-Math.PI / 2, 0, 0);
-        home.ik(B.rUp, B.rFore, B.rHand, new THREE.Vector3(tp.x + 0.03, tp.y - 0.05, tp.z + 0.17), home.w([0.4, 0.9, -0.3]));
+        X.screwdriver.position.set(tp.x + 0.02, tp.y - 0.04, tp.z - 0.09 - 0.02 * Math.abs(Math.sin(f * 0.6)));
+        X.screwdriver.rotation.set(Math.PI / 2, 0, 0);
+        home.ik(B.rUp, B.rFore, B.rHand, new THREE.Vector3(tp.x + 0.03, tp.y - 0.05, tp.z - 0.17), home.w([0.4, 0.9, -0.3]));
       } else {
-        X.turnpiece.rotation.z = -Math.PI / 2 * ramp(f, 24, 34);
-        home.ik(B.rUp, B.rFore, B.rHand, new THREE.Vector3(tp.x + 0.02, tp.y - 0.06, tp.z + 0.1), home.w([0.4, 0.9, -0.3]));
+        X.turnpiece.rotation.z = U.restOf(X.turnpiece).r.z - (Math.PI / 2) * ramp(f, 24, 34);
+        home.ik(B.rUp, B.rFore, B.rHand, new THREE.Vector3(tp.x + 0.02, tp.y - 0.06, tp.z - 0.1), home.w([0.4, 0.9, -0.3]));
       }
-      const c: V3 = [tp.x - 0.3, tp.y + 0.1, tp.z + 0.68];
+      const c: V3 = [tp.x - 0.32, tp.y + 0.1, tp.z - 0.66];
       return { light: "day", focus: [X.doorX, 1, 0.5], cam: f < 20
-        ? [{ f: 0, pos: c, look: [tp.x - 0.03, tp.y - 0.02, tp.z], fov: 32 }, { f: 19, pos: [c[0] - 0.02, c[1], c[2] - 0.06], look: [tp.x - 0.03, tp.y - 0.02, tp.z], fov: 32 }]
-        : [{ f: 20, pos: [tp.x - 0.22, tp.y + 0.1, tp.z + 0.62], look: [tp.x, tp.y - 0.03, tp.z], fov: 30 }, { f: 44, pos: [tp.x - 0.2, tp.y + 0.09, tp.z + 0.55], look: [tp.x, tp.y - 0.03, tp.z], fov: 30 }] };
+        ? [{ f: 0, pos: c, look: [tp.x - 0.03, tp.y - 0.02, tp.z], fov: 32 }, { f: 19, pos: [c[0] - 0.02, c[1], c[2] + 0.06], look: [tp.x - 0.03, tp.y - 0.02, tp.z], fov: 32 }]
+        : [{ f: 20, pos: [tp.x - 0.22, tp.y + 0.1, tp.z - 0.62], look: [tp.x, tp.y - 0.03, tp.z], fov: 30 }, { f: 44, pos: [tp.x - 0.2, tp.y + 0.09, tp.z - 0.55], look: [tp.x, tp.y - 0.03, tp.z], fov: 30 }] };
     },
     S04: (f) => {
       // Phil climbs through the side window: palms on the sill, one knee through
       houseState(4);
-      X.sash.position.y = X.SW.h / 2 - 0.03;
+      X.sash.position.y = U.restOf(X.sash).p.y + 0.47;
       const k = ramp(f, 8, 40);
       place(phil, [-5.62 + 0.18 * k, 0.12 * k, -3.0], 90);
       const a = phil.ankle;
@@ -251,17 +249,16 @@ export async function loadExterior(): Promise<ExteriorSet> {
       houseState(5);
       if (f < 18) {
         X.bars.visible = true;
-        X.bars.position.y = 0.06 * (1 - ramp(f, 0, 12));
+        X.bars.position.y = U.restOf(X.bars).p.y + 0.06 * (1 - ramp(f, 0, 12));
         return { light: "day", focus: [-5, 1, -3], cam: [{ f: 0, pos: [-6.6, 1.55, -2.1], look: [-5.12, 1.45, -3.0], fov: 40 }, { f: 17, pos: [-6.5, 1.53, -2.2], look: [-5.12, 1.45, -3.0], fov: 39 }] };
       }
-      X.bars.position.y = 0;
       place(phil, [-5.7, 0, -2.9], 95);
       stand(phil);
       const s = Math.sin(f * 0.9) * 0.05;
       X.fileTool.visible = f < 52;
       const ft = new THREE.Vector3(...sideWinWorld(1.12, 0.0 + s));
       X.fileTool.position.copy(ft).add(new THREE.Vector3(-0.15, 0, 0));
-      X.fileTool.rotation.set(0, 0, 0.3);
+      X.fileTool.rotation.set(Math.PI / 2, 0.3, 0); // Metal_File long axis is +Y: lay it along the bars
       phil.ik(B.rUp, B.rFore, B.rHand, ft.clone().add(new THREE.Vector3(-0.17, -0.02, 0.1)), phil.w([0.6, 0.8, -0.4]));
       phil.ik(B.lUp, B.lFore, B.lHand, new THREE.Vector3(-5.18, 1.3, -3.25), phil.w([0.6, 0.8, -0.4]));
       look(phil, 8, 14);
@@ -269,8 +266,8 @@ export async function loadExterior(): Promise<ExteriorSet> {
       const loose = X.barMeshes[2];
       if (f >= 52) {
         const t = ramp(f, 52, 62);
-        loose.rotation.x = 0.5 * t - 0.08 * Math.sin((f - 62) * 0.5) * (f > 62 ? Math.exp(-(f - 62) * 0.2) : 0);
-        loose.position.y = X.SW.sill + X.SW.h / 2 - 0.06 * t;
+        // Codex bars pivot at their feet: the loose one tips out away from the wall (-X), swings once and stops
+        loose.rotation.z = U.restOf(loose).r.z + 0.5 * t - 0.08 * Math.sin((f - 62) * 0.5) * (f > 62 ? Math.exp(-(f - 62) * 0.2) : 0);
         return { light: "day", focus: [-5, 1, -3], cam: [{ f: 52, pos: [-6.25, 1.4, -2.2], look: [-5.15, 1.4, -3.0], fov: 36 }, { f: 69, pos: [-6.2, 1.38, -2.25], look: [-5.15, 1.4, -3.0], fov: 35 }] };
       }
       return { light: "day", focus: [-5, 1, -3], cam: [{ f: 18, pos: [-5.32, 1.62, -1.75], look: [-5.72, 1.5, -2.9], fov: 40 }, { f: 51, pos: [-5.36, 1.6, -1.9], look: [-5.72, 1.5, -2.9], fov: 38 }] };
@@ -369,10 +366,10 @@ export async function loadExterior(): Promise<ExteriorSet> {
       // serious low-angle presentation of Gregory -> slide out to reveal a tiny pug before a very big doorway
       houseState(7);
       const p: V3 = [X.doorX, PORCH_Y, 0.62];
-      pug(p, 0, 0, 0, 0, f >= 40 && f < 44 ? 1 : 0);
+      pug(p, 0, { t: f / 30, blink: f >= 40 && f < 44 ? 1 - Math.abs(f - 41.5) / 2 : 0 });
       return { light: "day", focus: [X.doorX, 1, 1], cam: [
-        { f: 0, pos: [X.doorX + 0.08, PORCH_Y + 0.1, 1.55], look: [X.doorX, PORCH_Y + 0.4, 0.62], fov: 30 },
-        { f: 20, pos: [X.doorX + 0.08, PORCH_Y + 0.1, 1.5], look: [X.doorX, PORCH_Y + 0.4, 0.62], fov: 30 },
+        { f: 0, pos: [X.doorX + 0.08, PORCH_Y + 0.1, 2.0], look: [X.doorX, PORCH_Y + 0.36, 0.62], fov: 30 },
+        { f: 20, pos: [X.doorX + 0.08, PORCH_Y + 0.1, 1.92], look: [X.doorX, PORCH_Y + 0.36, 0.62], fov: 30 },
         { f: 52, pos: [X.doorX + 0.35, PORCH_Y + 0.22, 4.1], look: [X.doorX, 1.25, 0.2], fov: 52 },
         { f: 74, pos: [X.doorX + 0.38, PORCH_Y + 0.22, 4.25], look: [X.doorX, 1.25, 0.2], fov: 52 },
       ] };
@@ -392,7 +389,7 @@ export async function loadExterior(): Promise<ExteriorSet> {
       phil.ik(B.rUp, B.rFore, B.rHand, hold.clone().add(new THREE.Vector3(-0.16, 0.03, 0)), phil.w([-0.5, 0.9, -0.3]));
       look(phil, 0, 10);
       const track = ramp(f, 20, 40);
-      pug([X.doorX - 0.05, PORCH_Y, 0.95], 0, 0, 25 * track, 22 * track);
+      pug([X.doorX - 0.05, PORCH_Y, 0.95], 0, { clip: track > 0.6 ? "Sniff" : "Idle_Alert", t: track > 0.6 ? (f - 32) / 30 : f / 30, headYaw: 25 * track, headPitch: 22 * track });
       if (f < 36)
         return { light: "day", focus: [X.doorX, 0.5, 1.6], cam: [
           { f: 0, pos: [X.doorX - 1.3, 0.42, 3.5], look: [X.doorX + 0.2, 0.55, 1.8], fov: 44 },
@@ -406,17 +403,20 @@ export async function loadExterior(): Promise<ExteriorSet> {
     S10: (f) => {
       // Gregory abandons the door, scoots a body-length to Phil and sits; tag reads; one small chin scratch
       houseState(8);
-      place(phil, [X.doorX + 0.6, 0, 2.15], -12);
-      crouch(phil, 0.42);
+      place(phil, [X.doorX + 0.5, 0, 2.2], -12);
+      crouch(phil, 0.5);
+      if (f >= 24) phil.turn(B.spine1, [0, 0, 1], 16 * ramp(f, 24, 32) * phil.leftX); // lean toward Gregory for the chin scratch
       X.tray.visible = true;
       X.tray.position.set(X.doorX + 0.25, PORCH_Y / 2 + 0.005, 1.86);
-      const m = ramp(f, 0, 16);
-      const sit = ramp(f, 14, 24);
-      const pp: V3 = [lerp(X.doorX - 0.05, X.doorX + 0.18, m), lerp(PORCH_Y, 0, ramp(f, 4, 12)), lerp(0.95, 2.4, m)];
-      pug(pp, lerp(0, 10, m), sit, -6, -10);
+      // one body-length scoot (clip root motion, 0.45 m along his heading), then the Sit clip from the scoot's end
+      const start: V3 = [X.doorX + 0.02, 0, 1.92];
+      const heading = 18;
+      const scootEnd = f >= 15;
+      const fwd = new THREE.Vector3(Math.sin(D2R(heading)), 0, Math.cos(D2R(heading))).multiplyScalar(0.45);
+      if (!scootEnd) pug(start, heading, { clip: "Scoot_Forward", t: (f / 15) * 0.5 });
+      else pug([start[0] + fwd.x, 0, start[2] + fwd.z], heading, { clip: "Sit", t: ramp(f, 15, 27) * 0.4, headYaw: 8, headPitch: -12, blink: f >= 40 && f < 44 ? 1 - Math.abs(f - 41.5) / 2 : 0 });
       // chin scratch from f 30
-      X.pug.updateMatrixWorld(true);
-      const chin = new THREE.Vector3(0, 0.33, 0.24).applyMatrix4(X.pugBody.matrixWorld);
+      const chin = XP.pugJaw.getWorldPosition(new THREE.Vector3());
       const scratch = f >= 30 ? 0.012 * Math.sin((f - 30) * 1.3) : 0;
       if (f >= 26) phil.ik(B.rUp, B.rFore, B.rHand, chin.clone().add(new THREE.Vector3(0.05 + scratch, -0.03, 0.02)), phil.w(phil.mx("R", [0.7, 0.6, 0.1])));
       phil.ik(B.lUp, B.lFore, B.lHand, phil.w(phil.mx("L", [0.2, 0.55, 0.36])), phil.w(phil.mx("L", [0.6, 0.8, 0.2])));
@@ -430,14 +430,14 @@ export async function loadExterior(): Promise<ExteriorSet> {
     S11: (f) => {
       // near-ground yard angle: tilt from the homeowner's shoe at the wall base up to the top edge against the sky
       houseState(10);
-      place(home, [-4.55, 0, -9.0], 150);
+      place(home, [0.65, 0, -10.35], 150); // hedge-free stretch of the wall, behind the garage side
       stand(home);
       look(home, -15, -10 * ramp(f, 20, 50));
       face(home, { press: 0.5, browDown: 0.2 });
-      return { light: "day", focus: [-5, 1.5, -10], cam: [
-        { f: 0, pos: [-3.7, 0.18, -7.7], look: [-4.55, 0.1, -9.0], fov: 50 },
-        { f: 30, pos: [-3.7, 0.2, -7.7], look: [-4.7, 1.6, -9.4], fov: 54 },
-        { f: 62, pos: [-3.65, 0.22, -7.65], look: [-5.3, WALL_H + 0.6, -11.0], fov: 56 },
+      return { light: "day", focus: [0.5, 1.5, -10], cam: [
+        { f: 0, pos: [1.5, 0.18, -8.75], look: [0.65, 0.1, -10.35], fov: 54 },
+        { f: 30, pos: [1.5, 0.2, -8.75], look: [0.5, 1.6, -10.6], fov: 60 },
+        { f: 62, pos: [1.52, 0.22, -8.72], look: [0.0, WALL_H + 0.6, -11.0], fov: 64 },
       ] };
     },
     S12: (f) => {
@@ -474,7 +474,7 @@ export async function loadExterior(): Promise<ExteriorSet> {
         else aimPole(plant, [grip.x, grip.y, grip.z], grip.distanceTo(new THREE.Vector3(...plant)) + 0.75);
         const dir = new THREE.Vector3(0, 1, 0).applyQuaternion(X.pole.quaternion);
         const base = X.pole.position.clone();
-        const len = 4.6 * X.pole.scale.y;
+        const len = 4.9 * X.pole.scale.y;
         const gripAt = f < 26 ? 0.55 : (len - 0.75) / len;
         const hi = base.clone().addScaledVector(dir, len * (gripAt + 0.05)), lo = base.clone().addScaledVector(dir, len * (gripAt - 0.06));
         phil.ik(B.rUp, B.rFore, B.rHand, hi, phil.w([-0.6, 1.4, -0.4]));
@@ -523,12 +523,11 @@ export async function loadExterior(): Promise<ExteriorSet> {
       X.fortress.position.y = 0;
       if (f < 23) {
         const seat = 1 - ramp(f, 0, 9);
-        X.steelDoor.position.z = 0.08 + 0.25 * seat;
+        X.steelDoor.position.z = U.restOf(X.steelDoor).p.z + 0.25 * seat;
         return { light: "dusk", focus: [X.doorX, 1, 1], cam: [{ f: 0, pos: [X.doorX + 1.3, 1.1, 2.3], look: [X.doorX, 1.2, 0.1], fov: 42 }, { f: 22, pos: [X.doorX + 1.25, 1.1, 2.2], look: [X.doorX, 1.2, 0.1], fov: 41 }] };
       }
-      X.steelDoor.position.z = 0.08;
       const on = f >= 30 ? 1 : 0;
-      (X.sensor.material as THREE.MeshStandardMaterial).emissiveIntensity = 4 * on;
+      (X.sensor.material as THREE.MeshStandardMaterial).emissiveIntensity = 1.6 * on;
       sensorGlow.intensity = 0.06 * on;
       if (f < 46) {
         const s = X.sensor.getWorldPosition(new THREE.Vector3());

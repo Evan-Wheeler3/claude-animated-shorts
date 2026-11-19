@@ -187,82 +187,14 @@ export async function makePhil(url: (p: string) => string): Promise<Rig> {
   return new Rig(cloneRig(g.scene), "Phil_Face");
 }
 
-/** Re-dye the polo (the green-dominant region of the wardrobe atlas; skin and khaki are red-dominant) to `tint`,
- *  keeping the original fabric luminance variation. */
-function recolorShirt(tex: THREE.Texture, tint: THREE.Color): THREE.Texture {
-  const img = tex.image as HTMLImageElement | ImageBitmap;
-  const c = document.createElement("canvas");
-  c.width = img.width;
-  c.height = img.height;
-  const g = c.getContext("2d")!;
-  g.drawImage(img as CanvasImageSource, 0, 0);
-  const d = g.getImageData(0, 0, c.width, c.height);
-  const p = d.data;
-  const REF_L = 0.47; // mean luminance of the sage polo
-  for (let i = 0; i < p.length; i += 4) {
-    const r = p[i] / 255, gr = p[i + 1] / 255, b = p[i + 2] / 255;
-    const k = THREE.MathUtils.smoothstep(gr - r, -0.005, 0.03) * (gr > b ? 1 : 0);
-    if (k <= 0) continue;
-    const l = (0.299 * r + 0.587 * gr + 0.114 * b) / REF_L;
-    p[i] = 255 * Math.min(1, r + (tint.r * l - r) * k);
-    p[i + 1] = 255 * Math.min(1, gr + (tint.g * l - gr) * k);
-    p[i + 2] = 255 * Math.min(1, b + (tint.b * l - b) * k);
-  }
-  g.putImageData(d, 0, 0);
-  const t = new THREE.CanvasTexture(c);
-  t.flipY = tex.flipY;
-  t.colorSpace = tex.colorSpace;
-  t.wrapS = tex.wrapS;
-  t.wrapT = tex.wrapT;
-  return t;
+/** Generic loader for a Bip01 rig GLB from the episode asset folder (Codex cast: homeowner, guards). */
+export async function makeRigFrom(url: (p: string) => string, file: string, faceName: string): Promise<Rig> {
+  const g = await loadGLB(url(file));
+  return new Rig(cloneRig(g.scene), faceName);
 }
 
-/** Phil-body clone with a re-dyed polo (used for the two guards; head swap optional). */
-export async function makeExtra(url: (p: string) => string, shirt: string, homeownerHead = false): Promise<Rig> {
-  return homeownerHead ? makeHomeowner(url, shirt) : (async () => {
-    const g = await loadGLB(url(PHIL));
-    const body = cloneRig(g.scene);
-    body.traverse((o) => {
-      const m = o as THREE.Mesh;
-      if (m.name === "Phil_Wardrobe" && m.isMesh) {
-        const mat = (m.material as THREE.MeshStandardMaterial).clone();
-        if (mat.map) mat.map = recolorShirt(mat.map, new THREE.Color(shirt).convertLinearToSRGB());
-        m.material = mat;
-      }
-    });
-    return new Rig(body, "Phil_Face");
-  })();
-}
+/** Clothed homeowner (Codex A1, commit 69d697f): bath likeness on its own body + daytime wardrobe. */
+export const makeHomeowner = (url: (p: string) => string) => makeRigFrom(url, "cast/Homeowner_Standing_Rig.glb", "Homeowner_Face");
 
-/**
- * PROVISIONAL homeowner: the supplied bath likeness (Homeowner_Face, Rocketbox Male_Adult_16 head) skinned onto a
- * standing body clone, Phil's head hidden, shirt hue-shifted to a dusty blue so the two men read apart.
- * Status: placeholder until a dedicated clothed homeowner body/wardrobe is modeled (ASSET-MANIFEST).
- */
-export async function makeHomeowner(url: (p: string) => string, shirt = "#6f86a3"): Promise<Rig> {
-  const [phil, cast] = await Promise.all([loadGLB(url(PHIL)), loadGLB(url(CAST))]);
-  const body = cloneRig(phil.scene);
-  const srcFace = cast.scene.getObjectByName("Homeowner_Face") as THREE.SkinnedMesh;
-  if (!srcFace?.isSkinnedMesh) throw new Error("Homeowner_Face missing from Bathroom_Cast.glb");
-  cast.scene.updateMatrixWorld(true);
-  const face = srcFace.clone() as THREE.SkinnedMesh;
-  const bones = srcFace.skeleton.bones.map((b) => {
-    const t = body.getObjectByName(b.name.replace(/_\d+$/, "")) as THREE.Bone | undefined; // loader suffixes the 2nd rig's bones
-    if (!t) throw new Error(`homeowner bone ${b.name} not on body`);
-    return t;
-  });
-  face.name = "Homeowner_Face";
-  face.morphTargetInfluences = srcFace.morphTargetInfluences ? srcFace.morphTargetInfluences.map(() => 0) : undefined;
-  body.add(face);
-  face.bind(new THREE.Skeleton(bones, srcFace.skeleton.boneInverses.map((m) => m.clone())), srcFace.bindMatrix.clone());
-  body.traverse((o) => {
-    const m = o as THREE.SkinnedMesh;
-    if (m.name === "Phil_Face") m.visible = false;
-    if (m.name === "Phil_Wardrobe" && m.isMesh) {
-      const mat = (m.material as THREE.MeshStandardMaterial).clone();
-      if (mat.map) mat.map = recolorShirt(mat.map, new THREE.Color(shirt).convertLinearToSRGB());
-      m.material = mat;
-    }
-  });
-  return new Rig(body, "Homeowner_Face");
-}
+/** The two uniformed guards (Codex A2): distinct Rocketbox heads, shared uniform. */
+export const makeGuard = (url: (p: string) => string, which: "A" | "B") => makeRigFrom(url, `cast/Guard_${which}_Rig.glb`, `Guard_${which}_Face`);

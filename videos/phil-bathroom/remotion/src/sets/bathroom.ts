@@ -120,25 +120,44 @@ export async function loadBathroom(): Promise<BathroomSet> {
   for (const x of [1.9, 2.7]) box(0.04, 0.78, 0.3, std({ color: 0x4a301c }), x, 0.39, 3.38, H);
 
   // ---- door (hinge on the left jamb, swings into the hall) ----
-  const hinge = new THREE.Group();
-  hinge.position.set(0.0, 0, 3.17);
-  H.add(hinge);
-  const door = box(0.8, 2.04, 0.045, std({ map: T.paint("door", "#ece6d6"), roughness: 0.55 }), 0.4, 1.02, 0.0225, hinge);
+  const procHinge = new THREE.Group();
+  procHinge.position.set(0.0, 0, 3.17);
+  H.add(procHinge);
+  const door = box(0.8, 2.04, 0.045, std({ map: T.paint("door", "#ece6d6"), roughness: 0.55 }), 0.4, 1.02, 0.0225, procHinge);
   const knob = new THREE.Mesh(new THREE.SphereGeometry(0.03, 16, 10), new THREE.MeshStandardMaterial({ color: 0xc8a050, metalness: 0.8, roughness: 0.35 }));
   knob.position.set(0.33, -0.05, 0.05);
   door.add(knob);
 
   // ---- S15: steel front door at the end of the hallway (interior side), with a bolt that slides home ----
   const steel = new THREE.MeshStandardMaterial({ map: T.steel(), metalness: 0.75, roughness: 0.38 });
-  const steelDoor = box(0.06, 2.1, 1.0, steel, 3.42, 1.05, 4.9, H);
-  const bolt = box(0.05, 0.05, 0.22, new THREE.MeshStandardMaterial({ color: 0x9aa0a6, metalness: 0.9, roughness: 0.3 }), 3.37, 1.1, 4.5, H);
-  steelDoor.visible = bolt.visible = false;
+  box(0.06, 2.1, 1.0, steel, 3.42, 1.05, 4.9, H);
+
+  // ---- Codex hallway (Hallway.glb, bathroom coordinates) replaces the built blocking above ----
+  H.visible = false;
+  const hallGlb = (await loadGLB(staticFile("interior/Hallway.glb"))).scene;
+  hallGlb.traverse((o) => {
+    if ((o as THREE.Mesh).isMesh) o.castShadow = o.receiveShadow = true;
+  });
+  scene.add(hallGlb);
+  const node = (name: string) => {
+    const o = hallGlb.getObjectByName(name);
+    if (!o) throw new Error(`Hallway.glb node ${name} missing`);
+    return o;
+  };
+  const hinge = node("Bath_Door_Hinge");
+  const steelDoor = node("Steel_Front_Door_Interior");
+  const bolt = node("Bolt");
+  const boltRestZ = bolt.position.z;
 
   // ---- cast ----
   const [phil, home] = await Promise.all([makePhil(staticFile), makeHomeowner(staticFile)]);
   scene.add(phil.root, home.root);
-  const paperMat = (cast.scene.getObjectByName("Newspaper_Page_L") as THREE.Mesh).material as THREE.Material;
-  const paperProp = foldedPaper(paperMat);
+  // Codex Newspaper_Folded.glb: pivot on the centre fold, paper spans +X 0.29 m; centre it between the hands
+  const paperProp = new THREE.Group();
+  const paperGlb = (await loadGLB(staticFile("props/Newspaper_Folded.glb"))).scene.clone(true);
+  paperGlb.position.x = -0.145;
+  paperGlb.traverse((o) => ((o as THREE.Mesh).isMesh ? (o.castShadow = true) : null));
+  paperProp.add(paperGlb);
   scene.add(paperProp);
 
   const camera = new THREE.PerspectiveCamera(60, 9 / 16, 0.03, 100);
@@ -169,7 +188,7 @@ export async function loadBathroom(): Promise<BathroomSet> {
       // the lock finishes (bolt slides home), shoulders drop, he turns and walks toward the warm bathroom light
       hinge.rotation.y = -THREE.MathUtils.degToRad(70);
       phil.root.visible = false;
-      bolt.position.z = 4.5 - 0.12 * ramp(f, 2, 10);
+      bolt.position.z = boltRestZ - 0.12 * ramp(f, 2, 10);
       const go = ramp(f, 34, 75);
       home.root.position.set(2.75 - 1.8 * go, 0, 4.85 - 0.95 * go);
       home.root.rotation.y = THREE.MathUtils.degToRad(lerpDeg(90, -120, ramp(f, 26, 40)));

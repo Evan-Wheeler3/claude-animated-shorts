@@ -6,6 +6,7 @@
 // Status: built blocking-quality geometry with procedural textures (see ASSET-MANIFEST.md); not final hero assets.
 import * as THREE from "three";
 import { T, label } from "../lib/tex";
+import { cloneRig, loadGLB } from "../lib/load";
 
 export const WALL_H = 3.66; // twelve feet
 export const PORCH_Y = 0.18;
@@ -95,6 +96,7 @@ export function buildExterior(scene: THREE.Scene) {
   flat(1.0, 8.5, std({ map: T.concrete([1, 6]) }), -1.5, 5.0, 0.016); // front walk
   flat(1.2, 12, std({ map: T.concrete([1, 8]) }), -5.75, -4, 0.016); // side path to the wall
 
+  const houseStart = W.children.length; // procedural house structure starts here (replaced by Codex House_Exterior.glb)
   // ---------- house body (x -5..1, z -8..0) + garage (x 1..4.7, z -6..0.4) ----------
   const body = tiledBox(6, 2.8, 8, stucco, 2.2);
   body.position.set(-2, 1.4, -4);
@@ -275,6 +277,7 @@ export function buildExterior(scene: THREE.Scene) {
     h.position.set(-14 + i * 1.6, 0.6, -10.2);
   }
 
+  const houseEnd = W.children.length;
   // ---------- neighbourhood ----------
   const nb = (x: number, z: number, w: number, d: number, h: number, col: string, ry = 0) => {
     const g = new THREE.Group();
@@ -526,8 +529,80 @@ export function buildExterior(scene: THREE.Scene) {
   W.add(statement);
 
   return {
-    W, doorPivot, frontDoor, turnpiece, steelDoor, porchLamps, sideWin, sash, curtain, bars, barMeshes, boards, boardMeshes, frontBoards,
+    W, houseStart, houseEnd, rail, hedgeMat, wire, doorPivot, frontDoor, turnpiece, steelDoor, porchLamps, sideWin, sash, curtain, bars, barMeshes, boards, boardMeshes, frontBoards,
     garagePanels, garageRest, debris, car, wheel, pug, pugBody, head, tail, lids, eyes, legs, tag, tray, pole, fileTool, hammer,
     screwdriver, fortress, sensor, floods, cams, booth, statement, opening, GD, doorX, SW, garageSideBoards,
   };
 }
+
+/**
+ * Swap the procedural blocking for the Codex asset upgrade (codex/phil-bathroom @ 740c3eb):
+ * House_Exterior.glb, Car_Sedan.glb, Gregory_Pug_Rig.glb and the props. Keeps the built ground, street, walks,
+ * neighbours, trees, fence, hedge, porch railings, porch lamps, garage debris and razor wire (not in the GLB).
+ * Re-points every handle the shots drive; hidden upgrade groups (scale 0 in the GLB) are restored to scale 1 and
+ * driven by visibility instead.
+ */
+export async function upgradeExterior(X: ExteriorRefs, url: (p: string) => string) {
+  const get = async (p: string) => (await loadGLB(url(p))).scene;
+  const [house, car, tray, pole, file, hammer, screwdriver, statement, pug] = await Promise.all([
+    get("exterior/House_Exterior.glb"), get("props/Car_Sedan.glb"), get("props/Rotisserie_Tray.glb"), get("props/Vault_Pole.glb"),
+    get("props/Metal_File.glb"), get("props/Claw_Hammer.glb"), get("props/Screwdriver.glb"), get("props/Account_Statement.glb"),
+    loadGLB(url("cast/Gregory_Pug_Rig.glb")),
+  ]);
+  const shadows = (o: THREE.Object3D) => o.traverse((m) => { if ((m as THREE.Mesh).isMesh) { m.castShadow = true; m.receiveShadow = true; } });
+  // 1) hide the procedural house structure, keep what the GLB does not provide
+  const keep = new Set<THREE.Object3D>([X.rail, ...X.porchLamps, ...X.debris]);
+  X.W.children.slice(X.houseStart, X.houseEnd).forEach((o) => {
+    const isHedge = (o as THREE.Mesh).material === X.hedgeMat;
+    if (!keep.has(o) && !isHedge) o.visible = false, (o.userData.retired = true);
+  });
+  for (const old of [X.car, X.pug, X.tray, X.pole, X.fileTool, X.hammer, X.screwdriver, X.statement]) old.parent?.remove(old);
+  // 2) house
+  shadows(house);
+  X.W.add(house);
+  const n = <T extends THREE.Object3D = THREE.Object3D>(name: string, root: THREE.Object3D = house) => {
+    const o = root.getObjectByName(name);
+    if (!o) throw new Error(`asset node ${name} missing`);
+    return o as T;
+  };
+  for (const g of ["Front_Window_Boards", "Window_Bars", "Window_Boards", "Fortress_Dressing"]) n(g).scale.set(1, 1, 1);
+  const fortress = n("Fortress_Dressing");
+  X.fortress.remove(X.wire);
+  fortress.add(X.wire); // razor wire rides with the fortress state
+  X.fortress.parent?.remove(X.fortress);
+  const sensor = n<THREE.Mesh>("Security_Sensor_Lens");
+  sensor.material = new THREE.MeshStandardMaterial({ color: 0x400000, emissive: 0xff1a1a, emissiveIntensity: 0, roughness: 0.3 });
+  const panels = [0, 1, 2, 3].map((i) => n(`Garage_Panel_${i}`));
+  // 3) car (nose -Z, driver -X, origin on the ground centre), side glass rolled down so Phil reads through
+  shadows(car);
+  X.W.add(car);
+  for (const w of ["Window_FL", "Window_FR", "Window_RL", "Window_RR"]) n(w, car).visible = false;
+  // 4) props (pivots: tray bottom centre, pole tip with +Y length 4.9, tools at the grip with +Y long axis)
+  for (const o of [tray, pole, file, hammer, screwdriver, statement]) shadows(o), X.W.add(o);
+  // 5) Gregory (Codex A3): skinned rig + 5 clips on one mixer
+  const pugRoot = new THREE.Group();
+  const pugModel = cloneRig(pug.scene);
+  pugRoot.add(pugModel);
+  pugModel.traverse((m) => { if ((m as THREE.Mesh).isMesh) { m.castShadow = m.receiveShadow = true; m.frustumCulled = false; } });
+  X.W.add(pugRoot);
+  const mixer = new THREE.AnimationMixer(pugModel);
+  const clips = Object.fromEntries(pug.animations.map((c) => [c.name, mixer.clipAction(c)])) as Record<string, THREE.AnimationAction>;
+  Object.assign(X, {
+    doorPivot: n("Front_Door_Hinge"), frontDoor: n("Front_Door"), turnpiece: n("Deadbolt_Turnpiece"), steelDoor: n("Steel_Door"),
+    sash: n("Window_Sash"), bars: n("Window_Bars"), barMeshes: [0, 1, 2, 3, 4].map((i) => n(`Bar_${i}`)),
+    boards: n("Window_Boards"), boardMeshes: [0, 1, 2].map((i) => n(`Board_${i}`)), frontBoards: n("Front_Window_Boards"),
+    garagePanels: panels, garageRest: panels.map((g) => ({ p: g.position.clone(), r: g.rotation.clone() })),
+    fortress, sensor, car, wheel: n("Steering_Wheel", car), tray, pole, fileTool: file, hammer, screwdriver, statement,
+    pug: pugRoot, tag: n("Gregory_Tag", pugModel), pugJaw: n("Pug_Jaw", pugModel), pugHead: n("Pug_Head", pugModel), pugMixer: mixer, pugClips: clips,
+  });
+  // rest transforms for everything the shots offset relative to rest
+  const rest = new Map<THREE.Object3D, { p: THREE.Vector3; r: THREE.Euler }>();
+  for (const o of [X.sash, X.bars, ...X.barMeshes, X.steelDoor, X.turnpiece, X.fortress]) rest.set(o, { p: o.position.clone(), r: o.rotation.clone() });
+  return {
+    rest,
+    reset() { for (const [o, t] of rest) { o.position.copy(t.p); o.rotation.copy(t.r); } },
+    restOf: (o: THREE.Object3D) => rest.get(o)!,
+  };
+}
+
+export type PugExtras = { pugJaw: THREE.Object3D; pugHead: THREE.Object3D; pugMixer: THREE.AnimationMixer; pugClips: Record<string, THREE.AnimationAction> };
