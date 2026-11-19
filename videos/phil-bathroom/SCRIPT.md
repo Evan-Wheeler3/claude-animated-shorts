@@ -1,33 +1,33 @@
-Your idiot neighbor Phil keeps breaking into your house to use your bathroom.
+Your neighbor Phil keeps breaking into your house to use your bathroom.
 
 And worst of all, he never flushes.
 
 So you install a deadbolt.
 
-But that knucklehead just climbs through the window.
+But Phil just climbs through the window.
 
-So you install metal bars. Phil files right through them like a prison escapee.
+You install metal bars. Phil files through them.
 
-So you board up every window. But now your house looks like it's from Detroit.
+So you board up every window. But now your house looks like it’s from Detroit.
 
-And your stupid neighbor Phil drives straight through your garage.
+And Phil drives straight through your garage.
 
 This madness needs to stop!
 
 So you buy a highly trained guard dog.
 
-But that sneaky weasel brings him a rotisserie chicken.
+But Phil brings him a rotisserie chicken.
 
-The dog's name is now Gregory.
+The dog’s name is now Gregory.
 
 You build a twelve-foot concrete wall.
 
-But of course, this lunatic pole-vaulted in high school.
+But Phil did pole vault in high school.
 
 So you spend your entire life savings turning your house into a maximum-security fortress.
 
 Steel doors. Laser sensors. Armed guards.
 
-There's absolutely no way Phil's getting in now.
+There’s absolutely no way Phil’s getting in now.
 
 Time to relax.
