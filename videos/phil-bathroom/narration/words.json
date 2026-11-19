@@ -1,0 +1,672 @@
+[
+ {
+  "word": "Your",
+  "start": 0.0,
+  "end": 0.22
+ },
+ {
+  "word": "neighbor",
+  "start": 0.22,
+  "end": 0.52
+ },
+ {
+  "word": "Phil",
+  "start": 0.52,
+  "end": 1.0
+ },
+ {
+  "word": "keeps",
+  "start": 1.0,
+  "end": 1.38
+ },
+ {
+  "word": "breaking",
+  "start": 1.38,
+  "end": 1.72
+ },
+ {
+  "word": "into",
+  "start": 1.72,
+  "end": 2.02
+ },
+ {
+  "word": "your",
+  "start": 2.02,
+  "end": 2.2
+ },
+ {
+  "word": "house",
+  "start": 2.2,
+  "end": 2.52
+ },
+ {
+  "word": "to",
+  "start": 2.52,
+  "end": 2.74
+ },
+ {
+  "word": "use",
+  "start": 2.74,
+  "end": 3.0
+ },
+ {
+  "word": "your",
+  "start": 3.0,
+  "end": 3.24
+ },
+ {
+  "word": "bathroom.",
+  "start": 3.24,
+  "end": 3.78
+ },
+ {
+  "word": "And",
+  "start": 4.22,
+  "end": 4.28
+ },
+ {
+  "word": "worst",
+  "start": 4.28,
+  "end": 4.46
+ },
+ {
+  "word": "of",
+  "start": 4.46,
+  "end": 4.64
+ },
+ {
+  "word": "all,",
+  "start": 4.64,
+  "end": 4.86
+ },
+ {
+  "word": "he",
+  "start": 5.0,
+  "end": 5.2
+ },
+ {
+  "word": "never",
+  "start": 5.2,
+  "end": 5.84
+ },
+ {
+  "word": "flushes.",
+  "start": 5.84,
+  "end": 6.42
+ },
+ {
+  "word": "So",
+  "start": 6.94,
+  "end": 7.04
+ },
+ {
+  "word": "you",
+  "start": 7.04,
+  "end": 7.22
+ },
+ {
+  "word": "install",
+  "start": 7.22,
+  "end": 7.72
+ },
+ {
+  "word": "a",
+  "start": 7.72,
+  "end": 7.96
+ },
+ {
+  "word": "deadbolt,",
+  "start": 7.96,
+  "end": 8.42
+ },
+ {
+  "word": "but",
+  "start": 8.66,
+  "end": 8.8
+ },
+ {
+  "word": "Phil",
+  "start": 8.8,
+  "end": 9.06
+ },
+ {
+  "word": "just",
+  "start": 9.06,
+  "end": 9.4
+ },
+ {
+  "word": "climbs",
+  "start": 9.4,
+  "end": 10.04
+ },
+ {
+  "word": "through",
+  "start": 10.04,
+  "end": 10.34
+ },
+ {
+  "word": "the",
+  "start": 10.34,
+  "end": 10.48
+ },
+ {
+  "word": "window.",
+  "start": 10.48,
+  "end": 10.76
+ },
+ {
+  "word": "You",
+  "start": 11.06,
+  "end": 11.16
+ },
+ {
+  "word": "install",
+  "start": 11.16,
+  "end": 11.52
+ },
+ {
+  "word": "metal",
+  "start": 11.52,
+  "end": 11.78
+ },
+ {
+  "word": "bars,",
+  "start": 11.78,
+  "end": 12.26
+ },
+ {
+  "word": "Phil",
+  "start": 12.64,
+  "end": 12.78
+ },
+ {
+  "word": "files",
+  "start": 12.78,
+  "end": 13.16
+ },
+ {
+  "word": "through",
+  "start": 13.16,
+  "end": 13.48
+ },
+ {
+  "word": "them,",
+  "start": 13.48,
+  "end": 13.78
+ },
+ {
+  "word": "so",
+  "start": 13.98,
+  "end": 14.22
+ },
+ {
+  "word": "you",
+  "start": 14.22,
+  "end": 14.4
+ },
+ {
+  "word": "board",
+  "start": 14.4,
+  "end": 14.64
+ },
+ {
+  "word": "up",
+  "start": 14.64,
+  "end": 14.86
+ },
+ {
+  "word": "every",
+  "start": 14.86,
+  "end": 15.26
+ },
+ {
+  "word": "window.",
+  "start": 15.26,
+  "end": 15.64
+ },
+ {
+  "word": "But",
+  "start": 15.92,
+  "end": 16.02
+ },
+ {
+  "word": "now",
+  "start": 16.02,
+  "end": 16.26
+ },
+ {
+  "word": "your",
+  "start": 16.26,
+  "end": 16.5
+ },
+ {
+  "word": "house",
+  "start": 16.5,
+  "end": 16.84
+ },
+ {
+  "word": "looks",
+  "start": 16.84,
+  "end": 17.02
+ },
+ {
+  "word": "like",
+  "start": 17.02,
+  "end": 17.26
+ },
+ {
+  "word": "it's",
+  "start": 17.26,
+  "end": 17.42
+ },
+ {
+  "word": "from",
+  "start": 17.42,
+  "end": 17.58
+ },
+ {
+  "word": "Detroit.",
+  "start": 17.58,
+  "end": 18.0
+ },
+ {
+  "word": "And",
+  "start": 18.44,
+  "end": 18.6
+ },
+ {
+  "word": "Phil",
+  "start": 18.6,
+  "end": 18.88
+ },
+ {
+  "word": "drives",
+  "start": 18.88,
+  "end": 19.18
+ },
+ {
+  "word": "straight",
+  "start": 19.18,
+  "end": 19.58
+ },
+ {
+  "word": "through",
+  "start": 19.58,
+  "end": 19.84
+ },
+ {
+  "word": "your",
+  "start": 19.84,
+  "end": 20.04
+ },
+ {
+  "word": "garage.",
+  "start": 20.04,
+  "end": 20.38
+ },
+ {
+  "word": "This",
+  "start": 20.74,
+  "end": 20.88
+ },
+ {
+  "word": "madness",
+  "start": 20.88,
+  "end": 21.28
+ },
+ {
+  "word": "needs",
+  "start": 21.28,
+  "end": 21.64
+ },
+ {
+  "word": "to",
+  "start": 21.64,
+  "end": 21.9
+ },
+ {
+  "word": "stop.",
+  "start": 21.9,
+  "end": 22.26
+ },
+ {
+  "word": "So",
+  "start": 22.54,
+  "end": 22.76
+ },
+ {
+  "word": "you",
+  "start": 22.76,
+  "end": 22.96
+ },
+ {
+  "word": "buy",
+  "start": 22.96,
+  "end": 23.18
+ },
+ {
+  "word": "a",
+  "start": 23.18,
+  "end": 23.38
+ },
+ {
+  "word": "highly",
+  "start": 23.38,
+  "end": 23.7
+ },
+ {
+  "word": "trained",
+  "start": 23.7,
+  "end": 24.14
+ },
+ {
+  "word": "guard",
+  "start": 24.14,
+  "end": 24.48
+ },
+ {
+  "word": "dog,",
+  "start": 24.48,
+  "end": 24.78
+ },
+ {
+  "word": "but",
+  "start": 24.98,
+  "end": 25.16
+ },
+ {
+  "word": "Phil",
+  "start": 25.16,
+  "end": 25.4
+ },
+ {
+  "word": "brings",
+  "start": 25.4,
+  "end": 25.66
+ },
+ {
+  "word": "him",
+  "start": 25.66,
+  "end": 25.88
+ },
+ {
+  "word": "a",
+  "start": 25.88,
+  "end": 25.98
+ },
+ {
+  "word": "rotisserie",
+  "start": 25.98,
+  "end": 26.48
+ },
+ {
+  "word": "chicken.",
+  "start": 26.48,
+  "end": 26.82
+ },
+ {
+  "word": "The",
+  "start": 27.1,
+  "end": 27.24
+ },
+ {
+  "word": "dog's",
+  "start": 27.24,
+  "end": 27.66
+ },
+ {
+  "word": "name",
+  "start": 27.66,
+  "end": 27.84
+ },
+ {
+  "word": "is",
+  "start": 27.84,
+  "end": 28.06
+ },
+ {
+  "word": "now",
+  "start": 28.06,
+  "end": 28.3
+ },
+ {
+  "word": "Gregory.",
+  "start": 28.3,
+  "end": 28.58
+ },
+ {
+  "word": "You",
+  "start": 28.58,
+  "end": 29.1
+ },
+ {
+  "word": "build",
+  "start": 29.1,
+  "end": 29.34
+ },
+ {
+  "word": "a",
+  "start": 29.34,
+  "end": 29.52
+ },
+ {
+  "word": "12",
+  "start": 29.52,
+  "end": 29.8
+ },
+ {
+  "word": "-foot",
+  "start": 29.8,
+  "end": 30.06
+ },
+ {
+  "word": "concrete",
+  "start": 30.06,
+  "end": 30.56
+ },
+ {
+  "word": "wall,",
+  "start": 30.56,
+  "end": 30.96
+ },
+ {
+  "word": "but",
+  "start": 31.1,
+  "end": 31.32
+ },
+ {
+  "word": "Phil",
+  "start": 31.32,
+  "end": 31.52
+ },
+ {
+  "word": "did",
+  "start": 31.52,
+  "end": 31.74
+ },
+ {
+  "word": "pole",
+  "start": 31.74,
+  "end": 31.98
+ },
+ {
+  "word": "vault",
+  "start": 31.98,
+  "end": 32.22
+ },
+ {
+  "word": "in",
+  "start": 32.22,
+  "end": 32.38
+ },
+ {
+  "word": "high",
+  "start": 32.38,
+  "end": 32.58
+ },
+ {
+  "word": "school.",
+  "start": 32.58,
+  "end": 32.84
+ },
+ {
+  "word": "So",
+  "start": 33.1,
+  "end": 33.22
+ },
+ {
+  "word": "you",
+  "start": 33.22,
+  "end": 33.36
+ },
+ {
+  "word": "spend",
+  "start": 33.36,
+  "end": 33.62
+ },
+ {
+  "word": "your",
+  "start": 33.62,
+  "end": 33.86
+ },
+ {
+  "word": "entire",
+  "start": 33.86,
+  "end": 34.24
+ },
+ {
+  "word": "life",
+  "start": 34.24,
+  "end": 34.56
+ },
+ {
+  "word": "savings",
+  "start": 34.56,
+  "end": 35.08
+ },
+ {
+  "word": "turning",
+  "start": 35.08,
+  "end": 35.64
+ },
+ {
+  "word": "your",
+  "start": 35.64,
+  "end": 35.88
+ },
+ {
+  "word": "house",
+  "start": 35.88,
+  "end": 36.18
+ },
+ {
+  "word": "into",
+  "start": 36.18,
+  "end": 36.5
+ },
+ {
+  "word": "a",
+  "start": 36.5,
+  "end": 36.72
+ },
+ {
+  "word": "maximum",
+  "start": 36.72,
+  "end": 37.08
+ },
+ {
+  "word": "security",
+  "start": 37.08,
+  "end": 37.64
+ },
+ {
+  "word": "fortress.",
+  "start": 37.64,
+  "end": 38.24
+ },
+ {
+  "word": "Steel",
+  "start": 38.86,
+  "end": 38.94
+ },
+ {
+  "word": "doors,",
+  "start": 38.94,
+  "end": 39.34
+ },
+ {
+  "word": "laser",
+  "start": 39.86,
+  "end": 40.06
+ },
+ {
+  "word": "sensors,",
+  "start": 40.06,
+  "end": 40.62
+ },
+ {
+  "word": "armed",
+  "start": 41.12,
+  "end": 41.38
+ },
+ {
+  "word": "guards.",
+  "start": 41.38,
+  "end": 41.82
+ },
+ {
+  "word": "There's",
+  "start": 42.26,
+  "end": 42.46
+ },
+ {
+  "word": "absolutely",
+  "start": 42.46,
+  "end": 42.92
+ },
+ {
+  "word": "no",
+  "start": 42.92,
+  "end": 43.34
+ },
+ {
+  "word": "way",
+  "start": 43.34,
+  "end": 43.66
+ },
+ {
+  "word": "Phil's",
+  "start": 43.66,
+  "end": 44.12
+ },
+ {
+  "word": "getting",
+  "start": 44.12,
+  "end": 44.28
+ },
+ {
+  "word": "in",
+  "start": 44.28,
+  "end": 44.5
+ },
+ {
+  "word": "now.",
+  "start": 44.5,
+  "end": 44.9
+ },
+ {
+  "word": "Time",
+  "start": 45.52,
+  "end": 45.74
+ },
+ {
+  "word": "to",
+  "start": 45.74,
+  "end": 46.04
+ },
+ {
+  "word": "relax.",
+  "start": 46.04,
+  "end": 46.36
+ }
+]

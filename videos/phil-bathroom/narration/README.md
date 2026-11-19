@@ -1,3 +1,19 @@
+# Narration — LOCKED (owner-approved fallback voice B)
+
+**Status:** `voice.wav` is the owner-approved narrator take: Qwen3-TTS 1.7B VoiceDesign "voice B" (a low, lightly gravelly, sardonic late-30s storyteller), reading the approved `SCRIPT.md`. Post-processing:
+- every silence over 0.3 s shrunk to 0.22 s (0.6 s kept before "Time to relax")
+- 1.18× pitch-preserving tempo
+- loudness normalized to −16 LUFS
+
+The format is 48 kHz mono, 46.97 s. This is the fallback the owner approved in place of the enrolled cloned voice.
+
+`words.json` holds word timings from faster-whisper `small.en`. It matches the script at 99.3% (the only diff is "twelve" transcribed as "12"). "Time to relax" starts at 45.52 s, and the take ends at 46.36 s.
+
+**Timing impact:** the take is longer than the original 44.7 s target. With S16 kept intact and starting on "Time to relax", the short runs about 50.5 s. Refitting S01–S15 to these word times is the next step (see below).
+
+---
+_Original brief (kept for reference):_
+
 # Narration — BLOCKED on the owner's enrolled voice
 
 The narrator take must come from the owner's enrolled Qwen3-TTS voice. That voice reference, the TTS setup and the owner's machine were **not available** to the cloud session that built Gate 1: the repo has no voice sample or TTS workflow files, and no computer was attached. **No narration has been generated.** No substitute voice was used.
