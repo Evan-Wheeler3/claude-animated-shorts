@@ -1,0 +1,426 @@
+{
+  "passed": true,
+  "files_checked": 42,
+  "files": {
+    "S01_handle_snap.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 0.18,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -25.68652528479582,
+      "leading_silence_ms": 0.25,
+      "errors": []
+    },
+    "S01_paper_rustle.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 0.48,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -21.41914277997794,
+      "leading_silence_ms": 0.625,
+      "errors": []
+    },
+    "S01_step_1.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 0.23,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -22.093119967732232,
+      "leading_silence_ms": 0.3333333333333333,
+      "errors": []
+    },
+    "S01_step_2.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 0.25,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -20.087242806057283,
+      "leading_silence_ms": 0.3333333333333333,
+      "errors": []
+    },
+    "S02_doorway_creak.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 0.66,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -10.12373035179844,
+      "leading_silence_ms": 0.125,
+      "errors": []
+    },
+    "S02_roomtone_dip.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 2.0,
+      "peak_dbfs": -9.612110378099691,
+      "rms_dbfs": -24.00000104302263,
+      "leading_silence_ms": 0.5,
+      "errors": []
+    },
+    "S03_deadbolt_clunk.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 0.31,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -23.553551620386838,
+      "leading_silence_ms": 0.2916666666666667,
+      "errors": []
+    },
+    "S03_tool_tap_1.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 0.17,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -23.562051399258813,
+      "leading_silence_ms": 0.22916666666666666,
+      "errors": []
+    },
+    "S03_tool_tap_2.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 0.19,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -24.471623022905256,
+      "leading_silence_ms": 0.22916666666666666,
+      "errors": []
+    },
+    "S04_palm_plant.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 0.19,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -23.383787703687524,
+      "leading_silence_ms": 0.20833333333333334,
+      "errors": []
+    },
+    "S04_shoe_land.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 0.32,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -22.533676923817154,
+      "leading_silence_ms": 0.25,
+      "errors": []
+    },
+    "S04_sill_rub.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 0.36,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -16.54252761195238,
+      "leading_silence_ms": 0.8958333333333334,
+      "errors": []
+    },
+    "S05_bar_rattle.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 0.54,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -24.095266222047982,
+      "leading_silence_ms": 0.1875,
+      "errors": []
+    },
+    "S05_file_stroke_1.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 0.46,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -16.693761690458565,
+      "leading_silence_ms": 0.5,
+      "errors": []
+    },
+    "S05_file_stroke_2.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 0.51,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -18.182221718066394,
+      "leading_silence_ms": 0.5416666666666666,
+      "errors": []
+    },
+    "S06_exterior_roomtone.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 4.0,
+      "peak_dbfs": -7.943321738760511,
+      "rms_dbfs": -24.000001019212416,
+      "leading_silence_ms": 0.375,
+      "errors": []
+    },
+    "S06_hammer_hit_1.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 0.27,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -25.353539052057208,
+      "leading_silence_ms": 0.2708333333333333,
+      "errors": []
+    },
+    "S06_hammer_hit_2.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 0.33,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -23.363907872198368,
+      "leading_silence_ms": 0.22916666666666666,
+      "errors": []
+    },
+    "S07_engine_idle.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 1.0,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -11.655091591714278,
+      "leading_silence_ms": 0.1875,
+      "errors": []
+    },
+    "S07_garage_crash.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 1.28,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -27.743878067794697,
+      "leading_silence_ms": 0.25,
+      "errors": []
+    },
+    "S07_panel_settle.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 1.2,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -23.633382879211524,
+      "leading_silence_ms": 0.25,
+      "errors": []
+    },
+    "S08_dog_breath.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 0.51,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -19.54663865430568,
+      "leading_silence_ms": 0.9375,
+      "errors": []
+    },
+    "S08_nail_tick.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 0.14,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -23.155777151197434,
+      "leading_silence_ms": 0.20833333333333334,
+      "errors": []
+    },
+    "S09_dog_sniff.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 0.4,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -21.725658497927984,
+      "leading_silence_ms": 0.5,
+      "errors": []
+    },
+    "S09_foil_crinkle.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 0.44,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -21.917708233146143,
+      "leading_silence_ms": 0.22916666666666666,
+      "errors": []
+    },
+    "S10_nail_tap_run.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 0.56,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -23.691850239216823,
+      "leading_silence_ms": 0.16666666666666666,
+      "errors": []
+    },
+    "S10_tag_click.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 0.21,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -22.54839782914226,
+      "leading_silence_ms": 0.375,
+      "errors": []
+    },
+    "S11_concrete_set.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 0.66,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -22.63378960568039,
+      "leading_silence_ms": 0.2708333333333333,
+      "errors": []
+    },
+    "S12_foot_contact_1.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 0.24,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -22.613961096661484,
+      "leading_silence_ms": 0.1875,
+      "errors": []
+    },
+    "S12_foot_contact_2.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 0.27,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -22.677439146689835,
+      "leading_silence_ms": 0.25,
+      "errors": []
+    },
+    "S12_pole_swish.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 0.43,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -18.727162620918527,
+      "leading_silence_ms": 0.9166666666666666,
+      "errors": []
+    },
+    "S12_pole_tap.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 0.24,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -20.65235781520816,
+      "leading_silence_ms": 0.20833333333333334,
+      "errors": []
+    },
+    "S13_install_hum.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 2.0,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -11.308544271955391,
+      "leading_silence_ms": 0.16666666666666666,
+      "errors": []
+    },
+    "S13_mech_motor.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 1.5,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -11.032617920274062,
+      "leading_silence_ms": 0.20833333333333334,
+      "errors": []
+    },
+    "S13_paper_flick.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 0.23,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -23.10518850178628,
+      "leading_silence_ms": 0.2708333333333333,
+      "errors": []
+    },
+    "S14_heel_plant.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 0.27,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -21.63289603820044,
+      "leading_silence_ms": 0.3541666666666667,
+      "errors": []
+    },
+    "S14_sensor_pip.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 0.15,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -16.134430565244138,
+      "leading_silence_ms": 0.041666666666666664,
+      "errors": []
+    },
+    "S14_steel_slam.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 0.59,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -23.355886942182977,
+      "leading_silence_ms": 0.3125,
+      "errors": []
+    },
+    "S15_lock_clunk.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 0.28,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -24.12205113722941,
+      "leading_silence_ms": 0.16666666666666666,
+      "errors": []
+    },
+    "S15_sigh.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 0.49,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -20.991428689020005,
+      "leading_silence_ms": 0.7708333333333334,
+      "errors": []
+    },
+    "S16_bath_roomtone.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 5.0,
+      "peak_dbfs": -12.002259488547082,
+      "rms_dbfs": -24.000001044885234,
+      "leading_silence_ms": 0.3333333333333333,
+      "errors": []
+    },
+    "S16_fart.wav": {
+      "sample_rate_hz": 48000,
+      "bit_depth": 24,
+      "channels": 1,
+      "duration_s": 0.35,
+      "peak_dbfs": -3.0000009805991428,
+      "rms_dbfs": -17.286791048519788,
+      "leading_silence_ms": 0.0625,
+      "errors": []
+    }
+  }
+}
