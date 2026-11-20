@@ -1,6 +1,6 @@
 # Neighbor Podcast | Asset plan
 
-Target Three.js/Remotion. GLBs use meters, Y up and positive Z forward for standing cast. Proposed paths are relative to this folder. All entries await episode integration and in-engine review.
+Target Three.js/Remotion. GLBs use meters, Y up and positive Z forward for standing cast. Proposed paths are relative to this folder. The following table is the final-asset plan. Available blocking implementations are listed below. Render verification is deferred to Claude.
 
 | ID | Asset and target path | Source and status | Scale, pivot and review |
 | --- | --- | --- | --- |
@@ -22,6 +22,12 @@ Target Three.js/Remotion. GLBs use meters, Y up and positive Z forward for stand
 | TRAILCAM | `assets/props/Trail_Camera.glb` | Build device or define a named set camera anchor if housing stays offscreen. | Fixed lens origin with sightline to both chairs. |
 
 Build or source original and permissively licensed assets. Record exact source, license, materials, rig controls and evidence path as each asset lands. For reuse inspection, see the [pinned Phil asset tree](https://github.com/Evan-Wheeler3/claude-animated-shorts/tree/c455d9a7917d4efe7b9bd274ba654a0f23b40a0c/videos/phil-bathroom/assets). The branch carrying this package does not vendor those files.
+
+## Available for blocking
+
+- `assets/cast/Host_Blocking_Rig.glb` and `assets/cast/Homeowner_Standing_Rig.glb` are copied from the pinned Phil commit. Both use the existing standing IK and face controls. See `assets/cast/ROCKETBOX_LICENSE.md`. The host uses Phil’s likeness for blocking. The homeowner doubles as the porch guest and locksmith in the current still setups.
+- `remotion/src/sets.ts` contains procedural porch, crib, safe, trail clearing, chairs, mic, headphones, and posed baby and bear geometry. The baby and bear are static blocking assemblies. They need articulated motion for the stand, sit, and mic lean.
+- The existing house GLB remains a reuse candidate. The porch scene currently uses procedural siding and landscaping. No GLBs are shipped for the procedural sets or props.
 
 ## Audio
 

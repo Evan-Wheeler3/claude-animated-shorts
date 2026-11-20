@@ -4,7 +4,7 @@
 story_id: neighbor-podcast
 working_title: My Neighbor Has a Podcast
 script_status: approved
-codex_status: ready
+codex_status: in_progress
 claude_status: not_started
 target_duration_seconds: 51
 format: "9:16"
@@ -31,6 +31,6 @@ Use Phil Bathroom's Absurd 3D Comedy direction as the episode reference. Stage t
 
 ## Approval and scope
 
-The owner requested project build-out after the 51-second revision. That revision supplies the approved script and editorial direction. The timings are design targets pending recorded dialogue. This is fictional comedy with no documentary claims. Asset and motion reviews remain open.
+The owner requested project build-out after the 51-second revision. That revision supplies the approved script and editorial direction. The timings are design targets pending recorded dialogue. This is fictional comedy with no documentary claims. The owner waived Codex renders for the handoff. Claude can begin the build from the four blocking scenes. Motion and final reviews remain open.
 
 Start with [SCRIPT.md](SCRIPT.md), [DIALOGUE.md](DIALOGUE.md), and [SHOTLIST.md](SHOTLIST.md). See [ASSET-MANIFEST.md](ASSET-MANIFEST.md) for the build and reuse plan and [CODEX-HANDOFF.md](CODEX-HANDOFF.md) for the current production state.

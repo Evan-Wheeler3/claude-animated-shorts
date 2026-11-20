@@ -1,0 +1,25 @@
+{
+  "name": "holdup-neighbor-podcast",
+  "private": true,
+  "description": "Three.js and Remotion blocking stills for My Neighbor Has a Podcast",
+  "type": "module",
+  "scripts": {
+    "studio": "remotion studio src/index.ts --public-dir=../assets",
+    "stills": "node scripts/stills.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@remotion/bundler": "4.0.545",
+    "@remotion/cli": "4.0.545",
+    "@remotion/renderer": "4.0.545",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "remotion": "4.0.545",
+    "three": "0.177.0"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.8",
+    "@types/three": "0.177.0",
+    "typescript": "5.8.3"
+  }
+}
