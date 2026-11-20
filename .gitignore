@@ -1,0 +1,2 @@
+# Render scratch and caches (PRODUCTION-PIPELINE.md: large renders live in out/<story-id>/, not committed)
+out/
