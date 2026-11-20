@@ -91,3 +91,11 @@ export function face(r: Rig, f: Face) {
 }
 
 export const deg = D;
+
+/** one knee down (left knee on the floor, right foot planted forward): the locksmith at the safe */
+export function kneel(r: Rig, drop = 0.4) {
+  const a = r.ankle;
+  r.shiftPelvis(0, -drop, -0.06);
+  r.plant("L", [a.out, 0.13, -0.42], [a.out, 0.05, 0.6]);
+  r.plant("R", [a.out + 0.02, a.y, 0.24], [a.out + 0.05, 0.7, 1.2]);
+}

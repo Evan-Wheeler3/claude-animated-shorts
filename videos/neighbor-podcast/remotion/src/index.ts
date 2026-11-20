@@ -2,6 +2,8 @@ import React, {useEffect, useRef, useState} from "react";
 import * as THREE from "three";
 import {AbsoluteFill, cancelRender, Composition, continueRender, delayRender, registerRoot, useCurrentFrame, useVideoConfig} from "remotion";
 import {buildSet, type KeyFrame} from "./sets";
+import {Episode} from "./Episode";
+import {FPS, TOTAL} from "./shots";
 
 type Preview = Awaited<ReturnType<(typeof buildSet)[KeyFrame]>>;
 const pending = new Map<KeyFrame, Promise<Preview>>();
@@ -55,8 +57,13 @@ const ReviewFrame: React.FC = () => {
     }));
 };
 
-const Root = () => React.createElement(Composition, {
-  id: "PodcastStills", component: ReviewFrame, width: 1080, height: 1920, fps: 30, durationInFrames: 1530,
-});
+const Root = () => React.createElement(React.Fragment, null,
+  React.createElement(Composition, {
+    id: "NeighborPodcast", component: Episode, width: 1080, height: 1920, fps: FPS, durationInFrames: TOTAL,
+    defaultProps: {audio: "audio/motion_review_mix.wav"},
+  }),
+  React.createElement(Composition, {
+    id: "PodcastStills", component: ReviewFrame, width: 1080, height: 1920, fps: 30, durationInFrames: 1530,
+  }));
 
 registerRoot(Root);

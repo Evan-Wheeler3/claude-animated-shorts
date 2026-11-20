@@ -1,0 +1,765 @@
+[
+ {
+  "cue": "N01",
+  "who": "narrator",
+  "word": "Your",
+  "start": 0.133,
+  "end": 0.533
+ },
+ {
+  "cue": "N01",
+  "who": "narrator",
+  "word": "neighbor",
+  "start": 0.533,
+  "end": 0.713
+ },
+ {
+  "cue": "N01",
+  "who": "narrator",
+  "word": "thinks",
+  "start": 0.713,
+  "end": 1.033
+ },
+ {
+  "cue": "N01",
+  "who": "narrator",
+  "word": "your",
+  "start": 1.033,
+  "end": 1.253
+ },
+ {
+  "cue": "N01",
+  "who": "narrator",
+  "word": "doorbell",
+  "start": 1.253,
+  "end": 1.633
+ },
+ {
+  "cue": "N01",
+  "who": "narrator",
+  "word": "camera",
+  "start": 1.633,
+  "end": 1.993
+ },
+ {
+  "cue": "N01",
+  "who": "narrator",
+  "word": "is",
+  "start": 1.993,
+  "end": 2.253
+ },
+ {
+  "cue": "N01",
+  "who": "narrator",
+  "word": "his",
+  "start": 2.253,
+  "end": 2.393
+ },
+ {
+  "cue": "N01",
+  "who": "narrator",
+  "word": "podcast",
+  "start": 2.393,
+  "end": 2.813
+ },
+ {
+  "cue": "N01",
+  "who": "narrator",
+  "word": "studio.",
+  "start": 2.813,
+  "end": 3.233
+ },
+ {
+  "cue": "H01",
+  "who": "host",
+  "word": "Welcome",
+  "start": 4.0,
+  "end": 4.36
+ },
+ {
+  "cue": "H01",
+  "who": "host",
+  "word": "back.",
+  "start": 4.36,
+  "end": 4.78
+ },
+ {
+  "cue": "H01",
+  "who": "host",
+  "word": "Episode",
+  "start": 5.66,
+  "end": 5.66
+ },
+ {
+  "cue": "H01",
+  "who": "host",
+  "word": "46.",
+  "start": 5.66,
+  "end": 6.44
+ },
+ {
+  "cue": "N02",
+  "who": "narrator",
+  "word": "No",
+  "start": 7.067,
+  "end": 7.507
+ },
+ {
+  "cue": "N02",
+  "who": "narrator",
+  "word": "camera,",
+  "start": 7.507,
+  "end": 7.887
+ },
+ {
+  "cue": "N02",
+  "who": "narrator",
+  "word": "no",
+  "start": 8.167,
+  "end": 8.387
+ },
+ {
+  "cue": "N02",
+  "who": "narrator",
+  "word": "show,",
+  "start": 8.387,
+  "end": 8.727
+ },
+ {
+  "cue": "N02",
+  "who": "narrator",
+  "word": "so",
+  "start": 9.047,
+  "end": 9.247
+ },
+ {
+  "cue": "N02",
+  "who": "narrator",
+  "word": "destroy",
+  "start": 9.247,
+  "end": 9.627
+ },
+ {
+  "cue": "N02",
+  "who": "narrator",
+  "word": "the",
+  "start": 9.627,
+  "end": 9.847
+ },
+ {
+  "cue": "N02",
+  "who": "narrator",
+  "word": "doorbell",
+  "start": 9.847,
+  "end": 10.247
+ },
+ {
+  "cue": "N02",
+  "who": "narrator",
+  "word": "camera.",
+  "start": 10.247,
+  "end": 10.627
+ },
+ {
+  "cue": "N03",
+  "who": "narrator",
+  "word": "and",
+  "start": 12.267,
+  "end": 12.627
+ },
+ {
+  "cue": "N03",
+  "who": "narrator",
+  "word": "that",
+  "start": 12.627,
+  "end": 12.767
+ },
+ {
+  "cue": "N03",
+  "who": "narrator",
+  "word": "night",
+  "start": 12.767,
+  "end": 13.007
+ },
+ {
+  "cue": "N03",
+  "who": "narrator",
+  "word": "he's",
+  "start": 13.007,
+  "end": 13.247
+ },
+ {
+  "cue": "N03",
+  "who": "narrator",
+  "word": "on",
+  "start": 13.247,
+  "end": 13.347
+ },
+ {
+  "cue": "N03",
+  "who": "narrator",
+  "word": "the",
+  "start": 13.347,
+  "end": 13.467
+ },
+ {
+  "cue": "N03",
+  "who": "narrator",
+  "word": "baby",
+  "start": 13.467,
+  "end": 13.647
+ },
+ {
+  "cue": "N03",
+  "who": "narrator",
+  "word": "monitor.",
+  "start": 13.647,
+  "end": 13.927
+ },
+ {
+  "cue": "H02",
+  "who": "host",
+  "word": "Tonight's",
+  "start": 14.5,
+  "end": 15.04
+ },
+ {
+  "cue": "H02",
+  "who": "host",
+  "word": "guest",
+  "start": 15.04,
+  "end": 15.28
+ },
+ {
+  "cue": "H02",
+  "who": "host",
+  "word": "just",
+  "start": 15.28,
+  "end": 15.68
+ },
+ {
+  "cue": "H02",
+  "who": "host",
+  "word": "learned",
+  "start": 15.68,
+  "end": 16.04
+ },
+ {
+  "cue": "H02",
+  "who": "host",
+  "word": "to",
+  "start": 16.04,
+  "end": 16.28
+ },
+ {
+  "cue": "H02",
+  "who": "host",
+  "word": "stand.",
+  "start": 16.28,
+  "end": 16.68
+ },
+ {
+  "cue": "N04",
+  "who": "narrator",
+  "word": "This",
+  "start": 19.567,
+  "end": 20.147
+ },
+ {
+  "cue": "N04",
+  "who": "narrator",
+  "word": "needs",
+  "start": 20.147,
+  "end": 20.407
+ },
+ {
+  "cue": "N04",
+  "who": "narrator",
+  "word": "to",
+  "start": 20.407,
+  "end": 20.627
+ },
+ {
+  "cue": "N04",
+  "who": "narrator",
+  "word": "stop,",
+  "start": 20.627,
+  "end": 20.887
+ },
+ {
+  "cue": "N04",
+  "who": "narrator",
+  "word": "so",
+  "start": 21.107,
+  "end": 21.147
+ },
+ {
+  "cue": "N04",
+  "who": "narrator",
+  "word": "you",
+  "start": 21.147,
+  "end": 21.287
+ },
+ {
+  "cue": "N04",
+  "who": "narrator",
+  "word": "lock",
+  "start": 21.287,
+  "end": 21.487
+ },
+ {
+  "cue": "N04",
+  "who": "narrator",
+  "word": "every",
+  "start": 21.487,
+  "end": 21.727
+ },
+ {
+  "cue": "N04",
+  "who": "narrator",
+  "word": "camera",
+  "start": 21.727,
+  "end": 21.987
+ },
+ {
+  "cue": "N04",
+  "who": "narrator",
+  "word": "in",
+  "start": 21.987,
+  "end": 22.187
+ },
+ {
+  "cue": "N04",
+  "who": "narrator",
+  "word": "the",
+  "start": 22.187,
+  "end": 22.267
+ },
+ {
+  "cue": "N04",
+  "who": "narrator",
+  "word": "house",
+  "start": 22.267,
+  "end": 22.487
+ },
+ {
+  "cue": "N04",
+  "who": "narrator",
+  "word": "in",
+  "start": 22.487,
+  "end": 22.667
+ },
+ {
+  "cue": "N04",
+  "who": "narrator",
+  "word": "a",
+  "start": 22.667,
+  "end": 22.787
+ },
+ {
+  "cue": "N04",
+  "who": "narrator",
+  "word": "safe.",
+  "start": 22.787,
+  "end": 22.947
+ },
+ {
+  "cue": "N05",
+  "who": "narrator",
+  "word": "His",
+  "start": 24.567,
+  "end": 24.927
+ },
+ {
+  "cue": "N05",
+  "who": "narrator",
+  "word": "next",
+  "start": 24.927,
+  "end": 25.187
+ },
+ {
+  "cue": "N05",
+  "who": "narrator",
+  "word": "guest",
+  "start": 25.187,
+  "end": 25.487
+ },
+ {
+  "cue": "N05",
+  "who": "narrator",
+  "word": "is",
+  "start": 25.487,
+  "end": 25.687
+ },
+ {
+  "cue": "N05",
+  "who": "narrator",
+  "word": "a",
+  "start": 25.687,
+  "end": 25.787
+ },
+ {
+  "cue": "N05",
+  "who": "narrator",
+  "word": "locksmith.",
+  "start": 25.787,
+  "end": 26.307
+ },
+ {
+  "cue": "H03",
+  "who": "host",
+  "word": "So",
+  "start": 27.0,
+  "end": 27.2
+ },
+ {
+  "cue": "H03",
+  "who": "host",
+  "word": "how'd",
+  "start": 27.2,
+  "end": 27.4
+ },
+ {
+  "cue": "H03",
+  "who": "host",
+  "word": "you",
+  "start": 27.4,
+  "end": 27.5
+ },
+ {
+  "cue": "H03",
+  "who": "host",
+  "word": "get",
+  "start": 27.5,
+  "end": 27.64
+ },
+ {
+  "cue": "H03",
+  "who": "host",
+  "word": "into",
+  "start": 27.64,
+  "end": 27.86
+ },
+ {
+  "cue": "H03",
+  "who": "host",
+  "word": "this?",
+  "start": 27.86,
+  "end": 28.14
+ },
+ {
+  "cue": "N06",
+  "who": "narrator",
+  "word": "So",
+  "start": 30.067,
+  "end": 30.487
+ },
+ {
+  "cue": "N06",
+  "who": "narrator",
+  "word": "you",
+  "start": 30.487,
+  "end": 30.647
+ },
+ {
+  "cue": "N06",
+  "who": "narrator",
+  "word": "sell",
+  "start": 30.647,
+  "end": 30.847
+ },
+ {
+  "cue": "N06",
+  "who": "narrator",
+  "word": "the",
+  "start": 30.847,
+  "end": 30.987
+ },
+ {
+  "cue": "N06",
+  "who": "narrator",
+  "word": "house",
+  "start": 30.987,
+  "end": 31.187
+ },
+ {
+  "cue": "N06",
+  "who": "narrator",
+  "word": "and",
+  "start": 31.187,
+  "end": 31.387
+ },
+ {
+  "cue": "N06",
+  "who": "narrator",
+  "word": "move",
+  "start": 31.387,
+  "end": 31.547
+ },
+ {
+  "cue": "N06",
+  "who": "narrator",
+  "word": "so",
+  "start": 31.547,
+  "end": 31.787
+ },
+ {
+  "cue": "N06",
+  "who": "narrator",
+  "word": "deep",
+  "start": 31.787,
+  "end": 32.067
+ },
+ {
+  "cue": "N06",
+  "who": "narrator",
+  "word": "into",
+  "start": 32.067,
+  "end": 32.287
+ },
+ {
+  "cue": "N06",
+  "who": "narrator",
+  "word": "the",
+  "start": 32.287,
+  "end": 32.447
+ },
+ {
+  "cue": "N06",
+  "who": "narrator",
+  "word": "woods",
+  "start": 32.447,
+  "end": 32.627
+ },
+ {
+  "cue": "N06",
+  "who": "narrator",
+  "word": "the",
+  "start": 32.627,
+  "end": 32.827
+ },
+ {
+  "cue": "N06",
+  "who": "narrator",
+  "word": "road",
+  "start": 32.827,
+  "end": 33.007
+ },
+ {
+  "cue": "N06",
+  "who": "narrator",
+  "word": "gives",
+  "start": 33.007,
+  "end": 33.207
+ },
+ {
+  "cue": "N06",
+  "who": "narrator",
+  "word": "up",
+  "start": 33.207,
+  "end": 33.407
+ },
+ {
+  "cue": "N06",
+  "who": "narrator",
+  "word": "before",
+  "start": 33.407,
+  "end": 33.627
+ },
+ {
+  "cue": "N06",
+  "who": "narrator",
+  "word": "you",
+  "start": 33.627,
+  "end": 33.747
+ },
+ {
+  "cue": "N06",
+  "who": "narrator",
+  "word": "get",
+  "start": 33.747,
+  "end": 33.887
+ },
+ {
+  "cue": "N06",
+  "who": "narrator",
+  "word": "there.",
+  "start": 33.887,
+  "end": 34.107
+ },
+ {
+  "cue": "N07",
+  "who": "narrator",
+  "word": "Three",
+  "start": 36.567,
+  "end": 37.007
+ },
+ {
+  "cue": "N07",
+  "who": "narrator",
+  "word": "weeks,",
+  "start": 37.007,
+  "end": 37.307
+ },
+ {
+  "cue": "N07",
+  "who": "narrator",
+  "word": "you",
+  "start": 37.667,
+  "end": 37.787
+ },
+ {
+  "cue": "N07",
+  "who": "narrator",
+  "word": "haven't",
+  "start": 37.787,
+  "end": 38.047
+ },
+ {
+  "cue": "N07",
+  "who": "narrator",
+  "word": "heard",
+  "start": 38.047,
+  "end": 38.167
+ },
+ {
+  "cue": "N07",
+  "who": "narrator",
+  "word": "his",
+  "start": 38.167,
+  "end": 38.327
+ },
+ {
+  "cue": "N07",
+  "who": "narrator",
+  "word": "voice",
+  "start": 38.327,
+  "end": 38.527
+ },
+ {
+  "cue": "N07",
+  "who": "narrator",
+  "word": "once.",
+  "start": 38.527,
+  "end": 38.807
+ },
+ {
+  "cue": "H04",
+  "who": "host",
+  "word": "Welcome",
+  "start": 40.033,
+  "end": 40.393
+ },
+ {
+  "cue": "H04",
+  "who": "host",
+  "word": "back.",
+  "start": 40.393,
+  "end": 40.773
+ },
+ {
+  "cue": "H05",
+  "who": "host",
+  "word": "So,",
+  "start": 44.0,
+  "end": 44.34
+ },
+ {
+  "cue": "H05",
+  "who": "host",
+  "word": "when",
+  "start": 44.74,
+  "end": 44.84
+ },
+ {
+  "cue": "H05",
+  "who": "host",
+  "word": "did",
+  "start": 44.84,
+  "end": 44.98
+ },
+ {
+  "cue": "H05",
+  "who": "host",
+  "word": "you",
+  "start": 44.98,
+  "end": 45.14
+ },
+ {
+  "cue": "H05",
+  "who": "host",
+  "word": "know",
+  "start": 45.14,
+  "end": 45.4
+ },
+ {
+  "cue": "H05",
+  "who": "host",
+  "word": "it",
+  "start": 45.4,
+  "end": 45.56
+ },
+ {
+  "cue": "H05",
+  "who": "host",
+  "word": "was",
+  "start": 45.56,
+  "end": 45.7
+ },
+ {
+  "cue": "H05",
+  "who": "host",
+  "word": "time",
+  "start": 45.7,
+  "end": 45.92
+ },
+ {
+  "cue": "H05",
+  "who": "host",
+  "word": "to",
+  "start": 45.92,
+  "end": 46.1
+ },
+ {
+  "cue": "H05",
+  "who": "host",
+  "word": "move",
+  "start": 46.1,
+  "end": 46.24
+ },
+ {
+  "cue": "H05",
+  "who": "host",
+  "word": "out",
+  "start": 46.24,
+  "end": 46.42
+ },
+ {
+  "cue": "H05",
+  "who": "host",
+  "word": "of",
+  "start": 46.42,
+  "end": 46.52
+ },
+ {
+  "cue": "H05",
+  "who": "host",
+  "word": "your",
+  "start": 46.52,
+  "end": 46.64
+ },
+ {
+  "cue": "H05",
+  "who": "host",
+  "word": "parents'",
+  "start": 46.64,
+  "end": 46.9
+ },
+ {
+  "cue": "H05",
+  "who": "host",
+  "word": "cave?",
+  "start": 47.08,
+  "end": 47.16
+ }
+]

@@ -5,7 +5,7 @@ story_id: neighbor-podcast
 working_title: My Neighbor Has a Podcast
 script_status: approved
 codex_status: in_progress
-claude_status: not_started
+claude_status: motion_review  # awaiting owner approval before final export
 target_duration_seconds: 51
 format: "9:16"
 owner_approved_script_at: 2026-11-20
