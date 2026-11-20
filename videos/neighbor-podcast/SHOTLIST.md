@@ -1,0 +1,22 @@
+# My Neighbor Has a Podcast | Shot list
+
+51 seconds, 1,530 frames at 30 fps. Frame ranges start at zero and exclude the out point. N01–N07 follow the paragraphs in [SCRIPT.md](SCRIPT.md). H01–H05 reference [DIALOGUE.md](DIALOGUE.md).
+
+| Shot | Picture frames | Spoken cue and frames | Picture, camera and continuity | Sound | Asset IDs |
+| --- | --- | --- | --- | --- | --- |
+| S01 | 0–210 | N01 0–105, H01 120–180 | Fixed wide fisheye at doorbell height. Open on the neighbor setting a glass beside his guest. Keep both faces central and let the guest’s chair sink a little into the flower bed. The host squares his notes and looks into the lens. The uninterrupted angle establishes whose camera this is. | Glass tap, chair creak and light porch tone. | PORCH, HOST, GUEST, KIT, DOORBELL |
+| S02 | 210–366 | N02 210–330 | Cut to a medium side view, homeowner and doorbell on the same screen axis. Show the homeowner gripping the bat and stepping toward the camera. Cut back to the established fisheye for the swing so the viewer sees which feed dies. Cut to black at contact, frame 345. | Sharp crack at 345 followed by silence. | PORCH, OWNER, BAT, DOORBELL |
+| S03 | 366–450 | N03 366–435 | Start with a tight nightstand shot. Ease toward the monitor as its screen lights, then cut into its fixed view of the crib. The host pulls a tiny chair up beside the rail. | Low bedroom tone and a soft device tick. | NURSERY, HOST, KIT, MONITOR |
+| S04 | 450–585 | H02 450–507 | Hold the crib camera on the baby’s hands, face and microphone. The baby straightens at frame 510, then sits while the host lowers the mic to follow. Keep rail contact visible and leave headroom for the rise. | Brief CC0 crowd cheer at frame 510, filtered through the monitor. A small crib creak can sit after the cheer. | NURSERY, HOST, BABY, KIT, MONITOR |
+| S05 | 585–735 | N04 585–720 | Cut to a close view of the safe and visible camera pile. The homeowner puts the baby monitor in last. Hold on both hands pushing the door flush so the lockup reads instantly. | One heavy clunk after the line. | SAFE, OWNER, MONITOR |
+| S06 | 735–900 | N05 735–795, H03 810–870 | Cut to a camera inside the safe. Door opens on the locksmith and the host already offering the mic. Hold on the locksmith’s eyes looking down at the open safe and back up. | Hinge and light tool jingle. Leave room for the question and reaction. | SAFE, HOST, LOCKSMITH, KIT |
+| S07 | 900–1095 | N06 900–1080 | Cut to a wide view down the road, truck stopped where pavement ends. Follow the homeowner and the last box toward the cabin. Preserve travel direction and match-cut on the cabin steps. The road ending delivers the scale of the overreaction. | Truck idle drops out into woods and footsteps. | CABIN, MOVE, OWNER |
+| S08 | 1095–1200 | N07 1095–1170 | Medium locked shot of the homeowner on the same steps. Focus on the shoulders dropping, then hold on the sip. | Low forest wind, cup handling. | CABIN, MOVE, OWNER |
+| S09 | 1200–1320 | H04 1200–1230 | Hard cut to fixed infrared trail-cam view. Reuse the host’s adult folding chair and let him reach the mic toward the empty edge of frame. The bear steps in at 1230 or later, then loads the second chair. Keep the bear’s headphones and feet readable. | Two heavy footfalls and one chair creak after the greeting. | CABIN, TRAILCAM, HOST, BEAR, KIT |
+| S10 | 1320–1530 | H05 1320–1470 | Hold the same infrared two-shot. The host sincerely asks the question. The bear leans toward the mic. After the breath, cut to black for frames 1525–1529. | One breath after frame 1470. Cut the sound with picture. | CABIN, TRAILCAM, HOST, BEAR, KIT |
+
+## Audio and alignment
+
+The frame windows leave space between every spoken cue. Record the seven narrator lines and five host lines as separate dry tracks, then verify actual word timings before motion work. Adjust the surrounding reactions if a take needs room. Keep the host’s nursery line clear of frame 510 and preserve the baby stand and cheer on the same frame. The bat hit also gets a clear gap after narration.
+
+Use [Short Affirmative Cheer](https://freesound.org/people/ShangusBurger/sounds/763830/), CC0, as the first audition. Start with 21–27 frames and match the monitor’s restrained filter. Use [Wind in the forest](https://mixkit.co/free-sound-effects/forest/) as a candidate cabin bed. Mixkit permits use in the finished YouTube video and limits standalone redistribution under its [sound-effects license](https://mixkit.co/license/modal/sfxFree/). Audition both against the cut.
