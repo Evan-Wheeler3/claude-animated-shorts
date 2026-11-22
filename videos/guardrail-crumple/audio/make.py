@@ -1,6 +1,8 @@
-# Sound for "Why Guardrails Crumple": the narration (untouched) + synthesized SFX + a small original score, all numpy.
-# Same recipe and house mix as the Niagara / troy shorts (SFX -6 dB, music 10 LU under the voice and ducked 3 dB
-# under speech, -15 LUFS integrated, true peak <= -1 dBTP). Library: templates/audio (dsp, instruments, sfx_gen).
+# Sound for "Why Guardrails Crumple": the narration (untouched) + a small original background score, all numpy.
+# Owner direction (2026-11-22): music only, no sound effects, no chord hits / stabs / cymbals. The score is one
+# steady pluck-and-bass bed: D minor under the old rail, D major from the new end on, easing out on the last line.
+# House mix: music 10 LU under the voice and ducked 3 dB under speech, -15 LUFS integrated, true peak <= -1 dBTP.
+# build_sfx() is kept for reference but is not mixed (SFX_ON = False).
 # Every cue sits on a picture time read from the story module (timing.json from remotion/scripts/timing.mts).
 # usage: (cd remotion && npx tsx scripts/timing.mts > ../audio/timing.json); python3 audio/make.py
 import os, sys, json
@@ -27,6 +29,7 @@ wd = lambda w, k=0: W[w][k]
 R = rng(2027)
 CUES = []
 VREF = -20.0
+SFX_ON = False
 STEEL = [(410, 1.0, .25), (1130, .7, .18), (2240, .5, .12), (3420, .35, .08), (5100, .2, .05)]
 
 
@@ -175,35 +178,24 @@ def build_music():
     b = np.zeros((2, N)); r = rng(1987)
     pl = lambda t, m, v=0.45, p=0.15: place(b, pan(I.pluck(M(m), v, r, 0.9, 0.6), p), t)
     bass = lambda t, m, v=0.5: place(b, pan(I.pluck(M(m), v, r, 1.3, 0.3), -0.2), t)
-    tim = lambda t, m, v=0.6: place(b, st(I.timpani(M(m), v, r, 1.8)), t)
-    stab = lambda t, ms, d=0.3, v=0.8, kind="stab": [place(b, pan(I.brass(M(m), d, v, r, kind), 0.2 * (i - 1)), t) for i, m in enumerate(ms)]
     BT = 60 / 118
     MINOR = [(50, [62, 65, 69]), (46, [62, 65, 70]), (48, [60, 64, 67]), (45, [61, 64, 69])]   # D minor: i VI VII V
     MAJOR = [(50, [62, 66, 69]), (55, [62, 67, 71]), (57, [61, 64, 69]), (50, [62, 66, 69])]   # D major: I IV V I
 
-    def bed(t0, t1, prog, vel=0.4, drums=True):
-        k = 0
-        while t0 + k * BT / 2 < t1 - 0.15:
-            t = t0 + k * BT / 2; root, ch = prog[(k // 8) % 4]
-            pl(t, ch[k % 3] + (12 if k % 4 == 3 else 0), vel * (1.0 if k % 2 == 0 else 0.7), 0.25 if k % 2 else -0.15)
-            if k % 4 == 0: bass(t, root - 12, vel * 1.1)
-            if drums and k % 8 == 0: tim(t, root - 12, vel * 0.7)
+    def bed(t0, t1, prog, vel=0.4, k0=0):
+        k = k0
+        while t0 + (k - k0) * BT / 2 < t1 - 0.15:
+            t = t0 + (k - k0) * BT / 2; root, ch = prog[(k // 8) % 4]
+            fade = min(1.0, (t1 - t) / 2.5) if t1 - t < 2.5 else 1.0
+            pl(t, ch[k % 3] + (12 if k % 4 == 3 else 0), vel * fade * (1.0 if k % 2 == 0 else 0.7), 0.25 if k % 2 else -0.15)
+            if k % 4 == 0: bass(t, root - 12, vel * fade * 1.1)
             k += 1
-    # tense minor bed under the hook, out at the edge; back for the rail story; silence before the spear
-    bed(0.0, B["edge"], MINOR, 0.42)
-    stab(B["edge"] + .05, [50, 57, 62], 0.5, 0.8); place(b, st(I.cymbal(0.5, r, 1.8)), B["edge"] + .05)
-    stab(B["beam"] + .55, [62, 66, 69], 0.3, 0.6, "soft")  # the rail is built: a hopeful chord
-    bed(SH[3][0], SH[5][0] + 1.3, MINOR, 0.36)
-    for k in range(6): tim(SH[5][0] + 1.3 + k * BT / 2, 45, 0.3 + 0.07 * k)   # drum roll into the spear
-    stab(B["spear"], [38, 45, 50], 0.7, 1.0); place(b, st(I.cymbal(0.8, r, 2.4)), B["spear"])
-    place(b, st(I.pad([M(m) for m in (50, 53, 57)], 2.4, 0.35, r)), SH[6][0] + .2)    # "so deadly": a held minor pad
-    # the new end: brighter D major, building through the mechanism; a lift on "curls out the other"
-    place(b, st(I.glock(M(86), 0.5, r)), B["swap"] + .15)
-    bed(SH[7][0] + .9, SH[10][0] + 2.2, MAJOR, 0.34)
-    stab(wd("curls"), [62, 66, 69, 74], 0.4, 0.7, "soft")
-    # ending: slows with the car; a deadpan two-note button on the one-eye peek
-    for k, m in enumerate([69, 66, 62]): pl(B["stop"] - 1.4 + k * .55, m, 0.4 - .08 * k)
-    place(b, st(I.glock(M(81), 0.35, r)), B["peek"]); place(b, pan(I.pluck(M(74), 0.4, r, 1.2, 0.4), .1), B["peek"] + .28)
+        return k
+    # one continuous pulse: minor for the cliff and the old rail, major from the new end, easing out at the end
+    switch = SH[7][0]
+    k = bed(0.0, switch, MINOR, 0.4)
+    k = (k + 7) // 8 * 8                     # restart the major progression on a bar line
+    bed(switch, DUR - .3, MAJOR, 0.38, k)
     return b + 0.15 * convolve_st(b, make_ir(1.1, 3, hf=1.3))
 
 
@@ -224,7 +216,7 @@ def main():
     v = signal.resample_poly(v.mean(0) if v.ndim == 2 else v, SR, sr)
     voice = np.zeros(N); voice[: min(N, len(v))] = v[:N]; voice = st(voice)
     VREF = integrated(voice)
-    sfx = build_sfx() * dbg(-6.0)
+    sfx = build_sfx() * dbg(-6.0) if SFX_ON else np.zeros((2, N))
     mus = build_music()
     ctrl = np.zeros(N)
     for w in T["words"]: ctrl[max(0, ns(w["a"] - 0.08)): ns(w["b"] + 0.12)] = 1.0
@@ -236,11 +228,11 @@ def main():
     mix = limiter(mix, -1.6)
     tp = true_peak(mix)
     if tp > -1.0: mix = mix * dbg(-1.0 - tp)
-    for name, x in [("mix", mix), ("stem_voice", voice), ("stem_music", mus), ("stem_sfx", sfx)]: write_wav(os.path.join(HERE, name + ".wav"), x)
+    for name, x in [("mix", mix), ("stem_voice", voice), ("stem_music", mus)]: write_wav(os.path.join(HERE, name + ".wav"), x)
     with open(os.path.join(HERE, "cues.md"), "w") as f:
         f.write(f"# Sound cues (time, cue, level vs voice in LU)\n\nvoice {VREF:.1f} LUFS, mix {integrated(mix):.1f} LUFS, true peak {true_peak(mix):.1f} dBTP, {N / SR:.3f} s\n\n")
-        for t, name, db in sorted(CUES): f.write(f"- {t:6.2f} s (f {int(round(t * FPS)):4d})  {name}  ({db:+.0f})\n")
-    print(f"voice {VREF:.1f} LUFS | mix {integrated(mix):.1f} LUFS | peak {true_peak(mix):.1f} dBTP | music {integrated(mus):.1f} | sfx {integrated(sfx):.1f} | {N / SR:.3f} s")
+        f.write("Music only (owner direction): one pluck-and-bass bed, D minor to D major at the new-end shot, no sound effects.\n")
+    print(f"voice {VREF:.1f} LUFS | mix {integrated(mix):.1f} LUFS | peak {true_peak(mix):.1f} dBTP | music {integrated(mus):.1f} | {N / SR:.3f} s")
 
 
 if __name__ == "__main__":

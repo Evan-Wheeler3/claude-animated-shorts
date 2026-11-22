@@ -5,33 +5,40 @@ import {roadCenter} from '../../assets/models.mjs';
 import WORDS from './words.json';
 
 export const FPS = 30;
-export const TOTAL = 1154; // 38.47 s: narration ends 36.85 s, then the one-eye beat
 export const RAIL_X = 3.26;
 export const LANE_X = 2.85; // car centre for the head-on approaches (bumper meets the rail end on its driver side)
 
+// Everything below is timed from the narration (voice/words.json, copied to src/words.json). A new take re-times the
+// whole film: cuts sit in the gaps before sentence starts, beats sit on their words.
 type Word = {w: string; a: number; b: number};
 export const words = WORDS as Word[];
+const norm = (w: string) => w.replace(/[^a-z']/gi, '').replace(/’/g, "'").toLowerCase();
 /** start time of the n-th occurrence of a word (punctuation ignored) */
 export const at = (w: string, n = 0) => {
-  const hits = words.filter(x => x.w.replace(/[^a-z']/gi, '').toLowerCase() === w.toLowerCase());
+  const hits = words.filter(x => norm(x.w) === w.toLowerCase());
   if (!hits[n]) throw new Error(`word ${w}#${n} not in words.json`);
   return hits[n].a;
 };
+/** sentence start times (a word starts a sentence when the previous word ends in . ! or ?) */
+export const SENT: number[] = words.filter((x, i) => i === 0 || /[.!?]["”’]?$/.test(words[i - 1].w)).map(x => x.a);
+if (SENT.length !== 14) throw new Error(`words.json has ${SENT.length} sentences, SCRIPT.md has 14`);
+const LAST = words[words.length - 1];
+export const TOTAL = Math.round((LAST.b + 1.7) * FPS); // the last word, then the one-eye beat
 
 export type ShotId = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 export type Shot = {id: ShotId; a: number; b: number; key: string};
-// cut points sit in the gaps between sentences (or 2-3 frames ahead of the word they illustrate)
+const cut = (i: number) => SENT[i] - .09; // 2-3 frames ahead of the sentence that the next shot illustrates
 export const SHOTS: Shot[] = [
-  {id: 1, a: 0, b: 3.88, key: 'hook'},
-  {id: 2, a: 3.88, b: 5.98, key: 'assemble'},
-  {id: 3, a: 5.98, b: 10.55, key: 'glance'},
-  {id: 4, a: 10.55, b: 14.08, key: 'flex'},
-  {id: 5, a: 14.08, b: 17.62, key: 'old-end'},
-  {id: 6, a: 17.62, b: 20.2, key: 'cabin'},
-  {id: 7, a: 20.2, b: 24.1, key: 'new-head'},
-  {id: 8, a: 24.1, b: 26.95, key: 'slide'},
-  {id: 9, a: 26.95, b: 31.95, key: 'cutaway'},
-  {id: 10, a: 31.95, b: TOTAL / FPS, key: 'stop'},
+  {id: 1, a: 0, b: cut(2), key: 'hook'},          // "The road ran right along a cliff. One bad turn ... edge."
+  {id: 2, a: cut(2), b: cut(3), key: 'assemble'}, // "So the city built guardrails."
+  {id: 3, a: cut(3), b: cut(4), key: 'glance'},   // "If a car slid into the rail from the side ..."
+  {id: 4, a: cut(4), b: cut(5), key: 'flex'},     // "The steel would only bend a little."
+  {id: 5, a: cut(5), b: cut(7), key: 'old-end'},  // "But the real problem was the end ..." + "If you hit the end ... spear ..."
+  {id: 6, a: cut(7), b: cut(8), key: 'cabin'},    // "That's what made it so deadly."
+  {id: 7, a: cut(8), b: cut(10), key: 'new-head'},// "So the city added a new kind of end. It has a steel head ..."
+  {id: 8, a: cut(10), b: cut(11), key: 'slide'},  // "When a car hits it, the head slides down the rail."
+  {id: 9, a: cut(11), b: cut(12), key: 'cutaway'},// "The wavy steel feeds into the head ..."
+  {id: 10, a: cut(12), b: TOTAL / FPS, key: 'stop'}, // "Bending all that steel ... all at once." + one eye
 ];
 export const shotAt = (t: number) => SHOTS.find(s => t >= s.a && t < s.b) ?? SHOTS[SHOTS.length - 1];
 
@@ -54,8 +61,14 @@ export const BEAT = {
   spear: at('spear') - .07,          // old end spears the car (shot 5)
   swap: at('new') - .05,             // old end -> impact head (shot 7)
   hit: at('hits') - .07,             // bumper meets the head (shot 8)
-  stop: at('stops') - .05,           // car comes to rest (shot 10)
-  peek: at('stops') + 1.0,           // driver opens one eye
+  stop: LAST.a - .05,                // car comes to rest on the last word ("once")
+  peek: LAST.b + .75,                // driver opens one eye
+};
+/** cuts inside shots */
+export const CUT = {
+  glanceB: BEAT.sideHit - .5,        // shot 3: driver-side window -> rail-side angle, just before contact
+  oldEndB: SENT[6] - .09,            // shot 5: windshield approach -> along the rail, on "If you hit the end"
+  closeUp: BEAT.stop + .2,           // shot 10: wide -> windshield close-up for the one-eye beat
 };
 
 // ------------------------------------------------------------------ car state
@@ -128,7 +141,7 @@ export function hookCar(t: number, g: SideGeom): CarState {
 }
 
 // ------------------------------------------------------------------ head-on: old end (shot 5/6)
-const V_HEAD = 9;
+const V_HEAD = 7.5;
 export const PEN = 1.75; // m of rail inside the car when it stops
 export function oldEndCar(t: number, front: number): CarState & {pen: number} {
   const t5 = BEAT.spear;
@@ -149,8 +162,9 @@ export function oldEndCar(t: number, front: number): CarState & {pen: number} {
 // Video-time speed profile (m/s) of the bumper after contact: fast hit, a slow readable slide through the cutaway,
 // then the last metres in the wide shot. travel(t) integrates it; the car's bumper stays on the head's face.
 const V_APPROACH = 7;
+const H9 = SHOTS[8].a - BEAT.hit, H10 = SHOTS[9].a - BEAT.hit, HS = BEAT.stop - BEAT.hit;
 const PROFILE: [number, number][] = [
-  [0, 7], [.34, 3.2], [1.44, 1.3], [2.39, .7], [7.34, .45], [7.84, .6], [10.04, .35], [11.84, 0],
+  [0, 7], [.34, 3.2], [Math.max(.6, H9 - 1.0), 1.3], [H9, .7], [H10, .45], [H10 + .5, .6], [Math.max(H10 + .8, HS - 1.8), .35], [HS, 0],
 ];
 const STEPS = 2400;
 const TRAVEL_T: number[] = [];

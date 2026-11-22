@@ -1,19 +1,19 @@
-The road was near a cliff. One bad turn could send you right over the edge.
+The road ran right along a cliff. One bad turn could send your car straight over the edge.
 
 So the city built guardrails.
 
-Now, if a car slid into one from the side, the rail could guide it back along the road.
+If a car slid into the rail from the side, the rail would guide it back onto the road.
 
-But the rail had a problem. It could bend when you hit it from the side.
+The steel would only bend a little. But the real problem was the end of the rail.
 
-Hit the old end straight on, though, and the rail could spear right through your car.
+If you hit the end straight on, the rail could spear right through your car.
 
 That’s what made it so deadly.
 
-So the city put in new rails. These had a mechanism right at the end.
+So the city added a new kind of end. It has a steel head that sits right on the tip of the rail.
 
-When the bumper hits it, the head slides down the rail.
+When a car hits it, the head slides down the rail.
 
-The wavy steel goes in one side, gets squeezed flat, and curls out the other.
+The wavy steel feeds into the head, gets squeezed flat, and curls out the side.
 
-It takes energy to bend all that steel. That gives the car more distance to slow down before it stops.
+Bending all that steel uses up the car’s energy. So the car slows down over a longer distance instead of stopping all at once.

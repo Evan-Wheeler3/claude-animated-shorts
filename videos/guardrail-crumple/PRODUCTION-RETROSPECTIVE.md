@@ -26,6 +26,14 @@ Base: `codex/guardrail-crumple` at `10cf3b5`. Branch: `claude/guardrail-crumple-
 - `templates/scripts/short_qa.py` (report: `previews/final/qa-report.md`): 1440x2560, 30 fps, 1154 frames, 38.47 s; −16.3 LUFS integrated, LRA 2.3 LU, −1.1 dBFS peak; no silences, black, white or frozen spans. Its 10 "pops" are all planned: 8 shot cuts (one frame after the QA's rounded shot list), the cut inside shot 3 at f215 and the cabin jolt at f538.
 - Not done: no Opus-max verifier side-by-side scoring against the reference frames (SKILL.md step 9) was run on this cut.
 
+## Revision 2 (owner notes on the first cut)
+- **Voice:** "generic AI." The first cut used the Kokoro recipe that the Niagara branch documented as the house narrator. But Niagara and U-1206 were later re-voiced in the **owner's cloned voice** (commits `d20aa8e` and `3dd4b15`), and the docs were never updated. Lesson: check the latest commits on earlier productions' voice files, not just their tool scripts.
+- **Sound:** SFX, chord stabs and cymbals were too much. The film now has music only.
+- **Script:** reworded for clarity; line 4 was misleading.
+- **Timing:** cuts and beats were derived from words.json, so a new take re-times the film without editing story.ts.
+- **Rendering:** at about 7 s per 1440 frame, software GL in the cloud is far too slow. The final renders on the owner's Mac with the GPU (`run_mac.sh`).
+- `previews/final/*` is still the **first cut** (old script and voice) until the Mac run replaces it.
+
 ## Reusable lessons
 - When a GLB's geometry is baked into car space with no node transforms, wheels and steering need pivots at their bounding-box centres. The steering axis can be taken as the smallest-variance axis of the rim's vertices.
 - Drive an extrusion with **one travel value**. Beam start, head position, bumper contact and strip length all read from it, so contact can never drift.

@@ -14,7 +14,7 @@ import {createDriver} from '../../assets/driver';
 import {loadSedan, type Sedan} from '../../assets/sedan';
 import {createExtrusion, knockPosts, popPosts} from './extrusion';
 import {
-  BEAT, FPS, RAIL_X, LANE_X, TOTAL, SHOTS, shotAt, sideCar, hookCar, oldEndCar, terminalCar, travel, TRAVEL_END,
+  BEAT, CUT, FPS, RAIL_X, LANE_X, TOTAL, SHOTS, shotAt, sideCar, hookCar, oldEndCar, terminalCar, travel, TRAVEL_END,
   clamp01, smooth, lerp, mix3, kick, roadCenter, type CarState,
 } from './story';
 
@@ -146,14 +146,14 @@ function pose(w: World, t: number): Frame {
       const cp = [RAIL_X + roadCenter(s.contact) - .1, .7, s.contact];
       if (d > 0 && d < .7) sparkAt(0, cp, d / .7);
       driver.setPose(d > 0 && d < 1.2 ? 'brace' : 'steer', false, s.wheel);
-      if (shot.id === 3 && t < 7.15) {
+      if (shot.id === 3 && t < CUT.glanceB) {
         // driver-side window, tracking: the camera rides beside the car on the drop side
-        const u = (t - shot.a) / (7.15 - shot.a);
+        const u = (t - shot.a) / (CUT.glanceB - shot.a);
         fr = {pos: carPt(w, [lerp(3.3, 3.0, u), 1.42, lerp(.9, .5, u)]), look: carPt(w, [.25, 1.12, -.05]), fov: 38, cInf: 10, focus: carPt(w, [.35, 1.15, .1])};
       } else if (shot.id === 3) {
-        const u = smooth((t - 7.15) / (shot.b - 7.15));
+        const u = smooth((t - CUT.glanceB) / (shot.b - CUT.glanceB));
         const follow = [s.x + .4, .5, s.z + 1.2];
-        fr = {pos: mix3([7.3, 3.5, 1.6], [7.4, 3.6, 8.6], u), look: mix3([2.9, .5, 5.8], follow, smooth((t - 7.3) / 1.2)), fov: 40, cInf: 0, shake: kick(t, tc, .012)};
+        fr = {pos: mix3([7.3, 3.5, 1.6], [7.4, 3.6, 8.6], u), look: mix3([2.9, .5, 5.8], follow, smooth((t - CUT.glanceB - .15) / 1.2)), fov: 40, cInf: 0, shake: kick(t, tc, .012)};
       } else {
         const z0 = s.contact;
         const rx = RAIL_X + roadCenter(z0);
@@ -174,11 +174,11 @@ function pose(w: World, t: number): Frame {
       driver.card.position.y -= .03 * jolt;
       driver.setPose(d < 0 ? 'steer' : 'brace', shot.id === 6, d < 0 ? .18 * Math.sin(tt * 4) : -.1);
       placeCar(w, s);
-      if (shot.id === 5 && t < 15.45) {
-        const u = (t - shot.a) / (15.45 - shot.a);
+      if (shot.id === 5 && t < CUT.oldEndB) {
+        const u = (t - shot.a) / (CUT.oldEndB - shot.a);
         fr = {pos: carPt(w, [lerp(.0, .1, u), 1.45, sedan.front + lerp(3.6, 3.1, u)]), look: carPt(w, [.3, 1.08, .1]), fov: 34, cInf: 10, focus: carPt(w, [.35, 1.15, .1])};
       } else if (shot.id === 5) {
-        const u = (t - 15.45) / (shot.b - 15.45);
+        const u = (t - CUT.oldEndB) / (shot.b - CUT.oldEndB);
         fr = {pos: [lerp(3.05, 3.0, u), 1.02, lerp(5.0, 4.6, u)], look: [2.95, .6, -3.0], fov: 36, cInf: 8, focus: [RAIL_X, .68, -.1], shake: kick(t, BEAT.spear, .02)};
       } else {
         const u = (t - shot.a) / (shot.b - shot.a);
@@ -212,7 +212,7 @@ function pose(w: World, t: number): Frame {
       const hx = RAIL_X + roadCenter(T);
       const d = t - BEAT.hit;
       if (d > 0 && d < .55) sparkAt(0, [hx - .1, .62, T - .25], d / .55);
-      if (shot.id === 10 && t > 36.55) {
+      if (shot.id === 10 && t > CUT.closeUp) {
         driver.setPose(t < BEAT.peek ? 'brace' : 'peek', true, -.05);
       } else driver.setPose(d < 0 ? 'steer' : 'brace', d > 0, -.05);
       placeCar(w, s);
@@ -224,12 +224,12 @@ function pose(w: World, t: number): Frame {
       } else if (shot.id === 9) {
         const u = smooth((t - shot.a) / (shot.b - shot.a));
         fr = {pos: [hx + lerp(1.45, 1.25, u), lerp(2.3, 2.1, u), T + lerp(2.0, 1.75, u)], look: [hx + .12, .5, T + .05], fov: 40, cInf: 8, focus: [hx + .2, .6, T + .2]};
-      } else if (t <= 36.55) {
-        const u = smooth((t - shot.a) / (36.55 - shot.a));
+      } else if (t <= CUT.closeUp) {
+        const u = smooth((t - shot.a) / (CUT.closeUp - shot.a));
         const hz = Math.max(T, 0);
         fr = {pos: mix3([hx + 1.25, 2.1, hz + 1.75], [RAIL_X + 7.5, 5.2, TRAVEL_END + 5.5], u), look: mix3([hx + .12, .5, hz + .05], [RAIL_X - .4, .1, TRAVEL_END - 1.6], u), fov: 40, cInf: lerp(9, 0, u)};
       } else {
-        const u = (t - 36.55) / (shot.b - 36.55);
+        const u = (t - CUT.closeUp) / (shot.b - CUT.closeUp);
         fr = {pos: carPt(w, [lerp(.2, .24, u), 1.62, sedan.front + lerp(1.15, .95, u)]), look: carPt(w, [.33, 1.22, .05]), fov: 30, cInf: 12, focus: carPt(w, [.35, 1.18, .1])};
       }
       break;

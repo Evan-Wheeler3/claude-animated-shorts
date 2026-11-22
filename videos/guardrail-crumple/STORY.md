@@ -24,3 +24,8 @@ The city and the three crashes are a dramatized example.
 - ~~The abrupt stop at the old end is a dramatized comparison.~~ **Resolved 2026-11-22 (Claude, owner-approved line change):** the documented head-on hazard of untreated blunt W-beam ends was *spearing*: the rail could pierce the occupant compartment. Turned-down ends were a cheap fix that reduced spearing but could ramp a car into a launch or rollover. Energy-absorbing terminals came later to address both. Sources: [Wisconsin TOPS Lab guardrail-end report](https://topslab.wisc.edu/wp-content/uploads/2017/05/Guardrail-End-report.pdf), [TRB 1989 "Development of Guardrail Extruder Terminal"](https://onlinepubs.trb.org/Onlinepubs/trr/1989/1233/1233-004.pdf), [FHWA guardrail safety history](https://www.fhwa.dot.gov/guardrailsafety/history.cfm), [FHWA-AASHTO terminal analysis](https://www.fhwa.dot.gov/guardrailsafety/safetyanalysis/). The FHWA pages could not be fetched from the production container (network policy), so these were read through search summaries. SCRIPT.md line 5 changed from "…your car came to a sudden stop." to "…the rail could spear right through your car." Shot 5 shows the blunt beam end punching into the grille.
 
 The handoff is saved for review. Script approval and production have yet to begin.
+
+## Revision 2026-11-22 (owner)
+- SCRIPT.md was reworded for clarity in full sentences; the owner approved the new text. Line 4 is the main fix: the rail bending was never the problem, the end of the rail was.
+- Narration is the owner's cloned voice at 1.18× (`run_mac.sh`, built on the Mac). Sound is music only, with no SFX or chord hits.
+- Every cut and beat now follows `voice/words.json`, so the new take re-times the picture and the music automatically.
