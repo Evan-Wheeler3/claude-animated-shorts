@@ -4,7 +4,8 @@ import * as THREE from 'three';
 import {EffectComposer, RenderPass} from 'postprocessing';
 import {InkPass} from '../../../templates/bridge/ink';
 import {createCar, createCliffRoad, createDischargedSteel, createGuardrail} from './models.mjs';
-import {createDriver, createImpactEffect} from './cards.mjs';
+import {createImpactEffect} from './cards.mjs';
+import {createDriver} from './driver';
 
 export const FIRST_STILLS_COUNT = 7;
 
@@ -105,6 +106,7 @@ export function FirstStills() {
     composer.render();
     return () => {
       composer.dispose();
+      driver.dispose();
       sun.shadow.dispose();
       scene.traverse(object => {
         if (object instanceof THREE.Mesh) object.geometry.dispose();

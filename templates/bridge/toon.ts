@@ -434,7 +434,7 @@ const BUILD: Record<Build, { a: number; torso: number; legs: number; tw: number 
 
 export type FrontOpts = {
   phase?: number; expr?: Expr; mode?: "march" | "stroll" | "stand" | "sit" | "fall"; look?: number; blink?: boolean | number; lift?: number;
-  prop?: Prop; tilt?: number; headTilt?: number; wave?: number;
+  prop?: Prop; tilt?: number; headTilt?: number; wave?: number; steering?: number;
   /** canvas angle the key light comes FROM (painted crescent + thick outline side) */
   light?: number; facing?: -1 | 0 | 1; seed?: number;
 };
@@ -510,7 +510,14 @@ export const bodyFront = (p: Pen, o: Outfit, opts: FrontOpts) => {
   const rifle = !!o.rifle && (mode === "march" || mode === "stand" || mode === "stroll");
   type Arm = { pts: [P2, P2, P2]; front: boolean };
   const arms: Arm[] = [];
-  if (mode === "sit") for (const side of [-1, 1]) arms.push({ pts: [sh(side), [tcx + side * (1.1 * T.a + 6 * u), sh(side)[1] + 0.4 * HH], [tcx + side * (1.2 * T.a + 10 * u), torsoBot + 0.04 * HH]], front: false });
+  if (mode === "sit" && opts.steering !== undefined) {
+    const angle = opts.steering;
+    for (const side of [-1, 1]) {
+      const shoulder = sh(side);
+      const hand: P2 = [tcx + (14 * facing + side * 23 * Math.cos(angle)) * u, chin + (61 + side * 23 * Math.sin(angle)) * u];
+      arms.push({ pts: [shoulder, [shoulder[0] + side * 8 * u, hand[1] + 10 * u], hand], front: true });
+    }
+  } else if (mode === "sit") for (const side of [-1, 1]) arms.push({ pts: [sh(side), [tcx + side * (1.1 * T.a + 6 * u), sh(side)[1] + 0.4 * HH], [tcx + side * (1.2 * T.a + 10 * u), torsoBot + 0.04 * HH]], front: false });
   else if (mode === "fall") for (const side of [-1, 1]) arms.push({ pts: [sh(side), [tcx + side * (1.15 * T.a + 12 * u), sh(side)[1] - 0.25 * HH], [tcx + side * (1.3 * T.a + 24 * u), sh(side)[1] - 0.68 * HH]], front: false });
   else {
     arms.push({ pts: prop === "shako" ? hang(-1, 0) : hang(-1, -sw), front: false });

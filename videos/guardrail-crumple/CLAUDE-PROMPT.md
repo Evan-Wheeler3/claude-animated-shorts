@@ -2,7 +2,7 @@
 
 Read [the story](STORY.md), [the narration](SCRIPT.md), and [the timed shot list](SHOTLIST.md). Use [Niagara Falls](../niagara-barrel/CLAUDE-PROMPT.md) as the production reference and follow the [repo rendering guide](../../SKILL.md) and [style bible](../../references/STYLE_BIBLE.md).
 
-Keep the driver a fully drawn 2D toon character at the detail level of Annie in Niagara. Preserve the swept hair, shaped face, collared teal jacket and distinct steering, bracing and peek expressions. Show his face and upper body through the windshield or driver-side window while the car is moving. Use the two driving views in the first-stills sheet as framing references. Build the cliff, road, car, and guardrails in 3D with dark toon outlines and shaded surfaces. Reuse the same car and bend across the three setups. Match the replay angles so the viewer can immediately spot what changed. Use the existing Three.js/Remotion pipeline and narrator.
+Keep the driver a fully drawn 2D toon character at the detail level of Annie in Niagara. Reuse the seated shared-toon driver in `assets/driver.ts` with its teal jacket and steering, bracing and peek expressions. Set wheel rotation and pass the same angle as the third argument to `setPose` for the driver’s hands. Show his face and upper body through the windshield or driver-side window while the car is moving. Use the two driving views in the first-stills sheet as framing references. Build the cliff, road, car, and guardrails in 3D with dark toon outlines and shaded surfaces. Reuse the same car and bend across the three setups. Match the replay angles so the viewer can immediately spot what changed. Use the existing Three.js/Remotion pipeline and narrator.
 
 ## Animation and rigging
 
