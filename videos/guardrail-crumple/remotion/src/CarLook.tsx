@@ -9,7 +9,7 @@ import {createCar, createCliffRoad, createGuardrail} from '../../assets/models.m
 import {createDriver} from '../../assets/driver';
 import {loadSedan, type Sedan} from '../../assets/sedan';
 
-export const CAR_LOOK_FRAMES = 5;
+export const CAR_LOOK_FRAMES = 7;
 
 export const CarLook: React.FC = () => {
   const canvas = useRef<HTMLCanvasElement>(null);
@@ -72,6 +72,8 @@ export const CarLook: React.FC = () => {
     if (frame === 1) aim([1.0, 1.5, 12.4], [.35, 1.05, 7.2]);
     if (frame === 2) aim([3.6, 1.45, 7.6], [.3, 1.05, 6.95]);
     if (frame === 3) aim([7.4, 3.4, 2.4], [2.7, .46, 7.6]);
+    if (frame === 5) aim([1.9, 1.0, 10.1], [.7, .6, 8.9]);
+    if (frame === 6) aim([2.1, 1.1, 3.6], [.7, .6, 5.0]);
     if (frame === 4) aim([-3.3, 1.39, 8.1], [-.42, 1.13, 7.15]);
     camera.updateMatrixWorld();
     scene.updateMatrixWorld(true);

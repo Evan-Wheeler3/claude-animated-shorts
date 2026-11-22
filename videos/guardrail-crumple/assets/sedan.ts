@@ -8,6 +8,7 @@ import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {NOINK} from '../../../templates/bridge/ink';
 
 export const LENGTH = 4.1;
+const BUMPER_NARROW = .91; // 0.81 m -> 0.74 m half-width (GLB units): inside the side sheets' 0.72-0.77 m
 
 // material index in the GLB -> toon colour (indices are stable; the GLB's materials are unnamed)
 const TOON: Record<number, string> = {
@@ -78,6 +79,65 @@ export async function loadSedan(url: string): Promise<Sedan> {
     mesh.material = palette.get(index)!;
     mesh.castShadow = mesh.receiveShadow = true;
   }
+
+  // The bumpers are boxes 0.81 m out from centre, but the curved side sheets taper to 0.59-0.72 m at the nose and
+  // tail, so the bumper ends poked out through the bodywork. Narrow both bumpers to sit inside the side sheets.
+  for (const name of ['Front_Bumper', 'Rear_Bumper']) {
+    const bumper = model.getObjectByName(name);
+    if (bumper) bumper.scale.x *= BUMPER_NARROW;
+  }
+  // the taillight lenses reach 0.785 m, just past the side sheets' 0.77 m: tuck them in
+  for (const name of ['Taillight_L', 'Taillight_R']) {
+    model.getObjectByName(name)?.scale.multiply(new THREE.Vector3(.96, 1, 1));
+  }
+
+  // The side sheets also pinch 0.13 m inward over a last 0.1 m tip at the nose and tail. That tip has no thickness,
+  // so the head/taillights stuck out past it and its open edge read as a flap. Fold each tip ring back onto the ring
+  // behind it (matched by height order), so every sheet ends flush with the lights and the bumper wraps the corner.
+  const caps: [THREE.Object3D, THREE.Mesh][] = [];
+  for (const name of ['Driver_Body', 'Passenger_Body']) {
+    model.getObjectByName(name)?.traverse(o => {
+      const geo = (o as THREE.Mesh).geometry as THREE.BufferGeometry | undefined;
+      if (!geo) return;
+      const pos = geo.getAttribute('position');
+      for (const end of [-1, 1]) {
+        const ring = (lo: number, hi: number) => {
+          const ids: number[] = [];
+          for (let i = 0; i < pos.count; i++) {
+            const z = pos.getZ(i) * end;
+            if (z > lo && z <= hi) ids.push(i);
+          }
+          const ys = [...new Set(ids.map(i => +pos.getY(i).toFixed(3)))].sort((p, q) => p - q);
+          return {ids, ys};
+        };
+        const tip = ring(2.3, 9), prev = ring(2.2, 2.3);
+        if (!tip.ys.length || tip.ys.length !== prev.ys.length) continue;
+        const target = new Map<number, number>(); // tip height -> a vertex index of the ring behind
+        tip.ys.forEach((y, k) => target.set(y, prev.ids.find(i => +pos.getY(i).toFixed(3) === prev.ys[k])!));
+        for (const i of tip.ids) {
+          const j = target.get(+pos.getY(i).toFixed(3))!;
+          pos.setXYZ(i, pos.getX(j), pos.getY(j), pos.getZ(j));
+        }
+        // close the open sheet end below the lights with a plate behind the bumper (hides the gap at the corner)
+        const [b0, b1] = prev.ys.slice(0, 2).map(y => prev.ids.find(i => +pos.getY(i).toFixed(3) === y)!);
+        const z = pos.getZ(b0), side = Math.sign(pos.getX(b0));
+        const plate = new THREE.BufferGeometry().setFromPoints([
+          new THREE.Vector3(pos.getX(b0), pos.getY(b0), z), new THREE.Vector3(pos.getX(b1), pos.getY(b1), z),
+          new THREE.Vector3(side * .5, pos.getY(b1), z), new THREE.Vector3(side * .5, pos.getY(b0), z),
+        ]);
+        plate.setIndex([0, 1, 2, 0, 2, 3]);
+        plate.computeVertexNormals();
+        const cap = new THREE.Mesh(plate, (o as THREE.Mesh).material);
+        cap.name = 'Sheet_End_Plate';
+        caps.push([o, cap]); // the plate shares the sheet's (identity) node space
+      }
+      pos.needsUpdate = true;
+      geo.computeVertexNormals();
+      geo.computeBoundingBox();
+      geo.computeBoundingSphere();
+    });
+  }
+  for (const [parent, cap] of caps) { cap.castShadow = cap.receiveShadow = true; parent.add(cap); }
 
   const body = new THREE.Group();
   body.add(model);
