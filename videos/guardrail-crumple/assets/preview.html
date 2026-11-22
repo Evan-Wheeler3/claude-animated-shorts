@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Guardrail asset review</title>
+<style>
+  body { margin: 0; background: #241e32; color: #fff3d5; font: 16px system-ui; }
+  main { display: grid; grid-template-columns: repeat(4, 240px); gap: 8px; padding: 8px; }
+  figure { margin: 0; }
+  canvas { display: block; width: 240px; height: 426px; }
+  figcaption { padding: 6px 2px; }
+</style>
+<script type="importmap">
+{"imports":{"three":"../../../../animated-shorts-runtime/node_modules/three/build/three.module.js"}}
+</script>
+<main></main>
+<script type="module">
+import * as THREE from 'three';
+import {createCar, createCliffRoad, createDischargedSteel, createGuardrail} from './models.mjs';
+import {createDriver, createImpactEffect} from './cards.mjs';
+
+const renderer = new THREE.WebGLRenderer({antialias: true, preserveDrawingBuffer: true});
+renderer.setSize(480, 852);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+const scene = new THREE.Scene();
+scene.background = new THREE.Color('#a6cce1');
+scene.fog = new THREE.Fog('#a6cce1', 26, 75);
+const fill = new THREE.HemisphereLight('#dbe5ff', '#8d605d', 1.7);
+const sun = new THREE.DirectionalLight('#ffe3ae', 2.4);
+sun.position.set(8, 15, -7);
+sun.castShadow = true;
+sun.shadow.mapSize.set(1024, 1024);
+Object.assign(sun.shadow.camera, {left: -16, right: 16, top: 16, bottom: -16});
+sun.shadow.normalBias = .02;
+scene.add(fill, sun, createCliffRoad());
+const car = createCar();
+const driver = createDriver();
+const rail = createGuardrail({curved: true});
+const strip = createDischargedSteel();
+const impact = createImpactEffect();
+car.interior.add(driver.card);
+rail.head.add(strip.root);
+rail.root.position.x = 3.26;
+scene.add(car.root, rail.root, impact.root);
+const camera = new THREE.PerspectiveCamera(39, 480 / 852, .04, 140);
+camera.layers.enable(3);
+
+function capture(label, position, target) {
+  camera.position.set(...position);
+  camera.lookAt(...target);
+  camera.updateMatrixWorld();
+  driver.faceCamera(camera);
+  renderer.render(scene, camera);
+  const canvas = document.createElement('canvas');
+  canvas.width = 480;
+  canvas.height = 852;
+  canvas.getContext('2d').drawImage(renderer.domElement, 0, 0);
+  const figure = document.createElement('figure');
+  const caption = document.createElement('figcaption');
+  caption.textContent = label;
+  figure.append(canvas, caption);
+  document.querySelector('main').append(figure);
+}
+
+rail.root.visible = false;
+car.root.position.set(4.2, -.8, 9.4);
+car.root.rotation.set(.24, .72, -.2);
+capture('Cliff and opening skid', [13, 8, -2], [2, -2, 10]);
+
+rail.root.visible = true;
+rail.setTerminal({modern: false});
+rail.oldEnd.visible = false;
+rail.setBeam({flex: .25, contact: 7.5});
+car.root.position.set(2.19, .01, 7.1);
+car.root.rotation.set(0, .06, 0);
+impact.root.position.set(3.14, .5, 7.3);
+impact.setProgress(.32);
+capture('Side hit and local flex', [7.6, 3.8, 1.9], [2.45, .55, 7]);
+
+impact.setProgress(0);
+rail.setTerminal({modern: false});
+car.root.position.set(3.12, .01, -2.03);
+car.root.rotation.set(0, 0, 0);
+driver.setPose('brace', true);
+car.bumper.rotation.y = .16;
+capture('Exposed terminal and driver', [-.42, 2.22, 1.5], [3.25, .8, -1.33]);
+
+rail.setTerminal({travel: 3.1, open: true});
+strip.setLength(3.1);
+driver.setPose('peek');
+car.root.position.set(3.12, .01, .92);
+car.bumper.rotation.y = 0;
+capture('Sliding head and steel strip', [.73, 2.0, 4.25], [3.00, .56, 3]);
+document.body.dataset.status = 'rendered';
+</script>
+</html>

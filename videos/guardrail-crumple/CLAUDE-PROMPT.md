@@ -10,4 +10,4 @@ Keep the car, driver, beam, posts, and sliding head independently animatable. Gi
 
 Align the old-cap impact to “sudden stop,” then cut inside for the driver reaction. Time the edit to the recorded voice. Prioritize a readable mechanism and room for the narration over hitting the 49-second estimate exactly.
 
-This handoff contains planning documents. Begin animation and rendering when the owner authorizes production.
+Load the source assets and controls listed in the [asset manifest](ASSET-MANIFEST.md). See the [asset handoff](CODEX-HANDOFF.md) for validation status. When the owner authorizes production, stage initial Remotion stills for the cliff, both impact angles, the driver and the cutaway. Pause for visual approval before full animation.
