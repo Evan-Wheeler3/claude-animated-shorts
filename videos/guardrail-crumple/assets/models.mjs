@@ -153,7 +153,7 @@ export function createCar() {
   }
   box(interior, 'trim', [1.4, .18, .24], [0, 1, .49], .04);
   const steering = new THREE.Group();
-  steering.position.set(-.4, 1.12, .37);
+  steering.position.set(-.4, 1.06, .37);
   interior.add(steering);
   mesh(steering, new THREE.TorusGeometry(.155, .025, 9, 24), 'trim');
   box(steering, 'hub', [.22, .025, .028], [0, 0, 0]);

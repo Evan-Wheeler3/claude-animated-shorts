@@ -14,3 +14,5 @@
 | 8 | 0:32–0:37 | Replay the head-on hit. Track beside the bumper as it pushes the head down the beam. Keep the fixed posts in view so the movement is clear. | “When the bumper hits it, the head slides down the rail.” |
 | 9 | 0:37–0:43 | Cut away part of the head. In one continuous shot, show the wavy beam feeding in, getting squeezed flat, and curling out sideways as a strip. | “The wavy steel goes in one side, gets squeezed flat, and curls out the other.” |
 | 10 | 0:43–0:49 | Pull wide while the car is still moving. Let it slow to a stop with the strip of steel beside it. The driver opens one eye. Cut there. | “It takes energy to bend all that steel. That gives the car more distance to slow down before it stops.” |
+
+In shot 3, start on the driver-side window while the car is moving, then cut to the rail-side angle for contact and flex. In shot 5, establish the driver through the windshield on approach before cutting to bumper height for impact. Use the [Remotion driver review](previews/driver-window-review.png) for window framing.

@@ -6,7 +6,7 @@ import {InkPass} from '../../../templates/bridge/ink';
 import {createCar, createCliffRoad, createDischargedSteel, createGuardrail} from './models.mjs';
 import {createDriver, createImpactEffect} from './cards.mjs';
 
-export const FIRST_STILLS_COUNT = 5;
+export const FIRST_STILLS_COUNT = 7;
 
 export function FirstStills() {
   const canvas = useRef<HTMLCanvasElement>(null);
@@ -76,12 +76,24 @@ export function FirstStills() {
         driver.setPose('peek');
         aim([5.65, 2.05, 4.35], [3, .56, 3]);
         break;
-      default:
+      case 4:
         rail.root.visible = false;
         car.exterior.visible = false;
         car.root.position.set(3.12, .01, .92);
         driver.setPose('brace', true);
-        aim([1.81, 1.77, 2.05], [2.8, 1.17, .92]);
+        aim([1.81, 1.63, 2.15], [2.72, 1.23, 1]);
+        break;
+      case 5:
+        rail.root.visible = false;
+        car.root.position.set(0, .01, 7);
+        car.steering.rotation.z = -.32;
+        aim([-1.15, 1.45, 11.1], [-.36, 1.13, 7.43]);
+        break;
+      default:
+        rail.root.visible = false;
+        car.root.position.set(0, .01, 7);
+        car.steering.rotation.z = -.32;
+        aim([-3.3, 1.39, 8.1], [-.42, 1.13, 7.15]);
     }
 
     camera.updateMatrixWorld();
