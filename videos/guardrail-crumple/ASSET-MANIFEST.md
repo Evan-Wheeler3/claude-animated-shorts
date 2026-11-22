@@ -16,3 +16,5 @@ Coordinates are in approximate meters, Y up. Road grade is Y=0. Traffic travels 
 | All | Lighting, sky, shadows, outlines, audio generation | Existing [bridge template](../../templates/bridge/) and [audio helpers](../../templates/audio/) | Apply world ink to layer 0. Light and tint the driver with the existing card treatment. Use the existing narrator and mix. |
 
 The 3D geometry checks passed in Three.js 0.170. Open the [review page](assets/preview.html) or render the Remotion first-stills entry to inspect the supplied poses. Use real Remotion first-stills to approve the final look and camera contact before animation.
+
+A [CC0 Kenney sedan](assets/kenney-sedan/README.md) is available as a sourced exterior option. Its windows are opaque in the original mesh. The existing cabin car supports the driver-through-window shots.
