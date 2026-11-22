@@ -50,6 +50,12 @@ export type Sedan = {
   root: THREE.Group; body: THREE.Group; interior: THREE.Group;
   wheels: THREE.Object3D[]; steeringPivots: THREE.Object3D[]; steering: THREE.Object3D; bumper: THREE.Object3D;
   seat: THREE.Vector3; cushion: THREE.Box3; wheelCentre: THREE.Vector3; glass: THREE.Mesh[];
+  /** half length to the front bumper face, half width, rear overhang, wheel radius (m, root space) */
+  front: number; halfWidth: number; rear: number; wheelRadius: number;
+  /** turn the steering wheel about its column (rad, + = clockwise as the driver sees it) */
+  setSteer: (angle: number) => void;
+  /** roll the wheels to a travelled distance (m) and steer the front ones (rad, + = toward +X) */
+  setWheels: (distance: number, steer: number) => void;
 };
 
 export async function loadSedan(url: string): Promise<Sedan> {
@@ -162,5 +168,39 @@ export async function loadSedan(url: string): Promise<Sedan> {
   const wheelCentre = steering.getWorldPosition(new THREE.Vector3());
   // front wheels sit at +Z after the turn
   const steeringPivots = wheels.filter(w => w.getWorldPosition(new THREE.Vector3()).z > 0);
-  return {root, body, interior, wheels, steeringPivots, steering, bumper, seat, cushion, wheelCentre, glass};
+  const box = new THREE.Box3().setFromObject(body);
+  const wheelBox = new THREE.Box3().setFromObject(wheels[0]);
+  const wheelRadius = (wheelBox.max.y - wheelBox.min.y) / 2;
+  // steering column axis = normal of the rim (smallest spread of the rim's vertices), in the pivot's parent space
+  const rimPts: THREE.Vector3[] = [];
+  steering.traverse(o => {
+    const g = (o as THREE.Mesh).geometry as THREE.BufferGeometry | undefined;
+    if (!g) return;
+    const a = g.getAttribute('position');
+    for (let i = 0; i < a.count; i += 3) rimPts.push(new THREE.Vector3().fromBufferAttribute(a, i).applyMatrix4(o.matrixWorld));
+  });
+  const mean = rimPts.reduce((m, p) => m.add(p), new THREE.Vector3()).multiplyScalar(1 / Math.max(1, rimPts.length));
+  const cov = [0, 0, 0, 0, 0, 0]; // xx yy zz xy xz yz
+  for (const p of rimPts) {
+    const d = p.clone().sub(mean);
+    cov[0] += d.x * d.x; cov[1] += d.y * d.y; cov[2] += d.z * d.z; cov[3] += d.x * d.y; cov[4] += d.x * d.z; cov[5] += d.y * d.z;
+  }
+  // smallest eigenvector by inverse power iteration on (C + eps I)
+  const C = new THREE.Matrix3().set(cov[0], cov[3], cov[4], cov[3], cov[1], cov[5], cov[4], cov[5], cov[2]);
+  const inv = C.clone().invert();
+  let axis = new THREE.Vector3(0, .3, 1).normalize();
+  for (let k = 0; k < 30; k++) axis.applyMatrix3(inv).normalize();
+  if (axis.z < 0) axis.negate(); // world column axis, pointing to the front of the car
+  const parentQ = steering.parent!.getWorldQuaternion(new THREE.Quaternion()).invert();
+  const localAxis = axis.clone().applyQuaternion(parentQ).normalize();
+  const steerQ = new THREE.Quaternion();
+  const setSteer = (angle: number) => { steering.quaternion.copy(steerQ.setFromAxisAngle(localAxis, angle)); };
+  for (const w of wheels) w.rotation.order = 'YXZ';
+  const setWheels = (distance: number, steer: number) => {
+    // the model is turned 180 deg: local +X is world -X, so a forward roll is a negative local X rotation
+    for (const w of wheels) w.rotation.x = -distance / wheelRadius;
+    for (const w of steeringPivots) w.rotation.y = steer;
+  };
+  return {root, body, interior, wheels, steeringPivots, steering, bumper, seat, cushion, wheelCentre, glass,
+    front: box.max.z, halfWidth: box.max.x, rear: -box.min.z, wheelRadius, setSteer, setWheels};
 }

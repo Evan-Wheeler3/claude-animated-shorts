@@ -6,7 +6,7 @@ Now, if a car slid into one from the side, the rail could guide it back along th
 
 But the rail had a problem. It could bend when you hit it from the side.
 
-Hit the old end cap straight on, though, and your car came to a sudden stop.
+Hit the old end straight on, though, and the rail could spear right through your car.
 
 That’s what made it so deadly.
 

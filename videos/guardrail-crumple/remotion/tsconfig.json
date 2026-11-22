@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ES2020", "module": "ESNext", "moduleResolution": "bundler", "jsx": "react-jsx",
     "strict": true, "skipLibCheck": true, "allowJs": true, "noEmit": true, "esModuleInterop": true,
-    "typeRoots": ["./node_modules/@types"], "baseUrl": ".",
+    "baseUrl": ".",
     "paths": {"three": ["./node_modules/@types/three"], "three/*": ["./node_modules/@types/three/*"], "postprocessing": ["./node_modules/postprocessing"], "*": ["./node_modules/*", "./node_modules/@types/*"]}
   },
   "include": ["src", "../assets/*.ts", "../assets/*.tsx", "../../../templates/bridge/ink.ts", "../../../templates/bridge/toon.ts", "../../../templates/bridge/cardshade.ts"]

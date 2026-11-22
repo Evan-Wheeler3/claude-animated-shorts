@@ -1,0 +1,86 @@
+[
+ {
+  "i": 0,
+  "a": 0.0,
+  "b": 1.153,
+  "text": "The road was near a cliff."
+ },
+ {
+  "i": 1,
+  "a": 1.253,
+  "b": 3.437,
+  "text": "One bad turn could send you right over the edge."
+ },
+ {
+  "i": 2,
+  "a": 3.987,
+  "b": 5.391,
+  "text": "So the city built guardrails."
+ },
+ {
+  "i": 3,
+  "a": 6.091,
+  "b": 10.269,
+  "text": "Now, if a car slid into one from the side, the rail could guide it back along the road."
+ },
+ {
+  "i": 4,
+  "a": 10.719,
+  "b": 11.957,
+  "text": "But the rail had a problem."
+ },
+ {
+  "i": 5,
+  "a": 12.057,
+  "b": 13.797,
+  "text": "It could bend when you hit it from the side."
+ },
+ {
+  "i": 6,
+  "a": 14.247,
+  "b": 17.819,
+  "text": "Hit the old end straight on, though, and the rail could spear right through your car."
+ },
+ {
+  "i": 7,
+  "a": 18.419,
+  "b": 19.629,
+  "text": "That\u2019s what made it so deadly."
+ },
+ {
+  "i": 8,
+  "a": 20.429,
+  "b": 21.778,
+  "text": "So the city put in new rails."
+ },
+ {
+  "i": 9,
+  "a": 21.878,
+  "b": 23.782,
+  "text": "These had a mechanism right at the end."
+ },
+ {
+  "i": 10,
+  "a": 24.282,
+  "b": 26.616,
+  "text": "When the bumper hits it, the head slides down the rail."
+ },
+ {
+  "i": 11,
+  "a": 27.216,
+  "b": 31.087,
+  "text": "The wavy steel goes in one side, gets squeezed flat, and curls out the other."
+ },
+ {
+  "i": 12,
+  "a": 32.087,
+  "b": 33.963,
+  "text": "It takes energy to bend all that steel."
+ },
+ {
+  "i": 13,
+  "a": 34.063,
+  "b": 36.846,
+  "text": "That gives the car more distance to slow down before it stops."
+ }
+]
