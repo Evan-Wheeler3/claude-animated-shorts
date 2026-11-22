@@ -18,3 +18,12 @@ Coordinates are in approximate meters, Y up. Road grade is Y=0. Traffic travels 
 The 3D geometry checks passed in Three.js 0.170. Open the [review page](assets/preview.html) or render the Remotion first-stills entry to inspect the supplied poses. Use real Remotion first-stills to approve the final look and camera contact before animation.
 
 A [CC0 Kenney sedan](assets/kenney-sedan/README.md) is available as a sourced exterior option. Its windows are opaque in the original mesh. The existing cabin car supports the driver-through-window shots.
+
+## Claude production additions (2026-11-22)
+
+| Shots | Asset | Source and control | Notes |
+|---|---|---|---|
+| 1, 3–6, 8, 10 | Hold Up sedan in toon style (the only car in the film) | [car-sedan/Car_Sedan.glb](assets/car-sedan/README.md), loaded by [sedan.ts](assets/sedan.ts) `loadSedan()` | Copied unchanged from the phil-bathroom branch (commit `1e99cdc`, original Hold Up asset). The toon pass, corner fixes, wheel and steering pivots happen at load time. 4.1 m long, nose +Z, driver at +X. Replaces the cabin car and the Kenney sedan by owner decision, so the car looks the same in every cut. |
+| 8–10 | Extruded ribbon, posts knocked flat | [remotion/src/extrusion.ts](remotion/src/extrusion.ts) | Replaces `createDischargedSteel()`. The ribbon is a single path from the W-beam profile through a 90° throat to a flat strip and a coil that clears the posts and car. Its length equals the head's travel. |
+| All | Narration | [voice/](voice/) (Kokoro `am_michael` @1.32, the established Hold Up narrator), word timings in `voice/words.json` | Two Whisper mishearings were fixed by hand ("if a", "That"). |
+| All | Sound | [audio/make.py](audio/make.py) → `audio/mix.m4a`, cue sheet [audio/cues.md](audio/cues.md) | House mix: SFX −6 dB, music 10 LU under the voice and ducked 3 dB under speech, −1 dBTP. |
