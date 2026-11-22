@@ -219,10 +219,10 @@ export function createGuardrail({length = 28, curved = false} = {}) {
   const cutaway = new THREE.Group();
   head.add(cutaway);
   box(cutaway, 'darkSteel', [.40, .065, .5], [0, .49, .14], .015);
-  box(cutaway, 'darkSteel', [.065, .26, .47], [.17, .65, .14], .014);
+  box(cutaway, 'darkSteel', [.065, .26, .47], [-.17, .65, .14], .014);
   for (const y of [.55, .82]) {
     const guide = box(cutaway, 'yellow', [.29, .059, .36], [-.015, y, .14], .02);
-    guide.rotation.y = .36;
+    guide.rotation.y = -.36;
   }
 
   function setTerminal({travel = 0, open = false, modern = true} = {}) {
@@ -257,8 +257,8 @@ export function createDischargedSteel() {
       const s = index / segments * Math.max(length, .01);
       const angle = s * 1.48;
       const radius = .52 + s * .15;
-      const x = -.21 - Math.sin(angle) * radius;
-      const z = .16 - radius * (1 - Math.cos(angle)) - s * .28;
+      const x = .21 + Math.sin(angle) * radius;
+      const z = .16 + radius * (1 - Math.cos(angle)) + s * .28;
       const y = .58 * Math.exp(-s * .72) + .035;
       points.setXYZ(index * 2, x, y, z);
       points.setXYZ(index * 2 + 1, x, y + .235, z);
