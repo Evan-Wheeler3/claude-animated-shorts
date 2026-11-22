@@ -8,7 +8,7 @@ Default reference: ref_owner_voice.wav = the first 4.95 s of the owner's cloned-
 (commit d20aa8e, "In 1901, a 63-year-old woman decided to go over Niagara Falls. Inside a wooden barrel.").
 If you have your own enrolment sample, pass it with --ref and its exact words with --ref-text.
 
-usage: python3 make_voice.py [--model Qwen/Qwen3-TTS-12Hz-1.7B-Base] [--tempo 1.18] [--seed 7] [--ref ...] [--ref-text ...]
+usage: python3 make_voice.py [--model Qwen/Qwen3-TTS-12Hz-0.6B-Base] [--tempo 1.18] [--seed 7] [--ref ...] [--ref-text ...]
 """
 import argparse, json, os, re, subprocess, tempfile
 import numpy as np, soundfile as sf, torch
@@ -17,7 +17,7 @@ from qwen_tts import Qwen3TTSModel
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ap = argparse.ArgumentParser()
-ap.add_argument("--model", default="Qwen/Qwen3-TTS-12Hz-1.7B-Base")
+ap.add_argument("--model", default="Qwen/Qwen3-TTS-12Hz-0.6B-Base")  # 1.7B needs ~7 GB at fp32: too big for an 8 GB Mac
 ap.add_argument("--ref", default=os.path.join(HERE, "ref_owner_voice.wav"))
 ap.add_argument("--ref-text", default="In nineteen-oh-one, a sixty-three-year-old woman decided to go over Niagara Falls. Inside a wooden barrel.")
 ap.add_argument("--lines", default=os.path.join(HERE, "lines.txt"))
@@ -27,11 +27,13 @@ ap.add_argument("--seed", type=int, default=7)
 ap.add_argument("--only", type=int, nargs="*", help="re-generate only these line numbers (0-based), keep the rest from takes/")
 a = ap.parse_args()
 
+import gc
 dev = "mps" if torch.backends.mps.is_available() else "cpu"
-try:
-    m = Qwen3TTSModel.from_pretrained(a.model, device_map=dev, dtype=torch.float32)
+try:  # half precision on the Apple GPU: the 0.6B model needs ~1.2 GB
+    m = Qwen3TTSModel.from_pretrained(a.model, device_map=dev, dtype=torch.float16 if dev == "mps" else torch.float32)
 except Exception as e:  # some torch/qwen-tts builds can't place the model on mps: fall back to the CPU
     print("mps load failed, using cpu:", e, flush=True)
+    gc.collect()
     dev = "cpu"
     m = Qwen3TTSModel.from_pretrained(a.model, device_map=dev, dtype=torch.float32)
 print("device", dev, "model", a.model, flush=True)
