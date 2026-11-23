@@ -126,3 +126,14 @@ Rough stills (540x960, bridge ink pass, Lambert shading, 1.75 m toon sailor for 
 
 Known Claude-side items (not asset defects): sailors' ship-era outfits; gun-deck interior lighting; shot 5's carved
 lion will be a Claude effect card on the stern if the model's stern ornaments don't carry an ECU.
+
+## Acceptance round 2 (2026-11-23)
+Codex `codex/vasa-warship` @ `7dfabc9` (vasa, quay-segment, crate, assets.json only), merged. Checker 11/11 PASS.
+
+| Asset | Rough still | Verdict | Notes |
+|---|---|---|---|
+| `vasa` | `r2-03`, `r2-04` | **ACCEPT** | Lids rest closed and flush; origin on the top hinge; ~1.0 × 1.1 m; 60 lids. Port +z / starboard −z swing them up and out (measured amidships). |
+| `quay-segment` | `r2-13` | **ACCEPT** | Continuous planked deck, tiles without gaps, posts underneath. |
+| `crate` | `r2-15` | **ACCEPT** | Closed, planked lid. |
+
+**All 11 assets accepted.**

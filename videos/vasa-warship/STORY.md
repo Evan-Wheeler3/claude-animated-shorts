@@ -6,8 +6,8 @@ title: The Warship That Sailed for Twenty Minutes   # chosen from research rule 
 target_duration_seconds: 45-60   # draft runs ≈ 55 s
 format: 9:16
 script_status: approved          # GATE A — approved by owner 2026-11-23
-assets_status: delivered         # round 1: 8 accepted, 3 sent back (CODEX-FIX-1.md)
-animatic_status: not_started     # GATE B
+assets_status: accepted          # all 11 accepted after round 2 (codex 7dfabc9)
+animatic_status: rendering       # GATE B
 final_status: not_started        # GATE C
 voice: am_puck (Kokoro-82M), voice/voice.wav 58.8 s, 3.50 words/s, words.json aligned  # owner picked sample 3; confirmed over the owner's cloned voice (2026-11-23)
 claude_branch: claude/nice-hamilton-t80o5e

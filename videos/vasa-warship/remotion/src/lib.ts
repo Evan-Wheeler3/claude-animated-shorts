@@ -44,7 +44,7 @@ export const rig = (ship: THREE.Object3D, mode: 'set' | 'furled' | 'none', setSc
 });
 export const openLids = (ship: THREE.Object3D, row: 'lower' | 'upper' | 'all', a: number) => ship.traverse(o => {
   const r = /^gunport_lid_(port|starboard)_(lower|upper)_\d+$/.exec(o.name);
-  if (r && (row === 'all' || r[2] === row)) o.rotation.z = (r[1] === 'port' ? 1 : -1) * a;
+  if (r && (row === 'all' || r[2] === row)) o.rotation.z = (r[1] === 'port' ? 1 : -1) * a;  // port +z / starboard -z swing the lid up and out (measured)
 });
 
 /** A canvas card on the NOINK layer. Characters use the 600 x 1000 toon design space (soles at y = 975). */
