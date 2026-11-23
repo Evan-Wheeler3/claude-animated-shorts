@@ -25,6 +25,10 @@ L19 Most of the blame quietly landed on the shipbuilder, who had died the year b
 L20 In nineteen sixty-one, the Vasa was raised. Today it's ninety-eight percent original.
 L21 As a warship, it lasted about twenty minutes. As a museum, it's been packed for over thirty years.
 
-## Title options (no question mark, no date, no superlative; `research/vasa/REPORT.md` rule 10)
-1. The Warship That Sailed for Twenty Minutes
-2. Why Sweden's Warship Sank in Its Harbour
+## Title: **The Warship That Sailed for Twenty Minutes**
+Chosen by `research/vasa/REPORT.md` rule 10 and the verified title pattern of the reference channel (33 titles):
+- 7 words (channel median 6, range 4-8); declarative, no question mark, no date, no named person, no superlative.
+- "The [object] That…" is the channel's most common opening (10 of 33) and the shape of its top Short.
+- It states the paradox the hook proves on frame 1 and the ending pays off (rule 3: promise only what the video delivers).
+  "About twenty minutes" is the museum's own figure; the narration keeps the "about".
+- Rejected: "Why Sweden's Warship Sank in Its Harbour" gives away the location and has a weaker curiosity gap.

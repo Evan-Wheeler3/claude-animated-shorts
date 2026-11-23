@@ -2,7 +2,7 @@
 
 ```yaml
 story_id: vasa-warship
-working_title: The Warship That Sailed for Twenty Minutes
+title: The Warship That Sailed for Twenty Minutes   # chosen from research rule 10
 target_duration_seconds: 45-60   # draft runs ≈ 55 s
 format: 9:16
 script_status: approved          # GATE A — approved by owner 2026-11-23
@@ -75,5 +75,5 @@ exact death tolls; "700 sculptures"; "most powerful warship" or any other superl
 - Over 60 s is allowed, but our own synthesized music only (a claimed Short over 60 s is blocked worldwide).
 
 ## Open questions for the owner
-- Title choice (see `SCRIPT.md`).
+- Narrator voice: pick from `voice-samples/`.
 - Museum pages "The Disaster" and "The Inquest" still to be read in full (fact table, last column).
