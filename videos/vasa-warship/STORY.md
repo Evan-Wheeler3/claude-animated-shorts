@@ -5,7 +5,7 @@ story_id: vasa-warship
 working_title: The Warship That Sailed for Twenty Minutes
 target_duration_seconds: 45-60   # draft runs ≈ 55 s
 format: 9:16
-script_status: draft             # GATE A — awaiting owner approval
+script_status: approved          # GATE A — approved by owner 2026-11-23
 assets_status: briefed           # ASSET-BRIEF.md written; Codex not started
 animatic_status: not_started     # GATE B
 final_status: not_started        # GATE C
@@ -75,5 +75,5 @@ exact death tolls; "700 sculptures"; "most powerful warship" or any other superl
 - Over 60 s is allowed, but our own synthesized music only (a claimed Short over 60 s is blocked worldwide).
 
 ## Open questions for the owner
-- Approve the script and shot list as they stand, or change any line?
 - Title choice (see `SCRIPT.md`).
+- Museum pages "The Disaster" and "The Inquest" still to be read in full (fact table, last column).

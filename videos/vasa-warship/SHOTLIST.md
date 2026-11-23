@@ -1,4 +1,4 @@
-# Vasa — shot list (draft for GATE A)
+# Vasa — shot list (approved at GATE A, 2026-11-23)
 
 9:16, 30 fps, ≈ 55 s. Times are estimates at 3.7 words/s and will be re-timed to the recorded `words.json` in the
 animatic. **35 pictures ≈ one every 1.6 s** (target 1.5-2.5 s, `references/reports/editing.md`); every line has at

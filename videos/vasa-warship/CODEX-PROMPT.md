@@ -1,7 +1,6 @@
 # Codex prompt — vasa-warship
 
-**Not to be sent yet.** Paste only after the owner approves the script (GATE A) and `STORY.md` says
-`script_status: approved`. Codex is told to stop otherwise.
+Script approved at GATE A (2026-11-23). Paste once this package is on `main`.
 
 ```text
 Deliver assets for vasa-warship.

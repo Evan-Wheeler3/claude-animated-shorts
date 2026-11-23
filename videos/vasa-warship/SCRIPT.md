@@ -1,4 +1,4 @@
-# Vasa — narration (draft for GATE A)
+# Vasa — narration (approved at GATE A, 2026-11-23)
 
 Narrator-only. 205 words, ≈ 55 s at 3.7 words/s (51-59 s at 3.5-4.0). Every line is checked against the fact
 table in `STORY.md`; line numbers (L01…) are used by `SHOTLIST.md`.
