@@ -61,14 +61,71 @@ function trs(n) {
 }
 const apply = (m, [x, y, z]) => [m[0] * x + m[4] * y + m[8] * z + m[12], m[1] * x + m[5] * y + m[9] * z + m[13], m[2] * x + m[6] * y + m[10] * z + m[14]];
 
+
+const rotM = (axis, a) => {
+  const c = Math.cos(a), s = Math.sin(a);
+  if (axis === 'x') return [1, 0, 0, 0, 0, c, s, 0, 0, -s, c, 0, 0, 0, 0, 1];
+  if (axis === 'y') return [c, 0, -s, 0, 0, 1, 0, 0, s, 0, c, 0, 0, 0, 0, 1];
+  return [c, s, 0, 0, -s, c, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
+};
+/** world bbox of a node's subtree (optionally with an extra local rotation on that node) + its world origin */
+function subtree(j, ni, parentW, extra) {
+  const min = [Infinity, Infinity, Infinity], max = [-Infinity, -Infinity, -Infinity];
+  let local = trs(j.nodes[ni]);
+  if (extra) local = mul(local, rotM(extra.axis, extra.angle));
+  const top = mul(parentW, local);
+  const walk = (k, m) => {
+    const n = j.nodes[k];
+    if (n.mesh !== undefined) for (const p of j.meshes[n.mesh].primitives) {
+      const pos = j.accessors[p.attributes.POSITION];
+      for (let i = 0; i < 8; i++) {
+        const v = apply(m, [i & 1 ? pos.max[0] : pos.min[0], i & 2 ? pos.max[1] : pos.min[1], i & 4 ? pos.max[2] : pos.min[2]]);
+        for (let a = 0; a < 3; a++) { min[a] = Math.min(min[a], v[a]); max[a] = Math.max(max[a], v[a]); }
+      }
+    }
+    for (const c of n.children || []) walk(c, mul(m, trs(j.nodes[c])));
+  };
+  walk(ni, top);
+  return {min, max, origin: apply(top, [0, 0, 0])};
+}
+/** parts spec (assets.json "parts"): [{pattern, count, pivot: top|bottom|center, max_rest_thickness, open: {axis, sign}}] */
+function checkParts(j, r, parts, fail) {
+  const cen = r.min.map((m, i) => (m + r.max[i]) / 2);
+  const xz = (b) => Math.hypot((b.min[0] + b.max[0]) / 2 - cen[0], (b.min[2] + b.max[2]) / 2 - cen[2]);
+  for (const sp of parts) {
+    const re = new RegExp(sp.pattern);
+    const nodes = j.nodes.map((n, i) => [n, i]).filter(([n]) => re.test(n.name || ''));
+    if (sp.count !== undefined && nodes.length !== sp.count) fail(`parts /${sp.pattern}/: ${nodes.length} nodes, brief says ${sp.count}`);
+    let badPivot = 0, thick = 0, inward = 0;
+    for (const [, i] of nodes) {
+      if (r.parentW[i] === undefined) continue;
+      const b = subtree(j, i, r.parentW[i]);
+      const h = b.max[1] - b.min[1], tol = .12 * h + .02;
+      if (sp.pivot === 'top' && Math.abs(b.origin[1] - b.max[1]) > tol) badPivot++;
+      if (sp.pivot === 'bottom' && Math.abs(b.origin[1] - b.min[1]) > tol) badPivot++;
+      const t = Math.min(b.max[0] - b.min[0], b.max[2] - b.min[2]);
+      if (sp.max_rest_thickness !== undefined && t > sp.max_rest_thickness) thick++;
+      if (sp.open) {
+        const o = subtree(j, i, r.parentW[i], {axis: sp.open.axis, angle: (sp.open.sign ?? 1) * 1.0});
+        if (xz(o) <= xz(b) + .05) inward++;
+      }
+    }
+    if (badPivot) fail(`parts /${sp.pattern}/: ${badPivot}/${nodes.length} origins not on the ${sp.pivot} edge (hinge)`);
+    if (thick) fail(`parts /${sp.pattern}/: ${thick}/${nodes.length} stick out more than ${sp.max_rest_thickness} m at rest (should rest closed/flush)`);
+    if (inward) fail(`parts /${sp.pattern}/: ${inward}/${nodes.length} move inward, not outward, when rotated ${(sp.open.sign ?? 1) > 0 ? '+' : '-'}${sp.open.axis}`);
+  }
+}
+
 function analyse(gltf) {
   const j = gltf.json;
   const min = [Infinity, Infinity, Infinity], max = [-Infinity, -Infinity, -Infinity];
   let tris = 0, meshNodes = 0;
   const sceneIdx = j.scene ?? 0;
   const roots = j.scenes?.[sceneIdx]?.nodes ?? [];
+  const parentW = {};
   const visit = (ni, parent) => {
     const n = j.nodes[ni];
+    parentW[ni] = parent;
     const m = mul(parent, trs(n));
     if (n.mesh !== undefined) {
       meshNodes++;
@@ -89,7 +146,7 @@ function analyse(gltf) {
   };
   roots.forEach((r) => visit(r, I4()));
   return {
-    min, max, size: max.map((v, a) => v - min[a]), tris: Math.round(tris), meshNodes,
+    min, max, size: max.map((v, a) => v - min[a]), tris: Math.round(tris), meshNodes, parentW,
     materials: (j.materials || []).map((m) => m.name || ''),
     images: (j.images || []).length,
     externalUris: [...(j.buffers || []), ...(j.images || [])].filter((x) => x.uri && !x.uri.startsWith('data:')).map((x) => x.uri),
@@ -153,6 +210,12 @@ for (const a of manifest.assets || []) {
     }
     // budget
     if (typeof a.max_tris === 'number' && r.tris > a.max_tris) fail(`${r.tris} tris > budget ${a.max_tris}`);
+    // moving parts and tiling
+    if (Array.isArray(a.parts) && r.meshNodes) checkParts(g.json, r, a.parts, fail);
+    if (a.tile && r.meshNodes) {
+      const ax = {x: 0, y: 1, z: 2}[a.tile.axis ?? 'x'], L = r.size[ax];
+      if (Math.abs(L - a.tile.length) > .01 * a.tile.length) fail(`tile: length along ${a.tile.axis ?? 'x'} is ${f2(L)} m, must be exactly ${a.tile.length} m to tile without gaps`);
+    }
     // materials
     for (const want of a.materials || []) {
       if (!r.materials.some((m) => m.toLowerCase().includes(want.toLowerCase()))) fail(`no material named like "${want}"`);
