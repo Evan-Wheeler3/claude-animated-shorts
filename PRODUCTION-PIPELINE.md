@@ -58,14 +58,14 @@ or the tools as rules or checks, not just narrative.
 
 ## Pacing (defaults, not quotas)
 Numbers from `references/reports/editing.md`:
-- **Runtime 30-45 s.** A soft target: never cut a beat the story needs or squeeze clarity for it.
+- **Runtime 45-60 s.** A soft target: the story decides. Never pad, never cut a beat the story needs, never squeeze clarity.
 - Voice starts within 0.2 s and runs at 3.5-4.0 words/s. No pause over ~0.45 s unless it's a planned beat. The video ends on the last word.
 - A new picture every ~1.5-2.5 s: every sentence gets one, most get two.
 - No single picture held over ~4.5 s unless it's a continuous reveal or a named comic/suspense hold.
 - Every visual payoff lands 0-3 frames before its word.
 
 ## Settled rules (where older docs disagreed)
-- **Length:** 30-45 s target (replaces SKILL.md's 55-70 s). Script at ~3.7 words/s → ~110-165 words.
+- **Length:** 45-60 s target (the reference channel runs 55-78 s, median 60.5 s; see `research/vasa/`). Script at ~3.7 words/s → ~165-220 words.
 - **Holds:** the camera never fully freezes for 4+ frames. A "static hold" means a slow creeping push (0.15-0.35 %/f).
   A dead-still freeze frame only as a named comic beat in the shot list.
 - **Characters** are always our 2D toon cards (`toon.ts` / `cast.ts`). Codex never builds characters.

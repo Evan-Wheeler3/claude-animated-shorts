@@ -33,8 +33,8 @@ Any of these counts, and the reference mixes them:
 
 A changed facial expression alone is **not** a new picture. It keeps a hold alive, but it doesn't reset the clock.
 
-## Targets for Hold Up (30-45 s)
-- About **15-25 new pictures** in 30-45 s, one every ~1.5-2.5 s.
+## Targets for Hold Up (45-60 s)
+- About **20-35 new pictures** in 45-60 s, one every ~1.5-2.5 s.
 - Every sentence gets at least one new picture; most get two.
 - No single picture longer than ~4.5 s unless it is a continuous move revealing new content, or a deliberate
   comic/suspense hold that the shot list names and justifies.

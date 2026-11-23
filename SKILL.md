@@ -1,11 +1,11 @@
 ---
 name: cartoon-3d-short
-description: Make a ~30-45 s vertical cartoon story short in the "2D characters in a colourful 3D world" style (flat bean-head cartoon cards with ink outlines, painted 3D town/world with black ink lines, saturated sky, depth-of-field backgrounds, gliding cameras, voice narration, synthesized SFX + march-style music), rendered with three.js inside Remotion. Proven on "The Bridge That Fell for a Song" (2026-10-31). Use when the user asks for another video "like the bridge video", "like the soldiers/bridge short", "in that cartoon 3D style", a history/science story short with cartoon characters in 3D, or says "use the cartoon short skill".
+description: Make a ~45-60 s vertical cartoon story short in the "2D characters in a colourful 3D world" style (flat bean-head cartoon cards with ink outlines, painted 3D town/world with black ink lines, saturated sky, depth-of-field backgrounds, gliding cameras, voice narration, synthesized SFX + march-style music), rendered with three.js inside Remotion. Proven on "The Bridge That Fell for a Song" (2026-10-31). Use when the user asks for another video "like the bridge video", "like the soldiers/bridge short", "in that cartoon 3D style", a history/science story short with cartoon characters in 3D, or says "use the cartoon short skill".
 ---
 
 # Cartoon 3D story short (three.js + Remotion)
 
-> **Hold Up:** roles, approval gates and pacing targets live in `PRODUCTION-PIPELINE.md`; it wins where this file disagrees. Length is now 30-45 s (soft). This file stays the authority on the look and the code.
+> **Hold Up:** roles, approval gates and pacing targets live in `PRODUCTION-PIPELINE.md`; it wins where this file disagrees. Length is now 45-60 s (soft, the story decides). This file stays the authority on the look and the code.
 
 Proven example: **The Bridge That Fell for a Song**. It is an original 67 s short about the 1831 Broughton bridge and 74 soldiers marching in step.
 - Code: `src/videos/bridge/` of your Remotion project (composition `BridgeShort`, 1080x1920, 30 fps).
@@ -31,7 +31,7 @@ User rules that apply:
 ## Pipeline
 1. **Topic and facts.** Pick one surprising true story with a physical cause and effect (it should be visual), plus a simple everyday analogy that explains it.
    - Write the facts with their source at the top of `SCRIPT.md`.
-2. **Script** (~3.7 words/s, 30-45 s soft target; the bridge ran 67 s). Beat formula from the bridge short:
+2. **Script** (~3.7 words/s, 45-60 s soft target; the bridge ran 67 s). Beat formula from the bridge short:
    - **Hook:** the absurd fact in one line ("Seventy-four soldiers knocked down an iron bridge just by walking across it.").
    - **Setting:** year, place, pride.
    - **Action:** escalation over three or four beats, each a little bigger.
