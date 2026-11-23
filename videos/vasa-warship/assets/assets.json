@@ -1,0 +1,240 @@
+{
+  "story_id": "vasa-warship",
+  "assets": [
+    {
+      "id": "vasa",
+      "file": "vasa.glb",
+      "size_m": [
+        12,
+        52,
+        69
+      ],
+      "size_tolerance": 0.2,
+      "pivot": "bottom-center",
+      "max_tris": 80000,
+      "materials": [
+        "hull_wood",
+        "paint_red",
+        "gilt",
+        "carving_blue",
+        "carving_green",
+        "sail",
+        "rope",
+        "metal"
+      ],
+      "license": "CC0-1.0",
+      "source": "https://kenney.nl/assets/pirate-kit",
+      "author": "Kenney",
+      "credit": "",
+      "notes": "Kenney square-sail mesh repainted and rescaled. New two-deck hull, 60 independently hinged top-edge lids, open lower deck reached by the central companionway, red and gilded sterncastle, period rig, four set sails and five separately pivoted furled sails, and a separate rudder. Stock pirate hull could not provide both open gun decks and the raised stern."
+    },
+    {
+      "id": "cannon-24pdr",
+      "file": "cannon-24pdr.glb",
+      "size_m": [
+        0.9,
+        0.9,
+        3
+      ],
+      "size_tolerance": 0.25,
+      "pivot": "bottom-center",
+      "max_tris": 4000,
+      "materials": [
+        "bronze",
+        "wood",
+        "metal"
+      ],
+      "license": "CC0-1.0",
+      "source": "https://kenney.nl/assets/pirate-kit",
+      "author": "Kenney",
+      "credit": "",
+      "notes": "Extracted and bronze-painted the Kenney cannon tube and gave it a trunnion pivot. Rebuilt a low wooden truck carriage with four small wheels."
+    },
+    {
+      "id": "rowboat",
+      "file": "rowboat.glb",
+      "size_m": [
+        1.6,
+        0.7,
+        5
+      ],
+      "size_tolerance": 0.2,
+      "pivot": "bottom-center",
+      "max_tris": 3000,
+      "materials": [
+        "wood"
+      ],
+      "license": "CC0-1.0",
+      "source": "https://kenney.nl/assets/pirate-kit",
+      "author": "Kenney",
+      "credit": "",
+      "notes": "Rescaled and recoloured the Kenney hull. Split the paddles into separately pivoted oars and stowed them fore-and-aft inside the boat."
+    },
+    {
+      "id": "quay-segment",
+      "file": "quay-segment.glb",
+      "size_m": [
+        8,
+        2.5,
+        4
+      ],
+      "size_tolerance": 0.2,
+      "pivot": "bottom-center",
+      "max_tris": 3000,
+      "materials": [
+        "wood",
+        "stone"
+      ],
+      "license": "CC0-1.0",
+      "source": "https://kenney.nl/assets/pirate-kit",
+      "author": "Kenney",
+      "credit": "",
+      "notes": "Rescaled dock into an 8 m X-repeat, added stone pile shoes and a timber mooring bollard. Deck top at 2.5 m."
+    },
+    {
+      "id": "tre-kronor-castle",
+      "file": "tre-kronor-castle.glb",
+      "size_m": [
+        80,
+        60,
+        50
+      ],
+      "size_tolerance": 0.3,
+      "pivot": "bottom-center",
+      "max_tris": 15000,
+      "materials": [
+        "stone",
+        "roof",
+        "gilt"
+      ],
+      "license": "original",
+      "source": "",
+      "author": "",
+      "credit": "",
+      "notes": "No suitable licensed Tre Kronor mesh found. Original stylised broad castle with a tall central tower, spire and three stacked crowns."
+    },
+    {
+      "id": "barrel",
+      "file": "barrel.glb",
+      "size_m": [
+        0.6,
+        0.9,
+        0.6
+      ],
+      "size_tolerance": 0.2,
+      "pivot": "bottom-center",
+      "max_tris": 1500,
+      "materials": [
+        "wood",
+        "metal"
+      ],
+      "license": "CC0-1.0",
+      "source": "https://kenney.nl/assets/pirate-kit",
+      "author": "Kenney",
+      "credit": "",
+      "notes": "Rescaled the Kenney barrel and assigned separate wood and metal hoop materials."
+    },
+    {
+      "id": "crate",
+      "file": "crate.glb",
+      "size_m": [
+        0.8,
+        0.8,
+        0.8
+      ],
+      "size_tolerance": 0.2,
+      "pivot": "bottom-center",
+      "max_tris": 500,
+      "materials": [
+        "wood"
+      ],
+      "license": "CC0-1.0",
+      "source": "https://kenney.nl/assets/pirate-kit",
+      "author": "Kenney",
+      "credit": "",
+      "notes": "Squared and rescaled the Kenney crate, preserving the bracing in a single wood material."
+    },
+    {
+      "id": "rope-coil",
+      "file": "rope-coil.glb",
+      "size_m": [
+        0.8,
+        0.2,
+        0.8
+      ],
+      "size_tolerance": 0.2,
+      "pivot": "bottom-center",
+      "max_tris": 2000,
+      "materials": [
+        "rope"
+      ],
+      "license": "original",
+      "source": "",
+      "author": "",
+      "credit": "",
+      "notes": "Original continuous hemp spiral with simple geometry for ink outlines. Both CC0 rope-coil downloads located during sourcing were blocked by the network proxy."
+    },
+    {
+      "id": "inquiry-table",
+      "file": "inquiry-table.glb",
+      "size_m": [
+        4,
+        0.8,
+        1.2
+      ],
+      "size_tolerance": 0.2,
+      "pivot": "bottom-center",
+      "max_tris": 2000,
+      "materials": [
+        "wood"
+      ],
+      "license": "CC0-1.0",
+      "source": "https://kenney.nl/assets/furniture-kit",
+      "author": "Kenney",
+      "credit": "",
+      "notes": "Stretched the crossed-leg Kenney table, added a heavy stretcher and recoloured the assembly as period timber."
+    },
+    {
+      "id": "inquiry-bench",
+      "file": "inquiry-bench.glb",
+      "size_m": [
+        3.5,
+        0.45,
+        0.4
+      ],
+      "size_tolerance": 0.2,
+      "pivot": "bottom-center",
+      "max_tris": 800,
+      "materials": [
+        "wood"
+      ],
+      "license": "CC0-1.0",
+      "source": "https://kenney.nl/assets/furniture-kit",
+      "author": "Kenney",
+      "credit": "",
+      "notes": "Removed the Kenney backrest, rescaled the timber frame, and added a flat planked seat and central support."
+    },
+    {
+      "id": "salvage-pontoon-crane",
+      "file": "salvage-pontoon-crane.glb",
+      "size_m": [
+        10,
+        15,
+        30
+      ],
+      "size_tolerance": 0.3,
+      "pivot": "bottom-center",
+      "max_tris": 15000,
+      "materials": [
+        "steel",
+        "paint",
+        "rope"
+      ],
+      "license": "original",
+      "source": "",
+      "author": "",
+      "credit": "",
+      "notes": "No suitable CC0 or CC-BY-4.0 period salvage crane barge found. Original generic steel pontoon, framed gantry, cables and lifting hooks."
+    }
+  ]
+}
