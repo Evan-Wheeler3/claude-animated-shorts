@@ -4,7 +4,7 @@ Stills: `videos/vasa-warship/previews/asset-check/` on branch `claude/nice-hamil
 
 ```text
 Fix three assets for vasa-warship on your branch codex/vasa-warship. Read AGENTS.md and the "Acceptance (round 1)"
-table in videos/vasa-warship/ASSET-BRIEF.md (on main). Change only these files and assets.json:
+table in videos/vasa-warship/ASSET-BRIEF.md on branch claude/nice-hamilton-t80o5e (stills in videos/vasa-warship/previews/asset-check/). Change only these files and assets.json:
 1. vasa.glb — gunport lids: (a) rest pose CLOSED flush with the hull (they currently rest ~20° open); (b) move every
    gunport_lid_* node's origin onto its TOP hinge line so rotation.z swings the lid up and outward (port +z, starboard -z);
    it currently pivots on the bottom edge; (c) make the ports about 0.9 x 0.9 m with lids to match (they are ~2 m tall now,
