@@ -7,7 +7,7 @@ target_duration_seconds: 45-60   # draft runs ≈ 55 s
 format: 9:16
 script_status: approved          # GATE A — approved by owner 2026-11-23
 assets_status: accepted          # all 11 accepted after round 2 (codex 7dfabc9)
-animatic_status: rendering       # GATE B
+animatic_status: review          # GATE B — previews/animatic/vasa-animatic.mp4
 final_status: not_started        # GATE C
 voice: am_puck (Kokoro-82M), voice/voice.wav 58.8 s, 3.50 words/s, words.json aligned  # owner picked sample 3; confirmed over the owner's cloned voice (2026-11-23)
 claude_branch: claude/nice-hamilton-t80o5e
