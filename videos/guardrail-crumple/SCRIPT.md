@@ -1,19 +1,11 @@
-The road ran right along a cliff. One bad turn could send your car straight over the edge.
+See that steel ribbon at the end of this guardrail? It just saved this driver’s life.
 
-So the city built guardrails.
+Guardrails exist because one bad turn on a cliff road can send your car straight over the edge.
 
-If a car slid into the rail from the side, the rail would guide it back onto the road.
+Hit a rail from the side, and it bends and pushes you back onto the road.
 
-The steel would only bend a little. But the real problem was the end of the rail.
+But the old rails had a deadly flaw. Hit the end straight on, and the rail could spear right through your car.
 
-If you hit the end straight on, the rail could spear right through your car.
+So engineers put a steel head on the end. When a car hits it, the head slides down the rail. It squeezes the wavy steel flat and curls it out the side.
 
-That’s what made it so deadly.
-
-So the city added a new kind of end. It has a steel head that sits right on the tip of the rail.
-
-When a car hits it, the head slides down the rail.
-
-The wavy steel feeds into the head, gets squeezed flat, and curls out the side.
-
-Bending all that steel uses up the car’s energy. So the car slows down over a longer distance instead of stopping all at once.
+Bending all that steel soaks up the crash, so the car slows down instead of stopping dead. And that leftover ribbon is what saved him.

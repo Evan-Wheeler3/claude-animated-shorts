@@ -29,3 +29,12 @@ The handoff is saved for review. Script approval and production have yet to begi
 - SCRIPT.md was reworded for clarity in full sentences; the owner approved the new text. Line 4 is the main fix: the rail bending was never the problem, the end of the rail was.
 - Narration is the owner's cloned voice at 1.18× (`run_mac.sh`, built on the Mac). Sound is music only, with no SFX or chord hits.
 - Every cut and beat now follows `voice/words.json`, so the new take re-times the picture and the music automatically.
+
+## Revision 3, 2026-11-23 (owner: "build it now", engagement pass)
+- **Hook:** opens on the aftermath (ribbon, stopped car, driver alive) with a question. The flashback follows.
+- **Loop:** the last line ("And that leftover ribbon is what saved him.") glides back to the opening frame.
+- **Pacing:** 18 camera setups in 28.8 s (about 1.6 s each, against 3.7 s in v1). Speed ramps (slow motion at contact) on the glancing hit, the spear and the head hit. Impact punches and flashes.
+- **Eye direction:** a per-beat spotlight (`remotion/src/focus.ts`) darkens and desaturates around the subject. A harder key light and a stronger grade add contrast.
+- **Driver acting:** shock before impacts, panic in the skid, the one-eye peek on "life".
+- **Music:** a 128 bpm bed with a half-second drop-out on the spear. Still no SFX.
+- The v2 script, voice and timings are kept in `v2/`. The v1 render is in `previews/v1/`.

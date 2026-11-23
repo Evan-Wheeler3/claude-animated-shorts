@@ -1,6 +1,6 @@
 # Sound for "Why Guardrails Crumple": the narration (untouched) + a small original background score, all numpy.
-# Owner direction (2026-11-22): music only, no sound effects, no chord hits / stabs / cymbals. The score is one
-# steady pluck-and-bass bed: D minor under the old rail, D major from the new end on, easing out on the last line.
+# Owner direction (2026-11-22): music only, no sound effects, no chord hits / stabs / cymbals. v3: one driving
+# pluck-and-bass bed (128 bpm), D minor -> D major at the new head, a half-second drop-out on the spear.
 # House mix: music 10 LU under the voice and ducked 3 dB under speech, -15 LUFS integrated, true peak <= -1 dBTP.
 # build_sfx() is kept for reference but is not mixed (SFX_ON = False).
 # Every cue sits on a picture time read from the story module (timing.json from remotion/scripts/timing.mts).
@@ -20,7 +20,7 @@ FPS, TOTAL = T["FPS"], T["TOTAL"]
 DUR = TOTAL / FPS
 N = ns(DUR)
 B = T["BEAT"]
-SH = {s["id"]: (s["a"], s["b"]) for s in T["SHOTS"]}
+SH = {s.get("key", s.get("id")): (s["a"], s["b"]) for s in T["SHOTS"]}
 TRAVEL = np.array(T["travel"])
 W = {}
 for w in T["words"]:
@@ -175,28 +175,31 @@ M = I.m2f
 
 
 def build_music():
+    """v3: a driving pluck-and-bass bed at 128 bpm, D minor -> D major when the new head arrives. The bed drops out
+    for the old-end spear (a half-second of silence is the hardest hit in the edit) and comes back after it."""
     b = np.zeros((2, N)); r = rng(1987)
-    pl = lambda t, m, v=0.45, p=0.15: place(b, pan(I.pluck(M(m), v, r, 0.9, 0.6), p), t)
-    bass = lambda t, m, v=0.5: place(b, pan(I.pluck(M(m), v, r, 1.3, 0.3), -0.2), t)
-    BT = 60 / 118
-    MINOR = [(50, [62, 65, 69]), (46, [62, 65, 70]), (48, [60, 64, 67]), (45, [61, 64, 69])]   # D minor: i VI VII V
-    MAJOR = [(50, [62, 66, 69]), (55, [62, 67, 71]), (57, [61, 64, 69]), (50, [62, 66, 69])]   # D major: I IV V I
+    pl = lambda t, m, v=0.45, p=0.15: place(b, pan(I.pluck(M(m), v, r, 0.7, 0.65), p), t)
+    bass = lambda t, m, v=0.5: place(b, pan(I.pluck(M(m), v, r, 1.0, 0.3), -0.2), t)
+    BT = 60 / 128
+    MINOR = [(50, [62, 65, 69]), (46, [62, 65, 70]), (48, [60, 64, 67]), (45, [61, 64, 69])]
+    MAJOR = [(50, [62, 66, 69]), (55, [62, 67, 71]), (57, [61, 64, 69]), (50, [62, 66, 69])]
+    hole = (B["spear"] - .3, B["spear"] + .55)
 
     def bed(t0, t1, prog, vel=0.4, k0=0):
         k = k0
-        while t0 + (k - k0) * BT / 2 < t1 - 0.15:
+        while t0 + (k - k0) * BT / 2 < t1 - 0.1:
             t = t0 + (k - k0) * BT / 2; root, ch = prog[(k // 8) % 4]
-            fade = min(1.0, (t1 - t) / 2.5) if t1 - t < 2.5 else 1.0
-            pl(t, ch[k % 3] + (12 if k % 4 == 3 else 0), vel * fade * (1.0 if k % 2 == 0 else 0.7), 0.25 if k % 2 else -0.15)
-            if k % 4 == 0: bass(t, root - 12, vel * fade * 1.1)
+            if not (hole[0] <= t < hole[1]):
+                fade = min(1.0, (t1 - t) / 1.5)
+                pl(t, ch[k % 3] + (12 if k % 4 == 3 else 0), vel * fade * (1.0 if k % 2 == 0 else 0.72), 0.25 if k % 2 else -0.15)
+                if k % 2 == 0: bass(t, root - 12, vel * fade * (1.1 if k % 4 == 0 else .7))
             k += 1
         return k
-    # one continuous pulse: minor for the cliff and the old rail, major from the new end, easing out at the end
-    switch = SH[7][0]
-    k = bed(0.0, switch, MINOR, 0.4)
-    k = (k + 7) // 8 * 8                     # restart the major progression on a bar line
-    bed(switch, DUR - .3, MAJOR, 0.38, k)
-    return b + 0.15 * convolve_st(b, make_ir(1.1, 3, hf=1.3))
+    switch = SH["head"][0]
+    k = bed(0.0, switch, MINOR, 0.42)
+    k = (k + 7) // 8 * 8
+    bed(switch, DUR - .05, MAJOR, 0.4, k)
+    return b + 0.12 * convolve_st(b, make_ir(0.9, 3, hf=1.3))
 
 
 # ---------------------------------------------------------------- mix (house standard)

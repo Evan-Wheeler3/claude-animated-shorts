@@ -21,25 +21,24 @@ export const at = (w: string, n = 0) => {
 };
 /** sentence start times (a word starts a sentence when the previous word ends in . ! or ?) */
 export const SENT: number[] = words.filter((x, i) => i === 0 || /[.!?]["”’]?$/.test(words[i - 1].w)).map(x => x.a);
-if (SENT.length !== 14) throw new Error(`words.json has ${SENT.length} sentences, SCRIPT.md has 14`);
+if (SENT.length !== 11) throw new Error(`words.json has ${SENT.length} sentences, SCRIPT.md (v3) has 11`);
 const LAST = words[words.length - 1];
-export const TOTAL = Math.round((LAST.b + 1.7) * FPS); // the last word, then the one-eye beat
+export const TOTAL = Math.round((LAST.b + .45) * FPS); // ends on the opening frame: the Short loops
 
-export type ShotId = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
-export type Shot = {id: ShotId; a: number; b: number; key: string};
-const cut = (i: number) => SENT[i] - .09; // 2-3 frames ahead of the sentence that the next shot illustrates
-export const SHOTS: Shot[] = [
-  {id: 1, a: 0, b: cut(2), key: 'hook'},          // "The road ran right along a cliff. One bad turn ... edge."
-  {id: 2, a: cut(2), b: cut(3), key: 'assemble'}, // "So the city built guardrails."
-  {id: 3, a: cut(3), b: cut(4), key: 'glance'},   // "If a car slid into the rail from the side ..."
-  {id: 4, a: cut(4), b: cut(5), key: 'flex'},     // "The steel would only bend a little."
-  {id: 5, a: cut(5), b: cut(7), key: 'old-end'},  // "But the real problem was the end ..." + "If you hit the end ... spear ..."
-  {id: 6, a: cut(7), b: cut(8), key: 'cabin'},    // "That's what made it so deadly."
-  {id: 7, a: cut(8), b: cut(10), key: 'new-head'},// "So the city added a new kind of end. It has a steel head ..."
-  {id: 8, a: cut(10), b: cut(11), key: 'slide'},  // "When a car hits it, the head slides down the rail."
-  {id: 9, a: cut(11), b: cut(12), key: 'cutaway'},// "The wavy steel feeds into the head ..."
-  {id: 10, a: cut(12), b: TOTAL / FPS, key: 'stop'}, // "Bending all that steel ... all at once." + one eye
-];
+// v3: about 22 beats in ~30 s. Each beat = one camera setup; consecutive beats are cut (or whip) between.
+// A cut sits 2-3 frames ahead of the word or sentence the next beat illustrates.
+export type BeatKey =
+  | 'open' | 'ribbon' | 'eye'                                  // hook: the aftermath, the ribbon, the driver alive
+  | 'skid' | 'fall'                                            // flashback: off the cliff
+  | 'glanceWin' | 'glanceHit' | 'flex' | 'back'                // side hit
+  | 'flaw'                                                     // the old blunt end
+  | 'approach' | 'spear' | 'cabin'                             // head-on with the old end
+  | 'head' | 'slide' | 'cutaway' | 'stop' | 'loop';            // the extruding terminal, back to the opening frame
+export type Shot = {key: BeatKey; a: number; b: number};
+const cut = (t: number) => t - .08;
+
+/** word-anchored beats (filled in once BEAT is known, below) */
+export let SHOTS: Shot[] = [];
 export const shotAt = (t: number) => SHOTS.find(s => t >= s.a && t < s.b) ?? SHOTS[SHOTS.length - 1];
 
 // ------------------------------------------------------------------ helpers
@@ -53,23 +52,50 @@ export {roadCenter};
 
 /** the moment-of-truth beats, from the narration */
 export const BEAT = {
-  edge: at('edge') - .1,            // car leaves the cliff (shot 1)
-  posts: at('city', 0) - .05,        // posts start popping (shot 2)
-  beam: at('guardrails') + .1,       // beam runs along the posts
-  sideHit: at('side', 0) - .07,      // glancing contact (shot 3)
-  bend: at('bend') + .02,            // replayed flex peak (shot 4)
-  spear: at('spear') - .07,          // old end spears the car (shot 5)
-  swap: at('new') - .05,             // old end -> impact head (shot 7)
-  hit: at('hits') - .07,             // bumper meets the head (shot 8)
-  stop: LAST.a - .05,                // car comes to rest on the last word ("once")
-  peek: LAST.b + .75,                // driver opens one eye
+  ribbon: at('ribbon') + .3,         // push lands on the ribbon
+  life: at('life'),                  // the driver opens one eye
+  edge: at('edge') - .1,             // car leaves the cliff
+  sideHit: at('side', 0) - .07,      // glancing contact
+  bend: at('bends') + .05,           // replayed flex peak
+  pushes: at('back', 0),
+  spear: at('spear') - .07,          // old end spears the car
+  swap: at('head', 0) - .2,          // the impact head pops onto the rail
+  hit: at('hits') - .07,             // bumper meets the head
+  stop: at('dead') - .05,            // car comes to rest
+  loop: SENT[10],                    // "And that leftover ribbon is what saved him."
+  // legacy names used by the motion code
+  posts: 0, beam: 0, peek: at('life'),
 };
-/** cuts inside shots */
-export const CUT = {
-  glanceB: BEAT.sideHit - .5,        // shot 3: driver-side window -> rail-side angle, just before contact
-  oldEndB: SENT[6] - .09,            // shot 5: windshield approach -> along the rail, on "If you hit the end"
-  closeUp: BEAT.stop + .2,           // shot 10: wide -> windshield close-up for the one-eye beat
-};
+/** cuts inside the old shot groups (kept for the motion code) */
+export const CUT = {glanceB: BEAT.sideHit - .3, oldEndB: at('straight', 1) + .2, closeUp: 1e9};
+
+SHOTS = [
+  {key: 'open', a: 0, b: cut(BEAT.ribbon - .05)},
+  {key: 'ribbon', a: cut(BEAT.ribbon - .05), b: cut(SENT[1])},
+  {key: 'eye', a: cut(SENT[1]), b: cut(SENT[2])},
+  {key: 'skid', a: cut(SENT[2]), b: cut(at('road', 0) + .1)},
+  {key: 'fall', a: cut(at('road', 0) + .1), b: BEAT.edge + .35},     // cut away just after it leaves the edge
+  {key: 'glanceWin', a: BEAT.edge + .35, b: CUT.glanceB},            // the driver through the side window, then...
+  {key: 'glanceHit', a: CUT.glanceB, b: cut(at('bends'))},
+  {key: 'flex', a: cut(at('bends')), b: cut(at('back', 0))},
+  {key: 'back', a: cut(at('back', 0)), b: cut(SENT[4])},
+  {key: 'flaw', a: cut(SENT[4]), b: cut(SENT[5])},
+  {key: 'approach', a: cut(SENT[5]), b: CUT.oldEndB},
+  {key: 'spear', a: CUT.oldEndB, b: cut(at('through') + .05)},
+  {key: 'cabin', a: cut(at('through') + .05), b: cut(SENT[6])},
+  {key: 'head', a: cut(SENT[6]), b: cut(SENT[7])},
+  {key: 'slide', a: cut(SENT[7]), b: cut(SENT[8])},
+  {key: 'cutaway', a: cut(SENT[8]), b: cut(SENT[9])},
+  {key: 'stop', a: cut(SENT[9]), b: cut(BEAT.loop)},
+  {key: 'loop', a: cut(BEAT.loop), b: TOTAL / FPS},
+];
+
+/** speed ramp: video time v -> story time; slope 1 outside [hitV - w, hitV + w], `slow` inside, s(hitV) = hitS */
+export function ramp(v: number, hitV: number, hitS: number, slow: number, w: number) {
+  if (v < hitV - w) return hitS - slow * w + (v - (hitV - w));
+  if (v > hitV + w) return hitS + slow * w + (v - (hitV + w));
+  return hitS + slow * (v - hitV);
+}
 
 // ------------------------------------------------------------------ car state
 export type CarState = {
@@ -117,6 +143,10 @@ export function sideCar(tau: number, tc: number, g: SideGeom, rail: boolean): Ca
     pitch = .55 * over;
     roll = -.9 * over * over - .25 * over;
   }
+  if (rail) { // body language: lean out of the skid, a jolt on contact, a wobble as it settles
+    roll += d < 0 ? -.05 : -.05 * Math.exp(-d * 3) + .07 * Math.sin(Math.PI * clamp01(d / .35)) * Math.exp(-d * 2);
+    pitch += d < 0 ? 0 : .03 * Math.sin(Math.PI * clamp01(d / .3));
+  }
   return {x, y, z, yaw, pitch, roll, dist, steer, wheel: steer * -2.6, visible: true, flex, contact,
     spark: rail ? clamp01(d / .55) : 0};
 }
@@ -141,7 +171,7 @@ export function hookCar(t: number, g: SideGeom): CarState {
 }
 
 // ------------------------------------------------------------------ head-on: old end (shot 5/6)
-const V_HEAD = 7.5;
+const V_HEAD = 9;
 export const PEN = 1.75; // m of rail inside the car when it stops
 export function oldEndCar(t: number, front: number): CarState & {pen: number} {
   const t5 = BEAT.spear;
@@ -162,7 +192,8 @@ export function oldEndCar(t: number, front: number): CarState & {pen: number} {
 // Video-time speed profile (m/s) of the bumper after contact: fast hit, a slow readable slide through the cutaway,
 // then the last metres in the wide shot. travel(t) integrates it; the car's bumper stays on the head's face.
 const V_APPROACH = 7;
-const H9 = SHOTS[8].a - BEAT.hit, H10 = SHOTS[9].a - BEAT.hit, HS = BEAT.stop - BEAT.hit;
+const SH_ = (k: BeatKey) => SHOTS.find(x => x.key === k)!.a;
+const H9 = SH_('cutaway') - BEAT.hit, H10 = SH_('stop') - BEAT.hit, HS = BEAT.stop - BEAT.hit;
 const PROFILE: [number, number][] = [
   [0, 7], [.34, 3.2], [Math.max(.6, H9 - 1.0), 1.3], [H9, .7], [H10, .45], [H10 + .5, .6], [Math.max(H10 + .8, HS - 1.8), .35], [HS, 0],
 ];

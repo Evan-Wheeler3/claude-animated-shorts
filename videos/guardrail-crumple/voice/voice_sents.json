@@ -2,85 +2,67 @@
  {
   "i": 0,
   "a": 0.0,
-  "b": 1.324,
-  "text": "The road ran right along a cliff."
+  "b": 1.953,
+  "text": "See that steel ribbon at the end of this guardrail?"
  },
  {
   "i": 1,
-  "a": 1.424,
-  "b": 3.58,
-  "text": "One bad turn could send your car straight over the edge."
+  "a": 2.053,
+  "b": 3.614,
+  "text": "It just saved this driver\u2019s life."
  },
  {
   "i": 2,
-  "a": 4.08,
-  "b": 5.363,
-  "text": "So the city built guardrails."
+  "a": 3.914,
+  "b": 7.785,
+  "text": "Guardrails exist because one bad turn on a cliff road can send your car straight over the edge."
  },
  {
   "i": 3,
-  "a": 6.013,
-  "b": 9.334,
-  "text": "If a car slid into the rail from the side, the rail would guide it back onto the road."
+  "a": 8.035,
+  "b": 10.613,
+  "text": "Hit a rail from the side, and it bends and pushes you back onto the road."
  },
  {
   "i": 4,
-  "a": 9.734,
-  "b": 11.05,
-  "text": "The steel would only bend a little."
+  "a": 10.863,
+  "b": 12.405,
+  "text": "But the old rails had a deadly flaw."
  },
  {
   "i": 5,
-  "a": 11.15,
-  "b": 12.757,
-  "text": "But the real problem was the end of the rail."
+  "a": 12.505,
+  "b": 15.235,
+  "text": "Hit the end straight on, and the rail could spear right through your car."
  },
  {
   "i": 6,
-  "a": 13.157,
-  "b": 16.016,
-  "text": "If you hit the end straight on, the rail could spear right through your car."
+  "a": 15.685,
+  "b": 17.385,
+  "text": "So engineers put a steel head on the end."
  },
  {
   "i": 7,
-  "a": 16.616,
-  "b": 17.707,
-  "text": "That\u2019s what made it so deadly."
- },
- {
-  "i": 8,
-  "a": 18.407,
-  "b": 20.069,
-  "text": "So the city added a new kind of end."
- },
- {
-  "i": 9,
-  "a": 20.169,
-  "b": 22.427,
-  "text": "It has a steel head that sits right on the tip of the rail."
- },
- {
-  "i": 10,
-  "a": 22.877,
-  "b": 24.889,
+  "a": 17.485,
+  "b": 19.374,
   "text": "When a car hits it, the head slides down the rail."
  },
  {
-  "i": 11,
-  "a": 25.439,
-  "b": 28.828,
-  "text": "The wavy steel feeds into the head, gets squeezed flat, and curls out the side."
+  "i": 8,
+  "a": 19.474,
+  "b": 21.767,
+  "text": "It squeezes the wavy steel flat and curls it out the side."
  },
  {
-  "i": 12,
-  "a": 29.828,
-  "b": 31.897,
-  "text": "Bending all that steel uses up the car\u2019s energy."
+  "i": 9,
+  "a": 22.867,
+  "b": 26.714,
+  "text": "Bending all that steel soaks up the crash, so the car slows down instead of stopping dead."
  },
  {
-  "i": 13,
-  "a": 31.997,
-  "b": 35.239,
-  "text": "So the car slows down over a longer distance instead of stopping all at once."
+  "i": 10,
+  "a": 26.814,
+  "b": 28.493,
+  "text": "And that leftover ribbon is what saved him."
  }
 ]

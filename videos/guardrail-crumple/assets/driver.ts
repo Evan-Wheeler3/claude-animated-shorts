@@ -38,13 +38,18 @@ export function createDriver() {
   let belt = false;
   let steering = -.32;
   let facing: -1 | 0 | 1 = 0;
+  let exprOverride: Expr | undefined;
+  let lastKey = '';
 
   function redraw() {
     const expression: Record<Pose, Expr> = {steer: 'nervous', brace: 'pained', peek: 'pained'};
+    const key = [pose, belt, steering.toFixed(3), facing, exprOverride].join('|');
+    if (key === lastKey) return; // skip identical redraws (the canvas upload is the expensive part)
+    lastKey = key;
     context.clearRect(0, 0, canvas.width, canvas.height);
     bodyFront(new Pen(context), {...outfit, sash: belt ? '#e6bb70' : undefined}, {
       mode: 'sit',
-      expr: expression[pose],
+      expr: exprOverride ?? expression[pose],
       blink: pose === 'brace',
       facing,
       look: facing * .65,
@@ -56,8 +61,10 @@ export function createDriver() {
     texture.needsUpdate = true;
   }
 
-  function setPose(nextPose: Pose, fastened = false, wheelAngle = -.32) {
+  /** `expr` optionally overrides the pose's face (e.g. 'shock' for the moment before impact) */
+  function setPose(nextPose: Pose, fastened = false, wheelAngle = -.32, expr?: Expr) {
     pose = nextPose;
+    exprOverride = expr;
     belt = fastened;
     steering = wheelAngle;
     redraw();
