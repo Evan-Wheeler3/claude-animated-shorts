@@ -9,9 +9,9 @@ working_title: <short title>
 target_duration_seconds: 30-45   # soft target; clarity and quality come first
 format: 9:16
 script_status: draft             # draft | approved            (GATE A)
-assets_status: not_started       # not_started | briefed | delivered | accepted   (GATE B)
-animatic_status: not_started     # not_started | review | approved               (GATE C)
-final_status: not_started        # not_started | review | approved | published   (GATE D)
+assets_status: not_started       # not_started | briefed | delivered | accepted   (Claude's check, no gate)
+animatic_status: not_started     # not_started | review | approved               (GATE B)
+final_status: not_started        # not_started | review | approved | published   (GATE C)
 claude_branch: claude/<story-id>
 codex_branch: codex/<story-id>
 ```

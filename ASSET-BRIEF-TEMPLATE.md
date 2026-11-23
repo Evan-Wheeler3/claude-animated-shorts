@@ -44,6 +44,6 @@ videos/<story-id>/assets/. Do not merge.
 ```
 
 ## Acceptance (Claude fills in at stage 3)
-| Asset | Checker | In-engine still | Verdict | Notes / fix requested |
+| Asset | Checker | Rough still (our scene) | Verdict | Notes / fix requested |
 |---|---|---|---|---|
 | `<asset-id>` | PASS / FAIL | `out/<story-id>/assets/<id>_*.jpg` | ACCEPT / REJECT / FIXED-BY-CLAUDE | |
