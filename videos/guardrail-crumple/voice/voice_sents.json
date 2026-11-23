@@ -2,85 +2,85 @@
  {
   "i": 0,
   "a": 0.0,
-  "b": 1.569,
+  "b": 1.324,
   "text": "The road ran right along a cliff."
  },
  {
   "i": 1,
-  "a": 1.669,
-  "b": 4.099,
+  "a": 1.424,
+  "b": 3.58,
   "text": "One bad turn could send your car straight over the edge."
  },
  {
   "i": 2,
-  "a": 4.599,
-  "b": 6.003,
+  "a": 4.08,
+  "b": 5.363,
   "text": "So the city built guardrails."
  },
  {
   "i": 3,
-  "a": 6.653,
-  "b": 10.682,
+  "a": 6.013,
+  "b": 9.334,
   "text": "If a car slid into the rail from the side, the rail would guide it back onto the road."
  },
  {
   "i": 4,
-  "a": 11.082,
-  "b": 12.492,
+  "a": 9.734,
+  "b": 11.05,
   "text": "The steel would only bend a little."
  },
  {
   "i": 5,
-  "a": 12.592,
-  "b": 14.578,
+  "a": 11.15,
+  "b": 12.757,
   "text": "But the real problem was the end of the rail."
  },
  {
   "i": 6,
-  "a": 14.978,
-  "b": 18.129,
+  "a": 13.157,
+  "b": 16.016,
   "text": "If you hit the end straight on, the rail could spear right through your car."
  },
  {
   "i": 7,
-  "a": 18.729,
-  "b": 19.94,
+  "a": 16.616,
+  "b": 17.707,
   "text": "That\u2019s what made it so deadly."
  },
  {
   "i": 8,
-  "a": 20.64,
-  "b": 22.327,
+  "a": 18.407,
+  "b": 20.069,
   "text": "So the city added a new kind of end."
  },
  {
   "i": 9,
-  "a": 22.427,
-  "b": 25.045,
+  "a": 20.169,
+  "b": 22.427,
   "text": "It has a steel head that sits right on the tip of the rail."
  },
  {
   "i": 10,
-  "a": 25.495,
-  "b": 27.829,
+  "a": 22.877,
+  "b": 24.889,
   "text": "When a car hits it, the head slides down the rail."
  },
  {
   "i": 11,
-  "a": 28.379,
-  "b": 32.256,
+  "a": 25.439,
+  "b": 28.828,
   "text": "The wavy steel feeds into the head, gets squeezed flat, and curls out the side."
  },
  {
   "i": 12,
-  "a": 33.256,
-  "b": 35.711,
+  "a": 29.828,
+  "b": 31.897,
   "text": "Bending all that steel uses up the car\u2019s energy."
  },
  {
   "i": 13,
-  "a": 35.811,
-  "b": 39.696,
+  "a": 31.997,
+  "b": 35.239,
   "text": "So the car slows down over a longer distance instead of stopping all at once."
  }
 ]
