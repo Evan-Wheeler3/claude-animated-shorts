@@ -162,10 +162,13 @@ const B: Record<number, Build> = {
     return (f, l, u) => { s.root.rotation.z = lerp(.2, .48, smooth(l / 8)); s.root.position.z = -sec(f) * 1.2;
       sps.forEach((p, i) => { p.c.mesh.position.z = s.root.position.z - 16 + i * 6.5; p.at((l - 4 - i * 2) / 22); });
       cam(c, [-40, 8 + kick(l, .5), -4], [0, 12, s.root.position.z - 4], 42, 7 + 3 * kick(l)); }; },
-  3: c => { sky(c, 'day'); water(c); shore(c); const s = ship(c, 'furled');
-    const guns = [0, 1, 2, 3].map(k => { const g = put(clone(c.L, 'cannon-24pdr'), [-1.5, GUNDECK_Y, -13.2 + k * 3.22], Math.PI / 2); s.v.add(g); return g; });
-    return (f, l, u) => { guns.forEach((g, k) => { g.position.x = lerp(-2.5, -6.6, smooth((l - k * 5) / 8)); });
-      glide(c, [[-13, 10.6, -18], [-5.5, 10.2, -10]], [[-13, 10.6, -6], [-5.5, 10.2, 2]], u, 0, 40); }; },
+  3: c => { sky(c, 'day'); water(c); shore(c); const s = ship(c, 'furled'); openLids(s.v, 'lower', 1.1);
+    // each cannon rolls out through a real lower hatch (lids 04-07), muzzle first
+    const lids = [4, 5, 6, 7].map(n => s.v.getObjectByName(`gunport_lid_port_lower_${String(n).padStart(2, '0')}`)!);
+    s.v.updateMatrixWorld(true);
+    const guns = lids.map(lid => { const w = lid.getWorldPosition(new THREE.Vector3()); const g = put(clone(c.L, 'cannon-24pdr'), [0, w.y - WATER_Y - 1.15, w.z], Math.PI / 2); s.root.add(g); return g; });
+    return (f, l, u) => { guns.forEach((g, k) => { g.position.x = lerp(-3.5, -6.9, smooth((l - k * 3) / 7)); });
+      glide(c, [[-19, 9.2, -24], [-6, 8.6, -12]], [[-19, 9.2, -16], [-6, 8.6, -4]], u, 0, 40); }; },
   4: c => { sky(c, 'day'); water(c); shore(c); ship(c, 'furled');
     return (f, l, u) => glide(c, [[-34, 7, 4], [0, 8, 2]], [[-34, 9, 4], [0, 19, 2]], u, 0, 40); },
   5: c => { sky(c, 'day'); water(c); shore(c); ship(c, 'furled');
@@ -179,10 +182,10 @@ const B: Record<number, Build> = {
     const off = front(OFFICER, 21, {expr: 'stern'}); put(off.mesh, [12.8, top, 6]); c.scene.add(off.mesh);
     SAILORS.forEach((o, i) => { const k = front(o, i + 4); put(k.mesh, [13.6, top, -1 - i * 1.1]); c.scene.add(k.mesh); });
     return (f, l, u) => { s.root.rotation.z = 0; glide(c, [[16.8, top + .9, 13], [10, 9, -6]], [[16.8, top + .9, 12], [10, 10, -6]], u, l, 50); }; },
-  8: c => { sky(c, 'day'); water(c); shore(c); const s = ship(c, 'furled'); quay(c); const crew = deckSailors(s.root, 12);
-    return (f, l, u) => { crew.forEach((k, i) => { k.mesh.position.x = lerp(-4.5, 4.5, smooth((l - (i % 3) * 2) / 26)); k.mesh.userData.flip = false;
+  8: c => { sky(c, 'day'); water(c); shore(c); const s = ship(c, 'furled'); quay(c); const crew = deckSailors(s.root, 12); crew.forEach((k, i) => { k.mesh.position.z = 6 + (i % 3) * 2 + Math.floor(i / 3) * .5; });
+    return (f, l, u) => { crew.forEach((k, i) => { k.mesh.position.x = lerp(-3.2, 3.2, smooth((l - (i % 3) * 2) / 44)); k.mesh.userData.flip = false;
         k.draw(p => bodySide(p, SAILORS[i % 4], {mode: 'march', phase: sec(l) * 2.6 + i * .17, stomp: 1.4, stride: 1.2, seed: i + 2})); });
-      cam(c, [-2.5, 31, 12], [0, DECK_Y, -2], 36); }; },
+      glide(c, [[0, 19.5, 20.5], [0, DECK_Y + 1, 7.5]], [[0, 18.5, 19.5], [0, DECK_Y + 1, 7.5]], u, l, 50); }; },
   9: c => { sky(c, 'day'); water(c); shore(c); const s = ship(c, 'furled'); quay(c); const crew = deckSailors(s.root, 9); crew.forEach((k, i) => { k.mesh.position.z = 7 + (i % 3) * 1.4 + Math.floor(i / 3) * .4; });
     return (f, l, u) => { crew.forEach((k, i) => { k.mesh.position.x = lerp(3.2, -4.5, smooth((l - (i % 3) * 2) / 24)); k.mesh.userData.flip = true;
         k.draw(p => bodySide(p, SAILORS[i % 4], {mode: 'march', phase: sec(l) * 2.6 + i * .17, stomp: 1.4, stride: 1.2, seed: i + 2})); });
@@ -217,7 +220,7 @@ const B: Record<number, Build> = {
     return (f, l, u) => { rig(s.v, 'set', lerp(.15, 1, smooth(l / 14))); glide(c, [[-52, 12, -4], [0, 18, -4]], [[-52, 12, -4], [0, 34, -4]], u, 0, 40); }; },
   16: c => { sky(c, 'afternoon'); water(c); shore(c); const s = ship(c, 'set'); openLids(s.v, 'lower', .9);
     const puff = new Card(6, .5, 300, 300, false); puff.mesh.position.set(-8.5, 8.6 - WATER_Y, -6.5); s.root.add(puff.mesh);
-    return (f, l, u) => { puff.draw(p => fxPuff(p, Math.min(1, l / 18)));
+    return (f, l, u) => { const ps = (f - T('L10', 6)) / 24; puff.mesh.visible = ps > 0 && ps < 1; if (puff.mesh.visible) puff.draw(p => fxPuff(p, ps));
       cam(c, [-13 + kick(l, .25), 10.8, -1.5], [-6.5, 10.4, -6.5], 44, 2 * kick(l)); }; },
   17: c => { sky(c, 'afternoon'); water(c); shore(c); const s = ship(c, 'set');
     const k = new Card(1.75, .5); k.mesh.position.set(-4.4, DECK_Y - WATER_Y, 2); s.root.add(k.mesh);
@@ -271,7 +274,7 @@ const B: Record<number, Build> = {
       cam(c, [-170, 22, 0], [0, 20, 0], 26); }; },
   26: c => { toySet(c); const t = toy(true); c.scene.add(t.g);
     return (f, l, u) => { t.body.rotation.z = lerp(0, 1.45, smooth((l - 6) / 14)) + (l < 6 ? .08 * Math.sin(l) : 0);
-      glide(c, [[0, 1, 3.4], [0, .7, 0]], [[0, .9, 3.2], [0, .6, 0]], u, l, 40); }; },
+      glide(c, [[-.5, 1.4, 4.6], [-.6, .4, 0]], [[-.5, 1.3, 4.3], [-.6, .35, 0]], u, l, 40); }; },
   27: c => { sky(c, 'afternoon'); water(c); shore(c); const s = ship(c, 'set');
     return (f, l, u) => { s.root.rotation.z = .2; s.root.position.y = WATER_Y - lerp(26, 44, smooth(u));
       cam(c, [-60, WATER_Y + 5, 10], [0, WATER_Y + 7, 0], 40); }; },
