@@ -26,7 +26,7 @@
       "source": "https://kenney.nl/assets/pirate-kit",
       "author": "Kenney",
       "credit": "",
-      "notes": "Kenney square-sail mesh repainted and rescaled. New two-deck hull, 60 independently hinged top-edge lids, open lower deck reached by the central companionway, red and gilded sterncastle, period rig, four set sails and five separately pivoted furled sails, and a separate rudder. Stock pirate hull could not provide both open gun decks and the raised stern."
+      "notes": "Kenney square-sail mesh repainted and rescaled. Custom two-deck hull with 60 flush-closing 0.9 \u00d7 0.9 m gunport lids on top hinge lines (port +Z, starboard \u2212Z rotation), enterable lower deck reached by the central companionway, red and gilded sterncastle, period rig, four set sails, five separately pivoted furled sails, and a separate rudder."
     },
     {
       "id": "cannon-24pdr",
@@ -89,7 +89,7 @@
       "source": "https://kenney.nl/assets/pirate-kit",
       "author": "Kenney",
       "credit": "",
-      "notes": "Rescaled dock into an 8 m X-repeat, added stone pile shoes and a timber mooring bollard. Deck top at 2.5 m."
+      "notes": "Replaced the slabs with a continuous 8 \u00d7 4 m planked deck at 2.5 m with matching X seams. Retained and trimmed Kenney piles and braces, and added stone shoes and a water-edge mooring bollard."
     },
     {
       "id": "tre-kronor-castle",
@@ -152,7 +152,7 @@
       "source": "https://kenney.nl/assets/pirate-kit",
       "author": "Kenney",
       "credit": "",
-      "notes": "Squared and rescaled the Kenney crate, preserving the bracing in a single wood material."
+      "notes": "Retained and rescaled the Kenney crate bracing. Closed the crate with a solid cap and five visible timber planks."
     },
     {
       "id": "rope-coil",
