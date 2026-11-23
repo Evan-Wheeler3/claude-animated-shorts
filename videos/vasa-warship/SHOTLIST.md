@@ -1,4 +1,4 @@
-# Vasa — shot list (approved at GATE A, 2026-11-23)
+# Vasa — shot list (approved at GATE A, 2026-11-23; pacing approved at GATE B; times re-anchored to the 2026-11-23 narration in remotion/src/anchors.json)
 
 9:16, 30 fps, ≈ 55 s. Times are estimates at 3.7 words/s and will be re-timed to the recorded `words.json` in the
 animatic. **35 pictures ≈ one every 1.6 s** (target 1.5-2.5 s, `references/reports/editing.md`); every line has at
@@ -27,7 +27,7 @@ editing.md. Characters are 2D cards; water, foam, splashes, smoke and wind are C
 | 17 | 22.2 | L10 | Calm: the pennant barely stirs; a sailor leans back, relaxed. | MS, gentle push | False calm before the gust | soft lapping | vasa |
 | 18 | 23.0 | L11 | A dark ripple line races across the water toward the ship; a sailor's hat flies off. | LA at water level | Make the invisible gust visible | rising whoosh | water*, *ripple |
 | 19 | 23.8 | L12 | The Vasa leans hard to port. | WS, dutch roll follows the heel | The event | deep creak | vasa |
-| 20 | 25.3 | L12 | Inside the lower gun deck: water gushes through the open ports, cannons skid. | MS interior, kick | Shows the cause: open gunports | rush of water | vasa (gun deck interior), cannon-24pdr |
+| 20 | ~25.3 | L12 | Exterior ECU: the heeled port side, the open lower cannon hatches dipping to the waterline, water bursting in at each one. | ECU from just above the water, kick | Shows the cause plainly (replaces the dark interior) | rush of water | vasa (lids open), *splash fx |
 | 21 | 27.0 | L13 | High wide: the ship goes down, masts last, rowboats pulling toward it. | OH/aerial WS | Scale; "about thirteen hundred metres out" | wind, distant shouts | vasa, rowboat |
 | 22 | 28.7 | L13 | Still water; a few hats floating. Quiet. | WS hold with slow creep | Deaths stated plainly, no spectacle | near silence | water*, *hats |
 | 23 | 30.3 | L14 | "You see": a punching-bag toy is punched and rolls back up. | MS, plain bright set | The everyday analogy | boing | *bop-bag toy |

@@ -65,6 +65,7 @@ export class Card {
     this.mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({map: this.tex, alphaTest: figure ? .5 : .02, transparent: !figure, depthWrite: figure, toneMapped: false, side: THREE.DoubleSide}));
     this.mesh.layers.set(NOINK);
     this.mesh.userData.card = true;
+    this.mesh.userData.figure = figure;
   }
   draw(fn: (p: Pen, g: CanvasRenderingContext2D) => void) {
     const g = this.g;
@@ -91,15 +92,27 @@ export class Card {
 /** turn every card to face the camera around the world Y axis (cards stay upright even on a heeling ship) */
 export const faceCards = (scene: THREE.Scene, camera: THREE.Camera) => {
   const wp = new THREE.Vector3(), pq = new THREE.Quaternion(), q = new THREE.Quaternion(), up = new THREE.Vector3(0, 1, 0);
-  scene.traverse(o => {
-    if (!o.userData.card || o.userData.fixed) return;
+  const cards: THREE.Object3D[] = [];
+  scene.traverse(o => { if (o.userData.card && !o.userData.fixed) cards.push(o); });
+  for (const o of cards) {
+    if (o.userData.figure && o.visible) {           // soft contact shadow under the feet (bridge: tight blob ~.5)
+      let sh = o.userData.shadow as THREE.Mesh | undefined;
+      if (!sh) {
+        sh = new THREE.Mesh(SHADOW_GEO, SHADOW_MAT); sh.rotation.x = -Math.PI / 2; sh.layers.set(NOINK); sh.renderOrder = 1;
+        o.userData.shadow = sh; o.parent!.add(sh);
+      }
+      const w = (o as THREE.Mesh).scale.x;
+      sh.position.set(o.position.x, o.position.y + .03, o.position.z); sh.scale.set(w * .75, w * .32, 1);
+    }
     o.getWorldPosition(wp);
     const flip = o.userData.flip ? Math.PI : 0;
     q.setFromAxisAngle(up, Math.atan2(camera.position.x - wp.x, camera.position.z - wp.z) + flip);
     o.parent!.getWorldQuaternion(pq);
     o.quaternion.copy(pq.invert().multiply(q));
-  });
+  }
 };
+const SHADOW_GEO = new THREE.CircleGeometry(.5, 24);
+const SHADOW_MAT = new THREE.MeshBasicMaterial({color: '#1a1030', transparent: true, opacity: .32, depthWrite: false, toneMapped: false});
 
 export const dot = (r: number, col = '#ffcf3a') => {
   const m = new THREE.Mesh(new THREE.SphereGeometry(r, 24, 16), new THREE.MeshBasicMaterial({color: col, depthTest: false, toneMapped: false}));

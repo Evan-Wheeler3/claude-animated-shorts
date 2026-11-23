@@ -9,7 +9,7 @@ import {LensBlur} from '../../../../templates/bridge/lensblur';
 import {GradeEffect, GRADES} from '../../../../templates/bridge/grade';
 import {shoreline, skyDome, toonWater, type Water} from './look';
 import {InkPass, NOINK} from '../../../../templates/bridge/ink';
-import {bodyFront, bodySide, fxPuff, type Outfit, type Expr} from '../../../../templates/bridge/toon';
+import {bodyFront, bodySide, fxPuff, fxSplash, type Outfit, type Expr} from '../../../../templates/bridge/toon';
 import {Card, DECK_Y, GUNDECK_Y, WATER_Y, clone, dot, faceCards, loadLib, openLids, put, rig, type Lib} from './lib';
 import {FPS, SHOTS, TOTAL, kick, lerp, lerp3, shotAt, smooth, tw} from './story';
 
@@ -103,16 +103,31 @@ const toy = (headHeavy = false) => {
   return {g, body};
 };
 const museum = (c: Ctx) => {
-  c.scene.background = new THREE.Color('#1d1a22');
-  c.scene.fog = new THREE.Fog('#1d1a22', 90, 220);
+  c.scene.background = new THREE.Color('#2a2530');
+  c.scene.fog = new THREE.Fog('#2a2530', 110, 260);
   const hall = new THREE.Mesh(new THREE.BoxGeometry(180, 80, 120), new THREE.MeshLambertMaterial({color: '#2e2a33', side: THREE.BackSide}));
   hall.position.y = 39.9; hall.receiveShadow = true; c.scene.add(hall);
-  c.scene.add(new THREE.HemisphereLight('#8a8090', '#302a30', 1.1));
+  c.scene.add(new THREE.HemisphereLight('#b0a6b8', '#3a3038', 1.8));
+  const fill = new THREE.DirectionalLight('#ffe6c2', 1.2); fill.position.set(-60, 30, 60); c.scene.add(fill);
   [[-40, 50, 40], [-30, 60, -30], [30, 55, 20]].forEach(p => {
     const s = new THREE.SpotLight('#ffcf8a', 6000, 0, .5, .5, 1.6); s.position.set(p[0], p[1], p[2]); s.target.position.set(0, 18, 0);
     s.castShadow = true; c.scene.add(s, s.target);
   });
 };
+
+
+/** toon splash card (bridge fxSplash, 800 x 800 design canvas); call .at(t) with t in 0..1 */
+const splash = (parent: THREE.Object3D, pos: number[], size = 4) => {
+  const c = new Card(size, .3, 800, 800, false);
+  c.mesh.position.set(pos[0], pos[1], pos[2]); parent.add(c.mesh);
+  return {c, at: (t: number) => { c.mesh.visible = t > 0 && t < 1; if (c.mesh.visible) c.draw(p => fxSplash(p, t)); }};
+};
+/** white wind streaks racing across the frame along +X */
+const windStreaks = (scene: THREE.Scene, n = 10) => Array.from({length: n}, (_, i) => {
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(10 + (i % 3) * 5, .25), new THREE.MeshBasicMaterial({color: '#ffffff', transparent: true, opacity: .8, depthWrite: false, toneMapped: false, side: THREE.DoubleSide}));
+  m.rotation.y = -Math.PI / 2; m.layers.set(NOINK); scene.add(m);
+  return (t: number) => { const k = (t * 70 + i * 19) % 120; m.position.set(-26 + (i * 13 % 16), WATER_Y + 1 + (i * 37 % 15), -60 + k); (m.material as THREE.MeshBasicMaterial).opacity = .8 * Math.sin(Math.PI * k / 120); };
+});
 
 // ---------- the 35 pictures ----------
 type Upd = (f: number, local: number, u: number) => void;
@@ -137,13 +152,16 @@ const deckSailors = (root: THREE.Object3D, n: number, rows = 3) => Array.from({l
 });
 
 const B: Record<number, Build> = {
-  1: c => { sky(c, 'day'); water(c); shore(c); const s = ship(c, 'set'); const crew = deckSailors(s.root, 3, 3);
-    crew.forEach((k, i) => { k.mesh.position.set(-4.5, DECK_Y - WATER_Y, -20 + i * 2.2); k.draw(p => bodyFront(p, SAILORS[i % 4], {mode: 'stand', expr: 'nervous', seed: i + 3, tilt: -8})); });
-    return (f, l, u) => { s.root.rotation.z = .17; s.root.position.z = -sec(f) * 1.2;
-      glide(c, [[-14, 9, -40], [0, 14, -30]], [[-75, 9, -20], [0, 18, 0]], u, 0, 40, 4); }; },
+  1: c => { sky(c, 'day'); water(c); shore(c); const s = ship(c, 'set'); const crew = deckSailors(s.root, 4, 4);
+    crew.forEach((k, i) => { k.mesh.position.set(-3.7, DECK_Y - WATER_Y, -16 + i * 1.6); k.draw(p => bodyFront(p, SAILORS[i % 4], {mode: 'stand', expr: i % 2 ? 'shock' : 'nervous', seed: i + 3, tilt: -10, wave: i === 1 ? 1 : undefined})); });
+    const sp = splash(c.scene, [-7.5, WATER_Y - .4, -30], 8);
+    return (f, l, u) => { s.root.rotation.z = .2 + .02 * Math.sin(sec(l) * 3); s.root.position.z = -sec(f) * 1.2; sp.c.mesh.position.z = s.root.position.z - 30; sp.at((l % 40) / 40);
+      glide(c, [[-8.5, 15.6, -22], [-3.6, 14.2, -13.5]], [[-60, 11, -10], [0, 17, -6]], u, 0, 42, 5); }; },
   2: c => { sky(c, 'day'); water(c); shore(c); const s = ship(c, 'set'); openLids(s.v, 'lower', .9);
-    return (f, l, u) => { s.root.rotation.z = lerp(.17, .44, smooth(l / 8)); s.root.position.z = -sec(f) * 1.2;
-      cam(c, [-42, 9 + kick(l, .4), -6], [0, 12, s.root.position.z], 40, 6 + 2 * kick(l)); }; },
+    const sps = [-16, -9.5, -3].map(z => splash(c.scene, [-9.5, WATER_Y - .5, z], 9));
+    return (f, l, u) => { s.root.rotation.z = lerp(.2, .48, smooth(l / 8)); s.root.position.z = -sec(f) * 1.2;
+      sps.forEach((p, i) => { p.c.mesh.position.z = s.root.position.z - 16 + i * 6.5; p.at((l - 4 - i * 2) / 22); });
+      cam(c, [-40, 8 + kick(l, .5), -4], [0, 12, s.root.position.z - 4], 42, 7 + 3 * kick(l)); }; },
   3: c => { sky(c, 'day'); water(c); shore(c); const s = ship(c, 'furled');
     const guns = [0, 1, 2, 3].map(k => { const g = put(clone(c.L, 'cannon-24pdr'), [-1.5, GUNDECK_Y, -13.2 + k * 3.22], Math.PI / 2); s.v.add(g); return g; });
     return (f, l, u) => { guns.forEach((g, k) => { g.position.x = lerp(-2.5, -6.6, smooth((l - k * 5) / 8)); });
@@ -205,28 +223,36 @@ const B: Record<number, Build> = {
     const k = new Card(1.75, .5); k.mesh.position.set(-4.4, DECK_Y - WATER_Y, 2); s.root.add(k.mesh);
     k.draw(p => bodyFront(p, SAILORS[0], {mode: 'stand', expr: 'relief', tilt: 7, seed: 3}));
     return (f, l, u) => { glide(c, [[-.5, DECK_Y + 1.6, 7.5], [-4.4, DECK_Y + 1.1, 2]], [[-1, DECK_Y + 1.6, 6.8], [-4.4, DECK_Y + 1.1, 2]], u, l, 42); }; },
-  18: c => { sky(c, 'afternoon'); const w = water(c); shore(c); ship(c, 'set');
-    const band = new THREE.Mesh(new THREE.PlaneGeometry(14, 200), new THREE.MeshBasicMaterial({color: '#1f5c84'})); band.rotation.x = -Math.PI / 2; band.position.y = WATER_Y + .02; c.scene.add(band);
+  18: c => { sky(c, 'afternoon'); water(c); shore(c); const s = ship(c, 'set');
+    const band = new THREE.Mesh(new THREE.PlaneGeometry(14, 200), new THREE.MeshBasicMaterial({color: '#123f63'})); band.rotation.x = -Math.PI / 2; band.position.y = WATER_Y + .02; c.scene.add(band);
+    const streaks = windStreaks(c.scene, 14);
     const hat = new THREE.Mesh(new THREE.CylinderGeometry(.3, .3, .1, 20), new THREE.MeshLambertMaterial({color: '#3a2a20'})); c.scene.add(hat);
-    return (f, l, u) => { band.position.x = lerp(-90, -6, l / 22);
+    return (f, l, u) => { band.position.x = lerp(-90, -6, l / 22); streaks.forEach(st => st(sec(l)));
+      s.root.rotation.z = lerp(0, .08, smooth((l - 16) / 10));
       const hu = Math.max(0, (l - 14) / 10); hat.position.set(-5.5 + 6 * hu, DECK_Y + 1.7 + 3 * hu, 0); hat.rotation.z = hu * 6;
-      cam(c, [-38, WATER_Y + .7, 6], [0, WATER_Y + 7, 0], 44); void w; }; },
+      cam(c, [-38, WATER_Y + .7, 6], [0, WATER_Y + 7, 0], 46); }; },
   19: c => { sky(c, 'afternoon'); water(c); shore(c); const s = ship(c, 'set'); openLids(s.v, 'lower', .9);
-    return (f, l, u) => { s.root.rotation.z = lerp(0, .52, smooth(u * 1.2));
-      cam(c, [-95, 12, 0], [0, 15, 0], 40, 10 * s.root.rotation.z); }; },
-  20: c => { sky(c, 'afternoon'); const s = ship(c, 'set'); openLids(s.v, 'all', .9);
-    const gun = put(clone(c.L, 'cannon-24pdr'), [-2, GUNDECK_Y - WATER_Y, -3], Math.PI / 2); s.root.add(gun);
-    const flood = new THREE.Mesh(new THREE.BoxGeometry(11, .1, 50), new THREE.MeshLambertMaterial({color: '#2f7fae', transparent: true, opacity: .85}));
-    s.root.add(flood);
-    return (f, l, u) => { s.root.rotation.z = .5; flood.position.set(-1, GUNDECK_Y - WATER_Y + lerp(0, .9, l / 40), 0); flood.scale.y = 1;
-      gun.position.x = lerp(-2, -4.2, smooth(l / 14));
-      const p = s.root.localToWorld(new THREE.Vector3(1.8, GUNDECK_Y - WATER_Y + 1.5, 8)), t = s.root.localToWorld(new THREE.Vector3(-2, GUNDECK_Y - WATER_Y + 1.2, -6));
-      cam(c, [p.x + kick(l, .15), p.y, p.z], [t.x, t.y, t.z], 62, 28 + 3 * kick(l)); }; },
-  21: c => { sky(c, 'afternoon', 700); water(c); shore(c); const s = ship(c, 'set');
-    const boats = [0, 1].map(i => { const b = put(clone(c.L, 'rowboat'), [60 + i * 14, WATER_Y - .3, 30 - i * 20], -1.2); c.scene.add(b); return b; });
-    return (f, l, u) => { s.root.rotation.z = lerp(.55, .95, u); s.root.position.y = WATER_Y - 46 * smooth(u * .9);
-      boats.forEach((b, i) => { b.position.x = 60 + i * 14 - 22 * u; });
-      cam(c, [-130, 95, 95], [0, 6, 0], 38); }; },
+    const sps = [-18, -11, -4, 3, 10].map(z => splash(c.scene, [-9.5, WATER_Y - .5, z], 10));
+    return (f, l, u) => { s.root.rotation.z = lerp(0, .55, smooth(u * 1.2));
+      sps.forEach((p, i) => p.at((s.root.rotation.z - .3) * 4 - i * .08));
+      cam(c, [-88, 11, 2], [0, 14, 0], 40, 10 * s.root.rotation.z); }; },
+  20: c => { sky(c, 'afternoon'); water(c); shore(c); const s = ship(c, 'set'); openLids(s.v, 'lower', 1.1);
+    // exterior ECU: heeled port side, the lower cannon hatches dip to the waterline, water pours in at each one
+    const lids = [4, 5, 6, 7].map(n => s.v.getObjectByName(`gunport_lid_port_lower_${String(n).padStart(2, '0')}`)!);
+    const pours = lids.map(() => splash(c.scene, [0, 0, 0], 3.4));
+    const wp = new THREE.Vector3();
+    return (f, l, u) => { s.root.rotation.z = lerp(.62, .7, u); c.scene.updateMatrixWorld(true);
+      lids.forEach((lid, i) => { lid.getWorldPosition(wp); pours[i].c.mesh.position.set(wp.x - .9, Math.max(WATER_Y - .5, wp.y - 1.6), wp.z); pours[i].at(((l + i * 6) % 20) / 20); });
+      lids[1].getWorldPosition(wp);
+      cam(c, [wp.x - 8 + kick(l, .2), WATER_Y + 4.2, wp.z - 7], [wp.x, WATER_Y + .2, wp.z + 1], 46, 10 + 2 * kick(l)); }; },
+  21: c => { sky(c, 'afternoon'); water(c); shore(c); const s = ship(c, 'set');
+    const boats = [0, 1, 2].map(i => { const b = put(clone(c.L, 'rowboat'), [26 + i * 9, WATER_Y - .3, 18 - i * 14], -1.3 + i * .2); c.scene.add(b);
+      [-.9, .9].forEach((dz, j) => { const k = front(SAILORS[(i + j) % 4], 80 + i * 2 + j, {expr: 'shock', wave: 1}); put(k.mesh, [0, .45, dz]); k.mesh.scale.multiplyScalar(.95); b.add(k.mesh); }); return b; });
+    const sps = [[-6, -20], [-7, -6], [-6, 8], [5, -12], [6, 4]].map(([x, z]) => splash(c.scene, [x, WATER_Y - .3, z], 10));
+    return (f, l, u) => { s.root.rotation.z = lerp(.6, 1.05, u); s.root.position.y = WATER_Y - 24 * smooth(u);
+      sps.forEach((p, i) => p.at(((l + i * 11) % 34) / 34));
+      boats.forEach((b, i) => { b.position.x = 26 + i * 9 - 12 * u; });
+      glide(c, [[-78, 40, 74], [2, 6, 0]], [[-70, 32, 64], [2, 4, 0]], u, l, 40); }; },
   22: c => { sky(c, 'afternoon'); water(c); shore(c);
     const hats = [0, 1, 2, 3].map(i => { const h = new THREE.Mesh(new THREE.CylinderGeometry(.32, .32, .1, 20), new THREE.MeshLambertMaterial({color: ['#3a2a20', '#5a3b2a', '#2f2418', '#4a3020'][i]})); c.scene.add(h); return h; });
     return (f, l, u) => { hats.forEach((h, i) => { h.position.set(-3 + i * 2.2, WATER_Y + .05 + .05 * Math.sin(sec(l) * 2 + i), i * 1.3 - 2); h.rotation.z = .1 * Math.sin(sec(l) * 1.6 + i); });
@@ -281,15 +307,15 @@ const B: Record<number, Build> = {
     return (f, l, u) => { s.root.position.y = WATER_Y - lerp(14, 5, smooth(u)); s.root.rotation.z = .05;
       glide(c, [[-58, WATER_Y + 3, -48], [0, WATER_Y + 6, 0]], [[-52, WATER_Y + 3.5, -42], [0, WATER_Y + 7, 0]], u, l, 40); }; },
   33: c => { museum(c); const s = ship(c, 'none'); s.root.position.y = WATER_Y + 1;
-    VISITORS.concat(VISITORS).forEach((o, i) => { const k = front(o, 60 + i); put(k.mesh, [-14 - (i % 4) * 2.5, 0, 10 + i * 3]); c.scene.add(k.mesh); });
-    return (f, l, u) => glide(c, [[-42, 3, 52], [0, 16, 0]], [[-42, 24, 52], [0, 18, 0]], u, 0, 42); },
+    VISITORS.concat(VISITORS).forEach((o, i) => { const k = front(o, 60 + i, {expr: i % 3 ? 'grin' : 'laugh', look: 1}); put(k.mesh, [-24 - (i % 4) * 1.8, 0, 34 + (i >> 2) * 2.4 + (i % 2)]); c.scene.add(k.mesh); });
+    return (f, l, u) => glide(c, [[-36, 2.2, 46], [-12, 3.5, 22]], [[-38, 12, 50], [0, 11, 6]], u, 0, 46); },
   34: c => { sky(c, 'afternoon'); water(c); shore(c); const s = ship(c, 'set'); openLids(s.v, 'lower', .9);
     return (f, l, u) => { s.root.rotation.z = lerp(.35, .5, u); cam(c, [-55, 10, -4], [0, 14, 0], 40, 6 + 2 * kick(l)); }; },
   35: c => { museum(c); const s = ship(c, 'none'); s.root.position.y = WATER_Y + 1;
     const crowd = Array.from({length: 10}, (_, i) => { const k = new Card(1.75, .35); c.scene.add(k.mesh); return k; });
-    return (f, l, u) => { crowd.forEach((k, i) => { put(k.mesh, [-9 - (i % 3) * 1.6, 0, 60 - ((l * .12 + i * 3.1) % 30)]);
+    return (f, l, u) => { crowd.forEach((k, i) => { put(k.mesh, [-10 - (i % 3) * 1.5, 0, 54 - ((l * .1 + i * 2.2) % 18)]);
         k.draw(p => bodyFront(p, VISITORS[i % 4], {mode: 'stroll', phase: sec(l) * 1.8 + i * .3, expr: i % 3 ? 'grin' : 'neutral', seed: 70 + i})); });
-      glide(c, [[-20, 2.2, 66], [0, 16, 33]], [[-15, 4, 56], [0, 19, 33]], u, l, 42); }; },
+      glide(c, [[-16, 2.4, 64], [-5, 5, 36]], [[-14, 3.2, 58], [-3, 8, 34]], u, l, 50); }; },
 };
 
 export const VasaAnimatic: React.FC = () => {
