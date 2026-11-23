@@ -1,6 +1,6 @@
 # Hold Up — Camera Direction
 
-Supplement to SKILL.md, not a replacement. Use the existing Remotion/Three.js camera keys, DOF, ink and transition systems. The goal is more expressive direction, not constant motion.
+Supplement to SKILL.md, not a replacement. Pacing targets (how often the picture changes) are in `references/reports/editing.md`. Use the existing Remotion/Three.js camera keys, DOF, ink and transition systems. The goal is more expressive direction, not constant motion.
 
 ## Every shot needs a reason
 For each narration beat, choose the **subject**, **emotion or information**, **shot size**, **camera action**, and **visual payoff**. Default to the smallest shot that communicates the beat clearly on a phone.
@@ -15,7 +15,7 @@ For each narration beat, choose the **subject**, **emotion or information**, **s
 - **Tracking / follow:** move with the important object or character; maintain screen direction.
 - **Push-in:** emphasize a reveal, decision or rising danger; use a quick punch-in sparingly for jokes.
 - **Whip pan / match move:** transition between causally connected subjects when spatially clear.
-- **Static hold:** deliberate suspense or deadpan humor. Stillness can outperform movement.
+- **Hold:** deliberate suspense or deadpan humor. Stillness can outperform movement, but a hold is a slow creeping push (0.15-0.35 %/f), never a frozen frame; a true freeze only as a named comic beat in the shot list.
 
 ## Directing rules
 1. Hook begins with the strongest visual event, not an establishing shot or logo. Then orient the viewer.
