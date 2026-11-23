@@ -9,7 +9,7 @@ shots.json  the same file scripts/short_qa.py reads: {"shots": [{"id", "a", "b"}
             reaction swap, a camera move that reframes). Shot starts, planned cuts and beats all count
             as a new picture.
 
-Targets come from references/reports/editing.md. Runtime is a soft target (30-45 s): it is reported
+Targets come from references/reports/editing.md. Runtime is a soft target (45-60 s): it is reported
 but never fails the check. Everything else is a FLAG to fix or to justify in the shot list.
 Exit 1 if there are flags.
 """
@@ -39,8 +39,8 @@ flags, notes = [], []
 flag = flags.append
 
 # ---- runtime (soft) ----
-notes.append(f'runtime {dur:.1f} s ' + ('(inside the 30-45 s target)' if 30 <= dur <= 45 else
-             '(outside the 30-45 s target: fine if the story needs it, say why in SHOTLIST.md)'))
+notes.append(f'runtime {dur:.1f} s ' + ('(inside the 45-60 s target)' if 45 <= dur <= 60 else
+             '(outside the 45-60 s target: fine if the story needs it, say why in SHOTLIST.md)'))
 
 # ---- voice ----
 first, last = words[0]['s'], words[-1]['e']

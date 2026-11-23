@@ -1,6 +1,6 @@
 # Hold Up — Shorts Storytelling
 
-Supplement to the original SKILL.md. Target 30–45 seconds (a soft target: never trade clarity or quality for brevity); this replaces SKILL.md's 55–70 s. Preserve verified facts and the established art style.
+Supplement to the original SKILL.md. Target 45–60 seconds (a soft target: the story decides; never pad and never trade clarity for brevity). Evidence: `research/vasa/`. Preserve verified facts and the established art style.
 
 ## Script pattern
 1. **0–3 seconds: Hook.** Start with a specific surprising event, danger, contradiction or question. The first image should prove the premise visually. No greeting or logo.

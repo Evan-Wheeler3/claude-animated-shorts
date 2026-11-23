@@ -6,7 +6,7 @@ Stages and gates: `PRODUCTION-PIPELINE.md`.
 ```yaml
 story_id: <lower-kebab-case-id>
 working_title: <short title>
-target_duration_seconds: 30-45   # soft target; clarity and quality come first
+target_duration_seconds: 45-60   # soft target; the story decides, never pad
 format: 9:16
 script_status: draft             # draft | approved            (GATE A)
 assets_status: not_started       # not_started | briefed | delivered | accepted   (Claude's check, no gate)
@@ -55,7 +55,7 @@ No invented quotes, people or outcomes. A fact without a source is `unverified`.
 
 ## Checklist before GATE A
 - [ ] Hook visible in the first 1-3 s
-- [ ] ~110-165 words (about 30-45 s at 3.7 words/s); longer only if the story needs it
+- [ ] ~165-220 words (about 45-60 s at 3.7 words/s); shorter or longer only if the story needs it
 - [ ] Every sentence has its visuals in `SHOTLIST.md` (~2 pictures per sentence)
 - [ ] Every claim sourced or flagged
 - [ ] Asset brief lists only what we don't already have
