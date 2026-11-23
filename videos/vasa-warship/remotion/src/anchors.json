@@ -1,0 +1,225 @@
+{
+ "_": "Each picture from SHOTLIST.md starts LEAD frames before word `w` (0-based) of script line `line` in ../voice/words.json.",
+ "lead": 2,
+ "tail": 0.35,
+ "pics": [
+  {
+   "pic": 1,
+   "line": "L01",
+   "w": 0,
+   "env": "harbour"
+  },
+  {
+   "pic": 2,
+   "line": "L01",
+   "w": 11,
+   "env": "harbour"
+  },
+  {
+   "pic": 3,
+   "line": "L02",
+   "w": 0,
+   "env": "harbour"
+  },
+  {
+   "pic": 4,
+   "line": "L02",
+   "w": 2,
+   "env": "harbour"
+  },
+  {
+   "pic": 5,
+   "line": "L02",
+   "w": 5,
+   "env": "harbour"
+  },
+  {
+   "pic": 6,
+   "line": "L03",
+   "w": 0,
+   "env": "room"
+  },
+  {
+   "pic": 7,
+   "line": "L04",
+   "w": 0,
+   "env": "harbour"
+  },
+  {
+   "pic": 8,
+   "line": "L05",
+   "w": 0,
+   "env": "harbour"
+  },
+  {
+   "pic": 9,
+   "line": "L05",
+   "w": 7,
+   "env": "harbour"
+  },
+  {
+   "pic": 10,
+   "line": "L06",
+   "w": 0,
+   "env": "harbour"
+  },
+  {
+   "pic": 11,
+   "line": "L06",
+   "w": 9,
+   "env": "harbour"
+  },
+  {
+   "pic": 12,
+   "line": "L07",
+   "w": 0,
+   "env": "harbour"
+  },
+  {
+   "pic": 13,
+   "line": "L08",
+   "w": 0,
+   "env": "harbour"
+  },
+  {
+   "pic": 14,
+   "line": "L09",
+   "w": 0,
+   "env": "harbour"
+  },
+  {
+   "pic": 15,
+   "line": "L09",
+   "w": 5,
+   "env": "harbour"
+  },
+  {
+   "pic": 16,
+   "line": "L09",
+   "w": 8,
+   "env": "harbour"
+  },
+  {
+   "pic": 17,
+   "line": "L10",
+   "w": 0,
+   "env": "harbour"
+  },
+  {
+   "pic": 18,
+   "line": "L11",
+   "w": 0,
+   "env": "harbour"
+  },
+  {
+   "pic": 19,
+   "line": "L12",
+   "w": 0,
+   "env": "harbour"
+  },
+  {
+   "pic": 20,
+   "line": "L12",
+   "w": 5,
+   "env": "harbour"
+  },
+  {
+   "pic": 21,
+   "line": "L13",
+   "w": 0,
+   "env": "harbour"
+  },
+  {
+   "pic": 22,
+   "line": "L13",
+   "w": 7,
+   "env": "harbour"
+  },
+  {
+   "pic": 23,
+   "line": "L14",
+   "w": 0,
+   "env": "toy"
+  },
+  {
+   "pic": 24,
+   "line": "L14",
+   "w": 10,
+   "env": "toy"
+  },
+  {
+   "pic": 25,
+   "line": "L15",
+   "w": 0,
+   "env": "diagram"
+  },
+  {
+   "pic": 26,
+   "line": "L15",
+   "w": 8,
+   "env": "toy"
+  },
+  {
+   "pic": 27,
+   "line": "L16",
+   "w": 0,
+   "env": "harbour"
+  },
+  {
+   "pic": 28,
+   "line": "L17",
+   "w": 0,
+   "env": "room"
+  },
+  {
+   "pic": 29,
+   "line": "L18",
+   "w": 0,
+   "env": "room"
+  },
+  {
+   "pic": 30,
+   "line": "L19",
+   "w": 0,
+   "env": "room"
+  },
+  {
+   "pic": 31,
+   "line": "L19",
+   "w": 9,
+   "env": "room"
+  },
+  {
+   "pic": 32,
+   "line": "L20",
+   "w": 0,
+   "env": "salvage"
+  },
+  {
+   "pic": 33,
+   "line": "L20",
+   "w": 7,
+   "env": "museum"
+  },
+  {
+   "pic": 34,
+   "line": "L21",
+   "w": 0,
+   "env": "harbour"
+  },
+  {
+   "pic": 35,
+   "line": "L21",
+   "w": 8,
+   "env": "museum"
+  }
+ ],
+ "beats": [
+  {
+   "pic": 28,
+   "line": "L17",
+   "w": 4,
+   "what": "witnesses point at each other on 'Who'"
+  }
+ ]
+}
