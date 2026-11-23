@@ -1,61 +1,79 @@
-# Hold Up — End-to-end production pipeline (source of truth)
+# Hold Up — Production pipeline (source of truth)
 
-**Purpose:** One story folder is the handoff contract between ChatGPT (story/directing), Codex (assets/technical verification), and Claude Code (animation/audio/render). GitHub is the source of truth; chat messages are just commands to read it.
+This file wins when another doc disagrees. `SKILL.md` stays the authority on *how* to render the look
+(code, look values, gotchas). This file decides *who* does what, *in what order*, and *what must be approved*.
 
-**Existing SKILL.md and the proven Three.js/Remotion look remain authoritative on technical rendering and style.** Also read PROMPTING.md, CAMERA-DIRECTION.md, SHORTS-STORYTELLING.md, references/STYLE_BIBLE.md. Learning/QA files written by production agents should be consulted where they exist; don't assume an optional file exists.
+## Roles
+| Who | Owns | Never does |
+|---|---|---|
+| **Owner** | Ideas, every approval gate, merges, publishing | — |
+| **Claude** | Planning with the owner, facts, script, shot list, asset brief, the Codex prompt, asset acceptance, characters, water/effects, layout, camera, voice, animation, editing, sound, render, QA | Approve its own work on the owner's behalf |
+| **Codex** | Sourcing or modelling the 3D props and set pieces in the asset brief, as GLB files that pass `tools/check-assets.mjs` | Characters, water/effects, scene code, judging its own visual quality, editing outside `videos/<story-id>/assets/` |
 
-## Directory contract (one folder per story)
+Codex cannot render our scene, so it doesn't sign off on looks. Claude accepts assets from real in-engine renders.
 
-```text
-videos/<story-id>/
-  STORY.md                 # author-owned brief + factual claims + approval (copy STORY-TEMPLATE.md)
-  SCRIPT.md                # narrator-only final script; no embedded direction
-  SHOTLIST.md              # numbered shots linked to script beats
-  ASSET-MANIFEST.md        # exact asset requirements, paths, format, origin, scale, provenance, status
-  CODEX-HANDOFF.md         # Codex's next steps, evidence, blockers, Claude ready-state
-  CLAUDE-PROMPT.md         # copy/paste Claude continuation prompt
-  PRODUCTION-RETROSPECTIVE.md  # lessons after production
-  assets/                  # committed source/models/materials; include preview paths/README
-  previews/                # selected small review images if appropriate
-```
+## Stages and gates
+Each **GATE** is a stop. Nothing after it starts until the owner says so in their own words.
 
-Not every file exists at story inception. **Never falsely claim missing assets or previews are ready**. Large renders and transient caches belong under `out/<story-id>/` and are not automatically committed. Use `videos/niagara-barrel/` as an example of a historical handoff, not as a mandatory template for new stories.
+### 1. Plan (Claude + owner)
+Talk through the idea. Claude checks the facts and proposes a hook, angle and payoff.
 
-## Phase A — ChatGPT / story author
-1. Choose unique lower-kebab-case `story-id` (never reuse another story's folder). Author `STORY.md` using `STORY-TEMPLATE.md`. Put the working title, angle, hook, payoff, planned length, primary characters/setting, factual assertions and source URLs, sources needing verification, production constraints, and explicit approval state.
-2. Write `SCRIPT.md` (narrator-only) and `SHOTLIST.md` (one numbered beat per visual, narration anchor, action, camera movement, geography/continuity, sound cue, required assets).
-3. When author approves, set `STORY.md` to `script_status: approved` and `codex_status: ready`. **Do not silently auto-approve** a draft.
-4. Commit/push these story documents (prefer a story branch/PR, then merge when approved). Provide folder path and story-id. Commit success must be checked, never assumed.
+### 2. Script package (Claude) → **GATE A: script approved**
+Claude writes and commits to `videos/<story-id>/` on `claude/<story-id>`:
+- `STORY.md` from `STORY-TEMPLATE.md`, with the sourced fact table
+- `SCRIPT.md`: narrator-only lines
+- `SHOTLIST.md`: every line attached to its visuals, ~2 pictures per sentence (see Pacing below)
+- `ASSET-BRIEF.md` from `ASSET-BRIEF-TEMPLATE.md`: only the props/sets Codex must deliver, after checking what already exists
+- `CODEX-PROMPT.md`: one copy-paste block for Codex
 
-## Phase B — Codex / art + asset production
-Trigger: **“Proceed with Codex next steps on <story-id>.”** Read `AGENTS.md` and `CODEX-WORKFLOW.md`. Locate `videos/<story-id>/STORY.md` and `SCRIPT.md`; if not found or ambiguous, stop with exact missing path. Do not ask for a pasted script that is already committed.
-1. Inspect story approvals, repo renderer, asset library, prior lessons, and source provenance. Reject unverified claims as settled fact; mark questions for owner/Claude instead of making them up.
-2. Build on a fresh `codex/<story-id>` branch based on up-to-date main (unless a specified branch is the agreed integration base). **Never write into another agent's active branch.** Keep changes scoped to story folder + proven reusable modules needed. Coordinate integration if Claude has unmerged changes.
-3. List/reuse approved existing assets before modeling. Build only necessary new props/environment assets and character references/rigs compatible with the actual runtime (Three.js/Remotion). Avoid creating a generic 3D model when the renderer expects 2D character cards.
-4. For each asset: verify geometry and units, scale, origin/pivot, orientation, materials/ink, usage rights, animation affordances, render loadability. Render actual in-engine previews, not unrelated concept art, from multiple angles; compare with approved in-engine reference stills. Improve until quality meets benchmark, or explicitly mark as BLOCKED. **No “production-ready” based on successful export alone.**
-5. Produce `ASSET-MANIFEST.md`, `CODEX-HANDOFF.md`, and a story-specific `CLAUDE-PROMPT.md` referencing paths, limitations, validation results, and owner review gate. Ensure all linked files exist in the committed branch.
-6. Run available type/import/smoke checks and rendering/visual QA. Report command, result, date/environment and any limitations. Record reusable lessons and the exact tested commit SHA.
-7. Commit/push to Codex branch, create PR for owner review; **do not merge into main without approval** unless owner explicitly asks. Tell owner how to merge or provide specific merged SHA if approved. Output exact Claude copy/paste command and branch/commit to checkout. Do not imply Claude can see unmerged Codex files while checked out on main.
+The owner approves the script and shot list. Small wording changes later are fine; new beats mean re-approval.
 
-## Phase C — Claude / animation + delivery
-Trigger when Codex handoff is committed and the owner approves its visuals. Claude reads `CLAUDE-PROMPT.md`, `STORY.md`, `SCRIPT.md`, `SHOTLIST.md`, `ASSET-MANIFEST.md`, `CODEX-HANDOFF.md`, and existing SKILL.md. **Use the exact branch/SHA holding the assets**; coordinate branches when Codex assets and Claude scene work are not integrated.
-1. **Gate 1: preview.** Actual 9:16 stills from the real Remotion/Three.js scene, including hook, main character, hero props, action risk, and ending. Visual inspect anatomy, layering, object grounding, lights and framing. **Stop for owner's approval.**
-2. **Gate 2: motion proofs.** After approval, time narration to words, animate critical transitions, check collisions, clipping, camera jitter, foot contacts, water or physics motion as applicable; show short motion proof and correct defects before long final render if risk is material.
-3. **Gate 3: final.** Only after applicable approvals, complete narration, mixing, music/SFX, final render and technical/visual QA under SKILL.md. No YouTube upload without explicit authorization.
-4. Write `PRODUCTION-RETROSPECTIVE.md` with verified issues, iterations, fixes, tests, benchmarks and reusable lessons. Update shared lessons/skills only when genuinely reusable. Commit changes on a Claude branch/PR without overwriting concurrent work.
+### 3. Assets (Codex → Claude) → **GATE B: assets accepted**
+1. The owner pastes `CODEX-PROMPT.md` into Codex. Codex works on `codex/<story-id>`, delivers GLBs plus
+   `assets.json`, runs `node tools/check-assets.mjs videos/<story-id>/assets/assets.json` until it passes,
+   commits and pushes, and reports the branch and SHA.
+2. Claude merges that branch into its own story branch, re-runs the checker, then loads every asset in the real
+   scene: an in-scene scale shot next to a character and a close framing as the shot list uses it, under our ink and
+   lights. Each asset gets **ACCEPT** or **REJECT** with specific reasons (what reads wrong at phone size, and the fix).
+   Rejections go back to Codex as a short follow-up prompt. Claude may fix small things itself (recolour, pivot, scale).
+3. The owner sees the in-engine stills and approves.
 
-## Quality gates and authority
-- **Human owner controls:** story/script approval, art direction, first-stills approval, glow strength, technical/motion acceptance, final video/publishing. An assistant never treats its own enthusiasm as owner approval.
-- **Lock approved look:** don't redesign working characters, materials, camera language or environments to fix clipping/physics unless justified and owner approves.
-- **Proof over claims:** inspect actual renderer output, distinguish scaffolds from validated final assets; report missing QA honestly.
-- **No collision shortcuts:** feet on terrain, correct clothing/hat attachment, characters contacting props, solid objects not intersecting, camera near-plane sanity, believable trajectories.
-- **No assumptions about sync:** changes pushed to branch A are not magically present in branch B. Handoff must specify branch and commit SHA.
-- **No unwanted repo edits:** only approved story-specific changes; communicate merge/conflict plans first.
-- **Postmortem every video:** preserve learnings as code, tests, reusable assets and instructions, not just narrative docs.
+### 4. Animatic (Claude) → **GATE C: pacing approved**
+Record the voice and hand-fix `words.json`. Block every shot at final timing: real cameras and layout, simple
+poses, no polish. Render a low-res animatic with the voice. Run
+`python3 tools/check-pacing.py <words.json> <shots.json>` and fix its flags or justify them in `SHOTLIST.md`.
+The owner watches the animatic and approves the edit rhythm. **Pacing is fixed here, where it is cheap.**
 
-## Minimal user commands
-**Start here:** “Write and commit a Hold Up package for <story-id> following STORY-TEMPLATE.md and PRODUCTION-PIPELINE.md.” (If using this chat, explicitly authorize repo changes.)
+### 5. Production (Claude) → **GATE D: final approved**
+Animation, effects, character performance, sound, the 1440x2560 render, `short_qa.py`, the verifier pass from `SKILL.md`.
+Timing stays as approved at Gate C. If a timing change is needed, say so and show it.
+Deliver the MP4. Never upload anywhere without the owner's explicit go-ahead.
 
-**Codex:** “Proceed with Codex next steps on <story-id>. Follow AGENTS.md / CODEX-WORKFLOW.md. Commit the asset package on your branch, render asset QA, and output the precise Claude handoff and branch/SHA. Do not merge without my approval.”
+### 6. Retrospective (Claude)
+`videos/<story-id>/RETRO.md`: what went wrong, what fixed it. Reusable lessons go into this file, `SKILL.md`
+or the tools as rules or checks, not just narrative.
 
-**Claude:** Paste the verified continuation command printed by Codex after the package is available to Claude. Work only through the approval gate that command authorizes.
+## Pacing (defaults, not quotas)
+Numbers from `references/reports/editing.md`:
+- **Runtime 30-45 s.** A soft target: never cut a beat the story needs or squeeze clarity for it.
+- Voice starts within 0.2 s and runs at 3.5-4.0 words/s. No pause over ~0.45 s unless it's a planned beat. The video ends on the last word.
+- A new picture every ~1.5-2.5 s: every sentence gets one, most get two.
+- No single picture held over ~4.5 s unless it's a continuous reveal or a named comic/suspense hold.
+- Every visual payoff lands 0-3 frames before its word.
+
+## Settled rules (where older docs disagreed)
+- **Length:** 30-45 s target (replaces SKILL.md's 55-70 s). Script at ~3.7 words/s → ~110-165 words.
+- **Holds:** the camera never fully freezes for 4+ frames. A "static hold" means a slow creeping push (0.15-0.35 %/f).
+  A dead-still freeze frame only as a named comic beat in the shot list.
+- **Characters** are always our 2D toon cards (`toon.ts` / `cast.ts`). Codex never builds characters.
+- **No captions or labels,** English, one steady narrator, mix and export as in `SKILL.md`.
+
+## Branches
+- Claude: `claude/<story-id>`. Codex: `codex/<story-id>`, touching only `videos/<story-id>/assets/`.
+- A handoff always names a branch and a commit SHA. Never assume another branch's work is on main.
+- The owner merges to main.
+
+## Honesty rules (all agents)
+- Never say a render, test or commit happened unless it did. Show the file or the output.
+- "Checker passes" means mechanics are OK, not that the asset looks good.
+- If blocked, say exactly what is missing and stop.

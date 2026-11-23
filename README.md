@@ -2,7 +2,7 @@
 
 The free Claude skill from the video **"How to Make Viral Animated Shorts Using Claude (Full Workflow)"**.
 
-It makes 55-70 s vertical animated story shorts: 2D characters in a colourful 3D world, with ink outlines, a painted town, lens blur, gliding cameras, a march score and sound effects. Everything is rendered with three.js inside Remotion on your own PC, with no AI video generator.
+It makes 30-45 s vertical animated story shorts: 2D characters in a colourful 3D world, with ink outlines, a painted town, lens blur, gliding cameras, a march score and sound effects. Everything is rendered with three.js inside Remotion on your own PC, with no AI video generator.
 
 Proven on **The Bridge That Fell for a Song**, a 67 s short about the 1831 Broughton bridge.
 
@@ -10,11 +10,15 @@ Proven on **The Bridge That Fell for a Song**, a 67 s short about the 1831 Broug
 | Path | What it is |
 |---|---|
 | `SKILL.md` | The skill: the full pipeline, every rule, every fix, and the final look values |
+| `PRODUCTION-PIPELINE.md` | Hold Up workflow: roles (owner / Claude / Codex), approval gates, pacing targets. Wins over other docs |
+| `AGENTS.md`, `ASSET-BRIEF-TEMPLATE.md` | Codex's asset-only instructions and the brief Claude writes for it |
+| `tools/check-assets.mjs` | Checks delivered GLBs: size in metres, pivot, axes, triangle budget, material names, licence |
+| `tools/check-pacing.py` | Checks an animatic's timing: voice start, words/s, pauses, how often the picture changes |
 | `templates/bridge/` | The full source of the bridge short: world, characters, ink, lens blur, grade, story/camera |
 | `templates/audio/` | The synthesized sound: SFX, march music, the mix with ducking and loudness |
 | `templates/scripts/` | Stills, side-by-side sheets, shot merge and frame-by-frame QA helpers |
 | `references/STYLE_BIBLE.md` | The script and visual formula measured from 20 reference shorts |
-| `references/reports/` | Seven measured reports: motion, depth, textures, characters, lighting, outlines, grade |
+| `references/reports/` | Eight measured reports: motion, editing, depth, textures, characters, lighting, outlines, grade |
 | `references/frames/` | 38 full-size reference frames (540x960) to compare your frames against |
 | `references/sheets/` | 20 contact sheets, one per reference short, 60 frames each (1,200 frames) |
 

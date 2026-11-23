@@ -1,6 +1,6 @@
 # Hold Up — Shorts Storytelling
 
-Supplement to the original SKILL.md. Aim for an engaging 30–45 second video when requested; don't force the original 55–70 second template. Preserve verified facts and the established art style.
+Supplement to the original SKILL.md. Target 30–45 seconds (a soft target: never trade clarity or quality for brevity); this replaces SKILL.md's 55–70 s. Preserve verified facts and the established art style.
 
 ## Script pattern
 1. **0–3 seconds: Hook.** Start with a specific surprising event, danger, contradiction or question. The first image should prove the premise visually. No greeting or logo.
