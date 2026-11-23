@@ -18,10 +18,16 @@ PY
 cp kokoro/voices.npz kokoro/voices.bin
 ```
 
+## Emphasis
+Mark stressed words `*like this*` in `voice/SCRIPT-emphasis.md` (same `Lnn` lines as SCRIPT.md). `gen_voice.py`
+gives them primary stress and lengthens long vowels (never short ones: tip -> "teep"), lines may end in `!`, and
+`emph_gain.py` then lifts those words by +3 dB using the aligned `words.json`.
+
 ## Use
 ```bash
 KOKORO_DIR=kokoro ./tts/bin/python tools/voice/gen_voice.py videos/<story-id>
 ./tts/bin/python tools/voice/align.py videos/<story-id>
+./tts/bin/python tools/voice/emph_gain.py videos/<story-id> 3
 ```
 Then check pronunciation line by line, and add phoneme `OVERRIDE`s in `gen_voice.py` for words the recogniser
 mishears (Vasa needed five; see the comments there). Settings: voice `am_puck`, speed 1.10, 0.04 s between lines,

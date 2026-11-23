@@ -1,7 +1,7 @@
 # Vasa: original, subtle background score + mix, synthesized with the bridge short's instrument kit (templates/audio).
 # D minor, 100 bpm (one bar = 2.4 s). Sections follow the narration (voice/lines.json):
 #   hook + build (pizzicato arpeggios, warm pad, glock sparkle on "sculptures") | the test (busier plucks, soft
-#   timpani taps under the running) | departure (brighter, glock flourish on the salute) | breeze (pad only) |
+#   timpani taps under the running) | departure (brighter, glock flourish on the salute) |
 #   gust + sinking (low timpani roll, minor pad, then almost silence on the deaths) | "You see" (music-box motif) |
 #   inquiry (sneaky staccato plucks, full stop on "Officially, nobody.") | raising + payoff (warm F major pad, plucks,
 #   button on the last word).
@@ -87,13 +87,11 @@ for k in range(int((E('L06') - S('L05')) / Q)):
     add('timp', I.timpani(m2f(38), vel=.22, r=r, dur=1.0), S('L05') + k * Q)
 add('pluck', I.pluck(m2f(62), vel=.35, r=r, dur=.6), S('L07'))   # stop
 add('pluck', I.pluck(m2f(57), vel=.30, r=r, dur=.6), S('L08') + .05)
-# 3. departure: L09, brighter, flourish on the salute
-pads(S('L09'), S('L10'), ['F', 'C'], vel=.30)
-arps(S('L09'), S('L10'), ['F', 'C'], vel=.30, pattern=(0, 2, 1, 2))
-sparkle(w('L09', 10) - .05, notes=(77, 81, 84, 89), vel=.3)        # "cannon salute"
-add('timp', I.timpani(m2f(41), vel=.35, r=r, dur=1.6), w('L09', 10))
-# 4. breeze: pad only
-pads(S('L10'), S('L11'), ['Dm'], vel=.22)
+# 3. departure: L09-L10, brighter, flourish on the salute
+pads(S('L09'), S('L11'), ['F', 'C'], vel=.30)
+arps(S('L09'), S('L11'), ['F', 'C'], vel=.30, pattern=(0, 2, 1, 2))
+sparkle(w('L10', 6) - .05, notes=(77, 81, 84, 89), vel=.3)        # "cannon salute"
+add('timp', I.timpani(m2f(41), vel=.35, r=r, dur=1.6), w('L10', 6))
 # 5. gust + sinking: low roll into a minor hit, then near silence through the deaths
 for k in range(18):
     add('timp', I.timpani(m2f(38), vel=.05 + .02 * k, r=r, dur=.6), S('L11') + k * .065)
@@ -108,7 +106,7 @@ while t < S('L17') - 1:
     for b, n in MOTIF:
         add('box', I.musicbox(m2f(n + 12), vel=.28, r=r, dur=1.2), t + b * Q, p=-.2)
     t += 2 * BAR
-add('timp', I.timpani(m2f(36), vel=.3, r=r, dur=1.4), w('L15', 8))   # "top-heavy" lands low
+add('timp', I.timpani(m2f(36), vel=.3, r=r, dur=1.4), w('L15', 11))   # "top-heavy" lands low
 # 7. inquiry: sneaky staccato, hard stop on "Officially, nobody." then a single pluck on "nobody"
 arps(S('L17'), S('L18') - .05, ['Dm', 'A'], vel=.26, step=Q / 2, pattern=(0, 2), up=0)
 add('pluck', I.pluck(m2f(45), vel=.4, r=r, dur=1.0, bright=.2), w('L18', 1))
@@ -143,10 +141,15 @@ v = np.zeros((2, N)); v[:, :len(voice)] = voice
 v *= dbg(-16.0 - integrated(v))                    # voice -16 LUFS
 bed *= dbg(-16.0 - 16.0 - integrated(bed))         # bed ~16 LU under the voice
 mix = v + bed
-mix *= dbg(-14.0 - integrated(mix))                # YouTube loudness
-peak = np.abs(mix).max()
-if peak > .93:
-    mix *= .93 / peak
+# look-ahead peak limiter (5 ms) so the mix reaches YouTube loudness (-14 LUFS) without clipping
+from scipy.ndimage import minimum_filter1d, uniform_filter1d  # noqa: E402
+for _ in range(3):
+    mix *= dbg(-14.0 - integrated(mix))
+    need = np.minimum(1.0, .9 / np.maximum(np.abs(mix).max(0), 1e-9))
+    w = ns(.005)
+    gl = uniform_filter1d(minimum_filter1d(need, 2 * w + 1), 2 * w + 1)
+    mix *= gl[None, :]
+mix *= min(1.0, .93 / np.abs(mix).max())
 sf.write(f'{OUT}/music.wav', bed.T.astype(np.float32), SR)
 sf.write(f'{OUT}/mix.wav', mix.T.astype(np.float32), SR)
 print(f'dur {N / SR:.2f}s  voice {integrated(v):.1f}  bed {integrated(bed):.1f}  mix {integrated(mix):.1f} LUFS  peak {20 * np.log10(np.abs(mix).max()):.1f} dBFS')
