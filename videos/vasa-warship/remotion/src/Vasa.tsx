@@ -4,7 +4,10 @@
 import React, {useLayoutEffect, useRef, useState} from 'react';
 import {continueRender, delayRender, useCurrentFrame, useVideoConfig} from 'remotion';
 import * as THREE from 'three';
-import {EffectComposer, RenderPass} from 'postprocessing';
+import {EffectComposer, EffectPass, RenderPass, ToneMappingEffect, ToneMappingMode} from 'postprocessing';
+import {LensBlur} from '../../../../templates/bridge/lensblur';
+import {GradeEffect, GRADES} from '../../../../templates/bridge/grade';
+import {shoreline, skyDome, toonWater, type Water} from './look';
 import {InkPass, NOINK} from '../../../../templates/bridge/ink';
 import {bodyFront, bodySide, fxPuff, type Outfit, type Expr} from '../../../../templates/bridge/toon';
 import {Card, DECK_Y, GUNDECK_Y, WATER_Y, clone, dot, faceCards, loadLib, openLids, put, rig, type Lib} from './lib';
@@ -39,29 +42,14 @@ const crown = (c: Card) => { // gold crown on top of the King's head
 };
 
 // ---------- environments ----------
-type Ctx = {L: Lib; scene: THREE.Scene; camera: THREE.PerspectiveCamera};
-const LIGHTS = {
-  day: {sky: '#8fb6e4', fog: '#b8d0ec', sun: '#fff1d6', sunI: 2.4, hemi: 1.4},
-  afternoon: {sky: '#9ab7dc', fog: '#d9cdb8', sun: '#ffdcae', sunI: 2.5, hemi: 1.25},
-  morning61: {sky: '#a9bfd4', fog: '#c9d4de', sun: '#e6eefc', sunI: 1.9, hemi: 1.5},
-};
-const sky = (c: Ctx, k: keyof typeof LIGHTS, far = 420) => {
-  const l = LIGHTS[k];
-  c.scene.background = new THREE.Color(l.sky);
-  c.scene.fog = new THREE.Fog(l.fog, 140, far);
-  const sun = new THREE.DirectionalLight(l.sun, l.sunI);
-  sun.position.set(-40, 60, 25);
-  sun.castShadow = true;
-  sun.shadow.mapSize.set(2048, 2048);
-  Object.assign(sun.shadow.camera, {left: -70, right: 70, top: 70, bottom: -70, far: 300});
-  sun.shadow.normalBias = .03;
-  c.scene.add(new THREE.HemisphereLight('#dbe5ff', '#6d5a4d', l.hemi), sun);
-};
-const water = (c: Ctx) => {
-  const w = new THREE.Mesh(new THREE.PlaneGeometry(3000, 3000), new THREE.MeshLambertMaterial({color: '#2f7fae'}));
-  w.rotation.x = -Math.PI / 2; w.position.y = WATER_Y; w.receiveShadow = true;
-  c.scene.add(w);
-  return w;
+type Ctx = {L: Lib; scene: THREE.Scene; camera: THREE.PerspectiveCamera; water?: Water; ship?: THREE.Object3D; look?: number[]; dof?: number};
+const sky = (c: Ctx, k: 'day' | 'afternoon' | 'morning61', _far = 0) => { skyDome(c.scene, k === 'afternoon' ? 'afternoon' : 'day'); (c as Ctx & {pal?: string}).pal = k; };
+const water = (c: Ctx) => { const w = toonWater((c as Ctx & {pal?: string}).pal === 'afternoon' ? 'afternoon' : 'day'); c.scene.add(w.mesh); c.water = w; return w.mesh; };
+let shoreSeed = 1;
+const shore = (c: Ctx) => {
+  shoreline(c.scene, 150, 1, -260, 260, shoreSeed);           // town side (+X), seen behind the ship from the port-side camera
+  shoreline(c.scene, -150, -1, -260, 260, shoreSeed + 4, true); // Sodermalm-style cliffs (-X), seen from the quay
+  c.scene.add(put(clone(c.L, 'tre-kronor-castle'), [205, WATER_Y + 1.5, 95], -Math.PI / 2));
 };
 /** ship inside a roll pivot at the waterline: root.rotation.z = heel (+ = to port, masts toward -X), root.position.y = sink */
 const ship = (c: Ctx, sails: 'set' | 'furled' | 'none') => {
@@ -72,28 +60,27 @@ const ship = (c: Ctx, sails: 'set' | 'furled' | 'none') => {
   rig(v, sails);
   root.add(v);
   c.scene.add(root);
+  c.ship = root;
   return {root, v};
 };
 const quay = (c: Ctx) => { for (let i = -2; i <= 2; i++) c.scene.add(put(clone(c.L, 'quay-segment'), [12.5, WATER_Y - 1.2, i * 8], Math.PI / 2)); return WATER_Y + 1.3; };
-const shore = (c: Ctx) => {
-  c.scene.add(put(clone(c.L, 'tre-kronor-castle'), [175, WATER_Y, 115], -Math.PI / 2));
-  const cols = ['#b5654a', '#e3d3b0', '#c99a4a', '#a8533e', '#d9c7a0'];
-  for (let i = 0; i < 14; i++) {
-    const h = 7 + (i * 37 % 5), b = new THREE.Mesh(new THREE.BoxGeometry(9, h, 8), new THREE.MeshLambertMaterial({color: cols[i % 5]}));
-    b.position.set(205 + (i % 2) * 10, WATER_Y + h / 2, -90 + i * 13); b.castShadow = true; c.scene.add(b);
-    const r = new THREE.Mesh(new THREE.ConeGeometry(6.6, 4, 4), new THREE.MeshLambertMaterial({color: '#7a3b2e'}));
-    r.rotation.y = Math.PI / 4; r.position.set(b.position.x, WATER_Y + h + 2, b.position.z); c.scene.add(r);
-  }
-};
 const room = (c: Ctx) => {
-  c.scene.background = new THREE.Color('#3a3038');
+  c.scene.background = new THREE.Color('#1c2a2e');
   const m = (col: string) => new THREE.MeshLambertMaterial({color: col});
-  const floor = new THREE.Mesh(new THREE.PlaneGeometry(14, 10), m('#7a5a3e')); floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true;
-  const back = new THREE.Mesh(new THREE.PlaneGeometry(14, 6), m('#c8b48a')); back.position.set(0, 3, -2.6); back.receiveShadow = true;
-  const win = new THREE.Mesh(new THREE.PlaneGeometry(1.4, 2), new THREE.MeshBasicMaterial({color: '#fff3d6'})); win.position.set(-3.2, 2.4, -2.58);
-  c.scene.add(floor, back, win);
-  const key = new THREE.DirectionalLight('#fff0d0', 2.2); key.position.set(-6, 7, 5); key.castShadow = true; key.shadow.mapSize.set(1024, 1024);
-  c.scene.add(new THREE.HemisphereLight('#f2e6d0', '#5a4a3a', 1.1), key);
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(14, 10), m('#8a4a30')); floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true;
+  const rug = new THREE.Mesh(new THREE.PlaneGeometry(6, 4), m('#b8322a')); rug.rotation.x = -Math.PI / 2; rug.position.set(0, .01, .6); rug.receiveShadow = true;
+  const rugB = new THREE.Mesh(new THREE.PlaneGeometry(6.4, 4.4), m('#e0b44a')); rugB.rotation.x = -Math.PI / 2; rugB.position.set(0, .005, .6);
+  const back = new THREE.Mesh(new THREE.PlaneGeometry(14, 6), m('#2f6b66')); back.position.set(0, 3, -2.6); back.receiveShadow = true;
+  const wains = new THREE.Mesh(new THREE.BoxGeometry(14, 1.1, .1), m('#5a3424')); wains.position.set(0, .55, -2.55);
+  const rail = new THREE.Mesh(new THREE.BoxGeometry(14, .12, .14), m('#d8a94a')); rail.position.set(0, 1.12, -2.52);
+  const win = new THREE.Mesh(new THREE.PlaneGeometry(1.4, 2.1), new THREE.MeshBasicMaterial({color: '#fff1c8'})); win.position.set(-3.4, 2.5, -2.57);
+  const frame = new THREE.Mesh(new THREE.BoxGeometry(1.6, 2.3, .08), m('#5a3424')); frame.position.set(-3.4, 2.5, -2.6);
+  const cloth = new THREE.Mesh(new THREE.BoxGeometry(4.05, .02, 1.25), m('#2f6b3a')); cloth.position.set(0, .81, 0); cloth.receiveShadow = true;
+  c.scene.add(floor, rugB, rug, back, wains, rail, frame, win, cloth);
+  const key = new THREE.SpotLight('#ffe3b0', 90, 18, .5, .6, 1.2); key.position.set(-2.5, 6.5, 4.5); key.target.position.set(0, 1, -.5);
+  key.castShadow = true; key.shadow.mapSize.set(1024, 1024);
+  const beam = new THREE.DirectionalLight('#fff0d0', .9); beam.position.set(-6, 5, -1);
+  c.scene.add(new THREE.HemisphereLight('#bfd8d6', '#4a2a20', .75), key, key.target, beam);
   c.scene.add(clone(c.L, 'inquiry-table'));
 };
 const toySet = (c: Ctx) => {
@@ -131,6 +118,7 @@ const museum = (c: Ctx) => {
 type Upd = (f: number, local: number, u: number) => void;
 type Build = (c: Ctx) => Upd;
 const cam = (c: Ctx, p: number[], t: number[], fov = 40, roll = 0) => {
+  c.look = t;
   c.camera.fov = fov; c.camera.updateProjectionMatrix();
   c.camera.position.set(p[0], p[1], p[2]); c.camera.up.set(0, 1, 0); c.camera.lookAt(t[0], t[1], t[2]);
   if (roll) c.camera.rotateZ(roll * Math.PI / 180);
@@ -153,43 +141,43 @@ const B: Record<number, Build> = {
     crew.forEach((k, i) => { k.mesh.position.set(-4.5, DECK_Y - WATER_Y, -20 + i * 2.2); k.draw(p => bodyFront(p, SAILORS[i % 4], {mode: 'stand', expr: 'nervous', seed: i + 3, tilt: -8})); });
     return (f, l, u) => { s.root.rotation.z = .17; s.root.position.z = -sec(f) * 1.2;
       glide(c, [[-14, 9, -40], [0, 14, -30]], [[-75, 9, -20], [0, 18, 0]], u, 0, 40, 4); }; },
-  2: c => { sky(c, 'day'); water(c); const s = ship(c, 'set'); openLids(s.v, 'lower', .9);
+  2: c => { sky(c, 'day'); water(c); shore(c); const s = ship(c, 'set'); openLids(s.v, 'lower', .9);
     return (f, l, u) => { s.root.rotation.z = lerp(.17, .44, smooth(l / 8)); s.root.position.z = -sec(f) * 1.2;
       cam(c, [-42, 9 + kick(l, .4), -6], [0, 12, s.root.position.z], 40, 6 + 2 * kick(l)); }; },
-  3: c => { sky(c, 'day'); water(c); const s = ship(c, 'furled');
+  3: c => { sky(c, 'day'); water(c); shore(c); const s = ship(c, 'furled');
     const guns = [0, 1, 2, 3].map(k => { const g = put(clone(c.L, 'cannon-24pdr'), [-1.5, GUNDECK_Y, -13.2 + k * 3.22], Math.PI / 2); s.v.add(g); return g; });
     return (f, l, u) => { guns.forEach((g, k) => { g.position.x = lerp(-2.5, -6.6, smooth((l - k * 5) / 8)); });
       glide(c, [[-13, 10.6, -18], [-5.5, 10.2, -10]], [[-13, 10.6, -6], [-5.5, 10.2, 2]], u, 0, 40); }; },
-  4: c => { sky(c, 'day'); water(c); ship(c, 'furled');
+  4: c => { sky(c, 'day'); water(c); shore(c); ship(c, 'furled');
     return (f, l, u) => glide(c, [[-34, 7, 4], [0, 8, 2]], [[-34, 9, 4], [0, 19, 2]], u, 0, 40); },
-  5: c => { sky(c, 'day'); water(c); ship(c, 'furled');
+  5: c => { sky(c, 'day'); water(c); shore(c); ship(c, 'furled');
     return (f, l, u) => glide(c, [[-14, 22, 54], [0, 20, 33]], [[-10, 21, 46], [0, 20, 33]], u, 0, 34); },
   6: c => { room(c); const k = crown(front(KING, 11, {expr: 'grin'})); put(k.mesh, [0, 0, -.9]); c.scene.add(k.mesh);
     const plans = new THREE.Mesh(new THREE.PlaneGeometry(1.2, .8), new THREE.MeshLambertMaterial({color: '#efe2bd'})); plans.rotation.x = -Math.PI / 2; plans.position.set(0, .81, .1); c.scene.add(plans);
     const stamp = new THREE.Mesh(new THREE.BoxGeometry(.12, .16, .12), new THREE.MeshLambertMaterial({color: '#8a3b2e'})); c.scene.add(stamp);
     return (f, l, u) => { const hit = T('L03', 6) - 2; stamp.position.set(.35, f < hit ? .81 + .3 * smooth((hit - f) / 6) + .08 : .89, .1);
       glide(c, [[0, 1.6, 4.4], [0, 1.25, 0]], [[0, 1.55, 3.6], [0, 1.25, 0]], u, 0, 40); }; },
-  7: c => { sky(c, 'day'); water(c); const s = ship(c, 'furled'); const top = quay(c);
+  7: c => { sky(c, 'day'); water(c); shore(c); const s = ship(c, 'furled'); const top = quay(c);
     const off = front(OFFICER, 21, {expr: 'stern'}); put(off.mesh, [12.8, top, 6]); c.scene.add(off.mesh);
     SAILORS.forEach((o, i) => { const k = front(o, i + 4); put(k.mesh, [13.6, top, -1 - i * 1.1]); c.scene.add(k.mesh); });
     return (f, l, u) => { s.root.rotation.z = 0; glide(c, [[16.8, top + .9, 13], [10, 9, -6]], [[16.8, top + .9, 12], [10, 10, -6]], u, l, 50); }; },
-  8: c => { sky(c, 'day'); water(c); const s = ship(c, 'furled'); quay(c); const crew = deckSailors(s.root, 12);
+  8: c => { sky(c, 'day'); water(c); shore(c); const s = ship(c, 'furled'); quay(c); const crew = deckSailors(s.root, 12);
     return (f, l, u) => { crew.forEach((k, i) => { k.mesh.position.x = lerp(-4.5, 4.5, smooth((l - (i % 3) * 2) / 26)); k.mesh.userData.flip = false;
         k.draw(p => bodySide(p, SAILORS[i % 4], {mode: 'march', phase: sec(l) * 2.6 + i * .17, stomp: 1.4, stride: 1.2, seed: i + 2})); });
       cam(c, [-2.5, 31, 12], [0, DECK_Y, -2], 36); }; },
-  9: c => { sky(c, 'day'); water(c); const s = ship(c, 'furled'); quay(c); const crew = deckSailors(s.root, 9); crew.forEach((k, i) => { k.mesh.position.z = 7 + (i % 3) * 1.4 + Math.floor(i / 3) * .4; });
+  9: c => { sky(c, 'day'); water(c); shore(c); const s = ship(c, 'furled'); quay(c); const crew = deckSailors(s.root, 9); crew.forEach((k, i) => { k.mesh.position.z = 7 + (i % 3) * 1.4 + Math.floor(i / 3) * .4; });
     return (f, l, u) => { crew.forEach((k, i) => { k.mesh.position.x = lerp(3.2, -4.5, smooth((l - (i % 3) * 2) / 24)); k.mesh.userData.flip = true;
         k.draw(p => bodySide(p, SAILORS[i % 4], {mode: 'march', phase: sec(l) * 2.6 + i * .17, stomp: 1.4, stride: 1.2, seed: i + 2})); });
       glide(c, [[1.5, DECK_Y + 1.5, 16.5], [.5, DECK_Y + 1.1, 8.5]], [[.5, DECK_Y + 1.5, 16], [-.5, DECK_Y + 1.1, 8.5]], u, l, 56, -3); }; },
-  10: c => { sky(c, 'day'); water(c); const s = ship(c, 'furled'); quay(c);
+  10: c => { sky(c, 'day'); water(c); shore(c); const s = ship(c, 'furled'); quay(c);
     return (f, l, u) => { s.root.rotation.z = .12 * Math.sin(2 * Math.PI * sec(l) / 1.5);
       glide(c, [[30, WATER_Y + 2.6, 34], [0, 15, 0]], [[28, WATER_Y + 2.6, 31], [0, 15, 0]], u, l, 40); }; },
-  11: c => { sky(c, 'day'); water(c); const s = ship(c, 'furled'); const top = quay(c);
+  11: c => { sky(c, 'day'); water(c); shore(c); const s = ship(c, 'furled'); const top = quay(c);
     const off = new Card(1.8, .5); put(off.mesh, [13, top, 6]); c.scene.add(off.mesh);
     return (f, l, u) => { s.root.rotation.z = .12 * Math.sin(2 * Math.PI * sec(l + 60) / 1.5);
       off.draw(p => bodyFront(p, OFFICER, {mode: 'stand', expr: l < 6 ? 'stern' : 'shock', seed: 21}));
       cam(c, [13.2, top + 1.55, 8.4 - .02 * l], [13, top + 1.5, 6], 40 * (1 - .006 * Math.min(l, 25))); }; },
-  12: c => { sky(c, 'day'); water(c); const s = ship(c, 'furled'); quay(c);
+  12: c => { sky(c, 'day'); water(c); shore(c); const s = ship(c, 'furled'); quay(c);
     const off = new Card(1.8, .5); off.mesh.position.set(-2.5, DECK_Y - WATER_Y, 8); s.root.add(off.mesh);
     const crew = deckSailors(s.root, 4, 4);
     crew.forEach((k, i) => k.mesh.position.set(1.6 + i * .5, DECK_Y - WATER_Y, 7 + i * .9));
@@ -197,7 +185,7 @@ const B: Record<number, Build> = {
       crew.forEach((k, i) => { const x = lerp(4 + i * .6, .4 + i * .32, smooth(l / 10)); k.mesh.position.x = x;
         k.draw(p => bodyFront(p, SAILORS[i % 4], {mode: 'stand', expr: l > 10 ? 'dazed' : 'nervous', tilt: l > 10 ? (i % 2 ? 9 : -9) : 0, seed: i + 2})); });
       cam(c, [3.6, DECK_Y + 1.5, 17], [-.4, DECK_Y + 1.1, 7.6], 46 * (1 - .002 * l)); }; },
-  13: c => { sky(c, 'day'); water(c); ship(c, 'furled'); const top = quay(c);
+  13: c => { sky(c, 'day'); water(c); shore(c); ship(c, 'furled'); const top = quay(c);
     const a = front(OFFICER, 21, {expr: 'nervous', look: -1}); put(a.mesh, [12.6, top, 2]);
     const b = front(OFFICIAL, 31, {expr: 'neutral', look: 1}); put(b.mesh, [13.6, top, 2.6]); c.scene.add(a.mesh, b.mesh);
     return (f, l, u) => { const n = l - (SHOTS.find(s => s.pic === 13)!.b - SHOTS.find(s => s.pic === 13)!.a - 7);
@@ -207,17 +195,17 @@ const B: Record<number, Build> = {
   14: c => { sky(c, 'afternoon', 1200); water(c); shore(c); const s = ship(c, 'furled');
     const rb = put(clone(c.L, 'rowboat'), [30, WATER_Y - .3, -30], .3); c.scene.add(rb);
     return (f, l, u) => { s.root.position.z = -sec(l) * 1.0; glide(c, [[-70, 40, -48], [60, 18, 40]], [[-70, 16, -48], [60, 18, 40]], u, 0, 44); }; },
-  15: c => { sky(c, 'afternoon'); water(c); const s = ship(c, 'set');
+  15: c => { sky(c, 'afternoon'); water(c); shore(c); const s = ship(c, 'set');
     return (f, l, u) => { rig(s.v, 'set', lerp(.15, 1, smooth(l / 14))); glide(c, [[-52, 12, -4], [0, 18, -4]], [[-52, 12, -4], [0, 34, -4]], u, 0, 40); }; },
-  16: c => { sky(c, 'afternoon'); water(c); const s = ship(c, 'set'); openLids(s.v, 'lower', .9);
+  16: c => { sky(c, 'afternoon'); water(c); shore(c); const s = ship(c, 'set'); openLids(s.v, 'lower', .9);
     const puff = new Card(6, .5, 300, 300, false); puff.mesh.position.set(-8.5, 8.6 - WATER_Y, -6.5); s.root.add(puff.mesh);
     return (f, l, u) => { puff.draw(p => fxPuff(p, Math.min(1, l / 18)));
       cam(c, [-13 + kick(l, .25), 10.8, -1.5], [-6.5, 10.4, -6.5], 44, 2 * kick(l)); }; },
-  17: c => { sky(c, 'afternoon'); water(c); const s = ship(c, 'set');
+  17: c => { sky(c, 'afternoon'); water(c); shore(c); const s = ship(c, 'set');
     const k = new Card(1.75, .5); k.mesh.position.set(-4.4, DECK_Y - WATER_Y, 2); s.root.add(k.mesh);
     k.draw(p => bodyFront(p, SAILORS[0], {mode: 'stand', expr: 'relief', tilt: 7, seed: 3}));
     return (f, l, u) => { glide(c, [[-.5, DECK_Y + 1.6, 7.5], [-4.4, DECK_Y + 1.1, 2]], [[-1, DECK_Y + 1.6, 6.8], [-4.4, DECK_Y + 1.1, 2]], u, l, 42); }; },
-  18: c => { sky(c, 'afternoon'); const w = water(c); ship(c, 'set');
+  18: c => { sky(c, 'afternoon'); const w = water(c); shore(c); ship(c, 'set');
     const band = new THREE.Mesh(new THREE.PlaneGeometry(14, 200), new THREE.MeshBasicMaterial({color: '#1f5c84'})); band.rotation.x = -Math.PI / 2; band.position.y = WATER_Y + .02; c.scene.add(band);
     const hat = new THREE.Mesh(new THREE.CylinderGeometry(.3, .3, .1, 20), new THREE.MeshLambertMaterial({color: '#3a2a20'})); c.scene.add(hat);
     return (f, l, u) => { band.position.x = lerp(-90, -6, l / 22);
@@ -239,7 +227,7 @@ const B: Record<number, Build> = {
     return (f, l, u) => { s.root.rotation.z = lerp(.55, .95, u); s.root.position.y = WATER_Y - 46 * smooth(u * .9);
       boats.forEach((b, i) => { b.position.x = 60 + i * 14 - 22 * u; });
       cam(c, [-130, 95, 95], [0, 6, 0], 38); }; },
-  22: c => { sky(c, 'afternoon'); water(c);
+  22: c => { sky(c, 'afternoon'); water(c); shore(c);
     const hats = [0, 1, 2, 3].map(i => { const h = new THREE.Mesh(new THREE.CylinderGeometry(.32, .32, .1, 20), new THREE.MeshLambertMaterial({color: ['#3a2a20', '#5a3b2a', '#2f2418', '#4a3020'][i]})); c.scene.add(h); return h; });
     return (f, l, u) => { hats.forEach((h, i) => { h.position.set(-3 + i * 2.2, WATER_Y + .05 + .05 * Math.sin(sec(l) * 2 + i), i * 1.3 - 2); h.rotation.z = .1 * Math.sin(sec(l) * 1.6 + i); });
       glide(c, [[-14, WATER_Y + 3.6, 12], [0, WATER_Y, 0]], [[-12, WATER_Y + 3.2, 10], [0, WATER_Y, 0]], u, l, 40); }; },
@@ -258,7 +246,7 @@ const B: Record<number, Build> = {
   26: c => { toySet(c); const t = toy(true); c.scene.add(t.g);
     return (f, l, u) => { t.body.rotation.z = lerp(0, 1.45, smooth((l - 6) / 14)) + (l < 6 ? .08 * Math.sin(l) : 0);
       glide(c, [[0, 1, 3.4], [0, .7, 0]], [[0, .9, 3.2], [0, .6, 0]], u, l, 40); }; },
-  27: c => { sky(c, 'afternoon'); water(c); const s = ship(c, 'set');
+  27: c => { sky(c, 'afternoon'); water(c); shore(c); const s = ship(c, 'set');
     return (f, l, u) => { s.root.rotation.z = .2; s.root.position.y = WATER_Y - lerp(26, 44, smooth(u));
       cam(c, [-60, WATER_Y + 5, 10], [0, WATER_Y + 7, 0], 40); }; },
   28: c => { room(c);
@@ -288,14 +276,14 @@ const B: Record<number, Build> = {
       g.drawImage(src.canvas, 130, 60, 340, 430, 30, 40, 340, 430); });
     portrait.mesh.userData.fixed = true; put(portrait.mesh, [0, 1.8, -2.55]); c.scene.add(portrait.mesh);
     return (f, l, u) => cam(c, [0, 2.4, -.6], [0, 2.4, -2.55], 40 * (1 - .0025 * l)); },
-  32: c => { sky(c, 'morning61'); water(c); const s = ship(c, 'none');
+  32: c => { sky(c, 'morning61'); water(c); shore(c); const s = ship(c, 'none');
     c.scene.add(put(clone(c.L, 'salvage-pontoon-crane'), [-14, WATER_Y - 2, 0]), put(clone(c.L, 'salvage-pontoon-crane'), [14, WATER_Y - 2, 0], Math.PI));
     return (f, l, u) => { s.root.position.y = WATER_Y - lerp(14, 5, smooth(u)); s.root.rotation.z = .05;
       glide(c, [[-58, WATER_Y + 3, -48], [0, WATER_Y + 6, 0]], [[-52, WATER_Y + 3.5, -42], [0, WATER_Y + 7, 0]], u, l, 40); }; },
   33: c => { museum(c); const s = ship(c, 'none'); s.root.position.y = WATER_Y + 1;
     VISITORS.concat(VISITORS).forEach((o, i) => { const k = front(o, 60 + i); put(k.mesh, [-14 - (i % 4) * 2.5, 0, 10 + i * 3]); c.scene.add(k.mesh); });
     return (f, l, u) => glide(c, [[-42, 3, 52], [0, 16, 0]], [[-42, 24, 52], [0, 18, 0]], u, 0, 42); },
-  34: c => { sky(c, 'afternoon'); water(c); const s = ship(c, 'set'); openLids(s.v, 'lower', .9);
+  34: c => { sky(c, 'afternoon'); water(c); shore(c); const s = ship(c, 'set'); openLids(s.v, 'lower', .9);
     return (f, l, u) => { s.root.rotation.z = lerp(.35, .5, u); cam(c, [-55, 10, -4], [0, 14, 0], 40, 6 + 2 * kick(l)); }; },
   35: c => { museum(c); const s = ship(c, 'none'); s.root.position.y = WATER_Y + 1;
     const crowd = Array.from({length: 10}, (_, i) => { const k = new Card(1.75, .35); c.scene.add(k.mesh); return k; });
@@ -310,7 +298,7 @@ export const VasaAnimatic: React.FC = () => {
   const {width, height} = useVideoConfig();
   const [lib, setLib] = useState<Lib | null>(null);
   const [handle] = useState(() => delayRender('glbs'));
-  const st = useRef<{renderer?: THREE.WebGLRenderer; pic?: number; scene?: THREE.Scene; camera?: THREE.PerspectiveCamera; composer?: EffectComposer; upd?: Upd}>({});
+  const st = useRef<{renderer?: THREE.WebGLRenderer; pic?: number; scene?: THREE.Scene; camera?: THREE.PerspectiveCamera; composer?: EffectComposer; upd?: Upd; ctx?: Ctx; lens?: LensBlur}>({});
   useLayoutEffect(() => { loadLib().then(l => { setLib(l); continueRender(handle); }).catch(e => { console.error(e); continueRender(handle); }); }, [handle]);
   useLayoutEffect(() => () => { st.current.composer?.dispose(); st.current.renderer?.dispose(); }, []);
 
@@ -329,14 +317,30 @@ export const VasaAnimatic: React.FC = () => {
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(40, width / height, .05, 3000);
       camera.layers.enable(NOINK);
-      S.upd = B[shot.pic]({L: lib, scene, camera});
-      const composer = new EffectComposer(S.renderer, {multisampling: 4});
+      S.lens?.dispose();
+      const ctx: Ctx = {L: lib, scene, camera};
+      S.upd = B[shot.pic](ctx);
+      const composer = new EffectComposer(S.renderer, {multisampling: 4, frameBufferType: THREE.HalfFloatType});
       composer.addPass(new RenderPass(scene, camera));
-      composer.addPass(new InkPass(scene, camera));
-      Object.assign(S, {pic: shot.pic, scene, camera, composer});
+      composer.addPass(new InkPass(scene, camera, {distFar: 120}));
+      const lens = new LensBlur({maxCoC: 24, nearScale: 1.2});
+      composer.addPass(new EffectPass(camera, lens.pre));
+      composer.addPass(new EffectPass(camera, lens.main));
+      composer.addPass(new EffectPass(camera, new ToneMappingEffect({mode: ToneMappingMode.NEUTRAL}), new GradeEffect(GRADES.day, .85)));
+      Object.assign(S, {pic: shot.pic, scene, camera, composer, ctx, lens});
     }
     const local = frame - shot.a;
     S.upd!(frame, local, local / Math.max(1, shot.b - shot.a - 1));
+    const C = S.ctx!;
+    if (C.water) {
+      const sp = C.ship;
+      const on = sp ? Math.max(0, 1 - Math.abs(sp.position.y - WATER_Y) / 3) * Math.max(0, 1 - Math.abs(sp.rotation.z) / .6) : 0;
+      C.water.set(sec(frame), sp ? {x: sp.position.x, z: sp.position.z, on} : undefined);
+    }
+    // depth of field: focus on the look target; blur by shot size (bridge dofAt: CU 12-14, MS 10-12, wide 0)
+    const d = C.look ? S.camera!.position.distanceTo(new THREE.Vector3(C.look[0], C.look[1], C.look[2])) : 50;
+    S.lens!.focus = d;
+    S.lens!.cInf = C.dof ?? (d < 4 ? 13 : d < 12 ? 10 : d < 30 ? 6 : 0);
     S.camera!.updateMatrixWorld();
     S.scene!.updateMatrixWorld(true);
     faceCards(S.scene!, S.camera!);
