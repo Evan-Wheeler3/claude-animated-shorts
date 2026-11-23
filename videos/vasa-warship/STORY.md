@@ -9,6 +9,7 @@ script_status: approved          # GATE A — approved by owner 2026-11-23
 assets_status: briefed           # ASSET-BRIEF.md written; Codex not started
 animatic_status: not_started     # GATE B
 final_status: not_started        # GATE C
+voice: am_puck (Kokoro-82M), voice/voice.wav 58.8 s, 3.50 words/s, words.json aligned  # owner picked sample 3
 claude_branch: claude/nice-hamilton-t80o5e
 codex_branch: codex/vasa-warship
 research: research/vasa/REPORT.md (+ notes/)
@@ -75,5 +76,4 @@ exact death tolls; "700 sculptures"; "most powerful warship" or any other superl
 - Over 60 s is allowed, but our own synthesized music only (a claimed Short over 60 s is blocked worldwide).
 
 ## Open questions for the owner
-- Narrator voice: pick from `voice-samples/`.
 - Museum pages "The Disaster" and "The Inquest" still to be read in full (fact table, last column).
