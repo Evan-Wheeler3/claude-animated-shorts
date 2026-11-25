@@ -5,13 +5,17 @@
   fetch:   python3 tools/assets/polypizza.py fetch <ID> <out_dir> [--id my-id]
            -> <out_dir>/<id>.glb + an assets.json entry (licence, source, author, credit line from Poly Pizza)
 
-The API key is injected by the session's network proxy for api.poly.pizza (saved as a network secret); this script
-never reads or sends it. Licences: CC0 needs nothing; CC-BY needs the `credit` line in the video description.
+In the cloud the API key is injected by the session's network proxy (saved as a network secret). On a Mac, set
+POLYPIZZA_KEY. Downloads (static.poly.pizza) sit behind a Cloudflare bot challenge that refuses cloud machines, so
+run `fetch` on the Mac and commit the GLBs; `search` works from either. Licences: CC0 needs nothing; CC-BY needs the `credit` line in the video description.
 """
 import argparse, json, os, urllib.parse, urllib.request
 
 API = 'https://api.poly.pizza/v1.1'
 UA = {'User-Agent': 'HoldUpPipeline/1.0'}
+# On the owner's Mac (no proxy): export POLYPIZZA_KEY=... and the key is sent in the x-auth-token header.
+if os.environ.get('POLYPIZZA_KEY'):
+    UA['x-auth-token'] = os.environ['POLYPIZZA_KEY']
 
 
 def get(url, binary=False):
