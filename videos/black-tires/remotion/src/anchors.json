@@ -1,0 +1,67 @@
+{
+ "_": "Each picture starts LEAD frames before word `w` (0-based) of script line `line` in ../../voice/words.json.",
+ "lead": 2,
+ "tail": 0.5,
+ "pics": [
+  {
+   "pic": 1,
+   "line": "L01",
+   "w": 0,
+   "env": "road"
+  },
+  {
+   "pic": 2,
+   "line": "L01",
+   "w": 7,
+   "env": "road"
+  },
+  {
+   "pic": 3,
+   "line": "L02",
+   "w": 0,
+   "env": "lab"
+  },
+  {
+   "pic": 4,
+   "line": "L02",
+   "w": 7,
+   "env": "lab"
+  },
+  {
+   "pic": 5,
+   "line": "L03",
+   "w": 0,
+   "env": "road"
+  },
+  {
+   "pic": 6,
+   "line": "L04",
+   "w": 0,
+   "env": "lab"
+  },
+  {
+   "pic": 7,
+   "line": "L05",
+   "w": 0,
+   "env": "road"
+  },
+  {
+   "pic": 8,
+   "line": "L06",
+   "w": 0,
+   "env": "lab"
+  },
+  {
+   "pic": 9,
+   "line": "L07",
+   "w": 0,
+   "env": "road"
+  },
+  {
+   "pic": 10,
+   "line": "L07",
+   "w": 7,
+   "env": "road"
+  }
+ ]
+}
