@@ -19,7 +19,7 @@ Claude has to fake with boxes: you are the biggest lever on how the video looks.
 
 ## Sourcing
 1. Prefer CC0: Kenney (kenney.nl), Poly Haven, Quaternius, Poly Pizza (CC0 filter only).
-2. CC-BY-4.0 is allowed with a `credit` line. Nothing else: no "free for personal use", unclear licences or ripped game assets.
+2. CC-BY (3.0 or 4.0) is allowed with a `credit` line (owner decision 2026-11-25). Nothing else: no "free for personal use", unclear licences or ripped game assets.
 3. Model it yourself (`"license": "original"`) when nothing suitable exists; say why in `notes`. Modifying a CC0 base is encouraged.
 4. Pick for the **silhouette at phone size** and the **period/setting in the brief**: chunky stylised low-poly, clean
    shapes, flat or simply painted colours. Avoid photoreal scans and fine noisy detail: black ink outlines are drawn
