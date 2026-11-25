@@ -33,6 +33,7 @@ const paint = (o: THREE.Object3D, cols: Record<string, string>) => o.traverse(x 
   const m = x as THREE.Mesh; if (!m.isMesh) return;
   (Array.isArray(m.material) ? m.material : [m.material]).forEach(mt => { const c = cols[mt.name]; if (c) (mt as THREE.MeshLambertMaterial).color.set(c); });
 });
+const paint2 = (o: THREE.Object3D, cols: Record<string, string>) => { paint(o, cols); return o; };
 const SILVER = {silver: '#eef2f8', coin_edge: '#dfe5ee', coin_face: '#e8edf4'};
 
 // ---------- cast (2D cards) ----------
@@ -45,14 +46,54 @@ const WORKER: Outfit[] = [{jacket: '#e8dcc0', pants: '#4a3a2a', boots: '#2a1d16'
 const HX = 300, HY = 309;
 const stubble = (g: CanvasRenderingContext2D) => { g.fillStyle = '#5a4636'; for (let i = 0; i < 26; i++) { const a = Math.PI * (.12 + .76 * i / 25); g.beginPath(); g.arc(HX + 92 * Math.cos(a) * (i % 2 ? .9 : .8), HY + 30 + 72 * Math.sin(a) * (i % 2 ? .9 : .78), 3.5, 0, 7); g.fill(); } };
 const goldTooth = (g: CanvasRenderingContext2D) => { g.fillStyle = '#f2c23a'; g.strokeStyle = INK; g.lineWidth = 3; g.fillRect(HX + 8, HY + 52, 14, 12); g.strokeRect(HX + 8, HY + 52, 14, 12); };
-/** Newton's full-bottomed periwig: grey curls framing the face down to the shoulders (drawn behind and over the head) */
+/** Newton's full-bottomed periwig: one cloud of curls hugging the top of the head and falling to the shoulders, drawn
+ *  BEHIND the head (outlines first, fills second, so it reads as one mass), then a fringe of curls overlapping the crown. */
+const WIG_PTS: [number, number][] = [];
+for (let i = 0; i <= 10; i++) { const a = Math.PI * (1 + i / 10); WIG_PTS.push([HX + 126 * Math.cos(a), HY + 4 + 120 * Math.sin(a)]); }
+for (const s of [-1, 1]) for (let i = 0; i < 4; i++) WIG_PTS.push([HX + s * (128 + 6 * (i % 2)), HY + 40 + i * 44]);
 const wigBack = (g: CanvasRenderingContext2D) => {
-  g.fillStyle = '#d9d3c6'; g.strokeStyle = INK; g.lineWidth = 9;
-  for (const s of [-1, 1]) for (let i = 0; i < 6; i++) { g.beginPath(); g.arc(HX + s * (112 + 8 * (i % 2)), HY - 40 + i * 42, 40, 0, 7); g.fill(); g.stroke(); }
+  g.strokeStyle = INK; g.lineWidth = 18; WIG_PTS.forEach(([x, y]) => { g.beginPath(); g.arc(x, y, 40, 0, 7); g.stroke(); });
+  g.fillStyle = '#ddd7ca'; WIG_PTS.forEach(([x, y]) => { g.beginPath(); g.arc(x, y, 40, 0, 7); g.fill(); });
+  g.strokeStyle = '#b9b2a4'; g.lineWidth = 5; WIG_PTS.forEach(([x, y], i) => { g.beginPath(); g.arc(x, y, 20, i * .7, i * .7 + 3.2); g.stroke(); });
 };
 const wigTop = (g: CanvasRenderingContext2D) => {
-  g.fillStyle = '#ece7dc'; g.strokeStyle = INK; g.lineWidth = 9;
-  for (let i = 0; i < 5; i++) { g.beginPath(); g.arc(HX - 100 + i * 50, HY - 96 - 14 * Math.sin(Math.PI * i / 4), 40, Math.PI, 0); g.fill(); g.stroke(); }
+  for (let i = 0; i < 7; i++) { const a = Math.PI * (1.12 + .76 * i / 6), x = HX + 104 * Math.cos(a), y = HY - 8 + 104 * Math.sin(a);
+    g.fillStyle = '#ece7dc'; g.strokeStyle = INK; g.lineWidth = 8; g.beginPath(); g.arc(x, y, 30, 0, 7); g.fill(); g.stroke();
+    g.strokeStyle = '#c9c2b4'; g.lineWidth = 4; g.beginPath(); g.arc(x, y, 14, i, i + 3); g.stroke(); }
+};
+/** straight razor held in the raised right hand (bodyFront wave = 1 puts the hand at ~(471, 313) for an adult) */
+const razorInHand = (g: CanvasRenderingContext2D) => {
+  g.save(); g.translate(471, 313); g.rotate(-.55); g.lineJoin = 'round';
+  g.fillStyle = '#7a4a2a'; g.strokeStyle = INK; g.lineWidth = 7; g.beginPath(); g.roundRect(-10, -6, 78, 14, 6); g.fill(); g.stroke();
+  g.fillStyle = '#e6ecf2'; g.beginPath(); g.moveTo(-10, -8); g.lineTo(-108, -14); g.quadraticCurveTo(-118, 4, -104, 12); g.lineTo(-10, 8); g.closePath(); g.fill(); g.stroke();
+  g.strokeStyle = '#ffffff'; g.lineWidth = 4; g.beginPath(); g.moveTo(-20, -4); g.lineTo(-96, -9); g.stroke(); g.restore();
+};
+/** coin face decal: a crowned (or plain) profile head + bead border + a ring of lettering dots, painted on a lit disc that
+ *  covers the asset's abstract face marks. Placed on both faces (+-Z) just inside the rim. */
+const coinFace = (coin: THREE.Object3D, r: number, crown: boolean, base = '#e8edf4') => {
+  const cv = document.createElement('canvas'); cv.width = cv.height = 512; const g = cv.getContext('2d')!;
+  g.fillStyle = base; g.beginPath(); g.arc(256, 256, 256, 0, 7); g.fill();
+  g.strokeStyle = '#8f98a6'; g.lineWidth = 10; g.beginPath(); g.arc(256, 256, 236, 0, 7); g.stroke();
+  g.fillStyle = '#8f98a6'; for (let i = 0; i < 30; i++) { const a = Math.PI * (.62 + 1.76 * i / 29); g.fillRect(256 + 200 * Math.cos(a) - 7, 256 + 200 * Math.sin(a) - 9, 14, 18); }
+  // classic coin bust facing left: shoulders cut flat, neck, chin, lips, nose, brow, then hair over the back of the head
+  g.fillStyle = '#b4bcc9'; g.strokeStyle = '#3f4652'; g.lineWidth = 11; g.lineJoin = 'round'; g.lineCap = 'round';
+  g.beginPath(); g.moveTo(170, 372); g.quadraticCurveTo(200, 330, 250, 322); g.lineTo(248, 296);
+  g.quadraticCurveTo(222, 292, 214, 270); g.lineTo(204, 262); g.lineTo(212, 250); g.lineTo(200, 240); g.lineTo(210, 230);
+  g.lineTo(196, 214); g.quadraticCurveTo(204, 196, 214, 186); g.quadraticCurveTo(224, 148, 276, 144);
+  g.quadraticCurveTo(330, 146, 336, 210); g.quadraticCurveTo(338, 270, 300, 300); g.lineTo(304, 322);
+  g.quadraticCurveTo(350, 330, 362, 372); g.closePath(); g.fill(); g.stroke();
+  g.fillStyle = '#8a93a2'; g.beginPath(); g.moveTo(232, 156); g.quadraticCurveTo(300, 120, 340, 196); g.quadraticCurveTo(346, 262, 312, 296);
+  g.quadraticCurveTo(290, 250, 300, 214); g.quadraticCurveTo(270, 190, 232, 156); g.fill(); g.stroke();
+  g.lineWidth = 6; [[316, 214], [326, 246], [312, 272]].forEach(([x, y]) => { g.beginPath(); g.arc(x, y, 12, 0, 5); g.stroke(); });
+  g.fillStyle = '#3f4652'; g.beginPath(); g.arc(232, 210, 6, 0, 7); g.fill();
+  g.lineWidth = 6; g.beginPath(); g.moveTo(222, 198); g.lineTo(244, 194); g.stroke();
+  if (crown) { g.fillStyle = '#c9b46a'; g.lineWidth = 9; g.beginPath(); g.moveTo(232, 158); g.lineTo(226, 104); g.lineTo(252, 128); g.lineTo(274, 92); g.lineTo(296, 128); g.lineTo(322, 104); g.lineTo(318, 160); g.closePath(); g.fill(); g.stroke(); }
+  coin.traverse(o => { if (/^(Stamped relief|Dot)/.test(o.name)) o.visible = false; });   // Codex's abstract face marks
+  const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace;
+  const depth = new THREE.Box3().setFromObject(coin).getSize(new THREE.Vector3()).z;
+  for (const sd of [-1, 1]) { const d = new THREE.Mesh(new THREE.CircleGeometry(r, 48), new THREE.MeshLambertMaterial({map: tex}));
+    d.position.z = sd * (depth / 2 + .00004); if (sd < 0) d.rotation.y = Math.PI; coin.add(d); }
+  return coin;
 };
 const foamDots = (g: CanvasRenderingContext2D, x: number, y: number, r: number) => { g.fillStyle = '#ffffff'; g.strokeStyle = INK; g.lineWidth = 5;
   [[0, 0, 1], [-.9, .2, .7], [.9, .15, .75], [-.4, -.6, .6], [.45, -.55, .65]].forEach(([dx, dy, k]) => { g.beginPath(); g.arc(x + dx * r, y + dy * r, r * k, 0, 7); g.fill(); g.stroke(); }); };
@@ -97,7 +138,7 @@ const S: Build[] = [
   c => { c.near = .002; c.grade = 'day';
     c.scene.background = new THREE.Color('#cfe3f2');
     c.scene.add(put(clone(c.L, 'modern-table'), [0, 0, 0]));
-    const top = .75, q = clone(c.L, 'coin-modern-quarter'); paint(q, SILVER); q.position.set(0, top + .01215, 0); q.rotation.y = .9; c.scene.add(q);
+    const top = .75, q = coinFace(paint2(clone(c.L, 'coin-modern-quarter'), SILVER), .0098, false); q.position.set(0, top + .01215, 0); q.rotation.y = .9; c.scene.add(q);
     const back = plane(6, 3, '#f2dcb8'); back.position.set(0, 1.5, -1.4); c.scene.add(back);
     c.scene.add(new THREE.HemisphereLight('#ffffff', '#c8a87a', 1.2));
     const rim = new THREE.DirectionalLight('#ffffff', 2.2); rim.position.set(1.2, .8, -1); c.scene.add(rim);
@@ -110,12 +151,11 @@ const S: Build[] = [
     const foam = new THREE.Group(); [[0, 0, 0, .03], [.03, .01, .01, .022], [-.028, .008, -.01, .024], [.01, .03, 0, .02], [-.01, .02, .02, .018]].forEach(([x, y, z, r]) => {
       const s = new THREE.Mesh(new THREE.SphereGeometry(r, 20, 14), new THREE.MeshToonMaterial({color: '#ffffff', emissive: '#9a9a9a'})); s.position.set(x, y, z); s.castShadow = true; foam.add(s); });
     foam.position.set(.05, top + .015, -.35); c.scene.add(foam);
-    const raz = clone(c.L, 'straight-razor'); raz.position.set(.2, top + .16, -.33); raz.rotation.set(0, .4, -.5); c.scene.add(raz);
-    const brush = clone(c.L, 'shaving-brush'); brush.position.set(-.18, top, -.42); brush.rotation.z = .25; c.scene.add(brush);
+        const brush = clone(c.L, 'shaving-brush'); brush.position.set(-.18, top, -.42); brush.rotation.z = .25; c.scene.add(brush);
     c.scene.add(put(clone(c.L, 'shaving-mug'), [-.32, top, -.62]));
     c.scene.add(put(clone(c.L, 'candle'), [.45, top, -.75]));
     candleLight(c, [.45, top + .24, -.75], 3, 5);
-    const cl = person(CLIPPER, 1.72, {expr: 'grin', seed: 7, look: -.6, wave: 1}, {over: g => { stubble(g); goldTooth(g); foamDots(g, HX + 50, HY + 10, 16); }});
+    const cl = person(CLIPPER, 1.72, {expr: 'grin', seed: 7, look: -.6, wave: 1}, {over: g => { stubble(g); goldTooth(g); foamDots(g, HX + 50, HY + 10, 16); razorInHand(g); }});
     put(cl.mesh, [.05, 0, -1.05]); c.scene.add(cl.mesh);
     c.dof = 9; cam(c, [.35, 1.3, 1.55], [.02, 1.05, -.6], 44); },
   // 2: back room wide: crucible glowing on the brazier, silver ingot on the bench, Clipper grinning (pic 9-10)
@@ -141,23 +181,29 @@ const S: Build[] = [
   // 4: Tower of London with the Mint, morning, smoke from a chimney (pic 19)
   c => { c.grade = 'day'; skyDome(c.scene, 'day'); c.scene.fog = new THREE.Fog('#b8d0ec', 200, 900);
     c.scene.add(put(clone(c.L, 'tower-mint-exterior'), [0, 0, 0]));
-    const g = plane(800, 800, '#7f9a5a'); g.rotation.x = -Math.PI / 2; c.scene.add(g);
-    const river = plane(800, 60, '#4f7fa8'); river.rotation.x = -Math.PI / 2; river.position.set(0, .05, 70); c.scene.add(river);
+    const g = plane(800, 400, '#7f9a5a'); g.rotation.x = -Math.PI / 2; g.position.z = -175; c.scene.add(g);
+    const river = plane(800, 120, '#4f86b8'); river.rotation.x = -Math.PI / 2; river.position.set(0, -1.6, 100); c.scene.add(river);
     c.scene.add(new THREE.HemisphereLight('#cfe0ff', '#7a6650', 1.3));
-    const sun = new THREE.DirectionalLight('#fff0d8', 2.6); sun.position.set(-60, 80, 50); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
+    const sun = new THREE.DirectionalLight('#ffd9a8', 3.0); sun.position.set(-90, 45, 70); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
     Object.assign(sun.shadow.camera, {left: -60, right: 60, top: 60, bottom: -60, far: 300}); c.scene.add(sun);
-    [0, 1, 2, 3, 4].forEach(i => { const s = new THREE.Mesh(new THREE.SphereGeometry(1 + i * .45, 16, 12), lam('#d8d4cc')); s.position.set(-20 + i * 1.2, 22 + i * 2.2, -30 - i); s.castShadow = false; c.scene.add(s); });
-    c.dof = 0; cam(c, [-52, 7, 96], [0, 14, 0], 42); },
+    const quay = new THREE.Mesh(new THREE.BoxGeometry(800, 3, 4), lam('#a89a86')); quay.position.set(0, -.6, 40); quay.castShadow = quay.receiveShadow = true; c.scene.add(quay);
+    const bank = plane(800, 14, '#9a8a6a'); bank.rotation.x = -Math.PI / 2; bank.position.set(0, .03, 32); c.scene.add(bank);
+    [[-70, 10], [-58, 22], [44, 14], [60, 6], [72, 20], [-40, -50], [50, -48]].forEach(([x, z], i) => { const t = new THREE.Group();
+      const tr = new THREE.Mesh(new THREE.CylinderGeometry(.6, .8, 4, 8), lam('#5a3b2a')); tr.position.y = 2;
+      const cr = new THREE.Mesh(new THREE.SphereGeometry(4 + (i % 3), 14, 10), lam(['#5d7a3a', '#6b8a40', '#4f6e34'][i % 3])); cr.position.y = 7 + (i % 3);
+      [tr, cr].forEach(m => { m.castShadow = true; t.add(m); }); t.position.set(x, 0, z); c.scene.add(t); });
+    c.dof = 0; cam(c, [-62, 16, 176], [0, 12, 0], 40); },
   // 5: Newton questions a nervous witness by candlelight (pic 25)
   c => { backRoom(c); c.scene.background = new THREE.Color('#141016');
     const t = clone(c.L, 'interrogation-table'); c.scene.add(t);
     c.scene.add(put(clone(c.L, 'candle'), [.1, .75, 0])); candleLight(c, [.1, .99, 0], 7, 6);
-    const nw = person(NEWTON, 1.74, {expr: 'stern', seed: 12, look: .8}, {back: wigBack, over: wigTop}); put(nw.mesh, [-.15, 0, -.8]); c.scene.add(nw.mesh);
-    const wt = person(WITNESS, 1.7, {expr: 'nervous', seed: 23, look: -.8}); put(wt.mesh, [-.15, 0, .85]); c.scene.add(wt.mesh);
+    const nw = person(NEWTON, 1.74, {expr: 'stern', seed: 12, look: .8}, {back: wigBack, over: wigTop}); put(nw.mesh, [-.6, 0, -1.0]); c.scene.add(nw.mesh);
+    const wt = person(WITNESS, 1.7, {expr: 'nervous', seed: 23, look: -.8}); put(wt.mesh, [-.6, 0, 1.0]); c.scene.add(wt.mesh);
     c.dof = 9; cam(c, [4.4, 1.55, .05], [0, 1.2, 0], 44); },
   // 6: coin lineup ECU: hammered (lumpy, smooth edge), milled (crisp edge pattern), modern (reeds) + a clipped sliver
   c => { c.near = .002; backRoom(c); const top = bench(c);
     [['coin-hammered', -.045], ['coin-milled', 0], ['coin-modern-quarter', .045]].forEach(([id, x]) => { const k = clone(c.L, id as Id); paint(k, SILVER);
+      coinFace(k, id === 'coin-hammered' ? .0128 : id === 'coin-milled' ? .0165 : .0098, id !== 'coin-modern-quarter');
       const r = new THREE.Box3().setFromObject(k).getSize(new THREE.Vector3()).y / 2; k.position.set(x as number, top + r, -.35); k.rotation.y = .5; c.scene.add(k);
       const sl = k.getObjectByName('sliver') ?? k.getObjectByName('bite'); if (sl) sl.position.y -= .004; });
     candleLight(c, [-.12, top + .12, -.2], 1.2, 2);
