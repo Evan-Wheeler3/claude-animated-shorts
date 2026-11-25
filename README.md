@@ -12,8 +12,10 @@ Proven on **The Bridge That Fell for a Song**, a 67 s short about the 1831 Broug
 | `SKILL.md` | The skill: the full pipeline, every rule, every fix, and the final look values |
 | `PRODUCTION-PIPELINE.md` | Hold Up workflow: roles (owner / Claude / Codex), approval gates, pacing targets. Wins over other docs |
 | `AGENTS.md`, `ASSET-BRIEF-TEMPLATE.md` | Codex's asset-only instructions and the brief Claude writes for it |
-| `tools/check-assets.mjs` | Checks delivered GLBs: size in metres, pivot, axes, triangle budget, material names, licence |
+| `tools/check-assets.mjs` | Checks delivered GLBs: size in metres, pivot, axes, triangle budget, material names, licence, moving parts (count, hinge edge, rest pose, opening direction), tiling length |
 | `tools/check-pacing.py` | Checks an animatic's timing: voice start, words/s, pauses, how often the picture changes |
+| `tools/voice/` | Narration: Kokoro TTS with emphasis (`gen_voice.py`), word timing (`align.py`), emphasis lift (`emph_gain.py`), per-line mishearing check (`check_lines.py`) |
+| `templates/holdup/` | Starter kit for every new story: Remotion project with the look kit, asset preview for Codex, model probe, music template, Mac render script |
 | `templates/bridge/` | The full source of the bridge short: world, characters, ink, lens blur, grade, story/camera |
 | `templates/audio/` | The synthesized sound: SFX, march music, the mix with ducking and loudness |
 | `templates/scripts/` | Stills, side-by-side sheets, shot merge and frame-by-frame QA helpers |

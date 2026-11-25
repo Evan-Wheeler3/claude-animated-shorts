@@ -1,0 +1,1268 @@
+[
+ {
+  "word": "Sweden's",
+  "line": "L01",
+  "start": 0.0,
+  "end": 0.54
+ },
+ {
+  "word": "largest",
+  "line": "L01",
+  "start": 0.54,
+  "end": 0.88
+ },
+ {
+  "word": "warship",
+  "line": "L01",
+  "start": 0.88,
+  "end": 1.38
+ },
+ {
+  "word": "only",
+  "line": "L01",
+  "start": 1.38,
+  "end": 1.7
+ },
+ {
+  "word": "sailed",
+  "line": "L01",
+  "start": 1.7,
+  "end": 1.98
+ },
+ {
+  "word": "for",
+  "line": "L01",
+  "start": 1.98,
+  "end": 2.2
+ },
+ {
+  "word": "twenty",
+  "line": "L01",
+  "start": 2.2,
+  "end": 2.44
+ },
+ {
+  "word": "minutes!",
+  "line": "L01",
+  "start": 2.44,
+  "end": 2.8
+ },
+ {
+  "word": "It",
+  "line": "L02",
+  "start": 3.0,
+  "end": 3.0
+ },
+ {
+  "word": "had",
+  "line": "L02",
+  "start": 3.0,
+  "end": 3.14
+ },
+ {
+  "word": "sixty-four",
+  "line": "L02",
+  "start": 3.14,
+  "end": 3.72
+ },
+ {
+  "word": "guns",
+  "line": "L02",
+  "start": 3.72,
+  "end": 4.06
+ },
+ {
+  "word": "and",
+  "line": "L02",
+  "start": 4.06,
+  "end": 4.24
+ },
+ {
+  "word": "hundreds",
+  "line": "L02",
+  "start": 4.24,
+  "end": 4.58
+ },
+ {
+  "word": "of",
+  "line": "L02",
+  "start": 4.58,
+  "end": 4.86
+ },
+ {
+  "word": "painted",
+  "line": "L02",
+  "start": 4.86,
+  "end": 5.14
+ },
+ {
+  "word": "sculptures.",
+  "line": "L02",
+  "start": 5.14,
+  "end": 5.66
+ },
+ {
+  "word": "The",
+  "line": "L03",
+  "start": 5.94,
+  "end": 6.0
+ },
+ {
+  "word": "King",
+  "line": "L03",
+  "start": 6.0,
+  "end": 6.14
+ },
+ {
+  "word": "had",
+  "line": "L03",
+  "start": 6.14,
+  "end": 6.28
+ },
+ {
+  "word": "approved",
+  "line": "L03",
+  "start": 6.28,
+  "end": 6.52
+ },
+ {
+  "word": "the",
+  "line": "L03",
+  "start": 6.52,
+  "end": 6.74
+ },
+ {
+  "word": "design",
+  "line": "L03",
+  "start": 6.74,
+  "end": 7.0
+ },
+ {
+  "word": "himself.",
+  "line": "L03",
+  "start": 7.0,
+  "end": 7.44
+ },
+ {
+  "word": "But",
+  "line": "L04",
+  "start": 7.6,
+  "end": 7.72
+ },
+ {
+  "word": "before",
+  "line": "L04",
+  "start": 7.72,
+  "end": 7.94
+ },
+ {
+  "word": "it",
+  "line": "L04",
+  "start": 7.94,
+  "end": 8.08
+ },
+ {
+  "word": "could",
+  "line": "L04",
+  "start": 8.08,
+  "end": 8.2
+ },
+ {
+  "word": "sail,",
+  "line": "L04",
+  "start": 8.2,
+  "end": 8.48
+ },
+ {
+  "word": "they",
+  "line": "L04",
+  "start": 8.62,
+  "end": 8.66
+ },
+ {
+  "word": "had",
+  "line": "L04",
+  "start": 8.66,
+  "end": 8.8
+ },
+ {
+  "word": "to",
+  "line": "L04",
+  "start": 8.8,
+  "end": 9.0
+ },
+ {
+  "word": "test",
+  "line": "L04",
+  "start": 9.0,
+  "end": 9.18
+ },
+ {
+  "word": "it.",
+  "line": "L04",
+  "start": 9.18,
+  "end": 9.4
+ },
+ {
+  "word": "About",
+  "line": "L05",
+  "start": 9.48,
+  "end": 9.66
+ },
+ {
+  "word": "thirty",
+  "line": "L05",
+  "start": 9.66,
+  "end": 9.9
+ },
+ {
+  "word": "men",
+  "line": "L05",
+  "start": 9.9,
+  "end": 10.16
+ },
+ {
+  "word": "ran",
+  "line": "L05",
+  "start": 10.16,
+  "end": 10.44
+ },
+ {
+  "word": "back",
+  "line": "L05",
+  "start": 10.44,
+  "end": 10.68
+ },
+ {
+  "word": "and",
+  "line": "L05",
+  "start": 10.68,
+  "end": 10.86
+ },
+ {
+  "word": "forth",
+  "line": "L05",
+  "start": 10.86,
+  "end": 11.1
+ },
+ {
+  "word": "across",
+  "line": "L05",
+  "start": 11.1,
+  "end": 11.42
+ },
+ {
+  "word": "the",
+  "line": "L05",
+  "start": 11.42,
+  "end": 11.64
+ },
+ {
+  "word": "deck.",
+  "line": "L05",
+  "start": 11.64,
+  "end": 11.84
+ },
+ {
+  "word": "The",
+  "line": "L06",
+  "start": 11.98,
+  "end": 12.08
+ },
+ {
+  "word": "ship",
+  "line": "L06",
+  "start": 12.08,
+  "end": 12.28
+ },
+ {
+  "word": "rocked",
+  "line": "L06",
+  "start": 12.28,
+  "end": 12.56
+ },
+ {
+  "word": "so",
+  "line": "L06",
+  "start": 12.56,
+  "end": 12.88
+ },
+ {
+  "word": "hard,",
+  "line": "L06",
+  "start": 12.88,
+  "end": 13.26
+ },
+ {
+  "word": "they",
+  "line": "L06",
+  "start": 13.38,
+  "end": 13.56
+ },
+ {
+  "word": "feared",
+  "line": "L06",
+  "start": 13.56,
+  "end": 13.76
+ },
+ {
+  "word": "it",
+  "line": "L06",
+  "start": 13.76,
+  "end": 13.88
+ },
+ {
+  "word": "would",
+  "line": "L06",
+  "start": 13.88,
+  "end": 14.02
+ },
+ {
+  "word": "tip",
+  "line": "L06",
+  "start": 14.02,
+  "end": 14.18
+ },
+ {
+  "word": "over",
+  "line": "L06",
+  "start": 14.18,
+  "end": 14.44
+ },
+ {
+  "word": "at",
+  "line": "L06",
+  "start": 14.44,
+  "end": 14.6
+ },
+ {
+  "word": "the",
+  "line": "L06",
+  "start": 14.6,
+  "end": 14.74
+ },
+ {
+  "word": "dock.",
+  "line": "L06",
+  "start": 14.74,
+  "end": 14.98
+ },
+ {
+  "word": "So",
+  "line": "L07",
+  "start": 15.12,
+  "end": 15.2
+ },
+ {
+  "word": "they",
+  "line": "L07",
+  "start": 15.2,
+  "end": 15.38
+ },
+ {
+  "word": "stopped",
+  "line": "L07",
+  "start": 15.38,
+  "end": 15.64
+ },
+ {
+  "word": "the",
+  "line": "L07",
+  "start": 15.64,
+  "end": 15.82
+ },
+ {
+  "word": "test.",
+  "line": "L07",
+  "start": 15.82,
+  "end": 16.14
+ },
+ {
+  "word": "Despite",
+  "line": "L08",
+  "start": 16.42,
+  "end": 16.72
+ },
+ {
+  "word": "this,",
+  "line": "L08",
+  "start": 16.72,
+  "end": 17.02
+ },
+ {
+  "word": "the",
+  "line": "L08",
+  "start": 17.14,
+  "end": 17.2
+ },
+ {
+  "word": "king",
+  "line": "L08",
+  "start": 17.2,
+  "end": 17.34
+ },
+ {
+  "word": "sent",
+  "line": "L08",
+  "start": 17.34,
+  "end": 17.6
+ },
+ {
+  "word": "it",
+  "line": "L08",
+  "start": 17.6,
+  "end": 17.68
+ },
+ {
+  "word": "out",
+  "line": "L08",
+  "start": 17.68,
+  "end": 17.86
+ },
+ {
+  "word": "anyway!",
+  "line": "L08",
+  "start": 17.86,
+  "end": 18.26
+ },
+ {
+  "word": "On",
+  "line": "L09",
+  "start": 18.4,
+  "end": 18.52
+ },
+ {
+  "word": "August",
+  "line": "L09",
+  "start": 18.52,
+  "end": 18.78
+ },
+ {
+  "word": "tenth,",
+  "line": "L09",
+  "start": 18.78,
+  "end": 19.1
+ },
+ {
+  "word": "sixteen",
+  "line": "L09",
+  "start": 19.22,
+  "end": 19.46
+ },
+ {
+  "word": "twenty-eight,",
+  "line": "L09",
+  "start": 19.46,
+  "end": 19.96
+ },
+ {
+  "word": "it",
+  "line": "L09",
+  "start": 20.06,
+  "end": 20.18
+ },
+ {
+  "word": "set",
+  "line": "L09",
+  "start": 20.18,
+  "end": 20.36
+ },
+ {
+  "word": "sail.",
+  "line": "L09",
+  "start": 20.36,
+  "end": 20.74
+ },
+ {
+  "word": "The",
+  "line": "L10",
+  "start": 20.88,
+  "end": 21.0
+ },
+ {
+  "word": "cannon",
+  "line": "L10",
+  "start": 21.0,
+  "end": 21.2
+ },
+ {
+  "word": "hatches",
+  "line": "L10",
+  "start": 21.2,
+  "end": 21.52
+ },
+ {
+  "word": "opened",
+  "line": "L10",
+  "start": 21.52,
+  "end": 21.92
+ },
+ {
+  "word": "for",
+  "line": "L10",
+  "start": 21.92,
+  "end": 22.22
+ },
+ {
+  "word": "a",
+  "line": "L10",
+  "start": 22.22,
+  "end": 22.42
+ },
+ {
+  "word": "cannon",
+  "line": "L10",
+  "start": 22.42,
+  "end": 22.6
+ },
+ {
+  "word": "salute.",
+  "line": "L10",
+  "start": 22.6,
+  "end": 23.0
+ },
+ {
+  "word": "Just",
+  "line": "L11",
+  "start": 23.16,
+  "end": 23.34
+ },
+ {
+  "word": "then,",
+  "line": "L11",
+  "start": 23.34,
+  "end": 23.52
+ },
+ {
+  "word": "a",
+  "line": "L11",
+  "start": 23.52,
+  "end": 23.7
+ },
+ {
+  "word": "strong",
+  "line": "L11",
+  "start": 23.7,
+  "end": 23.9
+ },
+ {
+  "word": "gust",
+  "line": "L11",
+  "start": 23.9,
+  "end": 24.12
+ },
+ {
+  "word": "hit!",
+  "line": "L11",
+  "start": 24.12,
+  "end": 24.38
+ },
+ {
+  "word": "The",
+  "line": "L12",
+  "start": 24.54,
+  "end": 24.66
+ },
+ {
+  "word": "ship",
+  "line": "L12",
+  "start": 24.66,
+  "end": 24.84
+ },
+ {
+  "word": "leaned,",
+  "line": "L12",
+  "start": 24.84,
+  "end": 25.2
+ },
+ {
+  "word": "and",
+  "line": "L12",
+  "start": 25.2,
+  "end": 25.42
+ },
+ {
+  "word": "water",
+  "line": "L12",
+  "start": 25.42,
+  "end": 25.66
+ },
+ {
+  "word": "poured",
+  "line": "L12",
+  "start": 25.66,
+  "end": 25.96
+ },
+ {
+  "word": "in",
+  "line": "L12",
+  "start": 25.96,
+  "end": 26.2
+ },
+ {
+  "word": "through",
+  "line": "L12",
+  "start": 26.2,
+  "end": 26.38
+ },
+ {
+  "word": "its",
+  "line": "L12",
+  "start": 26.38,
+  "end": 26.52
+ },
+ {
+  "word": "open",
+  "line": "L12",
+  "start": 26.52,
+  "end": 26.82
+ },
+ {
+  "word": "cannon",
+  "line": "L12",
+  "start": 26.82,
+  "end": 27.2
+ },
+ {
+  "word": "hatches.",
+  "line": "L12",
+  "start": 27.2,
+  "end": 27.64
+ },
+ {
+  "word": "It",
+  "line": "L13",
+  "start": 27.78,
+  "end": 27.9
+ },
+ {
+  "word": "sank",
+  "line": "L13",
+  "start": 27.9,
+  "end": 28.14
+ },
+ {
+  "word": "in",
+  "line": "L13",
+  "start": 28.14,
+  "end": 28.32
+ },
+ {
+  "word": "the",
+  "line": "L13",
+  "start": 28.32,
+  "end": 28.5
+ },
+ {
+  "word": "harbor",
+  "line": "L13",
+  "start": 28.5,
+  "end": 28.68
+ },
+ {
+  "word": "within",
+  "line": "L13",
+  "start": 28.68,
+  "end": 28.96
+ },
+ {
+  "word": "minutes,",
+  "line": "L13",
+  "start": 28.96,
+  "end": 29.38
+ },
+ {
+  "word": "and",
+  "line": "L13",
+  "start": 29.4,
+  "end": 29.58
+ },
+ {
+  "word": "at",
+  "line": "L13",
+  "start": 29.58,
+  "end": 29.7
+ },
+ {
+  "word": "least",
+  "line": "L13",
+  "start": 29.7,
+  "end": 29.88
+ },
+ {
+  "word": "thirty",
+  "line": "L13",
+  "start": 29.88,
+  "end": 29.98
+ },
+ {
+  "word": "people",
+  "line": "L13",
+  "start": 29.98,
+  "end": 30.44
+ },
+ {
+  "word": "died.",
+  "line": "L13",
+  "start": 30.44,
+  "end": 30.92
+ },
+ {
+  "word": "You",
+  "line": "L14",
+  "start": 31.1,
+  "end": 31.16
+ },
+ {
+  "word": "see,",
+  "line": "L14",
+  "start": 31.16,
+  "end": 31.36
+ },
+ {
+  "word": "a",
+  "line": "L14",
+  "start": 31.52,
+  "end": 31.56
+ },
+ {
+  "word": "ship",
+  "line": "L14",
+  "start": 31.56,
+  "end": 31.78
+ },
+ {
+  "word": "is",
+  "line": "L14",
+  "start": 31.78,
+  "end": 31.96
+ },
+ {
+  "word": "like",
+  "line": "L14",
+  "start": 31.96,
+  "end": 32.1
+ },
+ {
+  "word": "a",
+  "line": "L14",
+  "start": 32.1,
+  "end": 32.26
+ },
+ {
+  "word": "punching-bag",
+  "line": "L14",
+  "start": 32.26,
+  "end": 32.86
+ },
+ {
+  "word": "toy.",
+  "line": "L14",
+  "start": 32.86,
+  "end": 33.22
+ },
+ {
+  "word": "Its",
+  "line": "L14",
+  "start": 33.52,
+  "end": 33.64
+ },
+ {
+  "word": "weight",
+  "line": "L14",
+  "start": 33.64,
+  "end": 33.92
+ },
+ {
+  "word": "sits",
+  "line": "L14",
+  "start": 33.92,
+  "end": 34.24
+ },
+ {
+  "word": "low,",
+  "line": "L14",
+  "start": 34.24,
+  "end": 34.56
+ },
+ {
+  "word": "so",
+  "line": "L14",
+  "start": 34.7,
+  "end": 34.82
+ },
+ {
+  "word": "it",
+  "line": "L14",
+  "start": 34.82,
+  "end": 34.94
+ },
+ {
+  "word": "rolls",
+  "line": "L14",
+  "start": 34.94,
+  "end": 35.14
+ },
+ {
+  "word": "back",
+  "line": "L14",
+  "start": 35.14,
+  "end": 35.4
+ },
+ {
+  "word": "up.",
+  "line": "L14",
+  "start": 35.4,
+  "end": 35.7
+ },
+ {
+  "word": "But",
+  "line": "L15",
+  "start": 35.78,
+  "end": 35.9
+ },
+ {
+  "word": "the",
+  "line": "L15",
+  "start": 35.9,
+  "end": 36.02
+ },
+ {
+  "word": "Vasa",
+  "line": "L15",
+  "start": 36.02,
+  "end": 36.28
+ },
+ {
+  "word": "had",
+  "line": "L15",
+  "start": 36.28,
+  "end": 36.5
+ },
+ {
+  "word": "heavy",
+  "line": "L15",
+  "start": 36.5,
+  "end": 36.78
+ },
+ {
+  "word": "guns",
+  "line": "L15",
+  "start": 36.78,
+  "end": 37.08
+ },
+ {
+  "word": "stacked",
+  "line": "L15",
+  "start": 37.08,
+  "end": 37.4
+ },
+ {
+  "word": "high,",
+  "line": "L15",
+  "start": 37.4,
+  "end": 37.78
+ },
+ {
+  "word": "so",
+  "line": "L15",
+  "start": 37.88,
+  "end": 38.04
+ },
+ {
+  "word": "it",
+  "line": "L15",
+  "start": 38.04,
+  "end": 38.14
+ },
+ {
+  "word": "was",
+  "line": "L15",
+  "start": 38.14,
+  "end": 38.28
+ },
+ {
+  "word": "top-heavy.",
+  "line": "L15",
+  "start": 38.28,
+  "end": 38.82
+ },
+ {
+  "word": "One",
+  "line": "L16",
+  "start": 38.98,
+  "end": 39.1
+ },
+ {
+  "word": "gust",
+  "line": "L16",
+  "start": 39.1,
+  "end": 39.34
+ },
+ {
+  "word": "was",
+  "line": "L16",
+  "start": 39.34,
+  "end": 39.5
+ },
+ {
+  "word": "enough",
+  "line": "L16",
+  "start": 39.5,
+  "end": 39.7
+ },
+ {
+  "word": "to",
+  "line": "L16",
+  "start": 39.7,
+  "end": 39.94
+ },
+ {
+  "word": "tip",
+  "line": "L16",
+  "start": 39.94,
+  "end": 40.08
+ },
+ {
+  "word": "it",
+  "line": "L16",
+  "start": 40.08,
+  "end": 40.2
+ },
+ {
+  "word": "over.",
+  "line": "L16",
+  "start": 40.2,
+  "end": 40.46
+ },
+ {
+  "word": "There",
+  "line": "L17",
+  "start": 40.6,
+  "end": 40.68
+ },
+ {
+  "word": "was",
+  "line": "L17",
+  "start": 40.68,
+  "end": 40.76
+ },
+ {
+  "word": "an",
+  "line": "L17",
+  "start": 40.76,
+  "end": 40.88
+ },
+ {
+  "word": "inquiry.",
+  "line": "L17",
+  "start": 40.88,
+  "end": 41.18
+ },
+ {
+  "word": "Who",
+  "line": "L17",
+  "start": 41.18,
+  "end": 41.42
+ },
+ {
+  "word": "was",
+  "line": "L17",
+  "start": 41.42,
+  "end": 41.58
+ },
+ {
+  "word": "to",
+  "line": "L17",
+  "start": 41.58,
+  "end": 41.7
+ },
+ {
+  "word": "blame?",
+  "line": "L17",
+  "start": 41.7,
+  "end": 42.02
+ },
+ {
+  "word": "Officially,",
+  "line": "L18",
+  "start": 42.38,
+  "end": 42.78
+ },
+ {
+  "word": "nobody.",
+  "line": "L18",
+  "start": 42.78,
+  "end": 43.08
+ },
+ {
+  "word": "The",
+  "line": "L19",
+  "start": 43.32,
+  "end": 43.4
+ },
+ {
+  "word": "blame",
+  "line": "L19",
+  "start": 43.4,
+  "end": 43.64
+ },
+ {
+  "word": "quietly",
+  "line": "L19",
+  "start": 43.64,
+  "end": 44.16
+ },
+ {
+  "word": "landed",
+  "line": "L19",
+  "start": 44.16,
+  "end": 44.58
+ },
+ {
+  "word": "on",
+  "line": "L19",
+  "start": 44.58,
+  "end": 44.78
+ },
+ {
+  "word": "the",
+  "line": "L19",
+  "start": 44.78,
+  "end": 44.94
+ },
+ {
+  "word": "shipbuilder,",
+  "line": "L19",
+  "start": 44.94,
+  "end": 45.36
+ },
+ {
+  "word": "who",
+  "line": "L19",
+  "start": 45.52,
+  "end": 45.72
+ },
+ {
+  "word": "had",
+  "line": "L19",
+  "start": 45.72,
+  "end": 45.86
+ },
+ {
+  "word": "died",
+  "line": "L19",
+  "start": 45.86,
+  "end": 46.1
+ },
+ {
+  "word": "the",
+  "line": "L19",
+  "start": 46.1,
+  "end": 46.32
+ },
+ {
+  "word": "year",
+  "line": "L19",
+  "start": 46.32,
+  "end": 46.46
+ },
+ {
+  "word": "before.",
+  "line": "L19",
+  "start": 46.46,
+  "end": 46.86
+ },
+ {
+  "word": "In",
+  "line": "L20",
+  "start": 47.02,
+  "end": 47.14
+ },
+ {
+  "word": "nineteen",
+  "line": "L20",
+  "start": 47.14,
+  "end": 47.42
+ },
+ {
+  "word": "sixty-one,",
+  "line": "L20",
+  "start": 47.42,
+  "end": 48.08
+ },
+ {
+  "word": "the",
+  "line": "L20",
+  "start": 48.24,
+  "end": 48.28
+ },
+ {
+  "word": "Vasa",
+  "line": "L20",
+  "start": 48.28,
+  "end": 48.62
+ },
+ {
+  "word": "was",
+  "line": "L20",
+  "start": 48.62,
+  "end": 48.82
+ },
+ {
+  "word": "raised.",
+  "line": "L20",
+  "start": 48.82,
+  "end": 49.36
+ },
+ {
+  "word": "Today",
+  "line": "L20",
+  "start": 49.58,
+  "end": 49.82
+ },
+ {
+  "word": "it",
+  "line": "L20",
+  "start": 49.82,
+  "end": 50.02
+ },
+ {
+  "word": "is",
+  "line": "L20",
+  "start": 50.02,
+  "end": 50.24
+ },
+ {
+  "word": "ninety-eight",
+  "line": "L20",
+  "start": 50.24,
+  "end": 50.84
+ },
+ {
+  "word": "percent",
+  "line": "L20",
+  "start": 50.84,
+  "end": 51.18
+ },
+ {
+  "word": "original.",
+  "line": "L20",
+  "start": 51.18,
+  "end": 51.64
+ },
+ {
+  "word": "As",
+  "line": "L21",
+  "start": 51.8,
+  "end": 51.94
+ },
+ {
+  "word": "a",
+  "line": "L21",
+  "start": 51.94,
+  "end": 52.14
+ },
+ {
+  "word": "warship,",
+  "line": "L21",
+  "start": 52.14,
+  "end": 52.58
+ },
+ {
+  "word": "it",
+  "line": "L21",
+  "start": 52.76,
+  "end": 52.76
+ },
+ {
+  "word": "lasted",
+  "line": "L21",
+  "start": 52.76,
+  "end": 53.1
+ },
+ {
+  "word": "about",
+  "line": "L21",
+  "start": 53.1,
+  "end": 53.42
+ },
+ {
+  "word": "twenty",
+  "line": "L21",
+  "start": 53.42,
+  "end": 53.74
+ },
+ {
+  "word": "minutes.",
+  "line": "L21",
+  "start": 53.74,
+  "end": 54.12
+ },
+ {
+  "word": "As",
+  "line": "L21",
+  "start": 54.42,
+  "end": 54.58
+ },
+ {
+  "word": "a",
+  "line": "L21",
+  "start": 54.58,
+  "end": 54.84
+ },
+ {
+  "word": "museum,",
+  "line": "L21",
+  "start": 54.84,
+  "end": 55.18
+ },
+ {
+  "word": "it",
+  "line": "L21",
+  "start": 55.36,
+  "end": 55.46
+ },
+ {
+  "word": "has",
+  "line": "L21",
+  "start": 55.46,
+  "end": 55.62
+ },
+ {
+  "word": "been",
+  "line": "L21",
+  "start": 55.62,
+  "end": 55.84
+ },
+ {
+  "word": "packed",
+  "line": "L21",
+  "start": 55.84,
+  "end": 56.16
+ },
+ {
+  "word": "for",
+  "line": "L21",
+  "start": 56.16,
+  "end": 56.42
+ },
+ {
+  "word": "over",
+  "line": "L21",
+  "start": 56.42,
+  "end": 56.64
+ },
+ {
+  "word": "sixty",
+  "line": "L21",
+  "start": 56.64,
+  "end": 56.94
+ },
+ {
+  "word": "years!",
+  "line": "L21",
+  "start": 56.94,
+  "end": 57.32
+ }
+]

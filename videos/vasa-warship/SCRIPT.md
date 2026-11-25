@@ -1,30 +1,30 @@
-# Vasa — narration (approved at GATE A, 2026-11-23)
+# Vasa: narration (owner-approved wording, 2026-11-23; supersedes the GATE A draft)
 
-Narrator-only. 205 words, ≈ 55 s at 3.7 words/s (51-59 s at 3.5-4.0). Every line is checked against the fact
-table in `STORY.md`; line numbers (L01…) are used by `SHOTLIST.md`.
+Narrator-only. 211 words, 57.7 s as recorded (3.68 words/s). Line numbers (L01…) are used by `SHOTLIST.md`
+and `remotion/src/anchors.json`. Delivery: `voice/SCRIPT-emphasis.md` marks the stressed words (*word*).
 
-L01 Sweden spent years building a giant warship. It sailed for about twenty minutes.
-L02 Sixty-four guns. Two gun decks. Hundreds of painted sculptures.
+L01 Sweden's largest warship only sailed for twenty minutes!
+L02 It had sixty-four guns and hundreds of painted sculptures.
 L03 The King had approved the design himself.
-L04 But before it sailed, they tested it.
+L04 But before it could sail, they had to test it.
 L05 About thirty men ran back and forth across the deck.
-L06 The ship rocked so hard, they feared it would capsize right there at the dock.
+L06 The ship rocked so hard, they feared it would tip over at the dock.
 L07 So they stopped the test.
-L08 And sent it out anyway.
-L09 Sunday, August tenth, sixteen twenty-eight. Four sails up. A cannon salute.
-L10 A light breeze.
-L11 Then one gust.
-L12 The Vasa leaned over, and water poured in through the open gunports.
-L13 It sank about thirteen hundred metres out. At least thirty people died.
-L14 You see, a ship stays upright like a punching-bag toy: heavy at the bottom, so it always rolls back up.
-L15 The Vasa's tall decks and heavy guns put too much weight up high.
-L16 So one gust was enough.
+L08 Despite this, the king sent it out anyway!
+L09 On August tenth, sixteen twenty-eight, it set sail.
+L10 The cannon hatches opened for a cannon salute.
+L11 Just then, a strong gust hit!
+L12 The ship leaned, and water poured in through its open cannon hatches.
+L13 It sank in the harbor within minutes, and at least thirty people died.
+L14 You see, a ship is like a punching-bag toy. Its weight sits low, so it rolls back up.
+L15 But the Vasa had heavy guns stacked high, so it was top-heavy.
+L16 One gust was enough to tip it over.
 L17 There was an inquiry. Who was to blame?
 L18 Officially, nobody.
-L19 Most of the blame quietly landed on the shipbuilder, who had died the year before.
-L20 In nineteen sixty-one, the Vasa was raised. Today it's ninety-eight percent original.
-L21 As a warship, it lasted about twenty minutes. As a museum, it's been packed for over thirty years.
+L19 The blame quietly landed on the shipbuilder, who had died the year before.
+L20 In nineteen sixty-one, the Vasa was raised. Today it is ninety-eight percent original.
+L21 As a warship, it lasted about twenty minutes. As a museum, it has been packed for over sixty years!
 
-## Title options (no question mark, no date, no superlative; `research/vasa/REPORT.md` rule 10)
-1. The Warship That Sailed for Twenty Minutes
-2. Why Sweden's Warship Sank in Its Harbour
+## Title: **The Warship That Sailed for Twenty Minutes**
+Chosen by `research/vasa/REPORT.md` rule 10 and the reference channel's verified title pattern (statement, ~6-7 words,
+"The [object] That…", no question mark, no date).

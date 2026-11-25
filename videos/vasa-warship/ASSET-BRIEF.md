@@ -106,14 +106,34 @@ All `bottom-center`, ±20 %. Used in shots 9 and 12. Search hints: Kenney Pirate
 ## Copy-paste prompt for Codex
 See `CODEX-PROMPT.md`.
 
-## Acceptance (Claude fills in at stage 3)
-| Asset | Checker | Rough still (our scene) | Verdict | Notes / fix requested |
+## Acceptance (Claude, stage 3, round 1, 2026-11-23)
+Codex branch `codex/vasa-warship` @ `3fcfb8a`, merged into `claude/nice-hamilton-t80o5e`. Checker: 11/11 PASS.
+Rough stills (540x960, bridge ink pass, Lambert shading, 1.75 m toon sailor for scale) from
+`remotion/src/AssetCheck.tsx`: `previews/asset-check/` (labelled `contact-sheet.jpg`).
+
+| Asset | Checker | Rough still | Verdict | Notes / fix requested |
 |---|---|---|---|---|
-| `vasa` | | | | |
-| `cannon-24pdr` | | | | |
-| `rowboat` | | | | |
-| `quay-segment` | | | | |
-| `tre-kronor-castle` | | | | |
-| `barrel` / `crate` / `rope-coil` | | | | |
-| `inquiry-table` / `inquiry-bench` | | | | |
-| `salvage-pontoon-crane` | | | | |
+| `vasa` | PASS | 00-08 | **REJECT** | Silhouette, colours, two port rows, sails, stern castle, deck and enterable gun deck all work. **Fix:** (1) every `gunport_lid_*` rests ~20° open; rest pose must be **closed flush** with the hull. (2) Each lid node's origin sits on its **bottom** edge, so rotating it opens it downward like a shelf (still 03); move each lid's origin onto its **top hinge line** so `rotation.z` swings it up and out. (3) Ports and lids are ~2 m tall, taller than a 1.75 m sailor (still 04), which makes the ship read small; make ports ≈ **0.9 × 0.9 m** with lids to match, keeping the two rows and 15 per row per side. |
+| `cannon-24pdr` | PASS | 11 | ACCEPT | Reads bronze on a truck carriage; right size next to a sailor. |
+| `rowboat` | PASS | 12 | ACCEPT | |
+| `quay-segment` | PASS | 13 | **REJECT** | Tiled at 8 m it reads as separate floating slabs with gaps. **Fix:** one continuous planked deck covering the full 8 × 4 m top so tiles join seamlessly along X, posts and stone shoes underneath, bollard on the water edge. |
+| `tre-kronor-castle` | PASS | 14 | ACCEPT | Background only; stylised as briefed. |
+| `barrel` | PASS | 15 | ACCEPT | |
+| `crate` | PASS | 15 | **REJECT** | Open-topped frame reads as an empty box. **Fix:** closed crate with a planked lid. |
+| `rope-coil` | PASS | 15 | ACCEPT | |
+| `inquiry-table` / `inquiry-bench` | PASS | 16 | ACCEPT | |
+| `salvage-pontoon-crane` | PASS | 17 | ACCEPT | |
+
+Known Claude-side items (not asset defects): sailors' ship-era outfits; gun-deck interior lighting; shot 5's carved
+lion will be a Claude effect card on the stern if the model's stern ornaments don't carry an ECU.
+
+## Acceptance round 2 (2026-11-23)
+Codex `codex/vasa-warship` @ `7dfabc9` (vasa, quay-segment, crate, assets.json only), merged. Checker 11/11 PASS.
+
+| Asset | Rough still | Verdict | Notes |
+|---|---|---|---|
+| `vasa` | `r2-03`, `r2-04` | **ACCEPT** | Lids rest closed and flush; origin on the top hinge; ~1.0 × 1.1 m; 60 lids. Port +z / starboard −z swing them up and out (measured amidships). |
+| `quay-segment` | `r2-13` | **ACCEPT** | Continuous planked deck, tiles without gaps, posts underneath. |
+| `crate` | `r2-15` | **ACCEPT** | Closed, planked lid. |
+
+**All 11 assets accepted.**

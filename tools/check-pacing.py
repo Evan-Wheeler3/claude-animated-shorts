@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Hold Up pacing check for the animatic (stage 4) and the final cut.
 
-Usage: python3 tools/check-pacing.py <words.json> <shots.json> [--fps 30]
+Usage: python3 tools/check-pacing.py <words.json> <shots.json> [--fps 30] [--voice voice.wav]
 
 words.json  a list of {"word"|"text", "start", "end"} in seconds (or {"words": [...]}).
 shots.json  the same file scripts/short_qa.py reads: {"shots": [{"id", "a", "b"}], "planned": [[f, f], ...]}
@@ -9,6 +9,8 @@ shots.json  the same file scripts/short_qa.py reads: {"shots": [{"id", "a", "b"}
             reaction swap, a camera move that reframes). Shot starts, planned cuts and beats all count
             as a new picture.
 
+--voice measures pauses from the audio itself (silence < -40 dBFS for >= 0.25 s). Whisper word gaps overstate
+pauses (Vasa: 5.2 s by word gaps vs 0.9 s of real silence), so with --voice the pause flags use the audio.
 Targets come from references/reports/editing.md. Runtime is a soft target (45-60 s): it is reported
 but never fails the check. Everything else is a FLAG to fix or to justify in the shot list.
 Exit 1 if there are flags.
@@ -54,6 +56,22 @@ notes.append(f'{len(words)} words, {wps:.2f} words/s (reference 3.5-4.1, median 
 if wps < 3.2: flag(f'narration is slow: {wps:.2f} words/s; tighten delivery or cut pauses')
 if wps > 4.3: flag(f'narration is rushed: {wps:.2f} words/s; clarity first, cut words instead of speeding up')
 gaps = [(words[i]['s'] - words[i - 1]['e'], words[i - 1]['w'], words[i]['w'], words[i]['s']) for i in range(1, len(words))]
+if '--voice' in sys.argv:   # real silences from the audio replace the word-gap estimate
+    import wave, array
+    wf = wave.open(sys.argv[sys.argv.index('--voice') + 1]); sr = wf.getframerate(); nch = wf.getnchannels()
+    pcm = array.array('h', wf.readframes(wf.getnframes()))[::nch]
+    hop = sr // 100; env = [max(abs(x) for x in pcm[i:i + hop] or [0]) / 32768 for i in range(0, len(pcm), hop)]
+    gaps, run = [], 0
+    for k, e in enumerate(env + [1.0]):
+        t = k / 100
+        if e < 0.01 and first < t < last: run += 1
+        else:
+            if run >= 25:
+                t0 = t - run / 100
+                prev = max((w for w in words if w['e'] <= t0 + .1), key=lambda w: w['e'], default=words[0])
+                nxt = min((w for w in words if w['s'] >= t - .1), key=lambda w: w['s'], default=words[-1])
+                gaps.append((run / 100, prev['w'], nxt['w'], t))
+            run = 0
 long_gaps = [g for g in gaps if g[0] > 0.45]
 total_pause = sum(g[0] for g in gaps if g[0] > 0.25)
 notes.append(f'pauses > 0.25 s total {total_pause:.2f} s (reference < 1 s)')

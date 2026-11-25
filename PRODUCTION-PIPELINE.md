@@ -2,59 +2,73 @@
 
 This file wins when another doc disagrees. `SKILL.md` stays the authority on *how* to render the look
 (code, look values, gotchas). This file decides *who* does what, *in what order*, and *what must be approved*.
+Lessons behind every rule here: `videos/vasa-warship/RETRO.md`.
 
 ## Roles
 | Who | Owns | Never does |
 |---|---|---|
-| **Owner** | Ideas, every approval gate, merges, publishing | — |
-| **Claude** | Planning with the owner, facts, script, shot list, asset brief, the Codex prompt, asset acceptance, characters, water/effects, layout, camera, voice, animation, editing, sound, render, QA | Approve its own work on the owner's behalf |
-| **Codex** | Sourcing or modelling the 3D props and set pieces in the asset brief, as GLB files that pass `tools/check-assets.mjs` | Characters, water/effects, scene code, judging its own visual quality, editing outside `videos/<story-id>/assets/` |
+| **Owner** | Ideas, every approval gate, merges, publishing, final say on claims and hooks | — |
+| **Claude** | Planning, research, script, voice, shot list, asset brief + Codex prompts, asset acceptance, look, characters, water/effects, camera, animation, editing, music, QA | Approve its own work on the owner's behalf |
+| **Codex** | Every 3D prop, set piece and background kit in the asset brief, as GLBs that pass `tools/check-assets.mjs` **and** its own `tools/asset-preview` stills | Characters, water/effects, scene code, edits outside `videos/<story-id>/assets/` |
 
-Codex cannot render our scene, so it doesn't sign off on looks. Claude accepts assets from quick rough stills in our scene.
+Codex starts the moment the script is approved and works **in parallel** with Claude's voice, look and blocking
+work. The more of the world Codex builds (props, ships, buildings, terrain pieces, interiors), the less Claude has
+to fake with boxes.
 
-**Renders:** everything before the end is a rough: low-res, quick, taken from our actual scene. Full-quality rendering
-happens once, at stage 5. The owner sees roughs only in the animatic.
+## Rendering rules
+- **Cloud (no GPU):** stills and short proofs (≤5 s) only. A still takes seconds; a full low-res render takes ~45 min.
+- **Full renders** (animatic proof and final) run on the owner's Mac: `bash videos/<story-id>/run_mac.sh [--proof]`.
+  If the owner asks for a cloud render, run it in the background with progress logging on.
+- Never render while assets or narration are still changing.
 
 ## Stages and gates
-Three owner **GATES**: script, animatic, final. Each is a stop. Nothing after it starts until the owner says so in their own words.
+Four owner **GATES**. Each is a stop: nothing after it starts until the owner says so in their own words.
 
-### 1. Plan (Claude + owner)
-Talk through the idea. Claude checks the facts and proposes a hook, angle and payoff.
+### 0. Preflight (Claude, before any work)
+- The environment can fetch a source page (e.g. the museum or Wikipedia). If not, ask for network access first.
+- The story's Remotion project is copied from `templates/holdup/` (look kit, cards, effects, music, voice tools).
 
-### 2. Script package (Claude) → **GATE A: script approved**
-Claude writes and commits to `videos/<story-id>/` on `claude/<story-id>`:
-- `STORY.md` from `STORY-TEMPLATE.md`, with the sourced fact table
-- `SCRIPT.md`: narrator-only lines
-- `SHOTLIST.md`: every line attached to its visuals, ~2 pictures per sentence (see Pacing below)
-- `ASSET-BRIEF.md` from `ASSET-BRIEF-TEMPLATE.md`: only the props/sets Codex must deliver, after checking what already exists
-- `CODEX-PROMPT.md`: one copy-paste block for Codex
+### 1. Plan + research (Claude + owner)
+Pitch, then sourced research. Propose the **boldest hook that can be defended**. Flag any risky claim once, plainly;
+the owner decides. Owner decisions on unverified claims are recorded in the fact table as `UNVERIFIED: owner decision`.
 
-The owner approves the script and shot list. Small wording changes later are fine; new beats mean re-approval.
+### 2. Script, heard aloud → **GATE A: script approved**
+Claude writes and commits to `videos/<story-id>/`:
+- `STORY.md` (sourced fact table), `SCRIPT.md`, `voice/SCRIPT-emphasis.md` (same lines, `*stressed*` words)
+- narration in the chosen voice + a first music bed: `voice/voice-and-music-preview.mp3`
+  (`tools/voice/gen_voice.py`, `align.py`, `emph_gain.py`, `check_lines.py` must pass, `templates/holdup/music.py`)
+- `SHOTLIST.md`: every line attached to its pictures, ~2 per sentence
+- `ASSET-BRIEF.md` + `CODEX-PROMPT.md` (moving parts, sizes, rest poses: see the template)
 
-### 3. Assets (Codex → Claude): no owner gate
-1. The owner pastes `CODEX-PROMPT.md` into Codex. Codex works on `codex/<story-id>`, delivers GLBs plus
-   `assets.json`, runs `node tools/check-assets.mjs videos/<story-id>/assets/assets.json` until it passes,
-   commits and pushes, and reports the branch and SHA.
-2. Claude merges that branch into its own story branch, re-runs the checker, then drops every asset into our scene
-   for a quick rough still: next to a character for scale, and at the closest framing the shot list uses, with our
-   ink and lights. Each asset gets **ACCEPT** or **REJECT** with specific reasons (what reads wrong at phone size,
-   and the fix). Rejections go back to Codex as a short follow-up prompt. Claude may fix small things itself
-   (recolour, pivot, scale). This is Claude's own check; the owner sees the assets in the animatic.
+The owner approves by **listening**, not just reading. Narration rules: `SHORTS-STORYTELLING.md`.
+Right after approval: merge the package to `main`, then the owner sends `CODEX-PROMPT.md`.
 
-### 4. Animatic (Claude) → **GATE B: animatic approved**
-Record the voice and hand-fix `words.json`. Block every shot at final timing: real cameras, layout and the accepted
-assets, simple poses, no polish. Render a rough low-res animatic with the voice. Run
-`python3 tools/check-pacing.py <words.json> <shots.json>` and fix its flags or justify them in `SHOTLIST.md`.
-The owner watches the animatic and approves the edit rhythm, framing and assets. **Pacing is fixed here, where it is cheap.**
+### 3. Look stills → **GATE B: look approved** (Codex works in parallel)
+Claude builds the world with the look kit and renders **six key stills in the final look** (hook frame, hero wide,
+character medium, interior/secondary set, the big effect beat, payoff). Codex assets still in flight may appear as
+labelled stand-ins. Before building any camera, run `templates/holdup/probe-ship.mjs` (or equivalent) on hero
+models: deck heights, mast positions, hull width, part positions. The owner approves colour, water, backgrounds,
+characters and mood here, from stills.
 
-### 5. Production (Claude) → **GATE C: final approved**
-Animation, effects, character performance, sound, the 1440x2560 render, `short_qa.py`, the verifier pass from `SKILL.md`.
-Timing stays as approved at Gate B. If a timing change is needed, say so and show it.
-Deliver the MP4. Never upload anywhere without the owner's explicit go-ahead.
+### 4. Assets (Codex → Claude): no owner gate
+1. Codex delivers on `codex/<story-id>`: GLBs, `assets.json`, checker PASS, `asset-preview` stills it has looked at,
+   and the reply template in `AGENTS.md` (branch, SHA, checker output, per-asset notes).
+2. Claude merges, re-runs the checker, renders each asset in the scene, and accepts or sends back specific notes.
 
-### 6. Retrospective (Claude)
-`videos/<story-id>/RETRO.md`: what went wrong, what fixed it. Reusable lessons go into this file, `SKILL.md`
-or the tools as rules or checks, not just narrative.
+### 5. Animatic → **GATE C: pacing approved**
+Block every shot at final timing in the approved look (word anchors in `remotion/src/anchors.json`). Before the owner
+sees anything, Claude:
+- renders **one still per shot** as a contact sheet and reviews every frame (blocked subjects, off-frame characters,
+  effects under water, empty frames);
+- runs `python3 tools/check-pacing.py voice/words.json shots.json --voice voice/voice.wav`.
+The owner watches the proof (`run_mac.sh --proof` on the Mac).
+
+### 6. Final → **GATE D: final approved**
+Character acting, effects polish, music + mix, `run_mac.sh` final render on the Mac, `short_qa.py`.
+Never upload anywhere without the owner's explicit go-ahead.
+
+### 7. Retrospective (Claude)
+`videos/<story-id>/RETRO.md`. Every lesson becomes a rule, template field or check in this repo, not just prose.
 
 ## Pacing (defaults, not quotas)
 Numbers from `references/reports/editing.md`:
@@ -64,16 +78,15 @@ Numbers from `references/reports/editing.md`:
 - No single picture held over ~4.5 s unless it's a continuous reveal or a named comic/suspense hold.
 - Every visual payoff lands 0-3 frames before its word.
 
-## Settled rules (where older docs disagreed)
-- **Length:** 45-60 s target (the reference channel runs 55-78 s, median 60.5 s; see `research/vasa/`). Script at ~3.7 words/s → ~165-220 words.
-- **Holds:** the camera never fully freezes for 4+ frames. A "static hold" means a slow creeping push (0.15-0.35 %/f).
-  A dead-still freeze frame only as a named comic beat in the shot list.
-- **Characters** are always our 2D toon cards (`toon.ts` / `cast.ts`). Codex never builds characters.
-- **No captions or labels,** English, one steady narrator, mix and export as in `SKILL.md`.
+## Settled rules
+- **Length:** 45-60 s (the reference channel runs 55-78 s, median 60.5 s; see `research/vasa/`). ~165-220 words.
+- **Holds:** the camera never fully freezes for 4+ frames; a hold is a slow creeping push. Freeze frames only as named comic beats.
+- **Characters** are our 2D toon cards (`toon.ts`), with contact shadows. Codex never builds characters.
+- **No captions or labels,** English, one steady narrator (currently `am_puck`, Kokoro), subtle original music under the voice, -14 LUFS.
 
 ## Branches
-- Claude: `claude/<story-id>`. Codex: `codex/<story-id>`, touching only `videos/<story-id>/assets/`.
-- A handoff always names a branch and a commit SHA. Never assume another branch's work is on main.
+- Claude: one story branch. Codex: `codex/<story-id>`, touching only `videos/<story-id>/assets/`.
+- The story package is on `main` before Codex starts. Every handoff names a branch and a commit SHA.
 - The owner merges to main.
 
 ## Honesty rules (all agents)

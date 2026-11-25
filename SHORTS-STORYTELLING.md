@@ -32,8 +32,22 @@ These are creative defaults, not fixed second-by-second rules. Fit the actual na
 ## Accuracy
 For true stories, maintain a source-backed fact sheet. Mark unconfirmed details as unconfirmed; never animate speculation as established fact. Separate dramatization from documented actions.
 
-## Narration
-Write for spoken rhythm, not reading. Short sentences, concrete verbs, natural emphasis. Record the approved voice with the existing workflow; align visuals to actual word timings. Do not change the established narrator without permission.
+## Narration (written for the ear: the owner rewrote the first Vasa draft for breaking these)
+Write for spoken rhythm, not reading. Record the approved voice with the existing workflow; align visuals to actual
+word timings. Do not change the established narrator without permission.
+- **Full sentences only.** No telegraph fragments ("Four sails up. A light breeze. Then one gust."): heard aloud they
+  sound like a list of disconnected images. Each sentence says who did what.
+- **No contractions** ("it's", "she'd", "Vasa's" possessives are fine only in names the owner wants). TTS swallows
+  them and listeners lose the word.
+- **Plain words for jargon.** Say what a thing is ("cannon hatches", not "gunports"); a technical term needs its
+  everyday meaning in the same sentence.
+- **Cause, then effect, in order.** Every beat names its cause: "The cannon hatches opened for a salute. Just then, a
+  strong gust hit." Never make the viewer infer the link.
+- **Hook = one bold, concrete claim with a number** ("Sweden's largest warship only sailed for twenty minutes.").
+  Propose the boldest defensible version; flag risk once; the owner decides.
+- **Mark emphasis while writing** in `voice/SCRIPT-emphasis.md`: 1-3 `*stressed*` words on lines that land a point
+  (numbers, the twist word, the punchline). End punch lines with "!".
+- **Read it aloud before approval:** the owner approves the recorded narration with the music bed, not text.
 
 ## Learning from uploads
 After each release, record topic, hook, runtime, title, views after a consistent period, viewed-vs-swiped, average view duration, retention curve, completion, likes/comments/shares and any obvious distribution caveats. Compare similar videos; distinguish observations from hypotheses. Change one or two variables at a time. Don't rewrite production rules based on one upload.
