@@ -94,10 +94,10 @@ Size is width (X) × height (Y) × depth (Z) in metres, +Y up, −Z forward. Tol
 
 | Node name pattern | Count | Hinge edge (`pivot`) | Rest pose | Opens by rotating | Notes |
 |---|---|---|---|---|---|
-| `^blade_upper$` | 1 | `center` (the rivet) | closed, blades together | `+y` (`open: {axis: "y", sign: 1}`) about 25° | lower blade + handle are the static mesh |
+| `^blade_upper$` | 1 | `center` (the rivet) | closed, blades together | spins about the rivet (no `open` check: it is not a lid) | lower blade + handle are the static mesh |
 
 ```json
-"parts": [{"pattern": "^blade_upper$", "count": 1, "pivot": "center", "open": {"axis": "y", "sign": 1}}]
+"parts": [{"pattern": "^blade_upper$", "count": 1, "pivot": "center"}]
 ```
 
 ### `crucible`
@@ -159,10 +159,10 @@ Size is width (X) × height (Y) × depth (Z) in metres, +Y up, −Z forward. Tol
 
 | Node name pattern | Count | Hinge edge (`pivot`) | Rest pose | Opens by rotating | Notes |
 |---|---|---|---|---|---|
-| `^screw_bar$` | 1 | `center` (screw axis) | bar along X | `+y` (`open: {axis: "y", sign: 1}`) | screw + bar + weights in this node; they spin together |
+| `^screw_bar$` | 1 | `center` (screw axis) | bar along X | spins about Y (no `open` check: it is not a lid) | screw + bar + weights in this node; they spin together |
 
 ```json
-"parts": [{"pattern": "^screw_bar$", "count": 1, "pivot": "center", "open": {"axis": "y", "sign": 1}}]
+"parts": [{"pattern": "^screw_bar$", "count": 1, "pivot": "center"}]
 ```
 
 ### `mint-interior`

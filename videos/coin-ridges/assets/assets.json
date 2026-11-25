@@ -135,16 +135,12 @@
         "iron"
       ],
       "license": "original",
-      "notes": "Custom closed iron snips, oval grips and center rivet.",
+      "notes": "Custom closed iron snips, oval grips and center rivet. | Claude: removed parts.open: this part spins about its centre (no outward-opening direction); brief error, not an asset defect.",
       "parts": [
         {
           "pattern": "^blade_upper$",
           "count": 1,
-          "pivot": "center",
-          "open": {
-            "axis": "y",
-            "sign": 1
-          }
+          "pivot": "center"
         }
       ]
     },
@@ -238,16 +234,12 @@
         "wood"
       ],
       "license": "original",
-      "notes": "Custom coining press with stone plinth, chest-high bar and screw, bar and weights sharing one pivot.",
+      "notes": "Custom coining press with stone plinth, chest-high bar and screw, bar and weights sharing one pivot. | Claude: removed parts.open: this part spins about its centre (no outward-opening direction); brief error, not an asset defect.",
       "parts": [
         {
           "pattern": "^screw_bar$",
           "count": 1,
-          "pivot": "center",
-          "open": {
-            "axis": "y",
-            "sign": 1
-          }
+          "pivot": "center"
         }
       ]
     },
