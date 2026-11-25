@@ -1,10 +1,10 @@
 # coin-ridges: original background score, SOLO PIANO only (owner note 2026-11-25: "no percussive hits, just piano,
 # a little quieter"). Synthesised piano (additive partials, slight inharmonicity, two detuned strings, soft hammer).
 # D minor -> F major, 92 bpm. Sections follow voice/lines.json:
-#   clipping L01-L04 (curious left-hand broken chords, light right-hand motif) | machine coins L05-L06 (steadier
-#   eighths) | recoinage + Newton L07-L09 (brighter F/C, a rising figure on "Isaac Newton", tiny high wink on
-#   "gravity") | the chase L10-L11 (low, sparse, stops on "hanged") | today + payoff L12-L13 (gentle motif, warm
-#   major, soft final chord on the last word). No percussion, no pads.
+#   hook + gag + clipping L01-L05 (curious broken chords; silence for the L03 joke beat) | machine coins L06-L07 |
+#   recoinage + Newton L08-L10 (brighter F/C, rising figure on "Isaac Newton", high wink on "gravity") | the chase
+#   L11-L12 (low, sparse, stops on "hanged") | today + payoff L13-L14 (gentle motif, warm major, soft final chord on
+#   the last word). Script v4 line numbers. No percussion, no pads.
 # The bed sits ~20 LU under the voice (v1 was 16) and ducks a further 4 dB while words are spoken.
 # Usage: python music.py <voice_dir> <out_dir>      (voice_dir holds voice.wav, lines.json, words.json)
 import json, os, sys
@@ -101,26 +101,28 @@ PROG_MIN = ['Dm', 'Bb', 'F', 'C']
 CURIOUS = [(0, 74), (.5, 77), (1, 76), (1.5, 74), (2, 72), (3, 69)]
 WARM = [(0, 72), (.5, 76), (1, 79), (2, 77), (2.5, 76), (3, 72)]
 
-# 1. clipping: L01..L04
-broken(0, S('L05'), PROG_MIN, vel=.30)
-motif(S('L02'), S('L04'), CURIOUS, vel=.22)
-note(81, w('L03', 14), .24, 2.5, pan=.3)                       # "free silver": one high note, no hit
-# 2. machine coins: L05..L06, steadier eighths
-broken(S('L05'), S('L07'), ['Dm', 'Gm', 'Dm', 'A'], vel=.30, pattern=(0, 2, 3, 4))
-note(76, w('L06', 0), .2, 2.0, pan=.3)
-# 3. recoinage + Newton: L07..L09, brighter
-broken(S('L07'), S('L10'), ['F', 'C', 'Bb', 'F'], vel=.30, pattern=(0, 2, 3, 2))
+# 1. hook + shaving gag + clipping: L01..L05. Piano stops dead for the L03 beat ("Well, not with shaving cream.")
+broken(0, S('L03'), PROG_MIN, vel=.30)
+motif(S('L02'), S('L03'), CURIOUS, vel=.22)
+broken(E('L03') + .05, S('L06'), ['Dm', 'Bb', 'F', 'C'], vel=.30)
+note(81, w('L04', 20), .24, 2.5, pan=.3)                       # "free silver": one high note, no hit
+chord('Dm', w('L05', 10), vel=.2, dur=2.0, up=-12)            # "death": soft low chord
+# 2. machine coins: L06..L07, steadier eighths
+broken(S('L06'), S('L08'), ['Dm', 'Gm', 'Dm', 'A'], vel=.30, pattern=(0, 2, 3, 4))
+note(76, w('L07', 0), .2, 2.0, pan=.3)
+# 3. recoinage + Newton: L08..L10, brighter
+broken(S('L08'), S('L11'), ['F', 'C', 'Bb', 'F'], vel=.30, pattern=(0, 2, 3, 2))
 for j, m in enumerate((72, 76, 79, 84)):
-    note(m, w('L08', 7) - .25 + j * .11, .26, 2.4, pan=.3)    # rising figure into "Isaac Newton"
+    note(m, w('L09', 7) - .25 + j * .11, .26, 2.4, pan=.3)    # rising figure into "Isaac Newton"
 for j, m in enumerate((88, 91)):
-    note(m, w('L09', 2) + j * .14, .18, 1.4, pan=.4)          # "gravity" wink
-# 4. the chase: L10..L11, low and sparse, stop on "hanged"
-broken(S('L10'), w('L11', 8) - .05, ['Dm', 'A', 'Dm', 'Bb'], vel=.26, step=Q, pattern=(0, 2), up=0)
-chord('Dm', w('L11', 8), vel=.22, dur=2.2, up=-12)
-# 5. today + payoff: L12..L13
-broken(S('L12'), E('L13'), ['F', 'C', 'Dm', 'Bb'], vel=.26)
-motif(S('L12'), E('L13') - .5, WARM, vel=.22)
-chord('F', E('L13') - .05, vel=.30, dur=3.5)
+    note(m, w('L10', 2) + j * .14, .18, 1.4, pan=.4)          # "gravity" wink
+# 4. the chase: L11..L12, low and sparse, stop on "hanged"
+broken(S('L11'), w('L12', 8) - .05, ['Dm', 'A', 'Dm', 'Bb'], vel=.26, step=Q, pattern=(0, 2), up=0)
+chord('Dm', w('L12', 8), vel=.22, dur=2.2, up=-12)
+# 5. today + payoff: L13..L14
+broken(S('L13'), E('L14'), ['F', 'C', 'Dm', 'Bb'], vel=.26)
+motif(S('L13'), E('L14') - .5, WARM, vel=.22)
+chord('F', E('L14') - .05, vel=.30, dur=3.5)
 
 # ---------- mix ----------
 hall = make_ir(1.8, 5, pre=.02, hf=1.4)
