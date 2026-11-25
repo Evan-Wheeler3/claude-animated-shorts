@@ -1,4 +1,4 @@
-# Why Coins Have Ridges: shot list (draft for GATE A, script v4)
+# Why Coins Have Ridges: shot list (GATE A approved 2026-11-25; times re-anchor to voice/words.json, narration 56.6 s)
 
 9:16, 30 fps, ≈ 55-58 s (re-timed to the recorded `voice/words.json` in the animatic). **31 pictures ≈ one every
 1.8 s**; every line has at least one. Framing: ECU / CU / MS / WS / OH (overhead) / LA (low angle). Characters are

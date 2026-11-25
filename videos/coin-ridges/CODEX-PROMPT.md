@@ -1,7 +1,7 @@
 # Codex prompt: coin-ridges
 
-**Do not send yet.** Paste this into Codex only after GATE A is approved and this package is merged to `main`
-(Codex refuses until `script_status` in `STORY.md` is `approved`).
+Script approved at GATE A (2026-11-25). Paste once this package is on `main`
+(Codex checks that `script_status` in `STORY.md` is `approved`).
 
 ```text
 Deliver assets for coin-ridges.

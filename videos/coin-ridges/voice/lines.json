@@ -58,14 +58,14 @@
  },
  {
   "line": "L06",
-  "text": "So in sixteen sixty-two, England began making coins by machine, with a pattern on the edge.",
+  "text": "So in sixteen sixty-two, England put a pattern on the edge of its coins.",
   "emph": [
-   15
+   10
   ],
   "start": 19.771,
-  "end": 24.894,
-  "take": "L06_t0.wav",
-  "heard_miss": 15
+  "end": 24.269,
+  "take": "L06_t1.wav",
+  "heard_miss": 13
  },
  {
   "line": "L07",
@@ -73,21 +73,21 @@
   "emph": [
    5
   ],
-  "start": 24.954,
-  "end": 27.186,
+  "start": 24.329,
+  "end": 26.561,
   "take": "L07_t1.wav",
   "heard_miss": 0
  },
  {
   "line": "L08",
-  "text": "But old smooth coins were still everywhere. So in sixteen ninety-six, England remade all its money.",
+  "text": "But old coins were everywhere, so in sixteen ninety-six, England remade all its money.",
   "emph": [
-   6,
-   13
+   4,
+   11
   ],
-  "start": 27.246,
-  "end": 33.087,
-  "take": "L08_t0.wav",
+  "start": 26.621,
+  "end": 31.733,
+  "take": "L08_t2.wav",
   "heard_miss": 8
  },
  {
@@ -97,8 +97,8 @@
    7,
    8
   ],
-  "start": 33.297,
-  "end": 36.165,
+  "start": 31.943,
+  "end": 34.811,
   "take": "L09_t1.wav",
   "heard_miss": 0
  },
@@ -108,8 +108,8 @@
   "emph": [
    2
   ],
-  "start": 36.225,
-  "end": 38.464,
+  "start": 34.871,
+  "end": 37.111,
   "take": "L10_t0.wav",
   "heard_miss": 0
  },
@@ -119,8 +119,8 @@
   "emph": [
    11
   ],
-  "start": 38.704,
-  "end": 43.406,
+  "start": 37.351,
+  "end": 42.052,
   "take": "L11_t0.wav",
   "heard_miss": 0
  },
@@ -130,8 +130,8 @@
   "emph": [
    8
   ],
-  "start": 43.466,
-  "end": 47.466,
+  "start": 42.112,
+  "end": 46.112,
   "take": "L12_t0.wav",
   "heard_miss": 0
  },
@@ -142,22 +142,21 @@
    12,
    18
   ],
-  "start": 47.746,
-  "end": 54.01,
+  "start": 46.392,
+  "end": 52.656,
   "take": "L13_t0.wav",
   "heard_miss": 0
  },
  {
   "line": "L14",
-  "text": "So every time you feel those ridges, you are touching an anti-theft trick over three hundred years old!",
+  "text": "So those ridges are a three-hundred-year-old anti-theft trick!",
   "emph": [
-   11,
-   14,
-   15
+   5,
+   7
   ],
-  "start": 54.07,
-  "end": 59.35,
-  "take": "L14_t2.wav",
-  "heard_miss": 4
+  "start": 52.716,
+  "end": 56.636,
+  "take": "L14_t1.wav",
+  "heard_miss": 7
  }
 ]

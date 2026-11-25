@@ -1,7 +1,7 @@
 ---
 story_id: coin-ridges
 title_working: Why Coins Have Ridges
-script_status: draft (awaiting GATE A)
+script_status: approved
 narrator: voice B (Qwen3-TTS 0.6B Base clone of videos/phil-bathroom/narration/voice.wav @ d17acc0, first ~6.4 s)
 target: 45-50 s, ~180 words
 test_variable: hook structure (claim proven in frame 1 + second reveal by ~6 s). Captions off; voice B as on Phil.
@@ -10,6 +10,8 @@ owner_decisions:
   - 2026-11-25 voice B approved ("I like voice B a lot")
   - 2026-11-25 music: solo piano only, no percussive hits, quieter than v1 (bed now ~20 LU under the voice)
   - 2026-11-25 tightened script v2 requested (v1 ran 61.8 s)
+  - 2026-11-25 hook option A + razor/shaving-cream gag (owner idea)
+  - 2026-11-25 GATE A approved: script v5, narration 56.6 s ("Go ahead. Approved. Merge")
 ---
 
 # Why coins have ridges: fact sheet
