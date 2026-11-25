@@ -1,0 +1,168 @@
+[
+ {
+  "line": "L01",
+  "text": "People used to shave the edges off their coins, and then spend them anyway!",
+  "emph": [
+   3,
+   13
+  ],
+  "start": 0.05,
+  "end": 3.89,
+  "take": "L01_t0.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L02",
+  "text": "Back then, a silver coin was worth the silver inside it.",
+  "emph": [
+   9
+  ],
+  "start": 3.95,
+  "end": 7.136,
+  "take": "L02_t2.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L03",
+  "text": "So shave a little off a hundred coins, melt the shavings, and you have free silver!",
+  "emph": [
+   14
+  ],
+  "start": 7.196,
+  "end": 11.622,
+  "take": "L03_t1.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L04",
+  "text": "This was called clipping, and you could be put to death for it.",
+  "emph": [
+   10
+  ],
+  "start": 11.682,
+  "end": 14.989,
+  "take": "L04_t0.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L05",
+  "text": "So in sixteen sixty-two, England started making coins by machine, with a pattern pressed into the edge.",
+  "emph": [
+   16
+  ],
+  "start": 15.229,
+  "end": 21.149,
+  "take": "L05_t2.wav",
+  "heard_miss": 16
+ },
+ {
+  "line": "L06",
+  "text": "Now, if someone shaved a coin, the missing edge gave them away!",
+  "emph": [
+   11
+  ],
+  "start": 21.209,
+  "end": 24.408,
+  "take": "L06_t2.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L07",
+  "text": "But the old, smooth coins were still everywhere.",
+  "emph": [
+   7
+  ],
+  "start": 24.468,
+  "end": 27.348,
+  "take": "L07_t2.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L08",
+  "text": "So in sixteen ninety-six, England melted down its old money and made it all again.",
+  "emph": [
+   13
+  ],
+  "start": 27.408,
+  "end": 32.208,
+  "take": "L08_t0.wav",
+  "heard_miss": 14
+ },
+ {
+  "line": "L09",
+  "text": "And the man whose job was to catch the cheaters was Isaac Newton!",
+  "emph": [
+   11,
+   12
+  ],
+  "start": 32.418,
+  "end": 36.25,
+  "take": "L09_t2.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L10",
+  "text": "Yes, the gravity guy.",
+  "emph": [
+   2
+  ],
+  "start": 36.31,
+  "end": 38.55,
+  "take": "L10_t0.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L11",
+  "text": "His biggest target was William Chaloner, a forger who had even learned to fake the edges.",
+  "emph": [
+   13
+  ],
+  "start": 38.79,
+  "end": 44.303,
+  "take": "L11_t0.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L12",
+  "text": "Newton questioned the witnesses himself, and Chaloner was hanged.",
+  "emph": [
+   8
+  ],
+  "start": 44.363,
+  "end": 48.363,
+  "take": "L12_t0.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L13",
+  "text": "Today's coins are not silver. So why keep the ridges?",
+  "emph": [],
+  "start": 48.643,
+  "end": 52.258,
+  "take": "L13_t0.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L14",
+  "text": "Partly tradition. But the ridges also help blind people tell coins apart by touch!",
+  "emph": [
+   7,
+   13
+  ],
+  "start": 52.318,
+  "end": 57.518,
+  "take": "L14_t1.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L15",
+  "text": "So those ridges are a leftover from when people shaved their money!",
+  "emph": [
+   9
+  ],
+  "start": 57.578,
+  "end": 61.232,
+  "take": "L15_t2.wav",
+  "heard_miss": 0
+ }
+]

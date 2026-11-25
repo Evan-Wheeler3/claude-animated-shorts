@@ -69,7 +69,9 @@ elif sys.argv[1] == "pick":
             # trim leading/trailing silence
             nz = np.where(np.abs(a) > 0.01)[0]
             a = a[max(0, nz[0] - int(0.02 * sr)): nz[-1] + int(0.06 * sr)] if len(nz) else a
-            segs, _ = wm.transcribe(f, language="en", beam_size=5)
+            from scipy.signal import resample_poly
+            a16 = resample_poly(a, 16000, sr).astype(np.float32)   # pass audio, not a path (PyAV API drift)
+            segs, _ = wm.transcribe(a16, language="en", beam_size=5)
             heard = " ".join(s.text for s in segs)
             want, got = norm(L["text"]), norm(heard)
             miss = sum(1 for x, y in zip(want, got) if x != y) + abs(len(want) - len(got))
