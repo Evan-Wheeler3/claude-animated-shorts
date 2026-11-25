@@ -46,7 +46,7 @@ if sys.argv[1] == "takes":
         y = y.mean(1)
     ref_clip = os.path.join(out, "_ref_voiceB.wav")
     sf.write(ref_clip, y[: int(6.6 * sr)], sr)
-    m = Qwen3TTSModel.from_pretrained("Qwen/Qwen3-TTS-12Hz-0.6B-Base", device_map="cpu", dtype=torch.float32)
+    m = Qwen3TTSModel.from_pretrained(os.environ.get("QWEN_DIR", "Qwen/Qwen3-TTS-12Hz-0.6B-Base"), device_map="cpu", dtype=torch.float32)
     prompt = m.create_voice_clone_prompt(ref_audio=ref_clip, ref_text=REF_TEXT)
     only = set(os.environ.get("LINES", "").split(",")) - {""}   # e.g. LINES=L05,L06 to re-record some lines
     for L in script_lines():

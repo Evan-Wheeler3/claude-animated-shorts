@@ -1,0 +1,81 @@
+[
+ {
+  "line": "L01",
+  "text": "The first car tires were not black. They were white!",
+  "emph": [
+   9
+  ],
+  "start": 0.05,
+  "end": 3.137,
+  "take": "L01_t1.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L02",
+  "text": "Rubber is naturally creamy white, and makers added a white powder for grip.",
+  "emph": [
+   12
+  ],
+  "start": 3.317,
+  "end": 7.595,
+  "take": "L02_t1.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L03",
+  "text": "But white tires wore out fast.",
+  "emph": [
+   5
+  ],
+  "start": 7.655,
+  "end": 9.72,
+  "take": "L03_t2.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L04",
+  "text": "So tire makers mixed in carbon black, a fine black powder that is basically soot.",
+  "emph": [
+   14
+  ],
+  "start": 9.93,
+  "end": 15.53,
+  "take": "L04_t1.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L05",
+  "text": "It makes the rubber tougher and pulls heat out of the tread, so tires last far longer.",
+  "emph": [
+   4,
+   15
+  ],
+  "start": 15.59,
+  "end": 20.421,
+  "take": "L05_t0.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L06",
+  "text": "Today, a tire can be up to forty percent carbon black.",
+  "emph": [
+   7
+  ],
+  "start": 20.481,
+  "end": 23.921,
+  "take": "L06_t1.wav",
+  "heard_miss": 4
+ },
+ {
+  "line": "L07",
+  "text": "So tires are not black for style. They are black because soot makes them last!",
+  "emph": [
+   11,
+   14
+  ],
+  "start": 24.131,
+  "end": 28.371,
+  "take": "L07_t2.wav",
+  "heard_miss": 0
+ }
+]

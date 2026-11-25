@@ -1,0 +1,524 @@
+[
+ {
+  "word": "The",
+  "line": "L01",
+  "start": 0.0,
+  "end": 0.52
+ },
+ {
+  "word": "first",
+  "line": "L01",
+  "start": 0.52,
+  "end": 0.78
+ },
+ {
+  "word": "car",
+  "line": "L01",
+  "start": 0.78,
+  "end": 1.06
+ },
+ {
+  "word": "tires",
+  "line": "L01",
+  "start": 1.06,
+  "end": 1.38
+ },
+ {
+  "word": "were",
+  "line": "L01",
+  "start": 1.38,
+  "end": 1.66
+ },
+ {
+  "word": "not",
+  "line": "L01",
+  "start": 1.66,
+  "end": 1.84
+ },
+ {
+  "word": "black.",
+  "line": "L01",
+  "start": 1.84,
+  "end": 2.22
+ },
+ {
+  "word": "They",
+  "line": "L01",
+  "start": 2.36,
+  "end": 2.44
+ },
+ {
+  "word": "were",
+  "line": "L01",
+  "start": 2.44,
+  "end": 2.64
+ },
+ {
+  "word": "white!",
+  "line": "L01",
+  "start": 2.64,
+  "end": 2.98
+ },
+ {
+  "word": "Rubber",
+  "line": "L02",
+  "start": 3.54,
+  "end": 3.98
+ },
+ {
+  "word": "is",
+  "line": "L02",
+  "start": 3.98,
+  "end": 4.24
+ },
+ {
+  "word": "naturally",
+  "line": "L02",
+  "start": 4.24,
+  "end": 4.62
+ },
+ {
+  "word": "creamy",
+  "line": "L02",
+  "start": 4.62,
+  "end": 5.0
+ },
+ {
+  "word": "white,",
+  "line": "L02",
+  "start": 5.0,
+  "end": 5.36
+ },
+ {
+  "word": "and",
+  "line": "L02",
+  "start": 5.36,
+  "end": 5.64
+ },
+ {
+  "word": "makers",
+  "line": "L02",
+  "start": 5.64,
+  "end": 5.98
+ },
+ {
+  "word": "added",
+  "line": "L02",
+  "start": 5.98,
+  "end": 6.34
+ },
+ {
+  "word": "a",
+  "line": "L02",
+  "start": 6.34,
+  "end": 6.5
+ },
+ {
+  "word": "white",
+  "line": "L02",
+  "start": 6.5,
+  "end": 6.68
+ },
+ {
+  "word": "powder",
+  "line": "L02",
+  "start": 6.68,
+  "end": 7.06
+ },
+ {
+  "word": "for",
+  "line": "L02",
+  "start": 7.06,
+  "end": 7.3
+ },
+ {
+  "word": "grip.",
+  "line": "L02",
+  "start": 7.3,
+  "end": 7.56
+ },
+ {
+  "word": "But",
+  "line": "L03",
+  "start": 7.88,
+  "end": 8.02
+ },
+ {
+  "word": "white",
+  "line": "L03",
+  "start": 8.02,
+  "end": 8.28
+ },
+ {
+  "word": "tires",
+  "line": "L03",
+  "start": 8.28,
+  "end": 8.7
+ },
+ {
+  "word": "wore",
+  "line": "L03",
+  "start": 8.7,
+  "end": 8.92
+ },
+ {
+  "word": "out",
+  "line": "L03",
+  "start": 8.92,
+  "end": 9.16
+ },
+ {
+  "word": "fast.",
+  "line": "L03",
+  "start": 9.16,
+  "end": 9.64
+ },
+ {
+  "word": "So",
+  "line": "L04",
+  "start": 10.46,
+  "end": 10.7
+ },
+ {
+  "word": "tire",
+  "line": "L04",
+  "start": 10.7,
+  "end": 11.1
+ },
+ {
+  "word": "makers",
+  "line": "L04",
+  "start": 11.1,
+  "end": 11.48
+ },
+ {
+  "word": "mixed",
+  "line": "L04",
+  "start": 11.48,
+  "end": 11.76
+ },
+ {
+  "word": "in",
+  "line": "L04",
+  "start": 11.76,
+  "end": 11.94
+ },
+ {
+  "word": "carbon",
+  "line": "L04",
+  "start": 11.94,
+  "end": 12.22
+ },
+ {
+  "word": "black,",
+  "line": "L04",
+  "start": 12.22,
+  "end": 12.62
+ },
+ {
+  "word": "a",
+  "line": "L04",
+  "start": 12.96,
+  "end": 13.08
+ },
+ {
+  "word": "fine",
+  "line": "L04",
+  "start": 13.08,
+  "end": 13.38
+ },
+ {
+  "word": "black",
+  "line": "L04",
+  "start": 13.38,
+  "end": 13.68
+ },
+ {
+  "word": "powder",
+  "line": "L04",
+  "start": 13.68,
+  "end": 14.08
+ },
+ {
+  "word": "that",
+  "line": "L04",
+  "start": 14.08,
+  "end": 14.3
+ },
+ {
+  "word": "is",
+  "line": "L04",
+  "start": 14.3,
+  "end": 14.44
+ },
+ {
+  "word": "basically",
+  "line": "L04",
+  "start": 14.44,
+  "end": 14.98
+ },
+ {
+  "word": "soot.",
+  "line": "L04",
+  "start": 14.98,
+  "end": 15.46
+ },
+ {
+  "word": "It",
+  "line": "L05",
+  "start": 16.0,
+  "end": 16.16
+ },
+ {
+  "word": "makes",
+  "line": "L05",
+  "start": 16.16,
+  "end": 16.38
+ },
+ {
+  "word": "the",
+  "line": "L05",
+  "start": 16.38,
+  "end": 16.58
+ },
+ {
+  "word": "rubber",
+  "line": "L05",
+  "start": 16.58,
+  "end": 16.78
+ },
+ {
+  "word": "tougher",
+  "line": "L05",
+  "start": 16.78,
+  "end": 17.06
+ },
+ {
+  "word": "and",
+  "line": "L05",
+  "start": 17.06,
+  "end": 17.26
+ },
+ {
+  "word": "pulls",
+  "line": "L05",
+  "start": 17.26,
+  "end": 17.52
+ },
+ {
+  "word": "heat",
+  "line": "L05",
+  "start": 17.52,
+  "end": 17.78
+ },
+ {
+  "word": "out",
+  "line": "L05",
+  "start": 17.78,
+  "end": 17.98
+ },
+ {
+  "word": "of",
+  "line": "L05",
+  "start": 17.98,
+  "end": 18.12
+ },
+ {
+  "word": "the",
+  "line": "L05",
+  "start": 18.12,
+  "end": 18.24
+ },
+ {
+  "word": "tread,",
+  "line": "L05",
+  "start": 18.24,
+  "end": 18.46
+ },
+ {
+  "word": "so",
+  "line": "L05",
+  "start": 18.46,
+  "end": 18.7
+ },
+ {
+  "word": "tires",
+  "line": "L05",
+  "start": 18.7,
+  "end": 19.2
+ },
+ {
+  "word": "last",
+  "line": "L05",
+  "start": 19.2,
+  "end": 19.54
+ },
+ {
+  "word": "far",
+  "line": "L05",
+  "start": 19.54,
+  "end": 19.82
+ },
+ {
+  "word": "longer.",
+  "line": "L05",
+  "start": 19.82,
+  "end": 20.22
+ },
+ {
+  "word": "Today,",
+  "line": "L06",
+  "start": 20.96,
+  "end": 21.22
+ },
+ {
+  "word": "a",
+  "line": "L06",
+  "start": 21.52,
+  "end": 21.64
+ },
+ {
+  "word": "tire",
+  "line": "L06",
+  "start": 21.64,
+  "end": 21.82
+ },
+ {
+  "word": "can",
+  "line": "L06",
+  "start": 21.82,
+  "end": 22.04
+ },
+ {
+  "word": "be",
+  "line": "L06",
+  "start": 22.04,
+  "end": 22.16
+ },
+ {
+  "word": "up",
+  "line": "L06",
+  "start": 22.16,
+  "end": 22.26
+ },
+ {
+  "word": "to",
+  "line": "L06",
+  "start": 22.26,
+  "end": 22.42
+ },
+ {
+  "word": "forty",
+  "line": "L06",
+  "start": 22.42,
+  "end": 22.62
+ },
+ {
+  "word": "percent",
+  "line": "L06",
+  "start": 22.62,
+  "end": 22.98
+ },
+ {
+  "word": "carbon",
+  "line": "L06",
+  "start": 22.98,
+  "end": 23.34
+ },
+ {
+  "word": "black.",
+  "line": "L06",
+  "start": 23.34,
+  "end": 23.8
+ },
+ {
+  "word": "So",
+  "line": "L07",
+  "start": 24.38,
+  "end": 24.52
+ },
+ {
+  "word": "tires",
+  "line": "L07",
+  "start": 24.52,
+  "end": 24.92
+ },
+ {
+  "word": "are",
+  "line": "L07",
+  "start": 24.92,
+  "end": 25.08
+ },
+ {
+  "word": "not",
+  "line": "L07",
+  "start": 25.08,
+  "end": 25.24
+ },
+ {
+  "word": "black",
+  "line": "L07",
+  "start": 25.24,
+  "end": 25.52
+ },
+ {
+  "word": "for",
+  "line": "L07",
+  "start": 25.52,
+  "end": 25.72
+ },
+ {
+  "word": "style.",
+  "line": "L07",
+  "start": 25.72,
+  "end": 26.12
+ },
+ {
+  "word": "They",
+  "line": "L07",
+  "start": 26.36,
+  "end": 26.56
+ },
+ {
+  "word": "are",
+  "line": "L07",
+  "start": 26.56,
+  "end": 26.68
+ },
+ {
+  "word": "black",
+  "line": "L07",
+  "start": 26.68,
+  "end": 26.94
+ },
+ {
+  "word": "because",
+  "line": "L07",
+  "start": 26.94,
+  "end": 27.28
+ },
+ {
+  "word": "soot",
+  "line": "L07",
+  "start": 27.28,
+  "end": 27.64
+ },
+ {
+  "word": "makes",
+  "line": "L07",
+  "start": 27.64,
+  "end": 27.86
+ },
+ {
+  "word": "them",
+  "line": "L07",
+  "start": 27.86,
+  "end": 28.02
+ },
+ {
+  "word": "last!",
+  "line": "L07",
+  "start": 28.02,
+  "end": 28.34
+ }
+]

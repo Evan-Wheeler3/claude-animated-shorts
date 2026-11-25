@@ -24,12 +24,12 @@ const tire = (col: string, old: boolean) => {
   const g = new THREE.Group(), spin = new THREE.Group(); g.add(spin);
   const mat = lam(col);
   const pts: THREE.Vector2[] = [];   // rounded-rect profile: x = radius, y = width
-  for (let i = 0; i <= 16; i++) { const a = -Math.PI / 2 + Math.PI * i / 16; pts.push(new THREE.Vector2(R - r + r * Math.cos(a) * 1.0, W / 2 * Math.sin(a))); }
-  const body = new THREE.Mesh(new THREE.LatheGeometry(pts.reverse(), 64), mat); body.rotation.x = Math.PI / 2; body.castShadow = body.receiveShadow = true; spin.add(body);
+  for (let i = 0; i <= 32; i++) { const a = -Math.PI / 2 + 2 * Math.PI * i / 32; pts.push(new THREE.Vector2(R - r + r * Math.cos(a), W / 2 * Math.sin(a))); }
+  const body = new THREE.Mesh(new THREE.LatheGeometry(pts, 64), mat); body.rotation.x = Math.PI / 2; body.castShadow = body.receiveShadow = true; spin.add(body);
   const tread: THREE.Mesh[] = [];
-  for (let i = 0; i < 36; i++) { const a = 2 * Math.PI * i / 36; const b = new THREE.Mesh(new THREE.BoxGeometry(.045, .022, W * .8), mat);
-    b.position.set(R * Math.cos(a), R * Math.sin(a), 0); b.rotation.z = a; b.castShadow = true; spin.add(b); tread.push(b); }
-  const hubR = R - r * 1.6;
+  for (let i = 0; i < 36; i++) { const a = 2 * Math.PI * i / 36; const b = new THREE.Mesh(new THREE.BoxGeometry(.016, .036, W * .72), mat);
+    b.position.set((R + .002) * Math.cos(a), (R + .002) * Math.sin(a), 0); b.rotation.z = a; b.castShadow = true; spin.add(b); tread.push(b); }
+  const hubR = R - 2 * r + .012;
   if (old) {
     const rim = new THREE.Mesh(new THREE.TorusGeometry(hubR, .02, 8, 48), lam('#7a4a2a')); spin.add(rim);
     for (let i = 0; i < 10; i++) { const s = new THREE.Mesh(new THREE.BoxGeometry(hubR * 2, .03, .03), lam('#8a5a32')); s.rotation.z = Math.PI * i / 10; spin.add(s); }
@@ -115,14 +115,14 @@ const B: Record<number, (c: Ctx) => Upd> = {
       c.dof = 8; cam(c, [.75 + .02 * kick(f - pop), .4, .9], [0, .3, 0], 40); }; },
   // 6 carbon black (basically soot) pours in; the creamy rubber turns black
   6: c => { const top = lab(c); const dough = tub(c, top); const p = powder('#1a1a1e', 90); p.g.position.set(0, top + .06, -.4); c.scene.add(p.g);
-    const soot = Array.from({length: 12}, (_, i) => { const s = new THREE.Mesh(new THREE.SphereGeometry(.05 + .02 * (i % 3), 10, 8), new THREE.MeshLambertMaterial({color: '#2a2a2e', transparent: true, opacity: .5})); s.layers.set(NOINK); c.scene.add(s); return s; });
+    const soot = Array.from({length: 12}, (_, i) => { const s = new THREE.Mesh(new THREE.SphereGeometry(.018 + .008 * (i % 3), 10, 8), new THREE.MeshLambertMaterial({color: '#222226', transparent: true, opacity: .45})); s.layers.set(NOINK); c.scene.add(s); return s; });
     const col = new THREE.Color(CREAM), blk = new THREE.Color(BLACK);
-    return (f, l, u) => { p.at(l / FPS, 1); (dough.material as THREE.MeshLambertMaterial).color.copy(col).lerp(blk, smooth(u * 1.3));
-      soot.forEach((s, i) => { const k = ((l / FPS) * .6 + i / 12) % 1; s.position.set(.25 * Math.sin(i * 2.1) * k, top + .3 + .35 * k, -.4 + .2 * Math.cos(i * 1.3) * k); s.scale.setScalar(.5 + k); });
+    return (f, l, u) => { p.at(l / FPS, 1); (dough.material as THREE.MeshLambertMaterial).color.copy(col).lerp(blk, smooth(u * 2.2));
+      soot.forEach((s, i) => { const k = ((l / FPS) * .6 + i / 12) % 1; s.position.set(.18 * Math.sin(i * 2.1) * k, top + .16 + .2 * k, -.4 + .15 * Math.cos(i * 1.3) * k); s.scale.setScalar(.6 + k); });
       c.dof = 8; cam(c, [0, top + .5, .6], [0, top + .2, -.4], 40); }; },
   // 7 tougher, cooler: a black tyre spins hard; red heat glow on the tread drains away as heat arrows rise off it
   7: c => { road(c); const w = tire(BLACK, false); c.scene.add(w.g);
-    const glow = w.tread.map(b => { const m = new THREE.Mesh(new THREE.BoxGeometry(.046, .023, .161), new THREE.MeshBasicMaterial({color: '#ff5a2a', transparent: true, opacity: .8, toneMapped: false})); m.layers.set(NOINK); b.add(m); return m; });
+    const glow = w.tread.map(b => { const m = new THREE.Mesh(new THREE.BoxGeometry(.017, .037, .146), new THREE.MeshBasicMaterial({color: '#ff5a2a', transparent: true, opacity: .8, toneMapped: false})); m.layers.set(NOINK); b.add(m); return m; });
     const arrows = [0, 1, 2].map(i => { const a = card(.18, .18, heatArrow); c.scene.add(a.mesh); return a; });
     return (f, l, u) => { w.spin.rotation.z = -.5 * l; const cool = smooth(u * 1.4);
       glow.forEach(m => { (m.material as THREE.MeshBasicMaterial).opacity = .8 * (1 - cool); });
@@ -130,17 +130,17 @@ const B: Record<number, (c: Ctx) => Upd> = {
       c.dof = 8; cam(c, [.9, .55, 1.1], [0, .38, 0], 40); }; },
   // 8 "up to forty percent carbon black": the cut face of a tyre fills black to 40 %
   8: c => { const top = lab(c); const s = sliceRing(0); s.g.position.set(0, top + .45, -.6); c.scene.add(s.g);
-    return (f, l, u) => { s.set(.4 * smooth((f - T('L06', 6)) / 18)); c.dof = 6; cam(c, [0, top + .45, .55], [0, top + .45, -.6], 40); }; },
+    return (f, l, u) => { s.set(.4 * smooth((f - T('L06', 7) + 4) / 18)); c.dof = 4; cam(c, [0, top + .45, 1.0], [0, top + .45, -.6], 40); }; },
   // 9 "So tires are not black for style": a row of modern black tyres rolls past
   9: c => { road(c); const ws = [0, 1, 2, 3, 4].map(() => { const w = tire(BLACK, false); c.scene.add(w.g); return w; });
     return (f, l, u) => { ws.forEach((w, i) => { const x = -5 + i * 1.2 + 3 * u; w.g.position.set(x, 0, -.2 + (i % 2) * .5); w.spin.rotation.z = -x / w.R; });
-      c.dof = 0; glide(c, [[1.5, .7, 4], [-1.5, .4, 0]], [[1.2, .7, 3.6], [-.5, .4, 0]], u, 40); }; },
+      c.dof = 0; glide(c, [[1.2, .9, 6.5], [-1.5, .4, 0]], [[1.0, .9, 6.0], [-.3, .4, 0]], u, 40); }; },
   // 10 payoff: the bald white tyre wobbles and topples beside the black one, which rolls on
   10: c => { road(c); const old = tire(WHITE, true); old.tread.forEach(b => b.scale.y = .05); old.g.position.set(-.5, 0, 0); c.scene.add(old.g);
     const neu = tire(BLACK, false); c.scene.add(neu.g); const tip = T('L07', 14);
     return (f, l, u) => { neu.g.position.set(.5 + .8 * u, 0, 0); neu.spin.rotation.z = -(.5 + .8 * u) / neu.R;
       const k = smooth((f - tip + 8) / 14); old.g.rotation.x = -1.45 * k * k; old.g.rotation.z = .05 * Math.sin(l * .6) * (1 - k);
-      c.dof = 6; cam(c, [.3, .6, 2.3], [0, .35, 0], 40); }; },
+      c.dof = 4; cam(c, [.4, .7, 3.6], [.2, .35, 0], 40); }; },
 };
 
 export const TiresShort: React.FC = () => {
