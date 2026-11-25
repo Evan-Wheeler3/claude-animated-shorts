@@ -17,52 +17,52 @@ import {skyDome} from './kit/look';
 export const LOOK_FRAMES = 8;
 
 // ---------- library ----------
-const IDS = ['coin-modern-quarter', 'coin-hammered', 'coin-milled', 'straight-razor', 'shaving-brush', 'shaving-mug', 'clipping-shears',
+export const IDS = ['coin-modern-quarter', 'coin-hammered', 'coin-milled', 'straight-razor', 'shaving-brush', 'shaving-mug', 'clipping-shears',
   'crucible', 'silver-ingot', 'workbench', 'candle', 'screw-press', 'interrogation-table', 'courtroom-bench', 'gallows',
   'mint-interior', 'mint-furnace', 'tower-mint-exterior', 'market-stall', 'apple', 'modern-table'] as const;
-type Id = typeof IDS[number];
-type Lib = Record<Id, THREE.Group>;
-const loadLib = (): Promise<Lib> => {
+export type Id = typeof IDS[number];
+export type Lib = Record<Id, THREE.Group>;
+export const loadLib = (): Promise<Lib> => {
   const L = new GLTFLoader();
   return Promise.all(IDS.map(id => L.loadAsync(staticFile(`${id}.glb`)).then(g => { toLambert(g.scene); return [id, g.scene] as const; })))
     .then(a => Object.fromEntries(a) as Lib);
 };
-const clone = (L: Lib, id: Id) => L[id].clone(true);
+export const clone = (L: Lib, id: Id) => L[id].clone(true);
 /** recolour materials by name (Codex names them per the brief) */
-const paint = (o: THREE.Object3D, cols: Record<string, string>) => o.traverse(x => {
+export const paint = (o: THREE.Object3D, cols: Record<string, string>) => o.traverse(x => {
   const m = x as THREE.Mesh; if (!m.isMesh) return;
   (Array.isArray(m.material) ? m.material : [m.material]).forEach(mt => { const c = cols[mt.name]; if (c) (mt as THREE.MeshLambertMaterial).color.set(c); });
 });
-const paint2 = (o: THREE.Object3D, cols: Record<string, string>) => { paint(o, cols); return o; };
-const SILVER = {silver: '#eef2f8', coin_edge: '#dfe5ee', coin_face: '#e8edf4'};
+export const paint2 = (o: THREE.Object3D, cols: Record<string, string>) => { paint(o, cols); return o; };
+export const SILVER = {silver: '#eef2f8', coin_edge: '#dfe5ee', coin_face: '#e8edf4'};
 
 // ---------- cast (2D cards) ----------
-const CLIPPER: Outfit = {jacket: '#6b5a3a', pants: '#4a3a2a', boots: '#2a1d16', hat: 'cap', cap: '#3d4a3a', skin: '#f5c9a0'};
-const CLIPPER_NOW: Outfit = {jacket: '#3f6fb5', pants: '#3b3f52', boots: '#f4f1ea', hat: 'cap', cap: '#3d4a3a', skin: '#f5c9a0'};
-const NEWTON: Outfit = {jacket: '#2b2b33', pants: '#2b2b33', boots: '#1d1a1a', hat: 'hair', hair: '#ece7dc', buttons: '#d9dde0'};
-const WITNESS: Outfit = {jacket: '#8a3b2e', pants: '#4a3a2a', boots: '#2a1d16', hat: 'hair', hair: '#5a3b2a'};
-const WORKER: Outfit[] = [{jacket: '#e8dcc0', pants: '#4a3a2a', boots: '#2a1d16', hat: 'hair', hair: '#2f2418'}, {jacket: '#d8c8a8', pants: '#3b3f52', boots: '#2a1d16', hat: 'cap', cap: '#7a3b2e'}];
+export const CLIPPER: Outfit = {jacket: '#6b5a3a', pants: '#4a3a2a', boots: '#2a1d16', hat: 'cap', cap: '#3d4a3a', skin: '#f5c9a0'};
+export const CLIPPER_NOW: Outfit = {jacket: '#3f6fb5', pants: '#3b3f52', boots: '#f4f1ea', hat: 'cap', cap: '#3d4a3a', skin: '#f5c9a0'};
+export const NEWTON: Outfit = {jacket: '#2b2b33', pants: '#2b2b33', boots: '#1d1a1a', hat: 'hair', hair: '#ece7dc', buttons: '#d9dde0'};
+export const WITNESS: Outfit = {jacket: '#8a3b2e', pants: '#4a3a2a', boots: '#2a1d16', hat: 'hair', hair: '#5a3b2a'};
+export const WORKER: Outfit[] = [{jacket: '#e8dcc0', pants: '#4a3a2a', boots: '#2a1d16', hat: 'hair', hair: '#2f2418'}, {jacket: '#d8c8a8', pants: '#3b3f52', boots: '#2a1d16', hat: 'cap', cap: '#7a3b2e'}];
 // head geometry in the 600 x 1000 toon space for build 'adult' (headBlob a = 118): centre (300, 309), half-size ~118 x 111
-const HX = 300, HY = 309;
-const stubble = (g: CanvasRenderingContext2D) => { g.fillStyle = '#5a4636'; for (let i = 0; i < 26; i++) { const a = Math.PI * (.12 + .76 * i / 25); g.beginPath(); g.arc(HX + 92 * Math.cos(a) * (i % 2 ? .9 : .8), HY + 30 + 72 * Math.sin(a) * (i % 2 ? .9 : .78), 3.5, 0, 7); g.fill(); } };
-const goldTooth = (g: CanvasRenderingContext2D) => { g.fillStyle = '#f2c23a'; g.strokeStyle = INK; g.lineWidth = 3; g.fillRect(HX + 8, HY + 52, 14, 12); g.strokeRect(HX + 8, HY + 52, 14, 12); };
+export const HX = 300, HY = 309;
+export const stubble = (g: CanvasRenderingContext2D) => { g.fillStyle = '#5a4636'; for (let i = 0; i < 26; i++) { const a = Math.PI * (.12 + .76 * i / 25); g.beginPath(); g.arc(HX + 92 * Math.cos(a) * (i % 2 ? .9 : .8), HY + 30 + 72 * Math.sin(a) * (i % 2 ? .9 : .78), 3.5, 0, 7); g.fill(); } };
+export const goldTooth = (g: CanvasRenderingContext2D) => { g.fillStyle = '#f2c23a'; g.strokeStyle = INK; g.lineWidth = 3; g.fillRect(HX + 8, HY + 52, 14, 12); g.strokeRect(HX + 8, HY + 52, 14, 12); };
 /** Newton's full-bottomed periwig: one cloud of curls hugging the top of the head and falling to the shoulders, drawn
  *  BEHIND the head (outlines first, fills second, so it reads as one mass), then a fringe of curls overlapping the crown. */
-const WIG_PTS: [number, number][] = [];
+export const WIG_PTS: [number, number][] = [];
 for (let i = 0; i <= 10; i++) { const a = Math.PI * (1 + i / 10); WIG_PTS.push([HX + 126 * Math.cos(a), HY + 4 + 120 * Math.sin(a)]); }
 for (const s of [-1, 1]) for (let i = 0; i < 4; i++) WIG_PTS.push([HX + s * (128 + 6 * (i % 2)), HY + 40 + i * 44]);
-const wigBack = (g: CanvasRenderingContext2D) => {
+export const wigBack = (g: CanvasRenderingContext2D) => {
   g.strokeStyle = INK; g.lineWidth = 18; WIG_PTS.forEach(([x, y]) => { g.beginPath(); g.arc(x, y, 40, 0, 7); g.stroke(); });
   g.fillStyle = '#ddd7ca'; WIG_PTS.forEach(([x, y]) => { g.beginPath(); g.arc(x, y, 40, 0, 7); g.fill(); });
   g.strokeStyle = '#b9b2a4'; g.lineWidth = 5; WIG_PTS.forEach(([x, y], i) => { g.beginPath(); g.arc(x, y, 20, i * .7, i * .7 + 3.2); g.stroke(); });
 };
-const wigTop = (g: CanvasRenderingContext2D) => {
+export const wigTop = (g: CanvasRenderingContext2D) => {
   for (let i = 0; i < 7; i++) { const a = Math.PI * (1.12 + .76 * i / 6), x = HX + 104 * Math.cos(a), y = HY - 8 + 104 * Math.sin(a);
     g.fillStyle = '#ece7dc'; g.strokeStyle = INK; g.lineWidth = 8; g.beginPath(); g.arc(x, y, 30, 0, 7); g.fill(); g.stroke();
     g.strokeStyle = '#c9c2b4'; g.lineWidth = 4; g.beginPath(); g.arc(x, y, 14, i, i + 3); g.stroke(); }
 };
 /** straight razor held in the raised right hand (bodyFront wave = 1 puts the hand at ~(471, 313) for an adult) */
-const razorInHand = (g: CanvasRenderingContext2D) => {
+export const razorInHand = (g: CanvasRenderingContext2D) => {
   g.save(); g.translate(471, 313); g.rotate(-.55); g.lineJoin = 'round';
   g.fillStyle = '#7a4a2a'; g.strokeStyle = INK; g.lineWidth = 7; g.beginPath(); g.roundRect(-10, -6, 78, 14, 6); g.fill(); g.stroke();
   g.fillStyle = '#e6ecf2'; g.beginPath(); g.moveTo(-10, -8); g.lineTo(-108, -14); g.quadraticCurveTo(-118, 4, -104, 12); g.lineTo(-10, 8); g.closePath(); g.fill(); g.stroke();
@@ -70,7 +70,7 @@ const razorInHand = (g: CanvasRenderingContext2D) => {
 };
 /** coin face decal: a crowned (or plain) profile head + bead border + a ring of lettering dots, painted on a lit disc that
  *  covers the asset's abstract face marks. Placed on both faces (+-Z) just inside the rim. */
-const coinFace = (coin: THREE.Object3D, r: number, crown: boolean, base = '#e8edf4') => {
+export const coinFace = (coin: THREE.Object3D, r: number, crown: boolean, base = '#e8edf4') => {
   const cv = document.createElement('canvas'); cv.width = cv.height = 512; const g = cv.getContext('2d')!;
   g.fillStyle = base; g.beginPath(); g.arc(256, 256, 256, 0, 7); g.fill();
   g.strokeStyle = '#8f98a6'; g.lineWidth = 10; g.beginPath(); g.arc(256, 256, 236, 0, 7); g.stroke();
@@ -95,22 +95,22 @@ const coinFace = (coin: THREE.Object3D, r: number, crown: boolean, base = '#e8ed
     d.position.z = sd * (depth / 2 + .00004); if (sd < 0) d.rotation.y = Math.PI; coin.add(d); }
   return coin;
 };
-const foamDots = (g: CanvasRenderingContext2D, x: number, y: number, r: number) => { g.fillStyle = '#ffffff'; g.strokeStyle = INK; g.lineWidth = 5;
+export const foamDots = (g: CanvasRenderingContext2D, x: number, y: number, r: number) => { g.fillStyle = '#ffffff'; g.strokeStyle = INK; g.lineWidth = 5;
   [[0, 0, 1], [-.9, .2, .7], [.9, .15, .75], [-.4, -.6, .6], [.45, -.55, .65]].forEach(([dx, dy, k]) => { g.beginPath(); g.arc(x + dx * r, y + dy * r, r * k, 0, 7); g.fill(); g.stroke(); }); };
 
-type Extra = {back?: (g: CanvasRenderingContext2D) => void; over?: (g: CanvasRenderingContext2D) => void};
-const person = (o: Outfit, h: number, opts: Parameters<typeof bodyFront>[2], ex: Extra = {}) =>
+export type Extra = {back?: (g: CanvasRenderingContext2D) => void; over?: (g: CanvasRenderingContext2D) => void};
+export const person = (o: Outfit, h: number, opts: Parameters<typeof bodyFront>[2], ex: Extra = {}) =>
   new Card(h, .6).draw((p: Pen, g) => { ex.back?.(g); bodyFront(p, o, {mode: 'stand', ...opts}); ex.over?.(g); });
 
 // ---------- sets + light ----------
-type Ctx = {L: Lib; scene: THREE.Scene; camera: THREE.PerspectiveCamera; look: number[]; dof?: number; grade: 'day' | 'golden'; near?: number};
-const cam = (c: Ctx, p: number[], t: number[], fov = 40, roll = 0) => {
+export type Ctx = {L: Lib; scene: THREE.Scene; camera: THREE.PerspectiveCamera; look: number[]; dof?: number; grade: 'day' | 'golden'; near?: number};
+export const cam = (c: Ctx, p: number[], t: number[], fov = 40, roll = 0) => {
   c.look = t; c.camera.fov = fov; c.camera.near = c.near ?? .05; c.camera.updateProjectionMatrix();
   c.camera.position.set(p[0], p[1], p[2]); c.camera.lookAt(t[0], t[1], t[2]); if (roll) c.camera.rotateZ(roll * Math.PI / 180);
 };
-const lam = (col: string) => new THREE.MeshLambertMaterial({color: col});
-const plane = (w: number, h: number, col: string) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), lam(col)); m.receiveShadow = true; return m; };
-const candleLight = (c: Ctx, p: number[], i = 6, d = 6) => {
+export const lam = (col: string) => new THREE.MeshLambertMaterial({color: col});
+export const plane = (w: number, h: number, col: string) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), lam(col)); m.receiveShadow = true; return m; };
+export const candleLight = (c: Ctx, p: number[], i = 6, d = 6) => {
   const l = new THREE.PointLight('#ffd6a0', i, d, 1.6); l.position.set(p[0], p[1], p[2]); l.castShadow = true; l.shadow.mapSize.set(1024, 1024); l.shadow.bias = -.002; c.scene.add(l);
   const fl = new THREE.Mesh(new THREE.SphereGeometry(.018, 12, 8).scale(1, 1.8, 1), new THREE.MeshBasicMaterial({color: '#ffe08a', toneMapped: false}));
   fl.position.set(p[0], p[1], p[2]); fl.layers.set(NOINK); c.scene.add(fl);
@@ -118,7 +118,7 @@ const candleLight = (c: Ctx, p: number[], i = 6, d = 6) => {
   halo.position.set(p[0], p[1], p[2]); halo.layers.set(NOINK); halo.userData.card = true; halo.userData.figure = false; c.scene.add(halo);
 };
 /** 1690s back room: plank floor, plaster walls with timber posts, a small night window (warm candle key, cool moon fill) */
-const backRoom = (c: Ctx) => {
+export const backRoom = (c: Ctx) => {
   c.scene.background = new THREE.Color('#1d1820'); c.grade = 'day';
   const floor = plane(10, 10, '#6b4a32'); floor.rotation.x = -Math.PI / 2; c.scene.add(floor);
   const wall = plane(10, 4, '#a88a66'); wall.position.set(0, 2, -1.6); c.scene.add(wall);
@@ -129,7 +129,7 @@ const backRoom = (c: Ctx) => {
   c.scene.add(new THREE.HemisphereLight('#b8c4e0', '#5a4030', 1.25));
   const moon = new THREE.DirectionalLight('#c8d4f0', 1.1); moon.position.set(2, 4, -3); c.scene.add(moon);
 };
-const bench = (c: Ctx) => { c.scene.add(put(clone(c.L, 'workbench'), [0, 0, -.6])); return .79; };
+export const bench = (c: Ctx) => { c.scene.add(put(clone(c.L, 'workbench'), [0, 0, -.6])); return .79; };
 
 // ---------- the stills ----------
 type Build = (c: Ctx) => void;

@@ -1,0 +1,193 @@
+{
+ "_": "Each picture from SHOTLIST.md starts LEAD frames before word `w` (0-based) of script line `line` in ../../voice/words.json.",
+ "lead": 2,
+ "tail": 0.45,
+ "pics": [
+  {
+   "pic": 1,
+   "line": "L01",
+   "w": 0,
+   "env": "kitchen"
+  },
+  {
+   "pic": 2,
+   "line": "L01",
+   "w": 9,
+   "env": "kitchen"
+  },
+  {
+   "pic": 3,
+   "line": "L02",
+   "w": 0,
+   "env": "backroom"
+  },
+  {
+   "pic": 4,
+   "line": "L02",
+   "w": 9,
+   "env": "backroom"
+  },
+  {
+   "pic": 5,
+   "line": "L03",
+   "w": 0,
+   "env": "backroom"
+  },
+  {
+   "pic": 6,
+   "line": "L03",
+   "w": 3,
+   "env": "backroom"
+  },
+  {
+   "pic": 7,
+   "line": "L04",
+   "w": 0,
+   "env": "backroom"
+  },
+  {
+   "pic": 8,
+   "line": "L04",
+   "w": 8,
+   "env": "backroom"
+  },
+  {
+   "pic": 9,
+   "line": "L04",
+   "w": 14,
+   "env": "backroom"
+  },
+  {
+   "pic": 10,
+   "line": "L04",
+   "w": 17,
+   "env": "backroom"
+  },
+  {
+   "pic": 11,
+   "line": "L05",
+   "w": 0,
+   "env": "court"
+  },
+  {
+   "pic": 12,
+   "line": "L05",
+   "w": 5,
+   "env": "hill"
+  },
+  {
+   "pic": 13,
+   "line": "L06",
+   "w": 0,
+   "env": "mint"
+  },
+  {
+   "pic": 14,
+   "line": "L06",
+   "w": 4,
+   "env": "mint"
+  },
+  {
+   "pic": 15,
+   "line": "L06",
+   "w": 10,
+   "env": "mint"
+  },
+  {
+   "pic": 16,
+   "line": "L07",
+   "w": 0,
+   "env": "backroom"
+  },
+  {
+   "pic": 17,
+   "line": "L08",
+   "w": 0,
+   "env": "market"
+  },
+  {
+   "pic": 18,
+   "line": "L08",
+   "w": 5,
+   "env": "mint"
+  },
+  {
+   "pic": 19,
+   "line": "L08",
+   "w": 9,
+   "env": "tower"
+  },
+  {
+   "pic": 20,
+   "line": "L09",
+   "w": 3,
+   "env": "mint"
+  },
+  {
+   "pic": 21,
+   "line": "L10",
+   "w": 0,
+   "env": "mint"
+  },
+  {
+   "pic": 22,
+   "line": "L11",
+   "w": 0,
+   "env": "backroom"
+  },
+  {
+   "pic": 23,
+   "line": "L11",
+   "w": 9,
+   "env": "backroom"
+  },
+  {
+   "pic": 24,
+   "line": "L12",
+   "w": 0,
+   "env": "interro"
+  },
+  {
+   "pic": 25,
+   "line": "L12",
+   "w": 1,
+   "env": "interro"
+  },
+  {
+   "pic": 26,
+   "line": "L12",
+   "w": 6,
+   "env": "interro"
+  },
+  {
+   "pic": 27,
+   "line": "L13",
+   "w": 0,
+   "env": "kitchen"
+  },
+  {
+   "pic": 28,
+   "line": "L13",
+   "w": 9,
+   "env": "kitchen"
+  },
+  {
+   "pic": 29,
+   "line": "L14",
+   "w": 0,
+   "env": "kitchen"
+  },
+  {
+   "pic": 30,
+   "line": "L14",
+   "w": 2,
+   "env": "kitchen"
+  },
+  {
+   "pic": 31,
+   "line": "L14",
+   "w": 6,
+   "env": "kitchen"
+  }
+ ]
+}
