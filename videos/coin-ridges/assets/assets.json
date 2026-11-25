@@ -1,0 +1,424 @@
+{
+  "story_id": "coin-ridges",
+  "assets": [
+    {
+      "id": "coin-modern-quarter",
+      "file": "coin-modern-quarter.glb",
+      "size_m": [
+        0.0243,
+        0.0243,
+        0.00175
+      ],
+      "size_tolerance": 0.05,
+      "pivot": "center",
+      "max_tris": 12000,
+      "materials": [
+        "coin_face",
+        "coin_edge"
+      ],
+      "license": "original",
+      "notes": "Purpose-built generic relief and 60 raised reeds."
+    },
+    {
+      "id": "coin-hammered",
+      "file": "coin-hammered.glb",
+      "size_m": [
+        0.032,
+        0.032,
+        0.0012
+      ],
+      "size_tolerance": 0.15,
+      "pivot": "center",
+      "max_tris": 6000,
+      "materials": [
+        "silver"
+      ],
+      "license": "original",
+      "notes": "Purpose-built asymmetrical blank with a flush detachable crescent and generic stamps.",
+      "parts": [
+        {
+          "pattern": "^sliver$",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "coin-milled",
+      "file": "coin-milled.glb",
+      "size_m": [
+        0.039,
+        0.039,
+        0.0025
+      ],
+      "size_tolerance": 0.15,
+      "pivot": "center",
+      "max_tris": 10000,
+      "materials": [
+        "silver",
+        "coin_edge"
+      ],
+      "license": "original",
+      "notes": "Purpose-built crown with raised diagonal blocks and a matching detachable edge segment.",
+      "parts": [
+        {
+          "pattern": "^bite$",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "straight-razor",
+      "file": "straight-razor.glb",
+      "size_m": [
+        0.25,
+        0.03,
+        0.015
+      ],
+      "size_tolerance": 0.15,
+      "pivot": "center",
+      "max_tris": 2000,
+      "materials": [
+        "steel",
+        "wood"
+      ],
+      "license": "original",
+      "notes": "Custom open shaving profile with long steel blade, wood scales and pivot pin."
+    },
+    {
+      "id": "shaving-brush",
+      "file": "shaving-brush.glb",
+      "size_m": [
+        0.06,
+        0.12,
+        0.06
+      ],
+      "size_tolerance": 0.15,
+      "pivot": "bottom-center",
+      "max_tris": 2500,
+      "materials": [
+        "bristle",
+        "wood"
+      ],
+      "license": "original",
+      "notes": "Custom turned handle with a broad, faceted shaving knot."
+    },
+    {
+      "id": "shaving-mug",
+      "file": "shaving-mug.glb",
+      "size_m": [
+        0.09,
+        0.1,
+        0.09
+      ],
+      "size_tolerance": 0.15,
+      "pivot": "bottom-center",
+      "max_tris": 2500,
+      "materials": [
+        "ceramic",
+        "foam"
+      ],
+      "license": "original",
+      "notes": "Custom glazed cup with loop handle and three broad foam lobes."
+    },
+    {
+      "id": "clipping-shears",
+      "file": "clipping-shears.glb",
+      "size_m": [
+        0.22,
+        0.02,
+        0.07
+      ],
+      "size_tolerance": 0.15,
+      "pivot": "center",
+      "max_tris": 3000,
+      "materials": [
+        "iron"
+      ],
+      "license": "original",
+      "notes": "Custom closed iron snips, oval grips and center rivet.",
+      "parts": [
+        {
+          "pattern": "^blade_upper$",
+          "count": 1,
+          "pivot": "center",
+          "open": {
+            "axis": "y",
+            "sign": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "crucible",
+      "file": "crucible.glb",
+      "size_m": [
+        0.4,
+        0.55,
+        0.4
+      ],
+      "size_tolerance": 0.15,
+      "pivot": "bottom-center",
+      "max_tris": 4000,
+      "materials": [
+        "clay",
+        "iron",
+        "coal"
+      ],
+      "license": "original",
+      "notes": "Custom thick terracotta pot on a wrought tripod and coal-filled brazier."
+    },
+    {
+      "id": "silver-ingot",
+      "file": "silver-ingot.glb",
+      "size_m": [
+        0.12,
+        0.03,
+        0.05
+      ],
+      "size_tolerance": 0.15,
+      "pivot": "bottom-center",
+      "max_tris": 500,
+      "materials": [
+        "silver"
+      ],
+      "license": "original",
+      "notes": "Custom four-level cast ingot silhouette with broad bevel facets."
+    },
+    {
+      "id": "workbench",
+      "file": "workbench.glb",
+      "size_m": [
+        1.4,
+        0.78,
+        0.7
+      ],
+      "size_tolerance": 0.15,
+      "pivot": "bottom-center",
+      "max_tris": 6000,
+      "materials": [
+        "wood",
+        "iron",
+        "wax"
+      ],
+      "license": "original",
+      "notes": "Custom seventeenth-century plank bench with apron, stretcher, hammer and tallow stub."
+    },
+    {
+      "id": "candle",
+      "file": "candle.glb",
+      "size_m": [
+        0.1,
+        0.2,
+        0.1
+      ],
+      "size_tolerance": 0.15,
+      "pivot": "bottom-center",
+      "max_tris": 1000,
+      "materials": [
+        "wax",
+        "pewter"
+      ],
+      "license": "original",
+      "notes": "Custom tallow stub with low pewter saucer and wick."
+    },
+    {
+      "id": "screw-press",
+      "file": "screw-press.glb",
+      "size_m": [
+        3.2,
+        2.2,
+        1.2
+      ],
+      "size_tolerance": 0.15,
+      "pivot": "bottom-center",
+      "max_tris": 15000,
+      "materials": [
+        "iron",
+        "stone",
+        "wood"
+      ],
+      "license": "original",
+      "notes": "Custom coining press with stone plinth, chest-high bar and screw, bar and weights sharing one pivot.",
+      "parts": [
+        {
+          "pattern": "^screw_bar$",
+          "count": 1,
+          "pivot": "center",
+          "open": {
+            "axis": "y",
+            "sign": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "interrogation-table",
+      "file": "interrogation-table.glb",
+      "size_m": [
+        1.6,
+        1.2,
+        1.6
+      ],
+      "size_tolerance": 0.15,
+      "pivot": "bottom-center",
+      "max_tris": 8000,
+      "materials": [
+        "wood",
+        "paper",
+        "ink"
+      ],
+      "license": "original",
+      "notes": "Custom oak interview furniture with two high backs, inkpot, quill and offset pages."
+    },
+    {
+      "id": "courtroom-bench",
+      "file": "courtroom-bench.glb",
+      "size_m": [
+        2.4,
+        1.3,
+        1
+      ],
+      "size_tolerance": 0.15,
+      "pivot": "bottom-center",
+      "max_tris": 5000,
+      "materials": [
+        "wood"
+      ],
+      "license": "original",
+      "notes": "Custom raised paneled judges bench with a gavel resting on its block.",
+      "parts": [
+        {
+          "pattern": "^gavel$",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "id": "gallows",
+      "file": "gallows.glb",
+      "size_m": [
+        3,
+        4,
+        1.5
+      ],
+      "size_tolerance": 0.15,
+      "pivot": "bottom-center",
+      "max_tris": 2000,
+      "materials": [
+        "wood"
+      ],
+      "license": "original",
+      "notes": "Custom silhouette with braced frame and short leaning ladder."
+    },
+    {
+      "id": "mint-interior",
+      "file": "mint-interior.glb",
+      "size_m": [
+        8,
+        4.5,
+        6
+      ],
+      "size_tolerance": 0.15,
+      "pivot": "bottom-center",
+      "max_tris": 15000,
+      "materials": [
+        "stone",
+        "wood",
+        "plaster"
+      ],
+      "license": "original",
+      "notes": "Custom open-front room with two perpendicular walls, arched window, floor flags and overhead timber."
+    },
+    {
+      "id": "mint-furnace",
+      "file": "mint-furnace.glb",
+      "size_m": [
+        2.5,
+        2.6,
+        2
+      ],
+      "size_tolerance": 0.15,
+      "pivot": "bottom-center",
+      "max_tris": 8000,
+      "materials": [
+        "brick",
+        "iron"
+      ],
+      "license": "original",
+      "notes": "Custom stepped brick furnace with recessed arched mouth, iron hearth and side chute."
+    },
+    {
+      "id": "tower-mint-exterior",
+      "file": "tower-mint-exterior.glb",
+      "size_m": [
+        36,
+        30,
+        32
+      ],
+      "size_tolerance": 0.15,
+      "pivot": "bottom-center",
+      "max_tris": 12000,
+      "materials": [
+        "stone",
+        "roof"
+      ],
+      "license": "original",
+      "notes": "Custom White Tower silhouette with four domed turrets, crenellations and a curtain-wall gateway."
+    },
+    {
+      "id": "market-stall",
+      "file": "market-stall.glb",
+      "size_m": [
+        2.5,
+        2.4,
+        1.4
+      ],
+      "size_tolerance": 0.15,
+      "pivot": "bottom-center",
+      "max_tris": 6000,
+      "materials": [
+        "wood",
+        "canvas",
+        "sack"
+      ],
+      "license": "original",
+      "notes": "Custom London plank stall with cream and rust awning, sacks and baskets. CC0 market listings were found, but no model could be retrieved through the workspace proxy."
+    },
+    {
+      "id": "apple",
+      "file": "apple.glb",
+      "size_m": [
+        0.08,
+        0.09,
+        0.08
+      ],
+      "size_tolerance": 0.15,
+      "pivot": "center",
+      "max_tris": 1000,
+      "materials": [
+        "apple",
+        "stem",
+        "leaf"
+      ],
+      "license": "original",
+      "notes": "Custom broad red lobes, angled stem and single folded leaf. CC0 apple download was blocked by the workspace proxy."
+    },
+    {
+      "id": "modern-table",
+      "file": "modern-table.glb",
+      "size_m": [
+        1.2,
+        0.75,
+        0.8
+      ],
+      "size_tolerance": 0.15,
+      "pivot": "bottom-center",
+      "max_tris": 2000,
+      "materials": [
+        "wood"
+      ],
+      "license": "original",
+      "notes": "Custom modern wood table, softly eased slab and slim legs. Kenney CC0 table download was blocked by the workspace proxy."
+    }
+  ]
+}
