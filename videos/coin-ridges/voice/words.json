@@ -1,968 +1,1076 @@
 [
  {
-  "word": "People",
+  "word": "The",
   "line": "L01",
   "start": 0.0,
-  "end": 0.62
+  "end": 0.6
  },
  {
-  "word": "used",
+  "word": "tiny",
   "line": "L01",
-  "start": 0.62,
-  "end": 0.9
+  "start": 0.6,
+  "end": 0.92
  },
  {
-  "word": "to",
+  "word": "ridges",
   "line": "L01",
-  "start": 0.9,
-  "end": 1.14
- },
- {
-  "word": "shave",
-  "line": "L01",
-  "start": 1.14,
-  "end": 1.32
- },
- {
-  "word": "the",
-  "line": "L01",
-  "start": 1.32,
-  "end": 1.5
- },
- {
-  "word": "edges",
-  "line": "L01",
-  "start": 1.5,
-  "end": 1.72
- },
- {
-  "word": "off",
-  "line": "L01",
-  "start": 1.72,
-  "end": 1.98
- },
- {
-  "word": "their",
-  "line": "L01",
-  "start": 1.98,
-  "end": 2.2
- },
- {
-  "word": "coins,",
-  "line": "L01",
-  "start": 2.2,
-  "end": 2.52
- },
- {
-  "word": "and",
-  "line": "L01",
-  "start": 2.52,
-  "end": 2.74
- },
- {
-  "word": "then",
-  "line": "L01",
-  "start": 2.74,
-  "end": 2.9
- },
- {
-  "word": "spend",
-  "line": "L01",
-  "start": 2.9,
-  "end": 3.18
- },
- {
-  "word": "them",
-  "line": "L01",
-  "start": 3.18,
-  "end": 3.4
- },
- {
-  "word": "anyway!",
-  "line": "L01",
-  "start": 3.4,
-  "end": 3.8
- },
- {
-  "word": "Back",
-  "line": "L02",
-  "start": 3.8,
-  "end": 4.72
- },
- {
-  "word": "then,",
-  "line": "L02",
-  "start": 4.72,
-  "end": 4.94
- },
- {
-  "word": "a",
-  "line": "L02",
-  "start": 4.94,
-  "end": 5.1
- },
- {
-  "word": "silver",
-  "line": "L02",
-  "start": 5.1,
-  "end": 5.34
- },
- {
-  "word": "coin",
-  "line": "L02",
-  "start": 5.34,
-  "end": 5.6
- },
- {
-  "word": "was",
-  "line": "L02",
-  "start": 5.6,
-  "end": 5.8
- },
- {
-  "word": "worth",
-  "line": "L02",
-  "start": 5.8,
-  "end": 5.96
- },
- {
-  "word": "the",
-  "line": "L02",
-  "start": 5.96,
-  "end": 6.16
- },
- {
-  "word": "silver",
-  "line": "L02",
-  "start": 6.16,
-  "end": 6.42
- },
- {
-  "word": "inside",
-  "line": "L02",
-  "start": 6.42,
-  "end": 6.86
- },
- {
-  "word": "it.",
-  "line": "L02",
-  "start": 6.86,
-  "end": 7.14
- },
- {
-  "word": "So",
-  "line": "L03",
-  "start": 7.14,
-  "end": 7.7
- },
- {
-  "word": "shave",
-  "line": "L03",
-  "start": 7.7,
-  "end": 8.04
- },
- {
-  "word": "a",
-  "line": "L03",
-  "start": 8.04,
-  "end": 8.18
- },
- {
-  "word": "little",
-  "line": "L03",
-  "start": 8.18,
-  "end": 8.32
- },
- {
-  "word": "off",
-  "line": "L03",
-  "start": 8.32,
-  "end": 8.6
- },
- {
-  "word": "a",
-  "line": "L03",
-  "start": 8.6,
-  "end": 8.72
- },
- {
-  "word": "hundred",
-  "line": "L03",
-  "start": 8.72,
-  "end": 8.94
- },
- {
-  "word": "coins,",
-  "line": "L03",
-  "start": 8.94,
-  "end": 9.4
- },
- {
-  "word": "melt",
-  "line": "L03",
-  "start": 9.4,
-  "end": 9.64
- },
- {
-  "word": "the",
-  "line": "L03",
-  "start": 9.64,
-  "end": 9.9
- },
- {
-  "word": "shavings,",
-  "line": "L03",
-  "start": 9.9,
-  "end": 10.26
- },
- {
-  "word": "and",
-  "line": "L03",
-  "start": 10.26,
-  "end": 10.42
- },
- {
-  "word": "you",
-  "line": "L03",
-  "start": 10.42,
-  "end": 10.54
- },
- {
-  "word": "have",
-  "line": "L03",
-  "start": 10.54,
-  "end": 10.74
- },
- {
-  "word": "free",
-  "line": "L03",
-  "start": 10.74,
-  "end": 11.0
- },
- {
-  "word": "silver!",
-  "line": "L03",
-  "start": 11.0,
-  "end": 11.5
- },
- {
-  "word": "This",
-  "line": "L04",
-  "start": 11.5,
-  "end": 12.26
- },
- {
-  "word": "was",
-  "line": "L04",
-  "start": 12.26,
-  "end": 12.44
- },
- {
-  "word": "called",
-  "line": "L04",
-  "start": 12.44,
-  "end": 12.7
- },
- {
-  "word": "clipping,",
-  "line": "L04",
-  "start": 12.7,
-  "end": 13.1
- },
- {
-  "word": "and",
-  "line": "L04",
-  "start": 13.1,
-  "end": 13.54
- },
- {
-  "word": "you",
-  "line": "L04",
-  "start": 13.54,
-  "end": 13.7
- },
- {
-  "word": "could",
-  "line": "L04",
-  "start": 13.7,
-  "end": 13.86
- },
- {
-  "word": "be",
-  "line": "L04",
-  "start": 13.86,
-  "end": 14.02
- },
- {
-  "word": "put",
-  "line": "L04",
-  "start": 14.02,
-  "end": 14.2
- },
- {
-  "word": "to",
-  "line": "L04",
-  "start": 14.2,
-  "end": 14.42
- },
- {
-  "word": "death",
-  "line": "L04",
-  "start": 14.42,
-  "end": 14.62
- },
- {
-  "word": "for",
-  "line": "L04",
-  "start": 14.62,
-  "end": 14.84
- },
- {
-  "word": "it.",
-  "line": "L04",
-  "start": 14.84,
-  "end": 15.1
- },
- {
-  "word": "So",
-  "line": "L05",
-  "start": 15.1,
-  "end": 15.96
- },
- {
-  "word": "in",
-  "line": "L05",
-  "start": 15.96,
-  "end": 16.16
- },
- {
-  "word": "sixteen",
-  "line": "L05",
-  "start": 16.16,
-  "end": 16.46
- },
- {
-  "word": "sixty-two,",
-  "line": "L05",
-  "start": 16.46,
-  "end": 17.02
- },
- {
-  "word": "England",
-  "line": "L05",
-  "start": 17.02,
-  "end": 17.32
- },
- {
-  "word": "began",
-  "line": "L05",
-  "start": 17.32,
-  "end": 17.64
- },
- {
-  "word": "making",
-  "line": "L05",
-  "start": 17.64,
-  "end": 17.94
- },
- {
-  "word": "coins",
-  "line": "L05",
-  "start": 17.94,
-  "end": 18.32
- },
- {
-  "word": "by",
-  "line": "L05",
-  "start": 18.32,
-  "end": 18.52
- },
- {
-  "word": "machine,",
-  "line": "L05",
-  "start": 18.52,
-  "end": 18.96
- },
- {
-  "word": "with",
-  "line": "L05",
-  "start": 18.96,
-  "end": 19.16
- },
- {
-  "word": "a",
-  "line": "L05",
-  "start": 19.16,
-  "end": 19.36
- },
- {
-  "word": "pattern",
-  "line": "L05",
-  "start": 19.36,
-  "end": 19.6
+  "start": 0.92,
+  "end": 1.28
  },
  {
   "word": "on",
-  "line": "L05",
-  "start": 19.6,
-  "end": 19.78
+  "line": "L01",
+  "start": 1.28,
+  "end": 1.44
  },
  {
-  "word": "the",
-  "line": "L05",
-  "start": 19.78,
-  "end": 19.94
- },
- {
-  "word": "edge.",
-  "line": "L05",
-  "start": 19.94,
-  "end": 20.28
- },
- {
-  "word": "Now",
-  "line": "L06",
-  "start": 20.28,
-  "end": 20.86
- },
- {
-  "word": "a",
-  "line": "L06",
-  "start": 20.86,
-  "end": 21.06
- },
- {
-  "word": "shaved",
-  "line": "L06",
-  "start": 21.06,
-  "end": 21.34
- },
- {
-  "word": "coin",
-  "line": "L06",
-  "start": 21.34,
-  "end": 21.6
- },
- {
-  "word": "was",
-  "line": "L06",
-  "start": 21.6,
-  "end": 21.8
- },
- {
-  "word": "easy",
-  "line": "L06",
-  "start": 21.8,
-  "end": 22.04
- },
- {
-  "word": "to",
-  "line": "L06",
-  "start": 22.04,
-  "end": 22.24
- },
- {
-  "word": "spot!",
-  "line": "L06",
-  "start": 22.24,
-  "end": 22.6
- },
- {
-  "word": "But",
-  "line": "L07",
-  "start": 22.6,
-  "end": 23.04
- },
- {
-  "word": "old",
-  "line": "L07",
-  "start": 23.04,
-  "end": 23.26
- },
- {
-  "word": "smooth",
-  "line": "L07",
-  "start": 23.26,
-  "end": 23.6
+  "word": "your",
+  "line": "L01",
+  "start": 1.44,
+  "end": 1.62
  },
  {
   "word": "coins",
-  "line": "L07",
-  "start": 23.6,
-  "end": 24.02
+  "line": "L01",
+  "start": 1.62,
+  "end": 1.92
  },
  {
   "word": "were",
-  "line": "L07",
-  "start": 24.02,
-  "end": 24.2
+  "line": "L01",
+  "start": 1.92,
+  "end": 2.1
  },
  {
-  "word": "still",
-  "line": "L07",
-  "start": 24.2,
-  "end": 24.44
+  "word": "put",
+  "line": "L01",
+  "start": 2.1,
+  "end": 2.28
  },
  {
-  "word": "everywhere.",
-  "line": "L07",
-  "start": 24.44,
-  "end": 24.9
+  "word": "there",
+  "line": "L01",
+  "start": 2.28,
+  "end": 2.46
  },
  {
-  "word": "So",
-  "line": "L07",
-  "start": 24.9,
-  "end": 25.34
+  "word": "to",
+  "line": "L01",
+  "start": 2.46,
+  "end": 2.6
  },
  {
-  "word": "in",
-  "line": "L07",
-  "start": 25.34,
-  "end": 25.56
+  "word": "stop",
+  "line": "L01",
+  "start": 2.6,
+  "end": 2.86
  },
  {
-  "word": "sixteen",
-  "line": "L07",
-  "start": 25.56,
-  "end": 25.86
+  "word": "thieves!",
+  "line": "L01",
+  "start": 2.86,
+  "end": 3.4
  },
  {
-  "word": "ninety-six,",
-  "line": "L07",
-  "start": 25.86,
-  "end": 26.62
- },
- {
-  "word": "England",
-  "line": "L07",
-  "start": 26.62,
-  "end": 27.36
- },
- {
-  "word": "remade",
-  "line": "L07",
-  "start": 27.36,
-  "end": 27.74
- },
- {
-  "word": "all",
-  "line": "L07",
-  "start": 27.74,
-  "end": 27.94
- },
- {
-  "word": "its",
-  "line": "L07",
-  "start": 27.94,
-  "end": 28.1
- },
- {
-  "word": "money.",
-  "line": "L07",
-  "start": 28.1,
-  "end": 28.4
- },
- {
-  "word": "And",
-  "line": "L08",
-  "start": 28.4,
-  "end": 28.94
- },
- {
-  "word": "the",
-  "line": "L08",
-  "start": 28.94,
-  "end": 29.08
- },
- {
-  "word": "man",
-  "line": "L08",
-  "start": 29.08,
-  "end": 29.38
- },
- {
-  "word": "hunting",
-  "line": "L08",
-  "start": 29.38,
-  "end": 29.8
- },
- {
-  "word": "the",
-  "line": "L08",
-  "start": 29.8,
-  "end": 30.0
- },
- {
-  "word": "cheaters",
-  "line": "L08",
-  "start": 30.0,
-  "end": 30.38
- },
- {
-  "word": "was",
-  "line": "L08",
-  "start": 30.38,
-  "end": 30.62
- },
- {
-  "word": "Isaac",
-  "line": "L08",
-  "start": 30.62,
-  "end": 30.98
- },
- {
-  "word": "Newton!",
-  "line": "L08",
-  "start": 30.98,
-  "end": 31.28
- },
- {
-  "word": "Yes,",
-  "line": "L09",
-  "start": 31.28,
-  "end": 32.4
- },
- {
-  "word": "the",
-  "line": "L09",
-  "start": 32.4,
-  "end": 32.92
- },
- {
-  "word": "gravity",
-  "line": "L09",
-  "start": 32.92,
-  "end": 33.32
- },
- {
-  "word": "guy.",
-  "line": "L09",
-  "start": 33.32,
-  "end": 33.74
- },
- {
-  "word": "His",
-  "line": "L10",
-  "start": 33.74,
-  "end": 34.22
- },
- {
-  "word": "biggest",
-  "line": "L10",
-  "start": 34.22,
-  "end": 34.48
- },
- {
-  "word": "target",
-  "line": "L10",
-  "start": 34.48,
-  "end": 34.92
- },
- {
-  "word": "was",
-  "line": "L10",
-  "start": 34.92,
-  "end": 35.12
- },
- {
-  "word": "a",
-  "line": "L10",
-  "start": 35.12,
-  "end": 35.36
- },
- {
-  "word": "forger",
-  "line": "L10",
-  "start": 35.36,
-  "end": 35.74
- },
- {
-  "word": "named",
-  "line": "L10",
-  "start": 35.74,
-  "end": 36.02
- },
- {
-  "word": "William",
-  "line": "L10",
-  "start": 36.02,
-  "end": 36.48
- },
- {
-  "word": "Chaloner,",
-  "line": "L10",
-  "start": 36.48,
-  "end": 37.08
- },
- {
-  "word": "who",
-  "line": "L10",
-  "start": 37.08,
-  "end": 37.38
- },
- {
-  "word": "even",
-  "line": "L10",
-  "start": 37.38,
-  "end": 37.56
- },
- {
-  "word": "faked",
-  "line": "L10",
-  "start": 37.56,
-  "end": 37.9
- },
- {
-  "word": "the",
-  "line": "L10",
-  "start": 37.9,
-  "end": 38.12
- },
- {
-  "word": "edges.",
-  "line": "L10",
-  "start": 38.12,
-  "end": 38.62
- },
- {
-  "word": "Newton",
-  "line": "L11",
-  "start": 38.62,
-  "end": 39.68
- },
- {
-  "word": "questioned",
-  "line": "L11",
-  "start": 39.68,
-  "end": 40.12
- },
- {
-  "word": "the",
-  "line": "L11",
-  "start": 40.12,
-  "end": 40.32
- },
- {
-  "word": "witnesses",
-  "line": "L11",
-  "start": 40.32,
-  "end": 40.62
- },
- {
-  "word": "himself,",
-  "line": "L11",
-  "start": 40.62,
-  "end": 41.18
- },
- {
-  "word": "and",
-  "line": "L11",
-  "start": 41.18,
-  "end": 41.62
- },
- {
-  "word": "Chaloner",
-  "line": "L11",
-  "start": 41.62,
-  "end": 42.06
- },
- {
-  "word": "was",
-  "line": "L11",
-  "start": 42.06,
-  "end": 42.28
- },
- {
-  "word": "hanged.",
-  "line": "L11",
-  "start": 42.28,
-  "end": 42.8
- },
- {
-  "word": "Today's",
-  "line": "L12",
-  "start": 42.8,
-  "end": 43.76
+  "word": "Because",
+  "line": "L02",
+  "start": 4.04,
+  "end": 4.1
  },
  {
   "word": "coins",
-  "line": "L12",
-  "start": 43.76,
-  "end": 43.96
+  "line": "L02",
+  "start": 4.1,
+  "end": 4.58
  },
  {
-  "word": "are",
-  "line": "L12",
-  "start": 43.96,
-  "end": 44.14
+  "word": "used",
+  "line": "L02",
+  "start": 4.58,
+  "end": 4.84
+ },
+ {
+  "word": "to",
+  "line": "L02",
+  "start": 4.84,
+  "end": 4.98
+ },
+ {
+  "word": "be",
+  "line": "L02",
+  "start": 4.98,
+  "end": 5.12
+ },
+ {
+  "word": "made",
+  "line": "L02",
+  "start": 5.12,
+  "end": 5.22
+ },
+ {
+  "word": "of",
+  "line": "L02",
+  "start": 5.22,
+  "end": 5.4
+ },
+ {
+  "word": "real",
+  "line": "L02",
+  "start": 5.4,
+  "end": 5.6
+ },
+ {
+  "word": "silver,",
+  "line": "L02",
+  "start": 5.6,
+  "end": 6.1
+ },
+ {
+  "word": "and",
+  "line": "L02",
+  "start": 6.1,
+  "end": 6.34
+ },
+ {
+  "word": "people",
+  "line": "L02",
+  "start": 6.34,
+  "end": 6.62
+ },
+ {
+  "word": "would",
+  "line": "L02",
+  "start": 6.62,
+  "end": 6.86
+ },
+ {
+  "word": "shave",
+  "line": "L02",
+  "start": 6.86,
+  "end": 7.26
+ },
+ {
+  "word": "them.",
+  "line": "L02",
+  "start": 7.26,
+  "end": 7.52
+ },
+ {
+  "word": "Well,",
+  "line": "L03",
+  "start": 8.0,
+  "end": 8.26
  },
  {
   "word": "not",
-  "line": "L12",
-  "start": 44.14,
-  "end": 44.32
+  "line": "L03",
+  "start": 8.4,
+  "end": 8.54
  },
  {
-  "word": "silver.",
-  "line": "L12",
-  "start": 44.32,
-  "end": 44.84
+  "word": "with",
+  "line": "L03",
+  "start": 8.54,
+  "end": 8.8
+ },
+ {
+  "word": "shaving",
+  "line": "L03",
+  "start": 8.8,
+  "end": 9.22
+ },
+ {
+  "word": "cream.",
+  "line": "L03",
+  "start": 9.22,
+  "end": 9.6
+ },
+ {
+  "word": "They",
+  "line": "L04",
+  "start": 10.08,
+  "end": 10.18
+ },
+ {
+  "word": "snipped",
+  "line": "L04",
+  "start": 10.18,
+  "end": 10.5
+ },
+ {
+  "word": "a",
+  "line": "L04",
+  "start": 10.5,
+  "end": 10.66
+ },
+ {
+  "word": "thin",
+  "line": "L04",
+  "start": 10.66,
+  "end": 10.84
+ },
+ {
+  "word": "sliver",
+  "line": "L04",
+  "start": 10.84,
+  "end": 11.18
+ },
+ {
+  "word": "off",
+  "line": "L04",
+  "start": 11.18,
+  "end": 11.4
+ },
+ {
+  "word": "the",
+  "line": "L04",
+  "start": 11.4,
+  "end": 11.6
+ },
+ {
+  "word": "edge.",
+  "line": "L04",
+  "start": 11.6,
+  "end": 11.88
+ },
+ {
+  "word": "Do",
+  "line": "L04",
+  "start": 12.34,
+  "end": 12.44
+ },
+ {
+  "word": "that",
+  "line": "L04",
+  "start": 12.44,
+  "end": 12.66
+ },
+ {
+  "word": "to",
+  "line": "L04",
+  "start": 12.66,
+  "end": 12.86
+ },
+ {
+  "word": "a",
+  "line": "L04",
+  "start": 12.86,
+  "end": 12.98
+ },
+ {
+  "word": "hundred",
+  "line": "L04",
+  "start": 12.98,
+  "end": 13.22
+ },
+ {
+  "word": "coins,",
+  "line": "L04",
+  "start": 13.22,
+  "end": 13.74
+ },
+ {
+  "word": "melt",
+  "line": "L04",
+  "start": 13.96,
+  "end": 14.12
+ },
+ {
+  "word": "the",
+  "line": "L04",
+  "start": 14.12,
+  "end": 14.34
+ },
+ {
+  "word": "slivers,",
+  "line": "L04",
+  "start": 14.34,
+  "end": 14.62
+ },
+ {
+  "word": "and",
+  "line": "L04",
+  "start": 14.62,
+  "end": 14.88
+ },
+ {
+  "word": "you",
+  "line": "L04",
+  "start": 14.88,
+  "end": 15.02
+ },
+ {
+  "word": "have",
+  "line": "L04",
+  "start": 15.02,
+  "end": 15.24
+ },
+ {
+  "word": "free",
+  "line": "L04",
+  "start": 15.24,
+  "end": 15.54
+ },
+ {
+  "word": "silver!",
+  "line": "L04",
+  "start": 15.54,
+  "end": 16.02
+ },
+ {
+  "word": "This",
+  "line": "L05",
+  "start": 16.62,
+  "end": 17.0
+ },
+ {
+  "word": "was",
+  "line": "L05",
+  "start": 17.0,
+  "end": 17.16
+ },
+ {
+  "word": "called",
+  "line": "L05",
+  "start": 17.16,
+  "end": 17.44
+ },
+ {
+  "word": "clipping,",
+  "line": "L05",
+  "start": 17.44,
+  "end": 17.8
+ },
+ {
+  "word": "and",
+  "line": "L05",
+  "start": 17.8,
+  "end": 18.26
+ },
+ {
+  "word": "you",
+  "line": "L05",
+  "start": 18.26,
+  "end": 18.42
+ },
+ {
+  "word": "could",
+  "line": "L05",
+  "start": 18.42,
+  "end": 18.58
+ },
+ {
+  "word": "be",
+  "line": "L05",
+  "start": 18.58,
+  "end": 18.72
+ },
+ {
+  "word": "put",
+  "line": "L05",
+  "start": 18.72,
+  "end": 18.92
+ },
+ {
+  "word": "to",
+  "line": "L05",
+  "start": 18.92,
+  "end": 19.12
+ },
+ {
+  "word": "death",
+  "line": "L05",
+  "start": 19.12,
+  "end": 19.32
+ },
+ {
+  "word": "for",
+  "line": "L05",
+  "start": 19.32,
+  "end": 19.56
+ },
+ {
+  "word": "it.",
+  "line": "L05",
+  "start": 19.56,
+  "end": 19.88
+ },
+ {
+  "word": "So",
+  "line": "L06",
+  "start": 20.36,
+  "end": 20.52
+ },
+ {
+  "word": "in",
+  "line": "L06",
+  "start": 20.52,
+  "end": 20.68
+ },
+ {
+  "word": "sixteen",
+  "line": "L06",
+  "start": 20.68,
+  "end": 20.98
+ },
+ {
+  "word": "sixty-two,",
+  "line": "L06",
+  "start": 20.98,
+  "end": 21.56
+ },
+ {
+  "word": "England",
+  "line": "L06",
+  "start": 21.66,
+  "end": 21.88
+ },
+ {
+  "word": "began",
+  "line": "L06",
+  "start": 21.88,
+  "end": 22.16
+ },
+ {
+  "word": "making",
+  "line": "L06",
+  "start": 22.16,
+  "end": 22.5
+ },
+ {
+  "word": "coins",
+  "line": "L06",
+  "start": 22.5,
+  "end": 22.86
+ },
+ {
+  "word": "by",
+  "line": "L06",
+  "start": 22.86,
+  "end": 23.06
+ },
+ {
+  "word": "machine,",
+  "line": "L06",
+  "start": 23.06,
+  "end": 23.48
+ },
+ {
+  "word": "with",
+  "line": "L06",
+  "start": 23.48,
+  "end": 23.7
+ },
+ {
+  "word": "a",
+  "line": "L06",
+  "start": 23.7,
+  "end": 23.9
+ },
+ {
+  "word": "pattern",
+  "line": "L06",
+  "start": 23.9,
+  "end": 24.14
+ },
+ {
+  "word": "on",
+  "line": "L06",
+  "start": 24.14,
+  "end": 24.32
+ },
+ {
+  "word": "the",
+  "line": "L06",
+  "start": 24.32,
+  "end": 24.48
+ },
+ {
+  "word": "edge.",
+  "line": "L06",
+  "start": 24.48,
+  "end": 24.8
+ },
+ {
+  "word": "Now",
+  "line": "L07",
+  "start": 24.8,
+  "end": 25.42
+ },
+ {
+  "word": "a",
+  "line": "L07",
+  "start": 25.42,
+  "end": 25.64
+ },
+ {
+  "word": "clipped",
+  "line": "L07",
+  "start": 25.64,
+  "end": 25.82
+ },
+ {
+  "word": "coin",
+  "line": "L07",
+  "start": 25.82,
+  "end": 26.1
+ },
+ {
+  "word": "was",
+  "line": "L07",
+  "start": 26.1,
+  "end": 26.32
+ },
+ {
+  "word": "easy",
+  "line": "L07",
+  "start": 26.32,
+  "end": 26.62
+ },
+ {
+  "word": "to",
+  "line": "L07",
+  "start": 26.62,
+  "end": 26.8
+ },
+ {
+  "word": "spot!",
+  "line": "L07",
+  "start": 26.8,
+  "end": 27.16
  },
  {
   "word": "But",
+  "line": "L08",
+  "start": 27.42,
+  "end": 27.66
+ },
+ {
+  "word": "old",
+  "line": "L08",
+  "start": 27.66,
+  "end": 27.88
+ },
+ {
+  "word": "smooth",
+  "line": "L08",
+  "start": 27.88,
+  "end": 28.22
+ },
+ {
+  "word": "coins",
+  "line": "L08",
+  "start": 28.22,
+  "end": 28.62
+ },
+ {
+  "word": "were",
+  "line": "L08",
+  "start": 28.62,
+  "end": 28.84
+ },
+ {
+  "word": "still",
+  "line": "L08",
+  "start": 28.84,
+  "end": 29.06
+ },
+ {
+  "word": "everywhere.",
+  "line": "L08",
+  "start": 29.06,
+  "end": 29.5
+ },
+ {
+  "word": "So",
+  "line": "L08",
+  "start": 29.9,
+  "end": 29.94
+ },
+ {
+  "word": "in",
+  "line": "L08",
+  "start": 29.94,
+  "end": 30.14
+ },
+ {
+  "word": "sixteen",
+  "line": "L08",
+  "start": 30.14,
+  "end": 30.46
+ },
+ {
+  "word": "ninety-six,",
+  "line": "L08",
+  "start": 30.46,
+  "end": 31.2
+ },
+ {
+  "word": "England",
+  "line": "L08",
+  "start": 31.62,
+  "end": 31.96
+ },
+ {
+  "word": "remade",
+  "line": "L08",
+  "start": 31.96,
+  "end": 32.36
+ },
+ {
+  "word": "all",
+  "line": "L08",
+  "start": 32.36,
+  "end": 32.54
+ },
+ {
+  "word": "its",
+  "line": "L08",
+  "start": 32.54,
+  "end": 32.72
+ },
+ {
+  "word": "money.",
+  "line": "L08",
+  "start": 32.72,
+  "end": 33.02
+ },
+ {
+  "word": "And",
+  "line": "L09",
+  "start": 33.62,
+  "end": 33.72
+ },
+ {
+  "word": "the",
+  "line": "L09",
+  "start": 33.72,
+  "end": 33.88
+ },
+ {
+  "word": "man",
+  "line": "L09",
+  "start": 33.88,
+  "end": 34.14
+ },
+ {
+  "word": "hunting",
+  "line": "L09",
+  "start": 34.14,
+  "end": 34.58
+ },
+ {
+  "word": "the",
+  "line": "L09",
+  "start": 34.58,
+  "end": 34.78
+ },
+ {
+  "word": "cheaters",
+  "line": "L09",
+  "start": 34.78,
+  "end": 35.14
+ },
+ {
+  "word": "was",
+  "line": "L09",
+  "start": 35.14,
+  "end": 35.38
+ },
+ {
+  "word": "Isaac",
+  "line": "L09",
+  "start": 35.38,
+  "end": 35.74
+ },
+ {
+  "word": "Newton!",
+  "line": "L09",
+  "start": 35.74,
+  "end": 36.04
+ },
+ {
+  "word": "Yes,",
+  "line": "L10",
+  "start": 36.76,
+  "end": 37.08
+ },
+ {
+  "word": "the",
+  "line": "L10",
+  "start": 37.46,
+  "end": 37.58
+ },
+ {
+  "word": "gravity",
+  "line": "L10",
+  "start": 37.58,
+  "end": 37.92
+ },
+ {
+  "word": "guy.",
+  "line": "L10",
+  "start": 37.92,
+  "end": 38.34
+ },
+ {
+  "word": "His",
+  "line": "L11",
+  "start": 38.82,
+  "end": 39.04
+ },
+ {
+  "word": "biggest",
+  "line": "L11",
+  "start": 39.04,
+  "end": 39.3
+ },
+ {
+  "word": "target",
+  "line": "L11",
+  "start": 39.3,
+  "end": 39.74
+ },
+ {
+  "word": "was",
+  "line": "L11",
+  "start": 39.74,
+  "end": 39.92
+ },
+ {
+  "word": "a",
+  "line": "L11",
+  "start": 39.92,
+  "end": 40.16
+ },
+ {
+  "word": "forger",
+  "line": "L11",
+  "start": 40.16,
+  "end": 40.5
+ },
+ {
+  "word": "named",
+  "line": "L11",
+  "start": 40.5,
+  "end": 40.84
+ },
+ {
+  "word": "William",
+  "line": "L11",
+  "start": 40.84,
+  "end": 41.28
+ },
+ {
+  "word": "Chaloner,",
+  "line": "L11",
+  "start": 41.28,
+  "end": 41.86
+ },
+ {
+  "word": "who",
+  "line": "L11",
+  "start": 41.86,
+  "end": 42.16
+ },
+ {
+  "word": "even",
+  "line": "L11",
+  "start": 42.16,
+  "end": 42.36
+ },
+ {
+  "word": "faked",
+  "line": "L11",
+  "start": 42.36,
+  "end": 42.7
+ },
+ {
+  "word": "the",
+  "line": "L11",
+  "start": 42.7,
+  "end": 42.9
+ },
+ {
+  "word": "edges.",
+  "line": "L11",
+  "start": 42.9,
+  "end": 43.28
+ },
+ {
+  "word": "Newton",
   "line": "L12",
-  "start": 44.84,
-  "end": 45.34
+  "start": 44.02,
+  "end": 44.32
+ },
+ {
+  "word": "questioned",
+  "line": "L12",
+  "start": 44.32,
+  "end": 44.76
  },
  {
   "word": "the",
   "line": "L12",
-  "start": 45.34,
-  "end": 45.54
+  "start": 44.76,
+  "end": 44.94
  },
  {
-  "word": "ridges",
+  "word": "witnesses",
   "line": "L12",
-  "start": 45.54,
-  "end": 45.84
+  "start": 44.94,
+  "end": 45.22
  },
  {
-  "word": "stayed,",
+  "word": "himself,",
   "line": "L12",
-  "start": 45.84,
-  "end": 46.18
+  "start": 45.22,
+  "end": 45.8
  },
  {
   "word": "and",
   "line": "L12",
-  "start": 46.18,
-  "end": 46.4
+  "start": 45.8,
+  "end": 46.24
  },
  {
-  "word": "they",
+  "word": "Chaloner",
   "line": "L12",
-  "start": 46.4,
-  "end": 46.56
+  "start": 46.24,
+  "end": 46.66
  },
  {
-  "word": "help",
+  "word": "was",
   "line": "L12",
-  "start": 46.56,
-  "end": 46.74
+  "start": 46.66,
+  "end": 46.9
  },
  {
-  "word": "blind",
+  "word": "hanged.",
   "line": "L12",
-  "start": 46.74,
-  "end": 47.18
+  "start": 46.9,
+  "end": 47.38
  },
  {
-  "word": "people",
-  "line": "L12",
-  "start": 47.18,
-  "end": 47.48
- },
- {
-  "word": "tell",
-  "line": "L12",
-  "start": 47.48,
-  "end": 47.74
- },
- {
-  "word": "coins",
-  "line": "L12",
-  "start": 47.74,
-  "end": 48.08
- },
- {
-  "word": "apart",
-  "line": "L12",
-  "start": 48.08,
-  "end": 48.4
- },
- {
-  "word": "by",
-  "line": "L12",
-  "start": 48.4,
+  "word": "Today's",
+  "line": "L13",
+  "start": 48.12,
   "end": 48.62
  },
  {
-  "word": "touch!",
-  "line": "L12",
+  "word": "coins",
+  "line": "L13",
   "start": 48.62,
-  "end": 49.12
- },
- {
-  "word": "So",
-  "line": "L13",
-  "start": 49.12,
-  "end": 49.86
- },
- {
-  "word": "those",
-  "line": "L13",
-  "start": 49.86,
-  "end": 50.18
- },
- {
-  "word": "ridges",
-  "line": "L13",
-  "start": 50.18,
-  "end": 50.56
+  "end": 48.8
  },
  {
   "word": "are",
   "line": "L13",
-  "start": 50.56,
-  "end": 50.74
+  "start": 48.8,
+  "end": 48.98
  },
  {
-  "word": "a",
+  "word": "not",
   "line": "L13",
-  "start": 50.74,
-  "end": 50.86
+  "start": 48.98,
+  "end": 49.16
  },
  {
-  "word": "leftover",
+  "word": "silver.",
   "line": "L13",
-  "start": 50.86,
-  "end": 51.38
+  "start": 49.16,
+  "end": 49.66
  },
  {
-  "word": "from",
+  "word": "But",
   "line": "L13",
-  "start": 51.38,
-  "end": 51.58
+  "start": 49.98,
+  "end": 50.2
  },
  {
-  "word": "when",
+  "word": "the",
   "line": "L13",
-  "start": 51.58,
-  "end": 51.76
+  "start": 50.2,
+  "end": 50.38
+ },
+ {
+  "word": "ridges",
+  "line": "L13",
+  "start": 50.38,
+  "end": 50.68
+ },
+ {
+  "word": "stayed,",
+  "line": "L13",
+  "start": 50.68,
+  "end": 51.02
+ },
+ {
+  "word": "and",
+  "line": "L13",
+  "start": 51.02,
+  "end": 51.22
+ },
+ {
+  "word": "they",
+  "line": "L13",
+  "start": 51.22,
+  "end": 51.4
+ },
+ {
+  "word": "help",
+  "line": "L13",
+  "start": 51.4,
+  "end": 51.56
+ },
+ {
+  "word": "blind",
+  "line": "L13",
+  "start": 51.56,
+  "end": 52.0
  },
  {
   "word": "people",
   "line": "L13",
-  "start": 51.76,
-  "end": 52.0
- },
- {
-  "word": "shaved",
-  "line": "L13",
   "start": 52.0,
-  "end": 52.42
+  "end": 52.3
  },
  {
-  "word": "their",
+  "word": "tell",
   "line": "L13",
-  "start": 52.42,
-  "end": 52.66
+  "start": 52.3,
+  "end": 52.58
  },
  {
-  "word": "money!",
+  "word": "coins",
   "line": "L13",
-  "start": 52.66,
-  "end": 52.94
+  "start": 52.58,
+  "end": 52.9
+ },
+ {
+  "word": "apart",
+  "line": "L13",
+  "start": 52.9,
+  "end": 53.24
+ },
+ {
+  "word": "by",
+  "line": "L13",
+  "start": 53.24,
+  "end": 53.48
+ },
+ {
+  "word": "touch!",
+  "line": "L13",
+  "start": 53.48,
+  "end": 53.88
+ },
+ {
+  "word": "So",
+  "line": "L14",
+  "start": 53.88,
+  "end": 54.48
+ },
+ {
+  "word": "every",
+  "line": "L14",
+  "start": 54.48,
+  "end": 54.72
+ },
+ {
+  "word": "time",
+  "line": "L14",
+  "start": 54.72,
+  "end": 55.0
+ },
+ {
+  "word": "you",
+  "line": "L14",
+  "start": 55.0,
+  "end": 55.16
+ },
+ {
+  "word": "feel",
+  "line": "L14",
+  "start": 55.16,
+  "end": 55.48
+ },
+ {
+  "word": "those",
+  "line": "L14",
+  "start": 55.48,
+  "end": 55.72
+ },
+ {
+  "word": "ridges,",
+  "line": "L14",
+  "start": 55.72,
+  "end": 56.24
+ },
+ {
+  "word": "you",
+  "line": "L14",
+  "start": 56.4,
+  "end": 56.52
+ },
+ {
+  "word": "are",
+  "line": "L14",
+  "start": 56.52,
+  "end": 56.66
+ },
+ {
+  "word": "touching",
+  "line": "L14",
+  "start": 56.66,
+  "end": 56.92
+ },
+ {
+  "word": "an",
+  "line": "L14",
+  "start": 56.92,
+  "end": 57.14
+ },
+ {
+  "word": "anti-theft",
+  "line": "L14",
+  "start": 57.14,
+  "end": 57.84
+ },
+ {
+  "word": "trick",
+  "line": "L14",
+  "start": 57.84,
+  "end": 58.08
+ },
+ {
+  "word": "over",
+  "line": "L14",
+  "start": 58.08,
+  "end": 58.36
+ },
+ {
+  "word": "three",
+  "line": "L14",
+  "start": 58.36,
+  "end": 58.56
+ },
+ {
+  "word": "hundred",
+  "line": "L14",
+  "start": 58.56,
+  "end": 58.84
+ },
+ {
+  "word": "years",
+  "line": "L14",
+  "start": 58.84,
+  "end": 59.06
+ },
+ {
+  "word": "old!",
+  "line": "L14",
+  "start": 59.06,
+  "end": 59.32
  }
 ]

@@ -1,149 +1,163 @@
 [
  {
   "line": "L01",
-  "text": "People used to shave the edges off their coins, and then spend them anyway!",
+  "text": "The tiny ridges on your coins were put there to stop thieves!",
   "emph": [
-   3,
-   13
+   2,
+   11
   ],
   "start": 0.05,
-  "end": 3.89,
-  "take": "L01_t0.wav",
+  "end": 3.57,
+  "take": "L01_t1.wav",
   "heard_miss": 0
  },
  {
   "line": "L02",
-  "text": "Back then, a silver coin was worth the silver inside it.",
+  "text": "Because coins used to be made of real silver, and people would shave them.",
   "emph": [
-   9
+   8,
+   12
   ],
-  "start": 3.95,
-  "end": 7.136,
+  "start": 3.63,
+  "end": 7.55,
   "take": "L02_t2.wav",
   "heard_miss": 0
  },
  {
   "line": "L03",
-  "text": "So shave a little off a hundred coins, melt the shavings, and you have free silver!",
+  "text": "Well, not with shaving cream.",
   "emph": [
-   14
+   4
   ],
-  "start": 7.196,
-  "end": 11.622,
-  "take": "L03_t1.wav",
+  "start": 7.61,
+  "end": 9.761,
+  "take": "L03_t0.wav",
   "heard_miss": 0
  },
  {
   "line": "L04",
-  "text": "This was called clipping, and you could be put to death for it.",
+  "text": "They snipped a thin sliver off the edge. Do that to a hundred coins, melt the slivers, and you have free silver!",
   "emph": [
-   10
+   20
   ],
-  "start": 11.682,
-  "end": 14.989,
-  "take": "L04_t0.wav",
+  "start": 9.821,
+  "end": 16.164,
+  "take": "L04_t2.wav",
   "heard_miss": 0
  },
  {
   "line": "L05",
+  "text": "This was called clipping, and you could be put to death for it.",
+  "emph": [
+   10
+  ],
+  "start": 16.404,
+  "end": 19.711,
+  "take": "L05_t0.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L06",
   "text": "So in sixteen sixty-two, England began making coins by machine, with a pattern on the edge.",
   "emph": [
    15
   ],
-  "start": 15.229,
-  "end": 20.353,
-  "take": "L05_t0.wav",
+  "start": 19.771,
+  "end": 24.894,
+  "take": "L06_t0.wav",
   "heard_miss": 15
  },
  {
-  "line": "L06",
-  "text": "Now a shaved coin was easy to spot!",
+  "line": "L07",
+  "text": "Now a clipped coin was easy to spot!",
   "emph": [
    5
   ],
-  "start": 20.413,
-  "end": 22.573,
-  "take": "L06_t1.wav",
+  "start": 24.954,
+  "end": 27.186,
+  "take": "L07_t1.wav",
   "heard_miss": 0
  },
  {
-  "line": "L07",
+  "line": "L08",
   "text": "But old smooth coins were still everywhere. So in sixteen ninety-six, England remade all its money.",
   "emph": [
    6,
    13
   ],
-  "start": 22.633,
-  "end": 28.473,
-  "take": "L07_t0.wav",
+  "start": 27.246,
+  "end": 33.087,
+  "take": "L08_t0.wav",
   "heard_miss": 8
  },
  {
-  "line": "L08",
+  "line": "L09",
   "text": "And the man hunting the cheaters was Isaac Newton!",
   "emph": [
    7,
    8
   ],
-  "start": 28.533,
-  "end": 31.401,
-  "take": "L08_t1.wav",
-  "heard_miss": 0
- },
- {
-  "line": "L09",
-  "text": "Yes, the gravity guy.",
-  "emph": [
-   2
-  ],
-  "start": 31.611,
-  "end": 33.85,
-  "take": "L09_t0.wav",
+  "start": 33.297,
+  "end": 36.165,
+  "take": "L09_t1.wav",
   "heard_miss": 0
  },
  {
   "line": "L10",
-  "text": "His biggest target was a forger named William Chaloner, who even faked the edges.",
+  "text": "Yes, the gravity guy.",
   "emph": [
-   11
+   2
   ],
-  "start": 33.91,
-  "end": 38.612,
+  "start": 36.225,
+  "end": 38.464,
   "take": "L10_t0.wav",
   "heard_miss": 0
  },
  {
   "line": "L11",
-  "text": "Newton questioned the witnesses himself, and Chaloner was hanged.",
+  "text": "His biggest target was a forger named William Chaloner, who even faked the edges.",
   "emph": [
-   8
+   11
   ],
-  "start": 38.852,
-  "end": 42.852,
+  "start": 38.704,
+  "end": 43.406,
   "take": "L11_t0.wav",
   "heard_miss": 0
  },
  {
   "line": "L12",
-  "text": "Today's coins are not silver. But the ridges stayed, and they help blind people tell coins apart by touch!",
+  "text": "Newton questioned the witnesses himself, and Chaloner was hanged.",
   "emph": [
-   12,
-   18
+   8
   ],
-  "start": 42.912,
-  "end": 49.176,
+  "start": 43.466,
+  "end": 47.466,
   "take": "L12_t0.wav",
   "heard_miss": 0
  },
  {
   "line": "L13",
-  "text": "So those ridges are a leftover from when people shaved their money!",
+  "text": "Today's coins are not silver. But the ridges stayed, and they help blind people tell coins apart by touch!",
   "emph": [
-   9
+   12,
+   18
   ],
-  "start": 49.456,
-  "end": 53.11,
-  "take": "L13_t2.wav",
+  "start": 47.746,
+  "end": 54.01,
+  "take": "L13_t0.wav",
   "heard_miss": 0
+ },
+ {
+  "line": "L14",
+  "text": "So every time you feel those ridges, you are touching an anti-theft trick over three hundred years old!",
+  "emph": [
+   11,
+   14,
+   15
+  ],
+  "start": 54.07,
+  "end": 59.35,
+  "take": "L14_t2.wav",
+  "heard_miss": 4
  }
 ]
