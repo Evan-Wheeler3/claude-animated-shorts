@@ -1,0 +1,85 @@
+{
+  "story_id": "library",
+  "assets": [
+    {
+      "id": "island-tree-02",
+      "file": "island-tree-02.glb",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/island_tree_02",
+      "author": "Rob Tuytel, Rico Cilliers",
+      "credit": "",
+      "notes": "Poly Haven island_tree_02 1k, simplified to 12% of triangles",
+      "library": true
+    },
+    {
+      "id": "shrub-03",
+      "file": "shrub-03.glb",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/shrub_03",
+      "author": "Rico Cilliers",
+      "credit": "",
+      "notes": "Poly Haven shrub_03 1k",
+      "library": true
+    },
+    {
+      "id": "shrub-04",
+      "file": "shrub-04.glb",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/shrub_04",
+      "author": "Rico Cilliers",
+      "credit": "",
+      "notes": "Poly Haven shrub_04 1k",
+      "library": true
+    },
+    {
+      "id": "dandelion-01",
+      "file": "dandelion-01.glb",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/dandelion_01",
+      "author": "Rob Tuytel, Rico Cilliers",
+      "credit": "",
+      "notes": "Poly Haven dandelion_01 1k, simplified to 30% of triangles",
+      "library": true
+    },
+    {
+      "id": "flower-gazania",
+      "file": "flower-gazania.glb",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/flower_gazania",
+      "author": "James Ray Cock, Jenelle van Heerden",
+      "credit": "",
+      "notes": "Poly Haven flower_gazania 1k",
+      "library": true
+    },
+    {
+      "id": "tree-stump-01",
+      "file": "tree-stump-01.glb",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/tree_stump_01",
+      "author": "Rob Tuytel",
+      "credit": "",
+      "notes": "Poly Haven tree_stump_01 1k",
+      "library": true
+    },
+    {
+      "id": "boulder-01",
+      "file": "boulder-01.glb",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/boulder_01",
+      "author": "Rico Cilliers",
+      "credit": "",
+      "notes": "Poly Haven boulder_01 1k, simplified to 30% of triangles",
+      "library": true
+    },
+    {
+      "id": "tree-small-02",
+      "file": "tree-small-02.glb",
+      "license": "CC0-1.0",
+      "source": "https://polyhaven.com/a/tree_small_02",
+      "author": "Rico Cilliers",
+      "credit": "",
+      "notes": "Poly Haven tree_small_02 1k, simplified to 6% of triangles",
+      "library": true
+    }
+  ]
+}
