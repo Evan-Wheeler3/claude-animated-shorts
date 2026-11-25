@@ -1,0 +1,162 @@
+[
+ {
+  "line": "L01",
+  "text": "The tiny ridges on your coins were put there to stop thieves!",
+  "emph": [
+   2,
+   11
+  ],
+  "start": 0.05,
+  "end": 3.57,
+  "take": "L01_t1.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L02",
+  "text": "Because coins used to be made of real silver, and people would shave them.",
+  "emph": [
+   8,
+   12
+  ],
+  "start": 3.63,
+  "end": 7.55,
+  "take": "L02_t2.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L03",
+  "text": "Well, not with shaving cream.",
+  "emph": [
+   4
+  ],
+  "start": 7.61,
+  "end": 9.761,
+  "take": "L03_t0.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L04",
+  "text": "They snipped a thin sliver off the edge. Do that to a hundred coins, melt the slivers, and you have free silver!",
+  "emph": [
+   20
+  ],
+  "start": 9.821,
+  "end": 16.164,
+  "take": "L04_t2.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L05",
+  "text": "This was called clipping, and you could be put to death for it.",
+  "emph": [
+   10
+  ],
+  "start": 16.404,
+  "end": 19.711,
+  "take": "L05_t0.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L06",
+  "text": "So in sixteen sixty-two, England put a pattern on the edge of its coins.",
+  "emph": [
+   10
+  ],
+  "start": 19.771,
+  "end": 24.269,
+  "take": "L06_t1.wav",
+  "heard_miss": 13
+ },
+ {
+  "line": "L07",
+  "text": "Now a clipped coin was easy to spot!",
+  "emph": [
+   5
+  ],
+  "start": 24.329,
+  "end": 26.561,
+  "take": "L07_t1.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L08",
+  "text": "But old coins were everywhere, so in sixteen ninety-six, England remade all its money.",
+  "emph": [
+   4,
+   11
+  ],
+  "start": 26.621,
+  "end": 31.733,
+  "take": "L08_t2.wav",
+  "heard_miss": 8
+ },
+ {
+  "line": "L09",
+  "text": "And the man hunting the cheaters was Isaac Newton!",
+  "emph": [
+   7,
+   8
+  ],
+  "start": 31.943,
+  "end": 34.811,
+  "take": "L09_t1.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L10",
+  "text": "Yes, the gravity guy.",
+  "emph": [
+   2
+  ],
+  "start": 34.871,
+  "end": 37.111,
+  "take": "L10_t0.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L11",
+  "text": "His biggest target was a forger named William Chaloner, who even faked the edges.",
+  "emph": [
+   11
+  ],
+  "start": 37.351,
+  "end": 42.052,
+  "take": "L11_t0.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L12",
+  "text": "Newton questioned the witnesses himself, and Chaloner was hanged.",
+  "emph": [
+   8
+  ],
+  "start": 42.112,
+  "end": 46.112,
+  "take": "L12_t0.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L13",
+  "text": "Today's coins are not silver. But the ridges stayed, and they help blind people tell coins apart by touch!",
+  "emph": [
+   12,
+   18
+  ],
+  "start": 46.392,
+  "end": 52.656,
+  "take": "L13_t0.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L14",
+  "text": "So those ridges are a three-hundred-year-old anti-theft trick!",
+  "emph": [
+   5,
+   7
+  ],
+  "start": 52.716,
+  "end": 56.636,
+  "take": "L14_t1.wav",
+  "heard_miss": 7
+ }
+]
