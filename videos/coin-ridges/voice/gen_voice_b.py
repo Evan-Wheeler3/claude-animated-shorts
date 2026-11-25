@@ -48,7 +48,10 @@ if sys.argv[1] == "takes":
     sf.write(ref_clip, y[: int(6.6 * sr)], sr)
     m = Qwen3TTSModel.from_pretrained("Qwen/Qwen3-TTS-12Hz-0.6B-Base", device_map="cpu", dtype=torch.float32)
     prompt = m.create_voice_clone_prompt(ref_audio=ref_clip, ref_text=REF_TEXT)
+    only = set(os.environ.get("LINES", "").split(",")) - {""}   # e.g. LINES=L05,L06 to re-record some lines
     for L in script_lines():
+        if only and L["line"] not in only:
+            continue
         for t in range(n):
             torch.manual_seed(1000 + t)
             t0 = time.time()

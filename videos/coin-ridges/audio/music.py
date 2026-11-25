@@ -1,9 +1,11 @@
-# coin-ridges: original, subtle background score + mix (re-sectioned from templates/holdup/music_example.py).
-# D minor, 100 bpm (one bar = 2.4 s). Sections follow voice/lines.json:
-#   clipping (sneaky pizzicato, glock sparkle on "free silver", low hit on "death") | machine coins (mechanical
-#   triplet plucks + press-like timpani taps, pluck on "away") | recoinage + Newton (brighter F/C, sparkle on
-#   "Isaac Newton", music-box wink on "gravity guy") | the chase (sneaky staccato, low hit on "hanged", near
-#   silence) | today + payoff (music-box motif, warm major, button on the last word).
+# coin-ridges: original background score, SOLO PIANO only (owner note 2026-11-25: "no percussive hits, just piano,
+# a little quieter"). Synthesised piano (additive partials, slight inharmonicity, two detuned strings, soft hammer).
+# D minor -> F major, 92 bpm. Sections follow voice/lines.json:
+#   clipping L01-L04 (curious left-hand broken chords, light right-hand motif) | machine coins L05-L06 (steadier
+#   eighths) | recoinage + Newton L07-L09 (brighter F/C, a rising figure on "Isaac Newton", tiny high wink on
+#   "gravity") | the chase L10-L11 (low, sparse, stops on "hanged") | today + payoff L12-L13 (gentle motif, warm
+#   major, soft final chord on the last word). No percussion, no pads.
+# The bed sits ~20 LU under the voice (v1 was 16) and ducks a further 4 dB while words are spoken.
 # Usage: python music.py <voice_dir> <out_dir>      (voice_dir holds voice.wav, lines.json, words.json)
 import json, os, sys
 import numpy as np
@@ -11,8 +13,7 @@ from scipy.signal import resample_poly
 import soundfile as sf
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../../templates/audio'))
-from dsp import SR, ns, rng, place, make_ir, convolve_st, integrated, hp, lp, dbg  # noqa: E402
-import instruments as I  # noqa: E402
+from dsp import SR, ns, rng, make_ir, convolve_st, integrated, hp, lp, dbg  # noqa: E402
 
 VDIR, OUT = sys.argv[1], sys.argv[2]
 os.makedirs(OUT, exist_ok=True)
@@ -22,103 +23,109 @@ voice, vsr = sf.read(f'{VDIR}/voice.wav', dtype='float64')
 if voice.ndim > 1:
     voice = voice.mean(1)
 voice = resample_poly(voice, SR, vsr)
-DUR = len(voice) / SR + 0.6
+DUR = len(voice) / SR + 1.2
 N = ns(DUR)
 S = lambda k: lines[k]['start']
 E = lambda k: lines[k]['end']
 w = lambda line, i: [x for x in words if x['line'] == line][i]['start']
+m2f = lambda m: 440.0 * 2 ** ((m - 69) / 12)
 
-Q = 0.6           # quarter note at 100 bpm
+Q = 60 / 92
 BAR = 4 * Q
-m2f = I.m2f
-CH = {'Dm': [50, 53, 57], 'Bb': [46, 50, 53], 'F': [41, 45, 48], 'C': [48, 52, 55], 'Gm': [43, 46, 50], 'A': [45, 49, 52]}
-PROG_MIN = ['Dm', 'Bb', 'F', 'C']
-PROG_END = ['F', 'C', 'Dm', 'Bb', 'F']
-
-tr = {k: np.zeros((2, N)) for k in ['pad', 'pluck', 'glock', 'timp', 'box']}
-r = rng(11)
+CH = {'Dm': [38, 45, 50, 53, 57], 'Bb': [34, 41, 46, 50, 53], 'F': [41, 48, 53, 57, 60], 'C': [36, 43, 48, 52, 55],
+      'Gm': [43, 50, 55, 58, 62], 'A': [33, 45, 49, 52, 57]}
+r = rng(7)
+bed = np.zeros((2, N))
 
 
-def add(track, x, t, gain=1.0, p=0.0):
-    x = np.asarray(x, dtype=float)
-    if x.ndim == 1:
-        th = (p + 1) * np.pi / 4
-        x = np.stack([x * np.cos(th), x * np.sin(th)])
+def piano(f, vel=0.5, dur=2.5):
+    """Soft synth piano note: 8 partials with stretch, per-partial decay, two detuned strings, felt hammer."""
+    n = ns(dur)
+    t = np.arange(n) / SR
+    B = 0.0004                       # inharmonicity
+    out = np.zeros(n)
+    bright = 0.35 + 0.5 * vel
+    for k in range(1, 9):
+        fk = f * k * np.sqrt(1 + B * k * k)
+        if fk > 9000:
+            break
+        amp = (bright ** (k - 1)) / k
+        dec = 0.9 + 0.0025 * fk      # higher partials die faster
+        for det in (-0.6, 0.6):
+            out += amp * np.exp(-dec * t) * np.sin(2 * np.pi * (fk + det) * t + r.uniform(0, 6.28))
+    att = np.minimum(1, t / 0.004)
+    rel = np.minimum(1, (dur - t) / 0.25).clip(0, 1)
+    out *= att * rel * vel / 4
+    return out
+
+
+def note(m, t, vel=0.4, dur=2.5, pan=0.0):
+    x = piano(m2f(m), vel, dur)
     i = ns(t)
     if i >= N:
         return
-    n = min(x.shape[1], N - i)
-    tr[track][:, i:i + n] += gain * x[:, :n]
+    n = min(len(x), N - i)
+    th = (pan + 1) * np.pi / 4
+    bed[0, i:i + n] += np.cos(th) * x[:n]
+    bed[1, i:i + n] += np.sin(th) * x[:n]
 
 
-def pads(t0, t1, prog, vel=.30, oct=0):
-    t, k = t0, 0
-    while t < t1 - .2:
-        d = min(BAR, t1 - t)
-        add('pad', I.pad([m2f(n + 12 * oct) for n in CH[prog[k % len(prog)]]], d, vel=vel, r=r, att=.5, rel=.8, warm=700), t)
-        t += BAR; k += 1
-
-
-def arps(t0, t1, prog, vel=.32, step=Q / 2, pattern=(0, 1, 2, 1), up=12, accent=1.0):
+def broken(t0, t1, prog, vel=.30, step=Q / 2, pattern=(0, 2, 3, 2), up=0):
+    """Left-hand broken chords (bass note held), one chord per bar."""
     t, i = t0, 0
     while t < t1 - .05:
         ch = CH[prog[int((t - t0) // BAR) % len(prog)]]
-        n = ch[pattern[i % len(pattern)]] + up + (12 if i % 8 >= 4 else 0)
-        v = vel * (accent if i % 4 == 0 else .8) * r.uniform(.9, 1.05)
-        add('pluck', I.pluck(m2f(n), vel=v, r=r, dur=.7, bright=.45), t, p=r.uniform(-.35, .35))
+        if i % 8 == 0:
+            note(ch[0] - 12 + 12, t, vel * 1.1, BAR * 1.1, pan=-.3)
+        n = ch[pattern[i % len(pattern)]] + up
+        note(n, t, vel * r.uniform(.85, 1.0), 1.6, pan=-.15)
         t += step; i += 1
 
 
-def sparkle(t, notes=(81, 86, 89, 93), vel=.25, gap=.09):
-    for j, n in enumerate(notes):
-        add('glock', I.glock(m2f(n), vel=vel, r=r, dur=1.4), t + j * gap, p=.3)
+def motif(t0, t1, notes, vel=.28, step=Q, pan=.25):
+    t, j = t0, 0
+    while t < t1 - .1:
+        b, n = notes[j % len(notes)]
+        note(n, t + b * step, vel * r.uniform(.9, 1.0), 2.2, pan=pan)
+        j += 1
+        if j % len(notes) == 0:
+            t += 2 * BAR
 
+
+def chord(name, t, vel=.3, dur=3.0, up=0):
+    for k, m in enumerate(CH[name][1:]):
+        note(m + up, t + k * .018, vel, dur, pan=-.1 + .1 * k)
+
+
+PROG_MIN = ['Dm', 'Bb', 'F', 'C']
+CURIOUS = [(0, 74), (.5, 77), (1, 76), (1.5, 74), (2, 72), (3, 69)]
+WARM = [(0, 72), (.5, 76), (1, 79), (2, 77), (2.5, 76), (3, 72)]
 
 # 1. clipping: L01..L04
-pads(0, S('L05'), PROG_MIN, vel=.24)
-arps(0.0, S('L04'), PROG_MIN, vel=.26, step=Q / 2, pattern=(0, 2, 1, 2))
-sparkle(w('L03', 14) - .05)                                        # "free silver"
-add('timp', I.timpani(m2f(38), vel=.45, r=r, dur=2.0), w('L04', 10))   # "death"
-# 2. machine coins: L05..L07, mechanical plucks + press taps
-pads(S('L05'), S('L08'), ['Dm', 'Gm', 'Dm', 'A'], vel=.24)
-arps(S('L05'), E('L06'), ['Dm', 'Gm', 'Dm', 'A'], vel=.28, step=Q / 3, pattern=(0, 1, 2), accent=1.15)
-for k in range(int((E('L05') - S('L05')) / Q)):
-    add('timp', I.timpani(m2f(41), vel=.16, r=r, dur=.6), S('L05') + k * Q)
-add('pluck', I.pluck(m2f(69), vel=.38, r=r, dur=.8), w('L06', 11))   # "away"
-arps(S('L07'), E('L07'), ['Dm', 'A'], vel=.2, step=Q / 2, pattern=(0, 2), up=0)
-# 3. recoinage + Newton: L08..L10, brighter
-pads(S('L08'), S('L11'), ['F', 'C', 'Bb', 'F'], vel=.28)
-arps(S('L08'), S('L11'), ['F', 'C', 'Bb', 'F'], vel=.28, pattern=(0, 2, 1, 2))
-sparkle(w('L09', 11) - .05, notes=(77, 81, 84, 89), vel=.32)       # "Isaac Newton"
-add('timp', I.timpani(m2f(41), vel=.32, r=r, dur=1.4), w('L09', 11))
-for j, n in enumerate((84, 88, 91)):
-    add('box', I.musicbox(m2f(n), vel=.3, r=r, dur=1.0), w('L10', 2) + j * .12, p=-.2)   # "gravity"
-# 4. the chase: L11..L12, sneaky staccato, low hit on "hanged", then near silence
-arps(S('L11'), w('L12', 8) - .05, ['Dm', 'A', 'Dm', 'Bb'], vel=.26, step=Q / 2, pattern=(0, 2), up=0)
-add('timp', I.timpani(m2f(36), vel=.55, r=r, dur=2.4), w('L12', 8))
-add('pad', I.pad([m2f(38), m2f(45)], S('L13') - w('L12', 8), vel=.10, r=r, att=.3, rel=1.0, warm=400), w('L12', 8))
-# 5. today + payoff: L13..L15
-pads(S('L13'), S('L15'), ['F', 'C', 'Dm', 'C'], vel=.18)
-MOTIF = [(0, 74), (.5, 77), (1, 81), (1.5, 79), (2, 77), (3, 76), (3.5, 74)]
-t = S('L13')
-while t < S('L15') - 1:
-    for b, n in MOTIF:
-        add('box', I.musicbox(m2f(n + 12), vel=.26, r=r, dur=1.2), t + b * Q, p=-.2)
-    t += 2 * BAR
-pads(S('L15'), E('L15') + .4, PROG_END, vel=.30)
-arps(S('L15'), E('L15'), PROG_END, vel=.28, pattern=(0, 1, 2, 1))
-sparkle(E('L15') - .05, notes=(77, 81, 84, 89, 93), vel=.3)
-add('timp', I.timpani(m2f(41), vel=.4, r=r, dur=2.0), E('L15') - .05)
+broken(0, S('L05'), PROG_MIN, vel=.30)
+motif(S('L02'), S('L04'), CURIOUS, vel=.22)
+note(81, w('L03', 14), .24, 2.5, pan=.3)                       # "free silver": one high note, no hit
+# 2. machine coins: L05..L06, steadier eighths
+broken(S('L05'), S('L07'), ['Dm', 'Gm', 'Dm', 'A'], vel=.30, pattern=(0, 2, 3, 4))
+note(76, w('L06', 0), .2, 2.0, pan=.3)
+# 3. recoinage + Newton: L07..L09, brighter
+broken(S('L07'), S('L10'), ['F', 'C', 'Bb', 'F'], vel=.30, pattern=(0, 2, 3, 2))
+for j, m in enumerate((72, 76, 79, 84)):
+    note(m, w('L08', 7) - .25 + j * .11, .26, 2.4, pan=.3)    # rising figure into "Isaac Newton"
+for j, m in enumerate((88, 91)):
+    note(m, w('L09', 2) + j * .14, .18, 1.4, pan=.4)          # "gravity" wink
+# 4. the chase: L10..L11, low and sparse, stop on "hanged"
+broken(S('L10'), w('L11', 8) - .05, ['Dm', 'A', 'Dm', 'Bb'], vel=.26, step=Q, pattern=(0, 2), up=0)
+chord('Dm', w('L11', 8), vel=.22, dur=2.2, up=-12)
+# 5. today + payoff: L12..L13
+broken(S('L12'), E('L13'), ['F', 'C', 'Dm', 'Bb'], vel=.26)
+motif(S('L12'), E('L13') - .5, WARM, vel=.22)
+chord('F', E('L13') - .05, vel=.30, dur=3.5)
 
 # ---------- mix ----------
-TARGET = {'pad': -9, 'pluck': -7, 'glock': -13, 'timp': -11, 'box': -8}   # relative balance inside the bed (LUFS)
-bed = np.zeros((2, N))
-for k, x in tr.items():
-    if np.any(x):
-        bed += x * dbg(TARGET[k] - integrated(x))
-hall = make_ir(1.6, 5, pre=.02, hf=1.3)
-bed = bed + .35 * convolve_st(bed.mean(0), hall)[:, :N]
-bed = hp(lp(bed, 9000, 2), 45, 2)
+hall = make_ir(1.8, 5, pre=.02, hf=1.4)
+bed = bed + .30 * convolve_st(bed.mean(0), hall)[:, :N]
+bed = hp(lp(bed, 8000, 2), 50, 2)
 
 # duck 4 dB under spoken words (20 ms attack / 250 ms release)
 env = np.zeros(N)
@@ -132,15 +139,14 @@ bed *= dbg(-4.0 * g)
 
 v = np.zeros((2, N)); v[:, :len(voice)] = voice
 v *= dbg(-16.0 - integrated(v))                    # voice -16 LUFS
-bed *= dbg(-16.0 - 16.0 - integrated(bed))         # bed ~16 LU under the voice
+bed *= dbg(-16.0 - 20.0 - integrated(bed))         # bed ~20 LU under the voice (quieter than v1's 16)
 mix = v + bed
-# look-ahead peak limiter (5 ms) so the mix reaches YouTube loudness (-14 LUFS) without clipping
 from scipy.ndimage import minimum_filter1d, uniform_filter1d  # noqa: E402
 for _ in range(3):
     mix *= dbg(-14.0 - integrated(mix))
     need = np.minimum(1.0, .9 / np.maximum(np.abs(mix).max(0), 1e-9))
-    w = ns(.005)
-    gl = uniform_filter1d(minimum_filter1d(need, 2 * w + 1), 2 * w + 1)
+    wl = ns(.005)
+    gl = uniform_filter1d(minimum_filter1d(need, 2 * wl + 1), 2 * wl + 1)
     mix *= gl[None, :]
 mix *= min(1.0, .93 / np.abs(mix).max())
 sf.write(f'{OUT}/music.wav', bed.T.astype(np.float32), SR)
