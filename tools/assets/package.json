@@ -1,0 +1,14 @@
+{
+  "name": "holdup-asset-tools",
+  "private": true,
+  "dependencies": {
+    "@gltf-transform/cli": "4.1.1",
+    "@gltf-transform/core": "4.1.1",
+    "@gltf-transform/functions": "4.1.1",
+    "obj2gltf": "3.1.6",
+    "fbx2gltf": "0.9.7-p1"
+  },
+  "overrides": {
+    "cesium": "1.120.0"
+  }
+}

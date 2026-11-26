@@ -13,7 +13,8 @@ import json, os, re, shutil, subprocess, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 LIB = os.path.join(ROOT, 'assets', 'library'); INC = os.path.join(LIB, '_incoming'); CAT = os.path.join(LIB, 'catalog.json')
-NPX = ['npx', '-y']
+TOOLS = os.path.join(ROOT, 'tools', 'assets'); BIN = os.path.join(TOOLS, 'node_modules', '.bin')   # npm i in tools/assets first
+FBX2GLTF = os.path.join(TOOLS, 'node_modules', 'fbx2gltf', 'bin', 'Darwin' if sys.platform == 'darwin' else 'Linux', 'FBX2glTF')
 
 
 def slug(s): return re.sub(r'[^a-z0-9]+', '-', s.lower()).strip('-')
@@ -22,11 +23,11 @@ def slug(s): return re.sub(r'[^a-z0-9]+', '-', s.lower()).strip('-')
 def convert(src, dst):
     ext = os.path.splitext(src)[1].lower()
     if ext in ('.gltf', '.glb'):
-        cmd = NPX + ['@gltf-transform/cli@4', 'copy', src, dst]
+        cmd = [os.path.join(BIN, 'gltf-transform'), 'copy', src, dst]
     elif ext == '.obj':
-        cmd = NPX + ['obj2gltf@3', '-i', src, '-o', dst, '--binary']
+        cmd = [os.path.join(BIN, 'obj2gltf'), '-i', src, '-o', dst, '--binary']
     elif ext == '.fbx':
-        cmd = NPX + ['fbx2gltf@0.9.7-p1', '--binary', '--input', src, '--output', dst[:-4]]
+        cmd = [FBX2GLTF, '--binary', '--input', src, '--output', dst[:-4]]
     else:
         return False
     r = subprocess.run(cmd, capture_output=True, text=True)
@@ -38,7 +39,7 @@ def stats(glb):
          "let t=0;for(const m of d.getRoot().listMeshes())for(const p of m.listPrimitives()){const i=p.getIndices();t+=(i?i.getCount():p.getAttribute('POSITION').getCount())/3}" \
          "const {getBounds}=require('@gltf-transform/core');const b=getBounds(d.getRoot().listScenes()[0]);" \
          "console.log(JSON.stringify({tris:Math.round(t),size:b.max.map((v,i)=>+(v-b.min[i]).toFixed(3))}))})()"
-    r = subprocess.run(['node', '-e', js, glb], capture_output=True, text=True, cwd=os.path.join(ROOT, 'templates', 'holdup', 'remotion'))
+    r = subprocess.run(['node', '-e', js, glb], capture_output=True, text=True, cwd=TOOLS)
     try: return json.loads(r.stdout.strip().splitlines()[-1])
     except Exception: return {}
 
