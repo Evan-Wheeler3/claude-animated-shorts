@@ -94,6 +94,36 @@ const smoke = (scene: THREE.Scene, n = 8, col = '#d8d4cc', size = .018) => Array
     m.position.set(p[0] + (.08 + .25 * k) * Math.sin(i * 2.3) * k + .06 * k, p[1] + .3 * k, p[2] + .04); (m.material as THREE.MeshBasicMaterial).opacity = .5 * amount * Math.sin(Math.PI * k); }; });
 /** world position of a point on a figure card (design units, 600 x 1000) */
 const onCard = (c: Card, x: number, y: number) => { c.mesh.updateMatrixWorld(true); return c.mesh.localToWorld(new THREE.Vector3(x / 600 - .5, .975 - y / 1000, 0)).toArray(); };
+/** acid bottle crammed into the coat pocket. k 0..1: 0 = held at the chest in the screen-right hand, .7 = shoved in, 1 = settled.
+ *  Returns the arm pose for that hand and a costume drawing the bottle / the bulging pocket. */
+const cramBottle = (k: number, t: number, jacket: string) => {
+  const reach = smooth(k / .7), inP = k > .62, settle = inP ? (k - .62) / .38 : 0;
+  const tgt = (g: {u: number; HH: number; chin: number; torsoBot: number; tcx: number; Ta: number}): P =>
+    [lerp(g.tcx + 6 * g.u, g.tcx + 1.05 * g.Ta, reach), lerp(g.chin + .5 * g.HH, g.torsoBot - .32 * g.HH, reach)];
+  const armPose = (side: -1 | 1, S: P, g: {u: number; HH: number; chin: number; torsoBot: number; tcx: number; Ta: number}): P[] | null => {
+    if (side < 0 && !inP) { const h: P = [g.tcx - 8 * g.u, g.chin + .62 * g.HH]; return [S, [S[0] - 22 * g.u, (S[1] + h[1]) / 2 + 12 * g.u], h]; }   // other hand steadies it
+    if (side < 0 || settle > .5) return null;
+    const h = tgt(g); return [S, [S[0] + 26 * g.u, (S[1] + h[1]) / 2 + 6 * g.u], h]; };
+  const costume: Costume = {hand: (k2: Kit) => { const u = k2.u, p = k2.p;
+    const px = k2.tcx + .78 * k2.Ta, py = k2.torsoBot - .26 * k2.HH;
+    const bottleAt = (x: number, y: number, sq = 1) => {
+      p.poly([[x - 14 * u * sq, y - 10 * u], [x + 14 * u * sq, y - 10 * u], [x + 14 * u * sq, y + 30 * u / sq], [x - 14 * u * sq, y + 30 * u / sq]], 'rgba(170,230,190,.92)', 2.4 * u);
+      p.poly([[x - 13 * u * sq, y + 8 * u], [x + 13 * u * sq, y + 8 * u + 3 * u * Math.sin(t * 9)], [x + 13 * u * sq, y + 29 * u / sq], [x - 13 * u * sq, y + 29 * u / sq]], 'rgba(120,220,120,.95)', 0);
+      p.poly([[x - 6 * u, y - 22 * u], [x + 6 * u, y - 22 * u], [x + 6 * u, y - 10 * u], [x - 6 * u, y - 10 * u]], '#7a5a3a', 2 * u); };
+    if (!inP) { const h = k2.hands[1] ?? k2.hands[0]; bottleAt(h[0], h[1] - 6 * u, 1 - .15 * smooth((k - .45) / .17)); p.dot(h[0], h[1], 5.5 * u); return; }
+    // the bulge: overshoots as it goes in, then wobbles with each step
+    const pop = 1 + .35 * Math.exp(-6 * settle) * Math.cos(settle * 18), wob = 1 + .06 * Math.sin(t * 11);
+    const rx = 22 * u * pop * wob, ry = 32 * u / pop;
+    p.poly([[px - 4 * u, py - 40 * u], [px + 9 * u, py - 40 * u], [px + 9 * u, py - 22 * u], [px - 4 * u, py - 22 * u]], '#7a5a3a', 2 * u);          // cork + neck poking out
+    p.poly([[px - 7 * u, py - 26 * u], [px + 12 * u, py - 26 * u], [px + 12 * u, py - 12 * u], [px - 7 * u, py - 12 * u]], 'rgba(170,230,190,.92)', 2.2 * u);
+    const e = Array.from({length: 40}, (_, i) => { const a = i / 40 * Math.PI * 2; return [px + 4 * u + Math.cos(a) * rx, py + 12 * u + Math.sin(a) * ry] as P; });
+    p.gradFill(e, jacket, shade(jacket, .7), k2.light); p.inkRing(e, k2.ow * .8, k2.thick);
+    p.stroke([[px - rx + 9 * u, py - 4 * u], [px + rx - 2 * u, py - 6 * u]], 2.6 * u, INK);                                                     // pocket flap seam
+    for (const dy of [12, 24]) p.stroke([[px + rx - 10 * u, py + dy * u], [px + rx - 3 * u, py + (dy + 3) * u]], 1.8 * u, shade(jacket, .5));   // strain creases
+    if (settle < .5) { const h = k2.hands[1] ?? k2.hands[0]; p.dot(h[0], h[1], 5.5 * u); }
+  }};
+  return {armPose, costume, armFront: true};
+};
 /** the jaw glows green (phossy jaw, kept comic: a soft green glow on the chin) */
 const glowJaw: Costume = {head: (k: Kit) => { const u = k.u;
   for (const [r, a] of [[46, .18], [34, .3], [24, .55]] as const) k.p.ell(300, k.hc + .55 * k.Hb, r * u * 1.6, r * u, `rgba(150,255,140,${a})`, 0); }};
@@ -194,11 +224,14 @@ const B: Record<number, (c: Ctx) => Upd> = {
     return (f, l, u) => { const dip = smooth((f - burst + 14) / 10) * (1 - smooth((f - burst) / 8));
       const y = top + .62 - .22 * dip; m.position.set(.08, y, -1.0); m.rotation.z = Math.PI;
       fl.at([.08, y - .23, -1.0], l / FPS, smooth((f - burst) / 6) * (1 - dip)); c.dof = 6; cam(c, [.25, top + .45, .1], [.08, top + .35, -1.0], 40); }; },
-  // 4 then you had to carry a bottle of acid around (gent tiptoes along the street)
-  4: c => { street(c); const a = actor(1.78); c.scene.add(a.k.mesh);
-    return (f, l, u) => { a.k.mesh.position.set(lerp(-1.2, .6, u), 0, .2);
-      a.draw(GENT, {mode: 'stroll', phase: l / FPS * 1.2, expr: 'nervous', seed: 21, look: -.6, costume: dress(cravat(), acidBottle(1))});
-      c.dof = 5; glide(c, [[-.6, 1.5, 3.8], [-.4, 1.2, 0]], [[.6, 1.5, 3.8], [.5, 1.2, 0]], u, 42); }; },
+  // 4 then you had to carry a bottle of acid around: he crams it into his coat pocket (huge bulge) and walks off with it
+  4: c => { street(c); const a = actor(1.78); c.scene.add(a.k.mesh); const n = SHOTS[3].b - SHOTS[3].a, cramEnd = Math.round(n * .42);
+    return (f, l, u) => { const t = l / FPS, k = Math.min(1, l / cramEnd), w = Math.max(0, (l - cramEnd) / FPS);   // w = seconds walking
+      const pos = [lerp(-.9, .35, Math.min(1, w / 1.6)), 0, lerp(-1.0, .55, Math.min(1, w / 1.6))]; a.k.mesh.position.set(pos[0], 0, pos[2]);
+      const cb = cramBottle(k, t, GENT.jacket);
+      a.draw(GENT, {mode: w > 0 ? 'stroll' : 'stand', phase: w * 1.0, lift: 48, ...cb, tilt: w > 0 ? 0 : 6 * Math.sin(Math.PI * k) , headTilt: w > 0 ? 4 * Math.sin(w * Math.PI * 2) : -6 * smooth(k),
+        expr: k < .62 ? 'nervous' : w > 0 ? 'nervous' : 'strain', seed: 21, look: w > 0 ? .7 : 0, costume: dress(cravat(), cb.costume)});
+      c.dof = 5; cam(c, [lerp(-.5, .3, smooth(u)), 1.45, lerp(1.6, 3.2, smooth(u))], [lerp(-.85, .25, smooth(u)), lerp(1.2, 1.0, u), lerp(-1.0, -.1, u)], 42); }; },
   // 5 a match dragged through folded sandpaper: whoosh (ECU, 4x props)
   5: c => { c.near = .01; const top = room(c); const sp = sandpaper(); sp.scale.setScalar(4); sp.position.set(0, top + .008, -1.0); c.scene.add(sp);
     const sp2 = sandpaper(); sp2.scale.setScalar(4); sp2.position.set(0, top + .05, -1.0); sp2.rotation.z = .2; c.scene.add(sp2);
