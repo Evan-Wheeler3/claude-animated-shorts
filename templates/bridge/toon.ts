@@ -229,7 +229,7 @@ const DEF_LIGHT = rad(-120);
 
 // ---------------- faces ----------------
 export type Expr = "neutral" | "stern" | "grin" | "laugh" | "whistle" | "nervous" | "shock" | "relief" | "relief_open" | "dazed"
-  | "pained" | "smile" | "smile_closed" | "lick";
+  | "pained" | "smile" | "smile_closed" | "lick" | "exhausted" | "strain" | "proud";
 type EyeK = "dot" | "small" | "lid" | "slit" | "happy" | "dash" | "squeeze" | "shock" | "shockHalf" | "spiral";
 type MouthK = "dash" | "frown" | "smirk" | "smile" | "smileWide" | "grin" | "laugh" | "o" | "O" | "wave" | "teeth" | "lick";
 /** eyes [back, front], brows [inner, outer] offsets in u (+ = down), mouth kind */
@@ -248,6 +248,9 @@ const FACE: Record<Expr, { eye: [EyeK, EyeK]; brow: [number, number]; mouth: Mou
   smile: { eye: ["dot", "dot"], brow: [0, -1], mouth: "smirk" },
   smile_closed: { eye: ["happy", "happy"], brow: [0, -1], mouth: "smile" },
   lick: { eye: ["dot", "dot"], brow: [0, -1], mouth: "lick" },
+  exhausted: { eye: ["slit", "slit"], brow: [-5, 4], mouth: "o" },
+  strain: { eye: ["squeeze", "squeeze"], brow: [5, -1], mouth: "teeth" },
+  proud: { eye: ["lid", "lid"], brow: [-2, -4], mouth: "smirk" },
 };
 const halfLid = (k: EyeK): EyeK => (k === "dot" || k === "small" ? "lid" : k === "lid" ? "slit" : k === "shock" ? "shockHalf" : k);
 const eyeKind = (k: EyeK, lid: number): EyeK =>
@@ -450,6 +453,10 @@ export type FrontOpts = {
   /** canvas angle the key light comes FROM (painted crescent + thick outline side) */
   light?: number; facing?: -1 | 0 | 1; seed?: number;
   costume?: Costume;
+  /** free arm posing: return the arm polyline (shoulder first, hand last) for side -1 (screen-left) / 1, or null for the default */
+  armPose?: (side: -1 | 1, shoulder: P2, g: { u: number; HH: number; chin: number; torsoBot: number; tcx: number; Ta: number }) => P2[] | null;
+  /** posed arms are drawn in front of the torso (hands working in front of the chest) */
+  armFront?: boolean;
 };
 
 const footStroke = (p: Pen, a: P2, b: P2, w: number, col: string) => {
@@ -459,7 +466,7 @@ const footStroke = (p: Pen, a: P2, b: P2, w: number, col: string) => {
 
 export const bodyFront = (p: Pen, o: Outfit, opts: FrontOpts) => {
   const { phase = 0, expr = "neutral", mode = "march", look = 0, blink = false, lift = 60, prop = null, tilt = 0, headTilt = 0, wave,
-    light = DEF_LIGHT, facing = 0, seed = 1, costume } = opts;
+    light = DEF_LIGHT, facing = 0, seed = 1, costume, armPose, armFront = false } = opts;
   const Bd = BUILD[o.build ?? "adult"], skin = o.skin ?? SKIN, two = Math.PI * 2, lid = lidOf(blink);
   const H = headBlob(seed, Bd.a, facing), W = 2 * H.a, HH = 2 * H.b, u = W / 100;
   const tall = (1 + Bd.torso + Bd.legs) * HH, sole = 975;
@@ -543,9 +550,14 @@ export const bodyFront = (p: Pen, o: Outfit, opts: FrontOpts) => {
       arms.push({ pts: [S, E, Hd], front: true });
     } else arms.push({ pts: hang(1, sw), front: false });
   }
-  const drawArm = (a: Arm) => { p.stroke(curve(a.pts[0], a.pts[1], a.pts[2]), 5.2 * u, armCol); p.dot(a.pts[2][0], a.pts[2][1], 5.5 * u); };
+  if (armPose) for (const side of [-1, 1] as const) {   // custom poses replace the default arm on that side
+    const pts = armPose(side, sh(side), { u, HH, chin, torsoBot, tcx, Ta: T.a });
+    if (pts) { const i = side < 0 ? 0 : arms.length > 1 ? 1 : -1; const a = { pts: pts as unknown as [P2, P2, P2], front: armFront }; if (i >= 0) arms[i] = a; else arms.push(a); }
+  }
+  const drawArm = (a: Arm) => { const q = a.pts as P2[], last = q[q.length - 1];
+    p.stroke(q.length === 3 ? curve(q[0], q[1], q[2]) : q, 5.2 * u, armCol); p.dot(last[0], last[1], 5.5 * u); };
   const kit = (head: P2[] = blobPts(300, hc, H)): Kit => ({ p, u, W, HH, light, thick, ow, torso: tp, tcx, tcy, Ta: T.a, Tb: T.b, chin, torsoBot,
-    shoulders: [sh(-1), sh(1)], head, hc, Ha: H.a, Hb: H.b, crown, hands: arms.map(a => a.pts[2]) });
+    shoulders: [sh(-1), sh(1)], head, hc, Ha: H.a, Hb: H.b, crown, hands: arms.map(a => (a.pts as P2[])[(a.pts as P2[]).length - 1]) });
   // behind the body: rifle, sword, arms
   if (rifle) {
     p.band([R0, R1], "#7a4b2a", 5 * u, 1.5 * u, "round");

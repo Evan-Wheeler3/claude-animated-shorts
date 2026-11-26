@@ -47,9 +47,38 @@ const acidBottle = (hand: number): Costume => ({hand: (k: Kit) => { const [x, y]
   k.p.poly([[x - 13 * u, y + 8 * u], [x + 13 * u, y + 8 * u], [x + 13 * u, y + 29 * u], [x - 13 * u, y + 29 * u]], 'rgba(120,220,120,.9)', 0);
   k.p.poly([[x - 6 * u, y - 22 * u], [x + 6 * u, y - 22 * u], [x + 6 * u, y - 10 * u], [x - 6 * u, y - 10 * u]], '#7a5a3a', 2 * u);
   k.p.dot(x, y, 5.5 * u); }});
-/** two sticks held crossed in front of the body (fire drill) */
-const sticks = (phase: number): Costume => ({hand: (k: Kit) => { const u = k.u, [a, b] = k.hands, dx = 6 * u * Math.sin(phase);
-  k.p.band([[a[0] + dx, a[1]], [b[0] - dx, b[1] - 30 * u]], '#8a5a32', 5 * u, 1.6 * u, 'round'); k.p.band([[a[0] - 10 * u, a[1] + 20 * u], [b[0] + 10 * u, b[1] + 22 * u]], '#7a4a2a', 6 * u, 1.6 * u, 'round'); }});
+/** hand drill (bow-less fire drill): seated, a spindle spun between flat palms into a fireboard between the feet.
+ *  t = seconds; the palms rub opposite ways ~3.5x/s and slide down the spindle, then hop back to the top. */
+const SIT_H = (h: number) => h * (1.2 + 1.1) / (1 + 1.1 + 1.4);   // a seated adult card is this tall (crown to soles)
+const drill = (t: number, weak = 0) => {
+  const rub = Math.sin(t * 22 * (1 - .55 * weak)) * (1 - .6 * weak), slide = (t * .55) % 1;
+  const armPose = (side: -1 | 1, S: [number, number], g: {u: number; HH: number; chin: number}) => { const u = g.u;
+    const hy = g.chin + (.3 + .35 * slide) * g.HH + side * rub * 5 * u, hx = 300 + side * (9 * u) + side * rub * 3 * u;
+    const ex = S[0] + side * (26 + 8 * weak) * u, ey = (S[1] + hy) / 2 + (8 + 30 * weak) * u;     // elbows out to the sides
+    return weak > 0 ? [S, [S[0] + side * 14 * u, S[1] + .2 * g.HH + 10 * weak * u * Math.sin(t * 9 + side)], [ex, ey + 6 * weak * u * Math.sin(t * 7)], [hx, hy]] as [number, number][]
+      : [S, [ex, ey], [hx, hy]] as [number, number][]; };
+  const costume: Costume = {hand: (k: Kit) => { const u = k.u, p = k.p, rot = p.rot; const [a, b] = k.hands;
+    const top = p.P((a[0] + b[0]) / 2, Math.min(a[1], b[1]) - 40 * u); p.rot = null;
+    const tip: [number, number] = [300, 975 - 13 * u];
+    p.poly([[300 - 46 * u, 975 - 16 * u], [300 + 46 * u, 975 - 16 * u], [300 + 50 * u, 975 - 3 * u], [300 - 50 * u, 975 - 3 * u]], '#9a6a3c', 2 * u);   // fireboard
+    p.ell(300, 975 - 15 * u, 7 * u, 2.6 * u, '#3a2414', 0);                                                                                       // burnt notch
+    if (weak === 0) p.ell(300, 975 - 15 * u, 4 * u * (.6 + .4 * Math.sin(t * 13)), 1.8 * u, `rgba(255,140,40,${Math.min(1, t / 3)})`, 0);           // ember glow builds
+    for (const sd of [-1, 1]) { const hip: [number, number] = [300 + sd * 16 * u, k.torsoBot - .12 * k.HH], knee: [number, number] = [300 + sd * 62 * u, k.torsoBot - .42 * k.HH],   // knees up, feet pin the board
+      ft: [number, number] = [300 + sd * 38 * u, 975 - 20 * u]; p.stroke([hip, knee, ft], 5.8 * u, INK);
+      p.stroke([[ft[0] - sd * 4 * u, ft[1]], [ft[0] + sd * 10 * u, ft[1] - 2 * u]], 10.5 * u, INK); p.stroke([[ft[0] - sd * 4 * u, ft[1]], [ft[0] + sd * 10 * u, ft[1] - 2 * u]], 7.5 * u, '#3a2a20'); }
+    p.band([tip, [top[0], top[1]]], '#c49a62', 5 * u, 1.6 * u, 'round');                                                                         // spindle
+    for (let i = 0; i < 4; i++) { const sx = Math.sin(t * 22 + i * 1.6) * 2 * u, f = .15 + .22 * i;                                             // spin marks
+      const q: [number, number] = [tip[0] + (top[0] - tip[0]) * f, tip[1] + (top[1] - tip[1]) * f]; p.stroke([[q[0] + sx - 1.2 * u, q[1]], [q[0] + sx + 1.2 * u, q[1] - 2 * u]], 1.4 * u, '#7a5430'); }
+    p.rot = rot; }};
+  return {armPose, costume, armFront: true, mode: 'sit' as const, tilt: 3.5 * rub * (1 - .5 * weak) + 6 * weak, headTilt: -2 * rub};
+};
+/** a 3D puff of smoke rising from a point: grey, grows with `amount` (0..1) */
+const smoke = (scene: THREE.Scene, n = 8, col = '#d8d4cc', size = .018) => Array.from({length: n}, (_, i) => { const m = new THREE.Mesh(new THREE.SphereGeometry(size * (1 + .4 * (i % 3)), 12, 8),
+  new THREE.MeshBasicMaterial({color: col, transparent: true, opacity: 0, depthWrite: false})); m.layers.set(NOINK); scene.add(m);
+  return (t: number, p: number[], amount: number) => { const k = (t * .45 + i / n) % 1; m.scale.setScalar(.5 + 2.2 * k);
+    m.position.set(p[0] + (.08 + .25 * k) * Math.sin(i * 2.3) * k + .06 * k, p[1] + .3 * k, p[2] + .04); (m.material as THREE.MeshBasicMaterial).opacity = .5 * amount * Math.sin(Math.PI * k); }; });
+/** world position of a point on a figure card (design units, 600 x 1000) */
+const onCard = (c: Card, x: number, y: number) => { c.mesh.updateMatrixWorld(true); return c.mesh.localToWorld(new THREE.Vector3(x / 600 - .5, .975 - y / 1000, 0)).toArray(); };
 /** the jaw glows green (phossy jaw, kept comic: a soft green glow on the chin) */
 const glowJaw: Costume = {head: (k: Kit) => { const u = k.u;
   for (const [r, a] of [[46, .18], [34, .3], [24, .55]] as const) k.p.ell(300, k.hc + .55 * k.Hb, r * u * 1.6, r * u, `rgba(150,255,140,${a})`, 0); }};
@@ -97,9 +126,10 @@ const fumes = (scene: THREE.Scene, n = 14, col = '#8af07a') => Array.from({lengt
 type Ctx = {L: Lib; scene: THREE.Scene; camera: THREE.PerspectiveCamera; env: THREE.DataTexture; renderer: THREE.WebGLRenderer; look: number[]; dof: number; near?: number};
 const cam = (c: Ctx, p: number[], t: number[], fov = 40) => { c.look = t; c.camera.fov = fov; c.camera.near = c.near ?? .05; c.camera.updateProjectionMatrix(); c.camera.position.set(p[0], p[1], p[2]); c.camera.lookAt(t[0], t[1], t[2]); };
 const glide = (c: Ctx, A: number[][], B: number[][], u: number, fov = 40) => cam(c, lerp3(A[0], B[0], smooth(u)), lerp3(A[1], B[1], smooth(u)), fov);
-const meadow = (c: Ctx) => { lightRig(c.renderer, c.scene, c.env); const s = c.scene;
+const meadow = (c: Ctx, clear = .55) => { lightRig(c.renderer, c.scene, c.env); const s = c.scene;
   const g = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), std('#4f8a2a', 1)); g.rotation.x = -Math.PI / 2; g.receiveShadow = true; s.add(g);
-  s.add(grassField(120000, -6, 6, -6, 6, (x, z) => Math.hypot(x, z - .8) < .55));
+  s.add(grassField(120000, -6, 6, -6, 6, (x, z) => Math.hypot(x, z - .8) < clear));
+  if (clear > .6) { const d = new THREE.Mesh(new THREE.CircleGeometry(clear * .9, 40), std('#7a6a48', 1)); d.rotation.x = -Math.PI / 2; d.position.set(0, .004, .8); d.receiveShadow = true; s.add(d); }
   [[-4, -6, 'commontree-1', 1.3], [4.5, -8, 'commontree-4', 1.4], [-8, -14, 'commontree-4', 1.5], [9, -15, 'commontree-1', 1.5]].forEach(([x, z, id, k]) => s.add(place(c.L, `stylized-nature-megakit/${id}`, x as number, 0, z as number, x as number, k as number)));
   s.add(place(c.L, 'stylized-nature-megakit/bush-common-flowers', -2.4, 0, -1.5)); s.add(place(c.L, 'stylized-nature-megakit/bush-common', 2.6, 0, -2));
   s.add(place(c.L, 'pirate-kit/environment-rock-2', 1.8, 0, 1.4, 0, .3)); s.add(place(c.L, 'stylized-nature-megakit/flower-3-group', -1.6, 0, 1.6));
@@ -128,16 +158,18 @@ const factory = (c: Ctx, night: boolean) => { lightRig(c.renderer, c.scene, c.en
 // ---------- the 16 pictures ----------
 type Upd = (f: number, l: number, u: number) => void;
 const B: Record<number, (c: Ctx) => Upd> = {
-  // 1 rub two sticks together (caveman, meadow)
-  1: c => { meadow(c); const a = actor(1.7); a.k.mesh.position.set(-.2, 0, .3); c.scene.add(a.k.mesh); const sm = fumes(c.scene, 6, '#d8d4cc');
-    sm.forEach(f => f(0, [0, 0, .8]));
-    return (f, l, u) => { a.draw(CAVE, {expr: 'stern', seed: 5, look: .3, costume: sticks(l * .9)});
-      sm.forEach(fn => fn(l / FPS * 2, [.1, .2, .8]));
-      c.dof = 5; glide(c, [[.6, 1.3, 4.2], [0, 1.0, .5]], [[.5, 1.25, 3.6], [0, 1.0, .5]], u, 40); }; },
-  // 2 it takes so long your arms give out
-  2: c => { meadow(c); const a = actor(1.7); a.k.mesh.position.set(-.2, 0, .3); c.scene.add(a.k.mesh);
-    return (f, l, u) => { a.draw(CAVE, {expr: u > .4 ? 'dazed' : 'nervous', seed: 5, tilt: 8 * smooth(u * 2), costume: sticks(l * .2)});
-      c.dof = 7; cam(c, [.2, 1.5, 2.2], [-.15, 1.35, .3], 40 * (1 - .002 * l)); }; },
+  // 1 the oldest way to make fire: a hand drill (seated caveman, spindle between the palms, smoke at the tip)
+  1: c => { meadow(c, 1.3).visible = false; const a = actor(SIT_H(1.7)); a.k.mesh.position.set(0, 0, .6); c.scene.add(a.k.mesh); const sm = smoke(c.scene, 9);
+    return (f, l, u) => { const t = l / FPS, d = drill(t);
+      a.draw(CAVE, {...d, expr: t > 1.2 ? 'strain' : 'stern', seed: 5, look: 0, costume: d.costume});
+      const tip = onCard(a.k, 300, 975 - 20); sm.forEach(fn => fn(t, tip, Math.min(1, .25 + t / 3)));
+      c.dof = 5; glide(c, [[.7, 1.35, 3.4], [0, .5, .6]], [[.45, 1.15, 2.7], [0, .48, .6]], u, 40); }; },
+  // 2 it takes so long your arms give out: the drilling slows, noodle arms, exhausted
+  2: c => { meadow(c, 1.3).visible = false; const a = actor(SIT_H(1.7)); a.k.mesh.position.set(0, 0, .6); c.scene.add(a.k.mesh); const sm = smoke(c.scene, 6);
+    return (f, l, u) => { const t = l / FPS + 3, d = drill(t, smooth(u * 1.6));
+      a.draw(CAVE, {...d, expr: u > .35 ? 'exhausted' : 'strain', seed: 5, look: 0, costume: d.costume});
+      sm.forEach(fn => fn(t, onCard(a.k, 300, 975 - 20), .5 * (1 - smooth(u * 1.5))));
+      c.dof = 7; cam(c, [.2, 1.0, 2.5], [0, .58, .6], 40 * (1 - .0015 * l)); }; },
   // 3 chemical match dipped in acid bursts into flame (ECU on the bench; close-up props are drawn 4x real size)
   3: c => { c.near = .01; const top = room(c); const bt = bottle(); bt.scale.setScalar(3.2); bt.position.set(.08, top, -1.0); c.scene.add(bt);
     const m = match3d(.2); c.scene.add(m); const fl = flame(c.scene, .16, 3); const burst = T('L02', 6);
