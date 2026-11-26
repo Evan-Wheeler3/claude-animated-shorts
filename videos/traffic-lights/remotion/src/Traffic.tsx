@@ -129,7 +129,7 @@ const carriage = (body = '#6b3a24') => { const g = new THREE.Group(), wood = std
   const bench = new THREE.Mesh(new THREE.BoxGeometry(1.1, .12, .45), dark); bench.position.set(0, 1.45, -.55);
   const back = new THREE.Mesh(new THREE.BoxGeometry(1.1, .4, .08), dark); back.position.set(0, 1.62, -.78);
   g.add(box, trim, bench, back);
-  for (const [z, r] of [[-.75, .42], [-2.0, .52]] as const) for (const x of [-.7, .7]) { const w = new THREE.Group(); w.position.set(x, r, z); w.rotation.z = Math.PI / 2;
+  for (const [z, r] of [[-.75, .42], [-2.0, .52]] as const) for (const x of [-.7, .7]) { const w = new THREE.Group(); w.position.set(x, r, z);   // axle along x
     const rim = new THREE.Mesh(new THREE.TorusGeometry(r, .04, 6, 24), dark); rim.rotation.y = Math.PI / 2; w.add(rim);
     for (let i = 0; i < 6; i++) { const sp = new THREE.Mesh(new THREE.BoxGeometry(.03, r * 2, .03), std('#b8913f', .5)); sp.rotation.x = i * Math.PI / 6; w.add(sp); }
     g.add(w); wheels.push(w); }
@@ -205,7 +205,7 @@ const oldCar = (paint = '#1d1d22', coat = '#6a4a2a') => { const g = new THREE.Gr
   for (const s2 of [-1, 1]) { const board = new THREE.Mesh(new THREE.BoxGeometry(.25, .05, 2.6), dark); board.position.set(s2 * .82, .45, .1); chassis.add(board);
     const fender = new THREE.Mesh(new THREE.BoxGeometry(.3, .06, .7), body); fender.position.set(s2 * .75, .9, 1.25); fender.rotation.x = -.25; chassis.add(fender);
     const lamp = new THREE.Mesh(new THREE.CylinderGeometry(.11, .11, .14, 14), brass); lamp.rotation.x = Math.PI / 2; lamp.position.set(s2 * .42, 1.32, 1.55); chassis.add(lamp); }
-  for (const [z, r] of [[1.1, .42], [-1.0, .45]] as const) for (const x of [-.75, .75]) { const w = new THREE.Group(); w.position.set(x, r, z); w.rotation.z = Math.PI / 2;
+  for (const [z, r] of [[1.1, .42], [-1.0, .45]] as const) for (const x of [-.75, .75]) { const w = new THREE.Group(); w.position.set(x, r, z);   // axle along x
     const tyre = new THREE.Mesh(new THREE.TorusGeometry(r - .04, .06, 8, 24), dark); tyre.rotation.y = Math.PI / 2; w.add(tyre);
     for (let i = 0; i < 6; i++) { const sp = new THREE.Mesh(new THREE.BoxGeometry(.03, r * 2 - .1, .03), std('#d8c8a0', .5)); sp.rotation.x = i * Math.PI / 6; w.add(sp); }
     g.add(w); wheels.push(w); }
@@ -321,8 +321,8 @@ const B: Record<number, (c: Ctx) => Upd> = {
     const crate = place(c.L, 'fantasy-props-megakit/crate-wooden', 0, 0, 0, 0, .55); c.scene.add(crate);
     const boomFx = blast(c.scene, 2.6, ['#6b3a24', '#8a5a34', '#c9a24a', '#2a1a12']), crash = T('L02', 8) - 2;                                    // owner note: a HUGE fiery explosion when they collide
     return (f, l, u) => { const t = l / FPS, e = (f - crash) / FPS, before = f < crash, back = before ? 0 : 1.1 * smooth(e * 3);
-      A.g.position.set(before ? -1.15 - 1.6 * (crash - f) / FPS : -1.15 - back, 0, 0);            // from the left, across the frame
-      Bt.g.position.set(0, 0, before ? -1.15 - 2.6 * (crash - f) / FPS : -1.15 - back);           // down the street toward us
+      A.g.position.set(before ? -1.55 - 1.6 * (crash - f) / FPS : -1.55 - back, 0, 0);            // from the left, across the frame
+      Bt.g.position.set(0, 0, before ? -1.55 - 2.6 * (crash - f) / FPS : -1.55 - back);           // down the street toward us
       const rear = before ? 0 : Math.sin(Math.min(1, e / .9) * Math.PI) * 1.0, burnt = before ? 0 : smooth(e * 8);
       A.h.pose(t * 2.2, before ? 1 : 0, rear); Bt.h.pose(t * 2.4 + .3, before ? 1 : 0, rear * .85); A.h.char(burnt * .85); Bt.h.char(burnt * .8);
       A.roll(A.g.position.x); Bt.roll(Bt.g.position.z);
@@ -425,8 +425,8 @@ const B: Record<number, (c: Ctx) => Upd> = {
     const hit = T('L06', 10) - 2, passes = [T('L06', 3), T('L06', 7), hit];
     return (f, l, u) => { const t = l / FPS;
       cars.forEach((cr, i) => { const e = (f - passes[i]) / FPS, v = 14, d = v * e;
-        if (i === 0) { cr.g.rotation.y = Math.PI / 2; cr.g.position.set(d, 0, 1.35); } else if (i === 1) { cr.g.rotation.y = -Math.PI / 2; cr.g.position.set(-d, 0, -1.4); }
-        else { cr.g.rotation.y = 0; cr.g.position.set(1.05, 0, d); }
+        if (i === 0) { cr.g.rotation.y = Math.PI / 2; cr.g.position.set(d, 0, 1.55); } else if (i === 1) { cr.g.rotation.y = -Math.PI / 2; cr.g.position.set(-d, 0, -1.6); }
+        else { cr.g.rotation.y = 0; cr.g.position.set(1.55, 0, d); }   // all clear of the platform: inches, not through
         cr.roll(d); cr.driver(Math.abs(e) < .4 ? 'shock' : 'smile_closed', t); });
       const e = (f - hit) / FPS, spun = e > 0, near = passes.some(p => Math.abs(f - p) < 8);
       a.draw(COP, {seed: 33, expr: spun ? (e < .5 ? 'shock' : 'dazed') : near ? 'shock' : 'nervous', look: -.3, headTilt: spun ? 18 * Math.sin(e * 14) * Math.exp(-e * 2) : 0,
@@ -499,7 +499,7 @@ const B: Record<number, (c: Ctx) => Upd> = {
     const wait = modernCar(c.L, 'sedan'); c.scene.add(wait); const yel = T('L11', 4), red = T('L11', 7);
     return (f, l, u) => { const t = l / FPS; b.set(f >= red ? {red: 1} : f >= yel ? {yellow: 1} : {green: 1});
       flow.forEach((g, i) => { const lane = i % 2 ? 1 : -1, x = ((t * 9 + i * 9) % 46) - 23; g.rotation.y = lane > 0 ? Math.PI / 2 : -Math.PI / 2; g.position.set(lane * x, 0, lane * 2.2); });
-      const go = Math.max(0, (f - red - 8) / FPS); wait.rotation.y = Math.PI; wait.position.set(2.2, 0, 7 - 2.5 * go * go);
+      wait.rotation.y = Math.PI; wait.position.set(2.2, 0, 7.2);
       const crane = smooth(l / 90);
       c.dof = 2 * (1 - crane); cam(c, [lerp(-3.0, 9, crane), lerp(4.6, 10, crane), lerp(5.4, 17, crane)], [lerp(-4.4, 0, crane), lerp(4.2, 0, crane), lerp(2.6, 0, crane)], 40); }; },
   // 14 "(pause) Of course, to some people, it is still just a suggestion": red light, a taxi waits politely; a red sports car
