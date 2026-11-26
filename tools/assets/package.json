@@ -5,8 +5,10 @@
     "@gltf-transform/cli": "4.1.1",
     "@gltf-transform/core": "4.1.1",
     "@gltf-transform/functions": "4.1.1",
+    "fbx2gltf": "0.9.7-p1",
     "obj2gltf": "3.1.6",
-    "fbx2gltf": "0.9.7-p1"
+    "sharp": "0.33.5",
+    "@gltf-transform/extensions": "4.1.1"
   },
   "overrides": {
     "cesium": "1.120.0"
