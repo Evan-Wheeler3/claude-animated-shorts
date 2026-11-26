@@ -3302,6 +3302,1891 @@
   "tris": 364
  },
  {
+  "id": "kenney-car-kit/ambulance",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/ambulance.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1.5,
+   1.8,
+   3.25
+  ],
+  "tris": 2804
+ },
+ {
+  "id": "kenney-car-kit/box",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/box.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.715,
+   0.715,
+   0.715
+  ],
+  "tris": 124
+ },
+ {
+  "id": "kenney-car-kit/cone",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/cone.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.476,
+   0.595,
+   0.476
+  ],
+  "tris": 172
+ },
+ {
+  "id": "kenney-car-kit/cone-flat",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/cone-flat.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.476,
+   0.281,
+   0.476
+  ],
+  "tris": 172
+ },
+ {
+  "id": "kenney-car-kit/debris-bolt",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/debris-bolt.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.173,
+   0.26,
+   0.2
+  ],
+  "tris": 36
+ },
+ {
+  "id": "kenney-car-kit/debris-bumper",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/debris-bumper.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1.3,
+   0.4,
+   0.45
+  ],
+  "tris": 116
+ },
+ {
+  "id": "kenney-car-kit/debris-door",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/debris-door.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.188,
+   0.9,
+   0.8
+  ],
+  "tris": 68
+ },
+ {
+  "id": "kenney-car-kit/debris-door-window",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/debris-door-window.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.188,
+   0.9,
+   0.8
+  ],
+  "tris": 74
+ },
+ {
+  "id": "kenney-car-kit/debris-drivetrain",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/debris-drivetrain.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1.204,
+   0.296,
+   1.92
+  ],
+  "tris": 412
+ },
+ {
+  "id": "kenney-car-kit/debris-drivetrain-axle",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/debris-drivetrain-axle.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1.204,
+   0.296,
+   0.348
+  ],
+  "tris": 200
+ },
+ {
+  "id": "kenney-car-kit/debris-nut",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/debris-nut.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.173,
+   0.1,
+   0.2
+  ],
+  "tris": 40
+ },
+ {
+  "id": "kenney-car-kit/debris-plate-a",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/debris-plate-a.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.9,
+   0.1,
+   0.9
+  ],
+  "tris": 40
+ },
+ {
+  "id": "kenney-car-kit/debris-plate-b",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/debris-plate-b.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.9,
+   0.2,
+   0.9
+  ],
+  "tris": 44
+ },
+ {
+  "id": "kenney-car-kit/debris-plate-small-a",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/debris-plate-small-a.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.45,
+   0.1,
+   0.45
+  ],
+  "tris": 28
+ },
+ {
+  "id": "kenney-car-kit/debris-plate-small-b",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/debris-plate-small-b.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.45,
+   0.2,
+   0.45
+  ],
+  "tris": 44
+ },
+ {
+  "id": "kenney-car-kit/debris-spoiler-a",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/debris-spoiler-a.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1.1,
+   0.3,
+   0.237
+  ],
+  "tris": 48
+ },
+ {
+  "id": "kenney-car-kit/debris-spoiler-b",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/debris-spoiler-b.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.35,
+   0.337
+  ],
+  "tris": 88
+ },
+ {
+  "id": "kenney-car-kit/debris-tire",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/debris-tire.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.35,
+   0.6,
+   0.6
+  ],
+  "tris": 288
+ },
+ {
+  "id": "kenney-car-kit/delivery",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/delivery.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1.5,
+   1.65,
+   3.25
+  ],
+  "tris": 2476
+ },
+ {
+  "id": "kenney-car-kit/delivery-flat",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/delivery-flat.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1.5,
+   1.35,
+   3.25
+  ],
+  "tris": 2574
+ },
+ {
+  "id": "kenney-car-kit/firetruck",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/firetruck.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1.5,
+   1.7,
+   3.4
+  ],
+  "tris": 2767
+ },
+ {
+  "id": "kenney-car-kit/garbage-truck",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/garbage-truck.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1.6,
+   1.6,
+   3.45
+  ],
+  "tris": 3124
+ },
+ {
+  "id": "kenney-car-kit/hatchback-sports",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/hatchback-sports.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1.3,
+   1.1,
+   2.85
+  ],
+  "tris": 2088
+ },
+ {
+  "id": "kenney-car-kit/kart-oobi",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/kart-oobi.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.974,
+   1.329,
+   1.428
+  ],
+  "tris": 2884
+ },
+ {
+  "id": "kenney-car-kit/kart-oodi",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/kart-oodi.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.974,
+   1.329,
+   1.428
+  ],
+  "tris": 2726
+ },
+ {
+  "id": "kenney-car-kit/kart-ooli",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/kart-ooli.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.974,
+   1.329,
+   1.428
+  ],
+  "tris": 2706
+ },
+ {
+  "id": "kenney-car-kit/kart-oopi",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/kart-oopi.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.974,
+   1.329,
+   1.428
+  ],
+  "tris": 2726
+ },
+ {
+  "id": "kenney-car-kit/kart-oozi",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/kart-oozi.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.974,
+   1.329,
+   1.428
+  ],
+  "tris": 2726
+ },
+ {
+  "id": "kenney-car-kit/police",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/police.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1.5,
+   1.3,
+   3.1
+  ],
+  "tris": 2304
+ },
+ {
+  "id": "kenney-car-kit/race",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/race.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1.3,
+   0.733,
+   2.56
+  ],
+  "tris": 1952
+ },
+ {
+  "id": "kenney-car-kit/race-future",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/race-future.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1.2,
+   0.833,
+   2.66
+  ],
+  "tris": 2068
+ },
+ {
+  "id": "kenney-car-kit/sedan",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/sedan.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1.5,
+   1.3,
+   2.55
+  ],
+  "tris": 2032
+ },
+ {
+  "id": "kenney-car-kit/sedan-sports",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/sedan-sports.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1.3,
+   1.1,
+   2.55
+  ],
+  "tris": 2088
+ },
+ {
+  "id": "kenney-car-kit/suv",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/suv.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1.5,
+   1.3,
+   2.7
+  ],
+  "tris": 2474
+ },
+ {
+  "id": "kenney-car-kit/suv-luxury",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/suv-luxury.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1.5,
+   1.3,
+   2.85
+  ],
+  "tris": 2086
+ },
+ {
+  "id": "kenney-car-kit/taxi",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/taxi.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1.5,
+   1.5,
+   2.75
+  ],
+  "tris": 2072
+ },
+ {
+  "id": "kenney-car-kit/tractor",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/tractor.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1.342,
+   1.602,
+   2.202
+  ],
+  "tris": 2044
+ },
+ {
+  "id": "kenney-car-kit/tractor-police",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/tractor-police.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1.342,
+   1.702,
+   2.302
+  ],
+  "tris": 2278
+ },
+ {
+  "id": "kenney-car-kit/tractor-shovel",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/tractor-shovel.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1.661,
+   1.512,
+   2.47
+  ],
+  "tris": 2646
+ },
+ {
+  "id": "kenney-car-kit/truck",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/truck.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1.5,
+   1.3,
+   2.95
+  ],
+  "tris": 2082
+ },
+ {
+  "id": "kenney-car-kit/truck-flat",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/truck-flat.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1.5,
+   1.3,
+   2.745
+  ],
+  "tris": 2488
+ },
+ {
+  "id": "kenney-car-kit/van",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/van.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1.5,
+   1.35,
+   2.75
+  ],
+  "tris": 2082
+ },
+ {
+  "id": "kenney-car-kit/wheel-dark",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/wheel-dark.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.4,
+   0.6,
+   0.6
+  ],
+  "tris": 332
+ },
+ {
+  "id": "kenney-car-kit/wheel-default",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/wheel-default.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.4,
+   0.6,
+   0.6
+  ],
+  "tris": 332
+ },
+ {
+  "id": "kenney-car-kit/wheel-racing",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/wheel-racing.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.4,
+   0.6,
+   0.6
+  ],
+  "tris": 332
+ },
+ {
+  "id": "kenney-car-kit/wheel-tractor-back",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/wheel-tractor-back.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.538,
+   0.875,
+   0.875
+  ],
+  "tris": 428
+ },
+ {
+  "id": "kenney-car-kit/wheel-tractor-dark-back",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/wheel-tractor-dark-back.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.538,
+   0.875,
+   0.875
+  ],
+  "tris": 428
+ },
+ {
+  "id": "kenney-car-kit/wheel-tractor-dark-front",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/wheel-tractor-dark-front.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.369,
+   0.539,
+   0.539
+  ],
+  "tris": 332
+ },
+ {
+  "id": "kenney-car-kit/wheel-tractor-front",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/wheel-tractor-front.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.369,
+   0.539,
+   0.539
+  ],
+  "tris": 332
+ },
+ {
+  "id": "kenney-car-kit/wheel-truck",
+  "pack": "kenney-car-kit",
+  "file": "kenney-car-kit/wheel-truck.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.35,
+   0.6,
+   0.6
+  ],
+  "tris": 428
+ },
+ {
+  "id": "kenney-city-kit-roads/bridge-pillar",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/bridge-pillar.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.1,
+   0.5,
+   0.1
+  ],
+  "tris": 38
+ },
+ {
+  "id": "kenney-city-kit-roads/bridge-pillar-wide",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/bridge-pillar-wide.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.14,
+   0.5,
+   0.14
+  ],
+  "tris": 38
+ },
+ {
+  "id": "kenney-city-kit-roads/construction-barrier",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/construction-barrier.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.135,
+   0.13,
+   0.225
+  ],
+  "tris": 60
+ },
+ {
+  "id": "kenney-city-kit-roads/construction-cone",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/construction-cone.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.075,
+   0.094,
+   0.075
+  ],
+  "tris": 66
+ },
+ {
+  "id": "kenney-city-kit-roads/construction-fence",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/construction-fence.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.075,
+   0.179,
+   0.375
+  ],
+  "tris": 136
+ },
+ {
+  "id": "kenney-city-kit-roads/construction-light",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/construction-light.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.075,
+   0.234,
+   0.075
+  ],
+  "tris": 144
+ },
+ {
+  "id": "kenney-city-kit-roads/dumpster",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/dumpster.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.275,
+   0.209,
+   0.37
+  ],
+  "tris": 234
+ },
+ {
+  "id": "kenney-city-kit-roads/electricity-pole",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/electricity-pole.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.579,
+   0.525,
+   0.214
+  ],
+  "tris": 416
+ },
+ {
+  "id": "kenney-city-kit-roads/electricity-pole-single",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/electricity-pole-single.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.079,
+   0.525,
+   0.214
+  ],
+  "tris": 176
+ },
+ {
+  "id": "kenney-city-kit-roads/electricity-pole-wide",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/electricity-pole-wide.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1.079,
+   0.525,
+   0.214
+  ],
+  "tris": 544
+ },
+ {
+  "id": "kenney-city-kit-roads/electricity-side",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/electricity-side.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.563,
+   0.525,
+   0.431
+  ],
+  "tris": 416
+ },
+ {
+  "id": "kenney-city-kit-roads/electricity-side-single",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/electricity-side-single.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.063,
+   0.525,
+   0.431
+  ],
+  "tris": 176
+ },
+ {
+  "id": "kenney-city-kit-roads/electricity-side-wide",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/electricity-side-wide.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1.063,
+   0.525,
+   0.431
+  ],
+  "tris": 544
+ },
+ {
+  "id": "kenney-city-kit-roads/electricity-wires",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/electricity-wires.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.506,
+   0.065,
+   0.185
+  ],
+  "tris": 72
+ },
+ {
+  "id": "kenney-city-kit-roads/electricity-wires-wide",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/electricity-wires-wide.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1.007,
+   0.104,
+   0.185
+  ],
+  "tris": 200
+ },
+ {
+  "id": "kenney-city-kit-roads/light-curved",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/light-curved.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.05,
+   0.675,
+   0.225
+  ],
+  "tris": 92
+ },
+ {
+  "id": "kenney-city-kit-roads/light-curved-cross",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/light-curved-cross.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.4,
+   0.675,
+   0.4
+  ],
+  "tris": 270
+ },
+ {
+  "id": "kenney-city-kit-roads/light-curved-double",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/light-curved-double.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.05,
+   0.675,
+   0.4
+  ],
+  "tris": 152
+ },
+ {
+  "id": "kenney-city-kit-roads/light-square",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/light-square.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.05,
+   0.6,
+   0.238
+  ],
+  "tris": 60
+ },
+ {
+  "id": "kenney-city-kit-roads/light-square-cross",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/light-square-cross.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.425,
+   0.6,
+   0.425
+  ],
+  "tris": 134
+ },
+ {
+  "id": "kenney-city-kit-roads/light-square-double",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/light-square-double.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.05,
+   0.6,
+   0.425
+  ],
+  "tris": 88
+ },
+ {
+  "id": "kenney-city-kit-roads/road-bend",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-bend.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.02,
+   1
+  ],
+  "tris": 260
+ },
+ {
+  "id": "kenney-city-kit-roads/road-bend-barrier",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-bend-barrier.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.08,
+   1
+  ],
+  "tris": 128
+ },
+ {
+  "id": "kenney-city-kit-roads/road-bend-sidewalk",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-bend-sidewalk.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.02,
+   1
+  ],
+  "tris": 220
+ },
+ {
+  "id": "kenney-city-kit-roads/road-bend-square",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-bend-square.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.02,
+   1
+  ],
+  "tris": 60
+ },
+ {
+  "id": "kenney-city-kit-roads/road-bend-square-barrier",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-bend-square-barrier.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.08,
+   1
+  ],
+  "tris": 48
+ },
+ {
+  "id": "kenney-city-kit-roads/road-bridge",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-bridge.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.52,
+   1
+  ],
+  "tris": 240
+ },
+ {
+  "id": "kenney-city-kit-roads/road-crossing",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-crossing.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.02,
+   1
+  ],
+  "tris": 104
+ },
+ {
+  "id": "kenney-city-kit-roads/road-crossroad",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-crossroad.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.02,
+   1
+  ],
+  "tris": 116
+ },
+ {
+  "id": "kenney-city-kit-roads/road-crossroad-barrier",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-crossroad-barrier.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.08,
+   1
+  ],
+  "tris": 112
+ },
+ {
+  "id": "kenney-city-kit-roads/road-crossroad-line",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-crossroad-line.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.02,
+   1
+  ],
+  "tris": 108
+ },
+ {
+  "id": "kenney-city-kit-roads/road-crossroad-path",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-crossroad-path.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.02,
+   1
+  ],
+  "tris": 276
+ },
+ {
+  "id": "kenney-city-kit-roads/road-curve",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-curve.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   2,
+   0.02,
+   2
+  ],
+  "tris": 308
+ },
+ {
+  "id": "kenney-city-kit-roads/road-curve-barrier",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-curve-barrier.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   2,
+   0.08,
+   2
+  ],
+  "tris": 200
+ },
+ {
+  "id": "kenney-city-kit-roads/road-curve-intersection",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-curve-intersection.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   2,
+   0.02,
+   2
+  ],
+  "tris": 298
+ },
+ {
+  "id": "kenney-city-kit-roads/road-curve-intersection-barrier",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-curve-intersection-barrier.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   2,
+   0.08,
+   2
+  ],
+  "tris": 166
+ },
+ {
+  "id": "kenney-city-kit-roads/road-curve-pavement",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-curve-pavement.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   2,
+   0.02,
+   2
+  ],
+  "tris": 220
+ },
+ {
+  "id": "kenney-city-kit-roads/road-driveway-double",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-driveway-double.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.02,
+   1
+  ],
+  "tris": 72
+ },
+ {
+  "id": "kenney-city-kit-roads/road-driveway-double-barrier",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-driveway-double-barrier.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.08,
+   1
+  ],
+  "tris": 72
+ },
+ {
+  "id": "kenney-city-kit-roads/road-driveway-single",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-driveway-single.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.02,
+   1
+  ],
+  "tris": 60
+ },
+ {
+  "id": "kenney-city-kit-roads/road-driveway-single-barrier",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-driveway-single-barrier.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.08,
+   1
+  ],
+  "tris": 48
+ },
+ {
+  "id": "kenney-city-kit-roads/road-end",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-end.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.02,
+   1
+  ],
+  "tris": 42
+ },
+ {
+  "id": "kenney-city-kit-roads/road-end-barrier",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-end-barrier.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.08,
+   1
+  ],
+  "tris": 28
+ },
+ {
+  "id": "kenney-city-kit-roads/road-end-round",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-end-round.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.02,
+   1
+  ],
+  "tris": 218
+ },
+ {
+  "id": "kenney-city-kit-roads/road-end-round-barrier",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-end-round-barrier.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.08,
+   1
+  ],
+  "tris": 160
+ },
+ {
+  "id": "kenney-city-kit-roads/road-intersection",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-intersection.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.02,
+   1
+  ],
+  "tris": 84
+ },
+ {
+  "id": "kenney-city-kit-roads/road-intersection-barrier",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-intersection-barrier.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.08,
+   1
+  ],
+  "tris": 68
+ },
+ {
+  "id": "kenney-city-kit-roads/road-intersection-line",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-intersection-line.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.02,
+   1
+  ],
+  "tris": 76
+ },
+ {
+  "id": "kenney-city-kit-roads/road-intersection-path",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-intersection-path.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.02,
+   1
+  ],
+  "tris": 204
+ },
+ {
+  "id": "kenney-city-kit-roads/road-roundabout",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-roundabout.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   3,
+   0.02,
+   3
+  ],
+  "tris": 1636
+ },
+ {
+  "id": "kenney-city-kit-roads/road-roundabout-barrier",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-roundabout-barrier.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   3,
+   0.08,
+   3
+  ],
+  "tris": 754
+ },
+ {
+  "id": "kenney-city-kit-roads/road-side",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-side.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.02,
+   1.31
+  ],
+  "tris": 44
+ },
+ {
+  "id": "kenney-city-kit-roads/road-side-barrier",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-side-barrier.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1.31,
+   0.08,
+   1
+  ],
+  "tris": 24
+ },
+ {
+  "id": "kenney-city-kit-roads/road-side-entry",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-side-entry.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.02,
+   1.31
+  ],
+  "tris": 306
+ },
+ {
+  "id": "kenney-city-kit-roads/road-side-entry-barrier",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-side-entry-barrier.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1.31,
+   0.08,
+   1
+  ],
+  "tris": 232
+ },
+ {
+  "id": "kenney-city-kit-roads/road-side-exit",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-side-exit.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.02,
+   1.31
+  ],
+  "tris": 306
+ },
+ {
+  "id": "kenney-city-kit-roads/road-side-exit-barrier",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-side-exit-barrier.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1.31,
+   0.08,
+   1
+  ],
+  "tris": 232
+ },
+ {
+  "id": "kenney-city-kit-roads/road-sign-empty",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-sign-empty.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.05,
+   0.475,
+   0.05
+  ],
+  "tris": 42
+ },
+ {
+  "id": "kenney-city-kit-roads/road-sign-empty-hanging",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-sign-empty-hanging.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.09,
+   0.475,
+   0.295
+  ],
+  "tris": 112
+ },
+ {
+  "id": "kenney-city-kit-roads/road-sign-object-stop",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-sign-object-stop.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.077,
+   0.126,
+   0.126
+  ],
+  "tris": 62
+ },
+ {
+  "id": "kenney-city-kit-roads/road-sign-object-street",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-sign-object-street.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.043,
+   0.06,
+   0.192
+  ],
+  "tris": 56
+ },
+ {
+  "id": "kenney-city-kit-roads/road-sign-object-warning",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-sign-object-warning.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.077,
+   0.134,
+   0.134
+  ],
+  "tris": 62
+ },
+ {
+  "id": "kenney-city-kit-roads/road-sign-stop",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-sign-stop.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.078,
+   0.494,
+   0.138
+  ],
+  "tris": 104
+ },
+ {
+  "id": "kenney-city-kit-roads/road-sign-street",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-sign-street.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.196,
+   0.475,
+   0.196
+  ],
+  "tris": 154
+ },
+ {
+  "id": "kenney-city-kit-roads/road-sign-warning",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-sign-warning.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.077,
+   0.499,
+   0.147
+  ],
+  "tris": 104
+ },
+ {
+  "id": "kenney-city-kit-roads/road-slant",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-slant.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.27,
+   1
+  ],
+  "tris": 44
+ },
+ {
+  "id": "kenney-city-kit-roads/road-slant-barrier",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-slant-barrier.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.33,
+   1
+  ],
+  "tris": 24
+ },
+ {
+  "id": "kenney-city-kit-roads/road-slant-curve",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-slant-curve.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   2,
+   0.52,
+   1
+  ],
+  "tris": 544
+ },
+ {
+  "id": "kenney-city-kit-roads/road-slant-curve-barrier",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-slant-curve-barrier.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   2,
+   0.58,
+   1
+  ],
+  "tris": 420
+ },
+ {
+  "id": "kenney-city-kit-roads/road-slant-flat",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-slant-flat.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.27,
+   1
+  ],
+  "tris": 44
+ },
+ {
+  "id": "kenney-city-kit-roads/road-slant-flat-curve",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-slant-flat-curve.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   2,
+   0.52,
+   1
+  ],
+  "tris": 648
+ },
+ {
+  "id": "kenney-city-kit-roads/road-slant-flat-high",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-slant-flat-high.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.52,
+   1
+  ],
+  "tris": 44
+ },
+ {
+  "id": "kenney-city-kit-roads/road-slant-high",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-slant-high.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.52,
+   1
+  ],
+  "tris": 44
+ },
+ {
+  "id": "kenney-city-kit-roads/road-slant-high-barrier",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-slant-high-barrier.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.58,
+   1
+  ],
+  "tris": 24
+ },
+ {
+  "id": "kenney-city-kit-roads/road-split",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-split.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.02,
+   2
+  ],
+  "tris": 862
+ },
+ {
+  "id": "kenney-city-kit-roads/road-split-barrier",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-split-barrier.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.08,
+   2
+  ],
+  "tris": 512
+ },
+ {
+  "id": "kenney-city-kit-roads/road-square",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-square.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.02,
+   1
+  ],
+  "tris": 36
+ },
+ {
+  "id": "kenney-city-kit-roads/road-square-barrier",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-square-barrier.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.08,
+   1
+  ],
+  "tris": 32
+ },
+ {
+  "id": "kenney-city-kit-roads/road-straight",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-straight.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.02,
+   1
+  ],
+  "tris": 44
+ },
+ {
+  "id": "kenney-city-kit-roads/road-straight-barrier",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-straight-barrier.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.08,
+   1
+  ],
+  "tris": 24
+ },
+ {
+  "id": "kenney-city-kit-roads/road-straight-barrier-end",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-straight-barrier-end.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.08,
+   1
+  ],
+  "tris": 16
+ },
+ {
+  "id": "kenney-city-kit-roads/road-straight-barrier-half",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-straight-barrier-half.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.08,
+   0.5
+  ],
+  "tris": 24
+ },
+ {
+  "id": "kenney-city-kit-roads/road-straight-half",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/road-straight-half.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.5,
+   0.02,
+   1
+  ],
+  "tris": 44
+ },
+ {
+  "id": "kenney-city-kit-roads/sign-highway",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/sign-highway.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.132,
+   0.707,
+   1
+  ],
+  "tris": 180
+ },
+ {
+  "id": "kenney-city-kit-roads/sign-highway-detailed",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/sign-highway-detailed.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.132,
+   0.822,
+   1
+  ],
+  "tris": 256
+ },
+ {
+  "id": "kenney-city-kit-roads/sign-highway-wide",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/sign-highway-wide.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.132,
+   0.707,
+   1
+  ],
+  "tris": 144
+ },
+ {
+  "id": "kenney-city-kit-roads/tile-high",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/tile-high.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.25,
+   1
+  ],
+  "tris": 12
+ },
+ {
+  "id": "kenney-city-kit-roads/tile-low",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/tile-low.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.02,
+   1
+  ],
+  "tris": 12
+ },
+ {
+  "id": "kenney-city-kit-roads/tile-slant",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/tile-slant.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.27,
+   1
+  ],
+  "tris": 12
+ },
+ {
+  "id": "kenney-city-kit-roads/tile-slanthigh",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/tile-slanthigh.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   1,
+   0.52,
+   1
+  ],
+  "tris": 12
+ },
+ {
+  "id": "kenney-city-kit-roads/traffic-light",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/traffic-light.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.118,
+   0.515,
+   0.09
+  ],
+  "tris": 212
+ },
+ {
+  "id": "kenney-city-kit-roads/traffic-light-hanging",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/traffic-light-hanging.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.118,
+   0.509,
+   0.295
+  ],
+  "tris": 230
+ },
+ {
+  "id": "kenney-city-kit-roads/traffic-light-object-hanging",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/traffic-light-object-hanging.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.098,
+   0.143,
+   0.061
+  ],
+  "tris": 114
+ },
+ {
+  "id": "kenney-city-kit-roads/traffic-light-object-horizontal",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/traffic-light-object-horizontal.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.098,
+   0.061,
+   0.143
+  ],
+  "tris": 118
+ },
+ {
+  "id": "kenney-city-kit-roads/traffic-light-object-vertical",
+  "pack": "kenney-city-kit-roads",
+  "file": "kenney-city-kit-roads/traffic-light-object-vertical.glb",
+  "license": "CC0-1.0",
+  "author": "Kenney",
+  "size_m": [
+   0.098,
+   0.143,
+   0.061
+  ],
+  "tris": 132
+ },
+ {
   "id": "medieval-village-megakit/balcony-cross-corner",
   "pack": "Medieval_Village_MegaKit",
   "file": "medieval-village-megakit/balcony-cross-corner.glb",

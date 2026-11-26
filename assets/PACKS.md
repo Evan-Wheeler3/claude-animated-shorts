@@ -31,3 +31,12 @@ Checked on quaternius.com on 2026-11-25 (model counts, formats and licence as li
 ## When Claude needs something new
 Claude adds a row here with a direct link (Quaternius, Poly Pizza, Kenney, Poly Haven, Sketchfab CC0/CC-BY), the
 exact item, and why. You download, drop it in `assets/inbox/`, run the script, say "assets sent".
+
+## Downloading without the Mac (Kenney only)
+`python3 tools/assets/kenney.py <slug>` downloads any kenney.nl pack zip from the cloud session (it asks the site for the
+same signed link the "Continue without donating" button uses), e.g. `car-kit`, `city-kit-roads`. Unzip `Models/GLB format/`
+into `assets/library/_incoming/kenney-<slug>/` and run `python3 tools/assets/ingest.py`. Quaternius (Google Drive) and
+Poly Pizza (Cloudflare) still need the Mac inbox. Kenney models are not at real size: e.g. cars are ~2.5 m long (scale ~1.7),
+`traffic-light` is 0.5 m tall (scale ~6); pass `s` to `place()`.
+In the library: `kenney-car-kit` (sedan, police, taxi, van, truck, ambulance, firetruck, delivery..., CC0) and
+`kenney-city-kit-roads` (roads, crossings, traffic lights, road signs, CC0), added 2026-11-26.

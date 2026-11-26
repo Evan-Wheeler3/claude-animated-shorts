@@ -58,7 +58,7 @@ def ingest():
             dst = os.path.join(LIB, mid + '.glb')
             if convert(s, dst):
                 st = stats(dst); cat.append({'id': mid, 'pack': pack, 'file': os.path.relpath(dst, LIB), 'license': 'CC0-1.0',
-                                             'author': 'Quaternius', 'size_m': st.get('size'), 'tris': st.get('tris')}); have.add(mid); ok += 1
+                                             'author': 'Kenney' if pack.startswith('kenney') else 'Quaternius', 'size_m': st.get('size'), 'tris': st.get('tris')}); have.add(mid); ok += 1
             else: bad += 1; print('  could not convert', os.path.relpath(s, INC))
         print(f'{pack}: {ok} models added, {bad} failed')
         if bad == 0: shutil.rmtree(pdir)
