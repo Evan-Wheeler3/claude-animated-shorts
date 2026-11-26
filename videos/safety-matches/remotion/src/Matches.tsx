@@ -95,6 +95,32 @@ const smoke = (scene: THREE.Scene, n = 8, col = '#d8d4cc', size = .018) => Array
     const sc = size / .018; m.position.set(p[0] + ((.08 + .25 * k) * Math.sin(i * 2.3) * k + .06 * k) * sc, p[1] + .3 * k * sc, p[2] + .04 * sc); (m.material as THREE.MeshBasicMaterial).opacity = .5 * amount * Math.sin(Math.PI * k); }; });
 /** world position of a point on a figure card (design units, 600 x 1000) */
 const onCard = (c: Card, x: number, y: number) => { c.mesh.updateMatrixWorld(true); return c.mesh.localToWorld(new THREE.Vector3(x / 600 - .5, .975 - y / 1000, 0)).toArray(); };
+/** striking a match on a hand-held box (front view). Screen-left hand holds the box at the chest, the other hand holds the match.
+ *  strokes = [frame, frame, ...] (each ~6 frames, head dragged along the box's striker strip, left to right); lit = frame it catches;
+ *  raise 0..1 lifts the lit match up to show it; gone = the match has been tossed (only the box remains) */
+const striker = (f: number, strokes: number[], lit: number, raise: number, gone: boolean, t: number) => {
+  let st = 0, inStroke = false; for (const s0 of strokes) { const k = (f - s0) / 6; if (k >= 0 && k <= 1) { st = k; inStroke = true; } else if (k > 1 && k < 2.2) st = 1 - (k - 1) / 1.2; }
+  const geo = (g: {u: number; HH: number; chin: number; tcx: number}) => { const u = g.u, B: P = [g.tcx - 4 * u, g.chin + .62 * g.HH];
+    const head: P = [B[0] - 20 * u + 44 * u * (inStroke ? st * st : st), B[1] + 9 * u];
+    const rest: P = [B[0] + 34 * u, B[1] + 10 * u], up: P = [g.tcx + 62 * u, g.chin + .05 * g.HH];
+    const H: P = gone ? [g.tcx + 50 * u, g.chin + .9 * g.HH] : raise > 0 ? lerp2(rest, up, raise) : [head[0] + 28 * u, head[1] + 8 * u + (inStroke ? 0 : 6 * u * (1 - st))];
+    return {u, B, H}; };
+  const armPose = (side: -1 | 1, S: P, g: {u: number; HH: number; chin: number; tcx: number}): P[] => { const {u, B, H} = geo(g);
+    const L: P = [B[0] - 4 * u, B[1] + 12 * u]; return side < 0 ? [S, [S[0] - 20 * u, (S[1] + L[1]) / 2 + 14 * u], L] : [S, [S[0] + 26 * u, (S[1] + H[1]) / 2 + 12 * u], H]; };
+  const costume: Costume = {hand: (k: Kit) => { const u = k.u, p = k.p, B: P = [k.tcx - 4 * u, k.chin + .62 * k.HH];
+    p.poly([[B[0] - 24 * u, B[1] - 12 * u], [B[0] + 24 * u, B[1] - 12 * u], [B[0] + 24 * u, B[1] + 12 * u], [B[0] - 24 * u, B[1] + 12 * u]], '#e8d6a0', 2.2 * u);   // the box
+    p.poly([[B[0] - 12 * u, B[1] - 8 * u], [B[0] + 12 * u, B[1] - 8 * u], [B[0] + 12 * u, B[1] + 2 * u], [B[0] - 12 * u, B[1] + 2 * u]], '#c0353a', 0);
+    p.poly([[B[0] - 24 * u, B[1] + 6 * u], [B[0] + 24 * u, B[1] + 6 * u], [B[0] + 24 * u, B[1] + 12 * u], [B[0] - 24 * u, B[1] + 12 * u]], '#5a2a1e', 1.6 * u);   // striker strip
+    const [lx, ly] = k.hands[0]; p.dot(lx, ly, 5.5 * u);
+    if (gone) return; const [hx, hy] = k.hands[1] ?? k.hands[0], on = f >= lit;
+    const hd: P = on && raise > 0 ? [hx + 3 * u, hy - 32 * u] : [hx - 28 * u, hy - 8 * u];                     // head end: on the strip while striking, up when shown
+    p.band([[hx, hy], hd], '#e8c48a', 3.5 * u, 1.2 * u, 'round'); p.ell(hd[0], hd[1], 4.5 * u, 6 * u, '#c0353a', 1.4 * u);
+    if (inStroke && st > .6) for (let i = 0; i < 4; i++) p.dot(hd[0] - (6 + 8 * i) * u, hd[1] + (2 - 3 * i) * u - 4 * u * Math.sin(i + t * 30), 1.8 * u, '#ffe27a');   // sparks off the strip
+    if (on) { const e = (f - lit) / FPS, s2 = e < .15 ? 1.5 - 3 * e : 1 + .08 * Math.sin(t * 17);
+      p.ell(hd[0] + 1 * u, hd[1] - 14 * u * s2, 9 * u * s2, 16 * u * s2, '#ffb23a', 0); p.ell(hd[0] + 1 * u, hd[1] - 10 * u * s2, 5 * u * s2, 9 * u * s2, '#fff2a8', 0); }
+    p.dot(hx, hy, 5.5 * u); }};
+  return {armPose, costume, armFront: true};
+};
 /** acid bottle crammed into the coat pocket. k 0..1: 0 = held at the chest in the screen-right hand, .7 = shoved in, 1 = settled.
  *  Returns the arm pose for that hand and a costume drawing the bottle / the bulging pocket. */
 const cramBottle = (k: number, t: number, jacket: string) => {
@@ -440,14 +466,27 @@ const B: Record<number, (c: Ctx) => Upd> = {
   // 14 that is why it is called a safety match (gent, proud, lit match)
   14: c => { street(c); const a = person(GENT, 1.78, {expr: 'smile', seed: 21, wave: 1, costume: dress(cravat(), matchInHand(1, 1))}); a.mesh.position.set(0, 0, 0); c.scene.add(a.mesh);
     return (f, l, u) => { c.dof = 6; cam(c, [.2, 1.55, 2.6], [0, 1.4, 0], 40 * (1 - .002 * l)); }; },
-  // 15 striking a match still works like the very first fire (back in the meadow, caveman with a matchbox)
-  15: c => { meadow(c); const a = actor(1.7); a.k.mesh.position.set(-.3, 0, .3); c.scene.add(a.k.mesh); const strike = T('L08', 3);
-    return (f, l, u) => { a.draw(CAVE, {expr: f > strike ? 'smile' : 'neutral', seed: 5, wave: 1, costume: matchInHand(1, smooth((f - strike) / 4))});
-      c.dof = 5; glide(c, [[.8, 1.4, 3.8], [0, 1.1, .5]], [[.6, 1.35, 3.2], [0, 1.1, .5]], u, 40); }; },
-  // 16 rubbing two things together, with some chemical help: the woodpile catches, campfire
-  16: c => { const wp = meadow(c); void wp; const a = person(CAVE, 1.7, {expr: 'relief', seed: 5}); a.mesh.position.set(-.7, 0, .2); c.scene.add(a.mesh);
-    const fl = flame(c.scene, .7, 6); const go = T('L08', 13);
-    return (f, l, u) => { fl.at([0, .05, .8], l / FPS, smooth((f - go) / 20)); c.dof = 4; cam(c, [.3, 1.2, 3.6], [-.2, .8, .5], 42); }; },
+  // 15 striking a match still works like the very first fire: back in the meadow, the caveman studies a matchbox and a match
+  15: c => { meadow(c); const a = actor(1.7); a.k.mesh.position.set(-.3, 0, .3); c.scene.add(a.k.mesh);
+    return (f, l, u) => { const sk = striker(f, [], 1e9, 0, false, l / FPS);
+      a.draw(CAVE, {...sk, expr: 'neutral', seed: 5, look: -.3, headTilt: 6 * Math.sin(l / FPS * 2), costume: sk.costume});
+      c.dof = 5; glide(c, [[.8, 1.4, 3.8], [-.2, 1.1, .5]], [[.5, 1.3, 2.8], [-.25, 1.15, .4]], u, 40); }; },
+  // 16 you are rubbing two things together, with some chemical help: he strikes (one fizzle, then it catches), shows it off,
+  //   and tosses it into the woodpile, which roars into a campfire
+  16: c => { meadow(c); const a = actor(1.7); a.k.mesh.position.set(-.55, 0, .25); c.scene.add(a.k.mesh);
+    const fire = flame(c.scene, .7, 6), mf = flame(c.scene, .1, 1.2), m3 = match3d(.08); c.scene.add(m3);
+    const s1 = T('L08', 13) - 2, s2 = T('L08', 16) - 3, lit = s2 + 5, toss = T('L08', 18), land = toss + 12;
+    let hand: P = [0, 0], uu = 1; const spy: Costume = {hand: k => { hand = k.hands[1] ?? k.hands[0]; uu = k.u; }};
+    const from = new THREE.Vector3();
+    return (f, l, u) => { const t = l / FPS, raise = smooth((f - lit - 4) / 8) * (1 - smooth((f - toss) / 4)), gone = f > toss + 2;
+      const sk = striker(f, [s1, s2], lit, raise, gone, t);
+      a.draw(CAVE, {...sk, expr: f > land ? 'smile' : f > lit ? 'proud' : 'strain', seed: 5, look: f > toss ? .6 : -.2, costume: dress(sk.costume, spy)});
+      if (f <= toss + 2) from.fromArray(onCard(a.k, hand[0] + 3 * uu, hand[1] - 34 * uu));
+      const k = Math.min(1, Math.max(0, (f - toss - 2) / (land - toss - 2)));                       // the lit match arcs into the woodpile
+      m3.visible = gone && k < 1; m3.position.set(lerp(from.x, 0, k), lerp(from.y, .15, k) + .35 * Math.sin(Math.PI * k), lerp(from.z, .8, k)); m3.rotation.z = -k * 6;
+      mf.at([m3.position.x, m3.position.y + .03, m3.position.z], t, m3.visible ? 1 : 0);
+      fire.at([0, .05, .8], t, smooth((f - land) / 14));
+      c.dof = 4; const pull = smooth((f - toss) / 14); cam(c, [lerp(.1, .2, pull), lerp(1.25, 1.3, pull), lerp(3.0, 3.7, pull)], [lerp(-.25, -.15, pull), lerp(.95, .7, pull), lerp(.45, .55, pull)], 42); }; },
 };
 
 const captionAt = (t: number) => { // groups of <= 3 words, shown while spoken
