@@ -9,6 +9,7 @@ Everything the Vasa short had to invent, ready for the next story (lessons: `vid
 | `remotion/src/kit/cards.ts` | Toon character/fx cards with contact shadows, camera-facing; splash and wind-streak effects; Lambert conversion | Claude |
 | `remotion/src/kit/world.ts` | **Look v2 (approved):** `lightRig()`, `candle()`, `makePost()` (AO, lens blur, bloom, ACES), `place()` library models, `grassField()`, `refStyle()` cast, caption style | Claude |
 | `remotion/src/kit/costume.ts` | Fitted costumes on the toon cards: tricorn, flat/motor cap, periwig, cravat, apron, belt, chain, scarf, razor, coin bag, foam | Claude |
+| `remotion/src/kit/acting.ts` | Acting + fx helpers (see `ANIMATION-PLAYBOOK.md`): `noodle`/`reach`/`cheek` arm poses, `onCard`/`toCard`, `SIT_H`, `sweat`, `stinkLines`, `smoke`, `flame` (ignition flash), `pointRing`/`pulse`, `hollowCan` | Claude |
 | `remotion/src/kit/post.ts` | Ink → lens blur → tone map + grade chain; `dofFor()` | Claude |
 | `remotion/src/AssetPreview.tsx` + `preview.sh` | 3 views per asset (three-quarter with a 1.75 m sailor, side, moving parts opened) + contact sheet | **Codex before delivering**, Claude at acceptance |
 | `probe-model.mjs` | Measures a hero model: walkable decks, masts/posts, half-width along the length, named parts | Claude before placing any camera or character |

@@ -3,6 +3,8 @@
 This file wins when another doc disagrees. `SKILL.md` stays the authority on *how* to render the look
 (code, look values, gotchas). This file decides *who* does what, *in what order*, and *what must be approved*.
 Lessons behind every rule here: `videos/vasa-warship/RETRO.md`.
+**Animating a shot? Read `ANIMATION-PLAYBOOK.md` first** (owner's standard for acting, clipping and clarity, framing,
+effects, voice declick and captions, learned on safety-matches; reusable code in `templates/holdup/remotion/src/kit/acting.ts`).
 
 ## Roles
 | Who | Owns | Never does |
@@ -84,6 +86,8 @@ Numbers from `references/reports/editing.md`:
 - **Look v2 (owner-approved 2026-11-26):** `templates/holdup/remotion/src/kit/world.ts` + `costume.ts`. World built from
   `assets/library` (Quaternius + Poly Haven, search `catalog.json`; new packs via `assets/PACKS.md` -> `assets/inbox`),
   approved light rig (low side sun, low HDRI ambient), AO + bloom + ACES, no ink on the world. Reference: `videos/look-test/previews/stills-v4-*`.
+- **Acting (owner 2026-11-26):** every character does the line's verb with their body (`armPose`), nothing clips, and each shot
+  shows its claim literally (a real demo, not a symbol). Verify each shot with a frame strip (`tools/frame_strip.py`). Details: `ANIMATION-PLAYBOOK.md`.
 - **Characters** are our 2D toon cards (`toon.ts`) in the reference style: `refStyle()` = plain white faces, black stick
   limbs, bold deadpan faces; hats, wigs and clothes from `costume.ts` (fitted to the body). No character cast shadows.
 - **Read-along captions ON** (owner 2026-11-25/26): 1-3 words of the current line, Lilita One, white with a dark stroke, SMALL (74 px of 1920) at 22 % above the bottom so they never hide the action; the word being spoken turns yellow (`captionCss`, `captionWord`, `captionActive`, `CAPTION_BOTTOM`). Groups never cross a line so planned pauses stay clean.
