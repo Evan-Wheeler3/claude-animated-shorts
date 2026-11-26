@@ -249,14 +249,27 @@ const B: Record<number, (c: Ctx) => Upd> = {
       m.position.set(0, my, hz + .2); m.rotation.y = .04 * Math.sin(l * .9) * (1 - k);
       fl.at([0, my, hz - .005], l / FPS, smooth((f - lit) / 4) * (hz > -.885 ? 1 : 0)); c.dof = 6;
       cam(c, [.16, top + .2, -.42 + .03 * u], [0, top + .02, -.93], 40); }; },
-  // 6 it stank of sulfur and burning bits fell onto the carpet
+  // 6 it stank of sulfur and burning bits fell onto the carpet: molten drips swell under the flame in his hand, drop, and set the rug smouldering
   6: c => { room(c); const r = rug(); r.position.set(.2, .022, .6); c.scene.add(r); const a = actor(1.78); a.k.mesh.position.set(-.3, 0, .1); c.scene.add(a.k.mesh);
-    const fl = flame(c.scene, .18, 3); const blob = new THREE.Mesh(new THREE.SphereGeometry(.02, 10, 8), new THREE.MeshBasicMaterial({color: '#ffb23a', toneMapped: false})); c.scene.add(blob);
-    const fall = T('L03', 16);
-    return (f, l, u) => { const s = (f - fall + 12) / FPS; const y = s < 0 ? 1.55 : Math.max(.03, 1.55 - 4.9 * s * s * 1.6); blob.position.set(.25, y, .55); blob.visible = s < .55;
-      fl.at([.25, .03, .55], l / FPS, smooth((f - fall - 2) / 10));
-      a.draw(GENT, {expr: f > fall ? 'shock' : 'pained', seed: 21, look: .5, wave: 1, costume: dress(cravat(), matchInHand(1, 1))});
-      c.dof = 4; cam(c, [.3, 1.4, 3.6], [0, .9, .3], 44); }; },
+    const stink = (t: number): Costume => ({head: k => { const [x, y] = k.hands[1] ?? k.hands[0], u = k.u;     // sulfur stink lines curling from the flame to his nose
+      for (let i = 0; i < 3; i++) { const q = (t * .6 + i / 3) % 1, pts: P[] = Array.from({length: 9}, (_, j) => { const s2 = j / 8, e = s2 * (.75 + .25 * q); return [lerp(x, 300 + 18 * u, e) + 7 * u * Math.sin(s2 * 9 + t * 6 + i * 2), lerp(y - 62 * u, k.hc + (6 + (i - 1) * 12) * u, e) + 6 * u * Math.cos(s2 * 7 + t * 4 + i)]; });
+        k.p.stroke(pts, 4 * u, `rgba(150,185,40,${.85 * Math.sin(Math.PI * q)})`); } }});
+    const t0 = T('L03', 14), drips = [0, 11, 19].map((d, i) => {
+      const b = new THREE.Mesh(new THREE.SphereGeometry(.032, 12, 10), new THREE.MeshBasicMaterial({color: '#ff7a10', toneMapped: false})); b.layers.set(NOINK); c.scene.add(b);
+      const fl = flame(c.scene, .2 + .04 * i, 2.6); const burn = new THREE.Mesh(new THREE.CircleGeometry(.08, 20), new THREE.MeshBasicMaterial({color: '#1a0f0a', transparent: true, opacity: .8}));
+      burn.rotation.x = -Math.PI / 2; c.scene.add(burn); return {b, fl, burn, at: t0 + d, dx: [.03, -.05, .08][i], dz: [.35, .5, .28][i], land: null as number[] | null}; });
+    let hand: P = [0, 0], uu = 1; const spy: Costume = {hand: k => { hand = k.hands[1] ?? k.hands[0]; uu = k.u; }};
+    return (f, l, u) => { const first = drips[0].at + 10;
+      a.draw(GENT, {expr: f > first ? 'shock' : 'pained', seed: 21, look: f > first ? .9 : .5, wave: 1, headTilt: f > first ? -6 : 0, costume: dress(cravat(), matchInHand(1, 1), stink(l / FPS), spy)});
+      const src = onCard(a.k, hand[0] + 5 * uu, hand[1] - 38 * uu);     // underside of the flame in his hand
+      for (const d of drips) { const s = (f - d.at) / FPS;
+        if (s < -.25) { d.b.visible = false; } else if (s < 0) { d.b.visible = true; d.b.scale.setScalar(.4 + 2.4 * (s + .25)); d.b.position.set(src[0], src[1] - .01, src[2]); }   // swelling drip
+        else { const y = src[1] - .01 - 4.9 * s * s; if (y > .035) { d.b.visible = true; d.b.scale.setScalar(1); d.b.position.set(src[0] + d.dx * s / .5, y, src[2] + d.dz * Math.min(1, s / .5)); }
+          else { d.b.visible = false; if (!d.land) d.land = [d.b.position.x, .03, d.b.position.z]; } }
+        const g = d.land ? (f - d.at) / FPS - Math.sqrt((src[1] - .045) / 4.9) : 0;
+        d.fl.at(d.land ?? [0, -9, 0], l / FPS + d.dx * 50, d.land ? smooth(g * 3) : 0);
+        d.burn.visible = !!d.land; if (d.land) { d.burn.position.set(d.land[0], .024, d.land[2]); d.burn.scale.setScalar(.4 + 1.4 * smooth(g)); } }
+      c.dof = 4; cam(c, [.35, 1.25, 3.1], [.05, .75, .35], 44); }; },
   // 7 white phosphorus lit on anything you struck it against (strike on the wall)
   7: c => { street(c); const a = actor(1.78); a.k.mesh.position.set(.1, 0, -.9); c.scene.add(a.k.mesh); const strike = T('L04', 12);
     return (f, l, u) => { a.draw(GENT, {expr: f > strike ? 'smile' : 'neutral', seed: 21, look: -1, wave: 1, costume: dress(cravat(), matchInHand(1, smooth((f - strike) / 4)))});
