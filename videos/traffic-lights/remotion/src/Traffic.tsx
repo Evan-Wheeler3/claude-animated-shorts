@@ -27,7 +27,8 @@ const W = words as Word[];
 const T = (line: string, i = 0) => Math.round(tw(line, i) * FPS);
 
 const IDS = ['medieval-village-megakit/floor-unevenbrick', 'medieval-village-megakit/wall-unevenbrick-straight', 'medieval-village-megakit/wall-plaster-window-wide-round',
-  'medieval-village-megakit/wall-plaster-straight', 'fantasy-props-megakit/barrel', 'fantasy-props-megakit/crate-wooden'];
+  'medieval-village-megakit/wall-plaster-straight', 'fantasy-props-megakit/barrel', 'fantasy-props-megakit/crate-wooden',
+  'downtown-city-megakit/prop-bollard', 'kenney-car-kit/sedan', 'kenney-car-kit/taxi', 'kenney-car-kit/sedan-sports', 'kenney-car-kit/suv', 'kenney-car-kit/van'];
 type Lib = Record<string, THREE.Group>;
 
 // ---------- cast ----------
@@ -175,6 +176,98 @@ const hurt = (t: number, on: number): Costume => ({head: k => { if (on <= 0) ret
     const st: P2[] = Array.from({length: 10}, (_, j) => { const b = -Math.PI / 2 + j * Math.PI / 5, r = (j % 2 ? 5 : 12) * u; return [x + r * Math.cos(b), y + r * Math.sin(b)]; });
     k.p.poly(st, '#ffe14a', 1.8 * u); } }});
 
+// ---------- 1900s-today props ----------
+const COP = refStyle({jacket: '#22305a', pants: '#1a1f30', boots: '#111111', hat: 'hair', hair: '#3a2a1a', buttons: '#e8c45a'});
+/** American police cap (flat top, peak, gold badge) */
+const copCap = (tilt = 0, on = true): Costume => ({head: k => { if (!on) return; const u = k.u, cx = 300, base = k.crown + .42 * k.Hb, w = 1.02 * k.Ha, col = '#1b2238';
+  const R = (q: P2[]) => rotAt(q, tilt, cx, base);
+  const crown: P2[] = R([[cx - w, base], [cx - w * 1.15, base - .55 * k.Hb], [cx + w * 1.15, base - .55 * k.Hb], [cx + w, base]]);
+  k.p.shadedFill(crown, col, shade(col, .55), k.light, w, .4); k.p.inkRing(crown, k.ow * .85, k.thick);
+  const band = R([[cx - w, base - 10 * u], [cx + w, base - 10 * u], [cx + w, base + 2 * u], [cx - w, base + 2 * u]]); k.p.poly(band, '#11151f', 1.4 * u);
+  const peak = R([[cx - .6 * w, base], [cx + .6 * w, base], [cx + .8 * w, base + 12 * u], [cx - .8 * w, base + 12 * u]]); k.p.poly(peak, '#0c0f18', 1.6 * u);
+  const [bx, by] = R([[cx, base - .3 * k.Hb]])[0];
+  k.p.poly(Array.from({length: 10}, (_, i) => { const a = -Math.PI / 2 + i * Math.PI / 5, r = (i % 2 ? 5 : 11) * u; return [bx + r * Math.cos(a), by + r * Math.sin(a)] as P2; }), '#e8c45a', 1.4 * u); }});
+/** a light bulb idea popping above the head (head hook) */
+const ideaBulb = (on: number): Costume => ({head: k => { if (on <= 0) return; const u = k.u, x = 300 + 70 * u, y = k.crown - 50 * u - 20 * u * on;
+  for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4; k.p.stroke([[x + 34 * u * Math.cos(a), y + 34 * u * Math.sin(a)], [x + 46 * u * Math.cos(a), y + 46 * u * Math.sin(a)]], 4 * u, `rgba(255,214,60,${on})`); }
+  k.p.poly(ell(x, y, 22 * u * on, 24 * u * on), '#fff3a0', 2.4 * u); k.p.poly([[x - 9 * u, y + 22 * u], [x + 9 * u, y + 22 * u], [x + 8 * u, y + 34 * u], [x - 8 * u, y + 34 * u]], '#9aa0a8', 2 * u); }});
+/** a 1910s car in code (tall black cab, brass radiator, big spoked wheels, running boards), faces +z, origin on the ground at
+ *  its centre; a seated driver card. roll(dist) spins the wheels; driver(expr, t, shock) poses him. */
+const oldCar = (paint = '#1d1d22', coat = '#6a4a2a') => { const g = new THREE.Group(), body = std(paint, .35, .3), dark = std('#141414', .6), brass = std('#c9a24a', .3, .7), wheels: THREE.Group[] = [];
+  const chassis = new THREE.Group(); g.add(chassis);
+  const tub = new THREE.Mesh(new THREE.BoxGeometry(1.4, .6, 1.9), body); tub.position.set(0, .95, -.45);
+  const hood = new THREE.Mesh(new THREE.BoxGeometry(.9, .55, 1.0), body); hood.position.set(0, .98, 1.0);
+  const rad = new THREE.Mesh(new THREE.BoxGeometry(.85, .7, .08), brass); rad.position.set(0, 1.0, 1.52);
+  const roof = new THREE.Mesh(new THREE.BoxGeometry(1.45, .07, 1.5), dark); roof.position.set(0, 2.15, -.55);
+  const glass = new THREE.Mesh(new THREE.BoxGeometry(1.25, .55, .04), new THREE.MeshStandardMaterial({color: '#bcd8e8', transparent: true, opacity: .35, roughness: .1})); glass.position.set(0, 1.55, .25);
+  chassis.add(tub, hood, rad, roof, glass);
+  for (const [x, z] of [[-.68, .2], [.68, .2], [-.68, -1.25], [.68, -1.25]]) { const post = new THREE.Mesh(new THREE.BoxGeometry(.05, .95, .05), dark); post.position.set(x, 1.67, z); chassis.add(post); }
+  for (const s2 of [-1, 1]) { const board = new THREE.Mesh(new THREE.BoxGeometry(.25, .05, 2.6), dark); board.position.set(s2 * .82, .45, .1); chassis.add(board);
+    const fender = new THREE.Mesh(new THREE.BoxGeometry(.3, .06, .7), body); fender.position.set(s2 * .75, .9, 1.25); fender.rotation.x = -.25; chassis.add(fender);
+    const lamp = new THREE.Mesh(new THREE.CylinderGeometry(.11, .11, .14, 14), brass); lamp.rotation.x = Math.PI / 2; lamp.position.set(s2 * .42, 1.32, 1.55); chassis.add(lamp); }
+  for (const [z, r] of [[1.1, .42], [-1.0, .45]] as const) for (const x of [-.75, .75]) { const w = new THREE.Group(); w.position.set(x, r, z); w.rotation.z = Math.PI / 2;
+    const tyre = new THREE.Mesh(new THREE.TorusGeometry(r - .04, .06, 8, 24), dark); tyre.rotation.y = Math.PI / 2; w.add(tyre);
+    for (let i = 0; i < 6; i++) { const sp = new THREE.Mesh(new THREE.BoxGeometry(.03, r * 2 - .1, .03), std('#d8c8a0', .5)); sp.rotation.x = i * Math.PI / 6; w.add(sp); }
+    g.add(w); wheels.push(w); }
+  shadows(g);
+  const d = actor(SIT_H(1.7)); d.k.mesh.position.set(0, 1.0, -.45); chassis.add(d.k.mesh);
+  const outfit = refStyle({jacket: coat, pants: '#2b2b33', boots: '#1d1a1a', hat: 'hair', hair: '#3a2a1a'});
+  return {g, chassis, roll: (dist: number) => wheels.forEach((w, i) => { w.rotation.x = dist / (i < 2 ? .42 : .45); }),
+    driver: (expr: string, t: number, arms: 'wheel' | 'up' = 'wheel', extra?: Costume) => d.draw(outfit, {mode: 'sit', seed: 60 + paint.length, expr: expr as never, armFront: true,
+      costume: dress(motorCapLite, extra ?? {}),
+      armPose: (side, S, gg) => arms === 'up' ? [S, [S[0] + side * 30 * gg.u, S[1] - .2 * gg.HH], [S[0] + side * 46 * gg.u, S[1] - .6 * gg.HH]] as P[]
+        : [S, [S[0] + side * 22 * gg.u, S[1] + .3 * gg.HH], [300 + side * 16 * gg.u, gg.chin + .55 * gg.HH + 2 * gg.u * Math.sin(t * 5 + side)]] as P[]})};
+};
+const motorCapLite: Costume = {head: k => { const u = k.u, y0 = k.crown + .4 * k.Hb, col = '#6b5a3a';
+  const dome: P2[] = [...ell(300, y0, 1.05 * k.Ha, .5 * k.Hb, 180, 360), [300 + 1.05 * k.Ha, y0 + 2 * u], [300 - 1.05 * k.Ha, y0 + 2 * u]];
+  k.p.shadedFill(dome, col, shade(col, .6), k.light, k.Ha, .4); k.p.inkRing(dome, k.ow * .85, k.thick);
+  for (const sx of [-1, 1]) { k.p.ell(300 + sx * .38 * k.Ha, y0 - 4 * u, 13 * u, 13 * u, '#c9a24a', 3 * u); k.p.ell(300 + sx * .38 * k.Ha, y0 - 4 * u, 8 * u, 8 * u, '#8fc4ec', 2 * u); } }};
+/** a traffic light box: 2 lenses (1912: red over green) or 3 (red, yellow, green). style 'old' = green-painted box,
+ *  'modern' = black box with visors. set({red, yellow, green}) 0..1; slot(k) slides the yellow lens in (0 = not there). */
+const lightBox = (n: 2 | 3, style: 'old' | 'modern' = 'old') => { const g = new THREE.Group(), col = style === 'old' ? '#3a5a3a' : '#151515';
+  const h = n === 2 ? .75 : 1.05, box = new THREE.Mesh(new THREE.BoxGeometry(.42, h, .32), std(col, .5, .3)); g.add(box);
+  const mk = (c: string, y: number) => { const m = new THREE.Mesh(new THREE.CircleGeometry(.12, 28), new THREE.MeshStandardMaterial({color: shade(c, .35), emissive: c, emissiveIntensity: 0, roughness: .3}));
+    m.position.set(0, y, .165); g.add(m); const back = m.clone(); back.position.z = -.165; back.rotation.y = Math.PI; back.material = m.material; g.add(back); if (style === 'modern') { const v = new THREE.Mesh(new THREE.CylinderGeometry(.15, .15, .14, 20, 1, true, 0, Math.PI), std('#151515', .5)); v.rotation.x = Math.PI / 2; v.rotation.z = Math.PI / 2; v.position.set(0, y + .03, .23); g.add(v); }
+    return m; };
+  const red = mk('#ff2a1a', n === 2 ? .17 : .33), green = mk('#2aff5a', n === 2 ? -.17 : -.33), yellow = n === 3 ? mk('#ffc21a', 0) : null;
+  shadows(g);
+  return {g, set: (v: {red?: number; yellow?: number; green?: number}) => { (red.material as THREE.MeshStandardMaterial).emissiveIntensity = 3 * (v.red ?? 0);
+    (green.material as THREE.MeshStandardMaterial).emissiveIntensity = 3 * (v.green ?? 0); if (yellow) (yellow.material as THREE.MeshStandardMaterial).emissiveIntensity = 3 * (v.yellow ?? 0); },
+    slot: (k: number) => { if (yellow) { g.children.filter(c2 => (c2 as THREE.Mesh).material === yellow.material).forEach(m => { m.position.x = (1 - k) * .6; m.visible = k > 0; }); } }};
+};
+/** a lamp post with a light box on it, origin at its foot; the box faces +z */
+const lightPole = (box: ReturnType<typeof lightBox>, h = 3.4) => { const g = new THREE.Group(), pole = new THREE.Mesh(new THREE.CylinderGeometry(.06, .08, h, 12), std('#2a2a2a', .5, .5));
+  pole.position.y = h / 2; g.add(pole); box.g.position.y = h + .4; g.add(box.g); shadows(g); return g; };
+/** a 1900s/modern city crossing: the library 4-way intersection at the origin, buildings on the far corners */
+const city = (c: Ctx, modern = false) => { const rig = lightRig(c.renderer, c.scene, c.env); if (!modern) { rig.sun.color.set('#ffe2b8'); } const s = c.scene;
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), std('#3a3a3c', .95)); ground.rotation.x = -Math.PI / 2; ground.position.y = -.01; ground.receiveShadow = true; s.add(ground);
+  // the road is drawn in code (the library intersection's textures are missing): asphalt, kerbed pavements on the four
+  // corners, dashed centre lines, stop lines and zebra crossings. Roads are 9 m wide along x and z through the origin.
+  const pave = std(modern ? '#b8b4ac' : '#c2b49a', .9), paint = new THREE.MeshStandardMaterial({color: '#f2efe6', roughness: .8});
+  for (const sx of [-1, 1]) for (const sz of [-1, 1]) { const b = new THREE.Mesh(new THREE.BoxGeometry(40, .15, 40), pave); b.position.set(sx * 24.5, .075, sz * 24.5); b.receiveShadow = true; s.add(b); }
+  const stripe = (w: number, d: number, x: number, z: number) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, d), paint); m.rotation.x = -Math.PI / 2; m.position.set(x, .012, z); m.receiveShadow = true; s.add(m); };
+  for (let k = 6; k < 60; k += 3) for (const sg of [-1, 1]) { stripe(1.6, .14, sg * k, 0); stripe(.14, 1.6, 0, sg * k); }
+  for (const sg of [-1, 1]) { stripe(.35, 4.4, sg * 5.6, -sg * 2.25); stripe(4.4, .35, sg * 2.25, sg * 5.6); }      // stop lines
+  for (let i = -3; i <= 3; i++) for (const sg of [-1, 1]) { stripe(.5, 2.2, i * .95, sg * 6.6); stripe(2.2, .5, sg * 6.6, i * .95); }   // zebra crossings
+  // simple code buildings (the library city blocks render untextured): brick/stone boxes, window grids, a cornice; far corners only
+  const bldg = (x: number, z: number, w: number, h: number, d: number, col: string) => { const g = new THREE.Group(); g.position.set(x, .15, z); s.add(g);
+    const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), std(col, .9)); m.position.y = h / 2; g.add(m);
+    const cor = new THREE.Mesh(new THREE.BoxGeometry(w + .4, .4, d + .4), std(shade(col, .7), .8)); cor.position.y = h; g.add(cor);
+    const win = std(modern ? '#2a3a4a' : '#2a2420', .3, .2), frame = std('#e8e0cc', .7);
+    for (const face of [1, -1]) for (let fy = 2.2; fy < h - 1; fy += 2.6) for (let fx = -w / 2 + 1.2; fx < w / 2 - .8; fx += 1.8) {
+      const fr = new THREE.Mesh(new THREE.BoxGeometry(1.05, 1.55, .06), frame); fr.position.set(fx, fy, face * (d / 2 + .02)); g.add(fr);
+      const wn = new THREE.Mesh(new THREE.BoxGeometry(.85, 1.35, .08), win); wn.position.set(fx, fy, face * (d / 2 + .04)); g.add(wn); }
+    for (const face of [1, -1]) for (let fy = 2.2; fy < h - 1; fy += 2.6) for (let fz = -d / 2 + 1.2; fz < d / 2 - .8; fz += 1.8) {
+      const fr = new THREE.Mesh(new THREE.BoxGeometry(.06, 1.55, 1.05), frame); fr.position.set(face * (w / 2 + .02), fy, fz); g.add(fr);
+      const wn = new THREE.Mesh(new THREE.BoxGeometry(.08, 1.35, .85), win); wn.position.set(face * (w / 2 + .04), fy, fz); g.add(wn); }
+    shadows(g); };
+  bldg(-12, -12, 12, 14, 12, modern ? '#9a8a7a' : '#8a4a3a'); bldg(12.5, -12.5, 13, 18, 13, modern ? '#7a8a9a' : '#a08a6a');
+  bldg(-12, -26, 12, 11, 12, '#6a5a4a'); bldg(12, -27, 12, 13, 12, modern ? '#aab0b8' : '#7a3a2a'); bldg(-25, -12, 12, 9, 12, '#9a7a5a'); bldg(25.5, -12, 13, 12, 12, '#6a4a3a');
+  bldg(-12, 13, 12, 10, 12, modern ? '#8a9aa8' : '#7a5a4a'); bldg(-26, 13, 12, 13, 12, '#8a4a3a');
+  s.fog = new THREE.Fog(modern ? '#c8d8e8' : '#d8c8b0', 30, 120); };
+/** a Kenney car (CC0) scaled to real size, facing +z (rotate the returned group) */
+const modernCar = (L: Lib, id: string) => { const g = new THREE.Group(); g.add(place(L, `kenney-car-kit/${id}`, 0, 0, 0, Math.PI, 1.7)); return g; };
+
 // ---------- sets ----------
 type Ctx = {L: Lib; scene: THREE.Scene; camera: THREE.PerspectiveCamera; env: THREE.DataTexture; renderer: THREE.WebGLRenderer; look: number[]; dof: number; near?: number};
 const cam = (c: Ctx, p: number[], t: number[], fov = 40) => { c.look = t; c.camera.fov = fov; c.camera.near = c.near ?? .05; c.camera.updateProjectionMatrix(); c.camera.position.set(p[0], p[1], p[2]); c.camera.lookAt(t[0], t[1], t[2]); };
@@ -310,6 +403,123 @@ const B: Record<number, (c: Ctx) => Upd> = {
       dust.forEach(fn => fn(t, [-.1, .05, 3.0], hit ? Math.max(0, 1 - (f - down) / 30) : 0));
       a.draw(OFFICER, {seed: 31, look: -.8, expr: hit ? 'smile_closed' : 'neutral', costume: dress(frazzle(1), soot(t, .7), hurt(t, 1))});
       c.dof = 2; cam(c, [1.2 + kick(f - down, .1), 3.4, 8.6 - .5 * u], [.1, 1.1, 1.2], 40); }; },
+  // 7 "Instead, a police officer stood in the middle of the intersection, directing traffic": 1900s crossing, an officer on a
+  //   striped platform holds one car with a flat palm and waves another through; on "directing traffic" he swaps.
+  7: c => { city(c); const plat = new THREE.Mesh(new THREE.CylinderGeometry(.55, .6, .35, 24), std('#d8d0c0', .7)); plat.position.y = .175; c.scene.add(shadows(plat));
+    const stripe = new THREE.Mesh(new THREE.CylinderGeometry(.61, .61, .1, 24), std('#c0352f', .6)); stripe.position.y = .2; c.scene.add(stripe);
+    const a = actor(1.75); a.k.mesh.position.set(0, .35, 0); c.scene.add(a.k.mesh); a.draw(COP, {seed: 33});
+    const A = oldCar('#1d1d22'), Bc = oldCar('#6a1f24', '#3a4a6a'); Bc.g.rotation.y = -Math.PI / 2; c.scene.add(A.g, Bc.g); const swap = T('L05', 18) - 2;
+    return (f, l, u) => { const t = l / FPS, sw = f >= swap;
+      const za = -16 + 6 * t; A.g.position.set(-2.2, 0, za); A.roll(za); A.driver('smile_closed', t);
+      const xb = sw ? 6 - .5 * 3 * ((f - swap) / FPS) ** 2 : 6; Bc.g.position.set(Math.max(-30, xb), 0, 2.2); Bc.roll(-xb); Bc.driver(sw ? 'smile' : 'nervous', t);
+      const wave = (side: -1 | 1, S: P, g: {u: number; HH: number}): P[] => [S, [S[0] + side * 30 * g.u, S[1] - .1 * g.HH], [S[0] + side * 44 * g.u, S[1] - (.35 + .25 * Math.sin(t * 9)) * g.HH]];
+      const palm = (side: -1 | 1, S: P, g: {u: number}): P[] => [S, [S[0] + side * 32 * g.u, S[1] - 2 * g.u], [S[0] + side * 64 * g.u, S[1] - 6 * g.u]];
+      a.draw(COP, {seed: 33, look: sw ? .7 : -.5, expr: 'stern', armFront: false, armPose: (side, S, g) => (side < 0) !== sw ? wave(side, S, g) : palm(side, S, g),
+        costume: dress(copCap(), {head: k => { k.p.poly([[300 + 8 * k.u, k.hc + .5 * k.Hb], [300 + 30 * k.u, k.hc + .45 * k.Hb], [300 + 30 * k.u, k.hc + .6 * k.Hb]], '#d9dde0', 1.4 * k.u); }})});  // whistle
+      c.dof = 2; cam(c, [6 - .8 * u, 4.2, 11 - 1.5 * u], [0, 1.4, 0], 40); }; },
+  // 8 "But standing in the middle of traffic all day was dangerous too": cars whizz past inches from him in front and behind;
+  //   on "dangerous" one clips his platform: he spins, cap knocked crooked, eyes spiral.
+  8: c => { city(c); const plat = new THREE.Mesh(new THREE.CylinderGeometry(.55, .6, .35, 24), std('#d8d0c0', .7)); plat.position.y = .175; c.scene.add(shadows(plat));
+    const a = actor(1.75); a.k.mesh.position.set(0, .35, 0); c.scene.add(a.k.mesh); a.draw(COP, {seed: 33});
+    const cars = [oldCar('#1d1d22'), oldCar('#2a4a3a', '#4a3a2a'), oldCar('#6a1f24', '#3a4a6a')]; cars.forEach(cr => c.scene.add(cr.g));
+    const hit = T('L06', 10) - 2, passes = [T('L06', 3), T('L06', 7), hit];
+    return (f, l, u) => { const t = l / FPS;
+      cars.forEach((cr, i) => { const e = (f - passes[i]) / FPS, v = 14, d = v * e;
+        if (i === 0) { cr.g.rotation.y = Math.PI / 2; cr.g.position.set(d, 0, 1.35); } else if (i === 1) { cr.g.rotation.y = -Math.PI / 2; cr.g.position.set(-d, 0, -1.4); }
+        else { cr.g.rotation.y = 0; cr.g.position.set(1.05, 0, d); }
+        cr.roll(d); cr.driver(Math.abs(e) < .4 ? 'shock' : 'smile_closed', t); });
+      const e = (f - hit) / FPS, spun = e > 0, near = passes.some(p => Math.abs(f - p) < 8);
+      a.draw(COP, {seed: 33, expr: spun ? (e < .5 ? 'shock' : 'dazed') : near ? 'shock' : 'nervous', look: -.3, headTilt: spun ? 18 * Math.sin(e * 14) * Math.exp(-e * 2) : 0,
+        tilt: spun ? 14 * Math.sin(e * 10) * Math.exp(-e * 1.5) : near ? -6 : 0,
+        armPose: (side, S, g) => near || (spun && e < 1) ? [S, [S[0] + side * 30 * g.u, S[1] - .2 * g.HH], [S[0] + side * 48 * g.u, S[1] - .55 * g.HH]] as P[] : null,
+        costume: dress(copCap(spun ? -.6 : 0))});
+      c.dof = 3; cam(c, [3.2 + kick(f - hit, .1), 2.1, 7.2 - .6 * u], [0, 1.35, 0], 40); }; },
+  // 9 "Until 1912, when a police officer invented an electric traffic light, and cities started putting them back up": an
+  //   officer in a booth by the road gets the idea (bulb pops) on "invented", throws the switch on "electric" and the red /
+  //   green box on the corner lights up; on "putting them back up" the camera pulls back as new lights spring up down the street.
+  9: c => { city(c); const bx = new THREE.Group(); bx.position.set(3.4, .15, -6.2); bx.rotation.y = -.35; c.scene.add(bx); const wood = std('#7a5a3a', .8), trim = std('#e8e0cc', .7);
+    const wall = (w: number, h: number, x: number, y: number, z: number, m = wood) => { const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, .08), m); b.position.set(x, y, z); bx.add(b); };
+    wall(1.4, .9, 0, .45, .6); wall(1.4, .3, 0, 2.05, .6, trim); wall(.1, 1.0, -.65, 1.4, .6); wall(.1, 1.0, .65, 1.4, .6); wall(1.4, 2.2, 0, 1.1, -.6);
+    const side = (x: number) => { const b = new THREE.Mesh(new THREE.BoxGeometry(.08, 2.2, 1.2), wood); b.position.set(x, 1.1, 0); bx.add(b); }; side(-.7); side(.7);
+    const roof = new THREE.Mesh(new THREE.ConeGeometry(1.15, .55, 4), std('#3a2a20', .8)); roof.position.y = 2.5; roof.rotation.y = Math.PI / 4; bx.add(roof); shadows(bx);
+    const lever = new THREE.Group(); lever.position.set(.35, 1.1, .68); const lh = new THREE.Mesh(new THREE.BoxGeometry(.05, .35, .05), std('#c9a24a', .3, .7)); lh.position.y = .17; lever.add(lh); bx.add(lever);
+    const a = actor(1.75); a.k.mesh.position.set(0, 0, .35); bx.add(a.k.mesh); a.draw(COP, {seed: 34});
+    const bulb = new Card(1.5, .6, 600, 600, false); bulb.mesh.userData.figure = false; bulb.mesh.position.set(0, 2.55, .7); bx.add(bulb.mesh);
+    const main = lightBox(2), mp = lightPole(main); mp.position.set(1.2, .15, -5.4); mp.rotation.y = .3; c.scene.add(mp);
+    const more = [[-7, -1.6], [-15, -1.6], [-23, -1.6], [-1.6, -9], [-1.6, -17]].map(([x, z]) => { const b2 = lightBox(2), p2 = lightPole(b2); p2.position.set(x, 0, z); p2.rotation.y = .5; c.scene.add(p2); return {b: b2, p: p2}; });
+    const idea = T('L07', 6) - 2, on = T('L07', 8) - 2, back = T('L07', 12) - 4;
+    return (f, l, u) => { const t = l / FPS, lit = f >= on, flick = lit && f < on + 6 ? (f % 2) : 1;
+      lever.rotation.x = lit ? -.8 : .3;
+      main.set(lit ? ((f - on) % 40 < 20 ? {green: flick} : {red: flick}) : {});
+      more.forEach(({b, p}, i) => { const k = (f - back - 6 * i); p.scale.set(1, k < 0 ? .001 : Math.min(1.25, smooth(k / 6) * (1 + .25 * Math.exp(-k / 6) * Math.sin(k * .8))), 1); b.set(k > 6 ? (i % 2 ? {red: 1} : {green: 1}) : {}); });
+      const pop = f >= idea ? Math.min(1, (f - idea) / 5) : 0, sw = toCard(a.k, .35 * Math.cos(.4), 1.35);
+      a.draw(COP, {seed: 34, look: lit ? -.6 : 0, expr: f < idea ? 'neutral' : lit ? 'proud' : 'smile', armFront: true,
+        armPose: (side2, S, g) => side2 > 0 && f >= idea - 10 ? reach(1, S, [sw[0] + 40 * g.u, sw[1] - (lit ? 30 : 0) * g.u], g.u, 24, 6) : null, costume: copCap()});
+      const bk = f < on + 20 ? pop : Math.max(0, 1 - (f - on - 20) / 8); bulb.mesh.visible = bk > 0; if (bk > 0) bulb.draw(p3 => { const k3 = {p: p3, u: 3.2, crown: 560, Hb: 50} as unknown as Kit; p3.rot = [0, 0, 0, -224, 0]; ideaBulb(bk).head!(k3); });
+      const pull = smooth((f - back + 4) / 30);
+      c.dof = 3 * (1 - pull); cam(c, [lerp(5.6, 9, pull), lerp(2.6, 7.5, pull), lerp(4.6, 15, pull)], [lerp(2.2, -5, pull), lerp(2.3, 1.2, pull), lerp(-4.0, -4, pull)], 40); }; },
+  // 10 "The problem now? There were only two lights: red and green": close on the two-light box, which shudders on "problem";
+  //   on "two" the lenses flash in turn; red on "red", green on "green".
+  10: c => { city(c); const b = lightBox(2), p = lightPole(b); p.position.set(1.6, 0, -1.6); c.scene.add(p);
+    const prob = T('L08', 1), two = T('L08', 6), red = T('L08', 8) - 1, green = T('L08', 10) - 1;
+    return (f, l, u) => { const sh = f >= prob && f < prob + 14 ? .05 * Math.sin((f - prob) * 2.2) * (1 - (f - prob) / 14) : 0; b.g.rotation.z = sh;
+      b.set(f >= green ? {green: 1} : f >= red ? {red: 1} : f >= two ? ((f - two) % 8 < 4 ? {red: 1} : {green: 1}) : {});
+      c.dof = 4; cam(c, [2.4, 3.75 + .1 * u, .2 - .2 * u], [1.6, 3.8, -1.6], 38); }; },
+  // 11 "The light switched so suddenly that drivers could not stop in time": green snaps to red on "suddenly"; the car brakes
+  //   hard, skids (tyre smoke, nose dips) past the line, and the car behind rear-ends it on "stop".
+  11: c => { city(c); const b = lightBox(2), p = lightPole(b); p.position.set(-4.4, 0, 2.6); c.scene.add(p);
+    const A = oldCar('#1d1d22'), Bc = oldCar('#2a4a3a', '#4a3a2a'); c.scene.add(A.g, Bc.g); const tyre = smoke(c.scene, 10, '#d8d4cc', .1), bump = blast(c.scene, .45, ['#1d1d22', '#c9a24a', '#2a4a3a']);
+    const snap = T('L09', 4) - 2, hit = T('L09', 9) - 2, v = 9, brake = snap + 3, stopZ = 2.6;
+    return (f, l, u) => { const t = l / FPS;
+      const zb = stopZ - v * v / (2 * 9) , e = (f - brake) / FPS; let za: number;
+      if (f < brake) za = zb - v * (brake - f) / FPS; else if (e < 1) za = zb + v * e - 4.5 * e * e; else za = stopZ;
+      if (f >= hit) za += 1.0 * smooth((f - hit) / 5);
+      A.g.position.set(-2.2, 0, za); A.roll(za); A.chassis.rotation.x = f >= brake && e < 1.1 ? .07 * Math.sin(Math.min(1, e) * Math.PI) : 0;
+      const zB = f < hit ? (stopZ - 3.5) - 7 * (hit - f) / FPS : stopZ - 3.5 - .4 * smooth((f - hit) / 5); Bc.g.position.set(-2.2, 0, zB); Bc.roll(zB);
+      A.driver(f >= brake ? 'shock' : 'smile_closed', t, f >= hit ? 'up' : 'wheel'); Bc.driver(f >= hit - 8 ? 'shock' : 'neutral', t, f >= hit ? 'up' : 'wheel');
+      b.set(f >= snap ? {red: 1} : {green: 1});
+      tyre.forEach(fn => fn(t * 2, [-2.2, .1, za - 1.0], f >= brake && e < 1 ? .9 : Math.max(0, .9 - (e - 1) * 2)));
+      bump([-2.2, 1.0, stopZ - 1.75], f >= hit ? (f - hit) / FPS : -1, t);
+      c.dof = 2; cam(c, [3.4 + kick(f - hit, .12), 2.6, 11 - .8 * u], [-2.4, 1.2, .5], 40); }; },
+  // 12 "So they added a yellow light, to warn you before the light turns red": the yellow lens slides into the box on
+  //   "yellow"; camera pulls back; the light goes yellow on "warn", the car eases off and stops gently on the line as it turns
+  //   red on "red". The driver smiles.
+  12: c => { city(c); const b = lightBox(3), p = lightPole(b); p.position.set(-4.4, 0, 2.6); c.scene.add(p); const A = oldCar('#1d1d22'); c.scene.add(A.g);
+    const yel = T('L10', 4) - 2, warn = T('L10', 7) - 2, red = T('L10', 13) - 2, v = 7, stopZ = 1.4;
+    return (f, l, u) => { const t = l / FPS; b.slot(f < yel ? 0 : smooth((f - yel) / 8)); b.set(f >= red ? {red: 1} : f >= warn ? {yellow: 1} : {green: 1});
+      const T2 = (red - warn) / FPS, dec = v / T2, zw = stopZ - v * T2 / 2, e = (f - warn) / FPS;
+      const za = f < warn ? zw - v * (warn - f) / FPS : e < T2 ? zw + v * e - dec * e * e / 2 : stopZ; A.g.position.set(-2.2, 0, za); A.roll(za);
+      A.driver(f >= red ? 'smile_closed' : f >= warn ? 'neutral' : 'smile', t);
+      const pull = smooth((f - yel - 12) / 25);
+      c.dof = 3; cam(c, [lerp(-3.2, 2.6, pull), lerp(4.1, 3.4, pull), lerp(4.4, 14, pull)], [lerp(-4.4, -3.0, pull), lerp(4.0, 2.2, pull), lerp(2.6, 1.2, pull)], 40); }; },
+  // 13 "And that is the same traffic light we still use today": modern crossing (Kenney cars, CC0): the modern light cycles,
+  //   cross traffic flows then stops, waiting cars pull away; the camera cranes up over the busy junction by "today".
+  13: c => { city(c, true); const b = lightBox(3, 'modern'), p = lightPole(b, 3.8); p.position.set(-4.4, 0, 2.6); c.scene.add(p); b.slot(1);
+    const ids = ['sedan', 'taxi', 'suv', 'van', 'sedan-sports'], flow = ids.map((id, i) => { const g = modernCar(c.L, id); c.scene.add(g); return g; });
+    const wait = modernCar(c.L, 'sedan'); c.scene.add(wait); const yel = T('L11', 4), red = T('L11', 7);
+    return (f, l, u) => { const t = l / FPS; b.set(f >= red ? {red: 1} : f >= yel ? {yellow: 1} : {green: 1});
+      flow.forEach((g, i) => { const lane = i % 2 ? 1 : -1, x = ((t * 9 + i * 9) % 46) - 23; g.rotation.y = lane > 0 ? Math.PI / 2 : -Math.PI / 2; g.position.set(lane * x, 0, lane * 2.2); });
+      const go = Math.max(0, (f - red - 8) / FPS); wait.rotation.y = Math.PI; wait.position.set(2.2, 0, 7 - 2.5 * go * go);
+      const crane = smooth(l / 90);
+      c.dof = 2 * (1 - crane); cam(c, [lerp(-3.0, 9, crane), lerp(4.6, 10, crane), lerp(5.4, 17, crane)], [lerp(-4.4, 0, crane), lerp(4.2, 0, crane), lerp(2.6, 0, crane)], 40); }; },
+  // 14 "(pause) Of course, to some people, it is still just a suggestion": red light, a taxi waits politely; a red sports car
+  //   blasts straight through; its wind spins our sooty 1868 officer on the corner and blows his helmet off; on "suggestion"
+  //   it drops back onto his head, crooked, and he glares.
+  14: c => { city(c, true); const b = lightBox(3, 'modern'), p = lightPole(b, 3.8); p.position.set(-4.4, 0, 2.6); c.scene.add(p); b.slot(1); b.set({red: 1});
+    const taxi = modernCar(c.L, 'taxi'); taxi.rotation.y = Math.PI; taxi.position.set(-2.2, 0, -4.5); c.scene.add(taxi);
+    const racer = modernCar(c.L, 'sedan-sports'); racer.rotation.y = Math.PI / 2; c.scene.add(racer);
+    const a = actor(1.75); a.k.mesh.position.set(-5.0, .15, 4.8); c.scene.add(a.k.mesh); a.draw(OFFICER, {seed: 31});
+    const hc = new Card(.42, .8, 300, 300, false); hc.mesh.userData.figure = false; c.scene.add(hc.mesh); hc.draw(p2 => drawHelmet(p2, 150, 230, 95, .95, -.6, 0, 4.75));
+    const zoom = T('L12', 3) + 2, land = T('L12', 10) + 2, gust = smoke(c.scene, 8, '#e8e8e8', .05);
+    return (f, l, u) => { const t = l / FPS, e = (f - zoom) / FPS, x = -5.4 + 16 * e; racer.position.set(x, 0, 2.2);
+      gust.forEach(fn => fn(t * 2, [x - 3, .3, 2.2], Math.abs(e) < .6 ? .6 : 0));
+      const blown = e > .02, flying = blown && f < land, air = (land - zoom) / FPS;
+      a.draw(OFFICER, {seed: 31, expr: !blown ? 'neutral' : f < land ? 'shock' : 'stern', look: blown && f < land ? .4 : 0,
+        headTilt: blown && f < land ? 20 * Math.sin(e * 12) : 0, tilt: blown && f < land ? 10 * Math.sin(e * 9) * Math.exp(-e) : 0,
+        armPose: (side, S, g) => f >= land ? [S, [S[0] + side * 22 * g.u, S[1] + .35 * g.HH], [300 - side * 10 * g.u, g.chin + .45 * g.HH]] as P[] : null,   // arms crossed
+        costume: dress(soot(t, .8), frazzle(1), helmet(f >= land ? -.5 : 0, !flying))});
+      hc.mesh.visible = flying; if (flying) { const ee = e - .05, vy = 9.8 * air / 2; hc.mesh.position.set(-5.0 + 1.2 * ee, 1.9 + vy * ee - 4.9 * ee * ee, 4.8); hc.mesh.rotation.z = ee * 10; }
+      c.dof = 2; cam(c, [-.6, 3.0, 15.5 - .8 * u], [-4.1, 1.5, 3.2], 40); }; },
 };
 // shots not built yet: the 1868 crossing, wide
 const placeholder = (c: Ctx): Upd => { london(c); const sig = gasSignal(); sig.g.position.set(-.1, 0, 0); c.scene.add(sig.g);
