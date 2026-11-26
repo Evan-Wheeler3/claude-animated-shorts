@@ -81,13 +81,22 @@
  },
  {
   "line": "L08",
-  "text": "So striking a match still works like the very first fire. You are rubbing two things together, with some chemical help!",
-  "emph": [
-   19
-  ],
+  "text": "So striking a match still works like the very first fire. You are rubbing two things together.",
+  "emph": [],
   "start": 48.931,
-  "end": 55.384,
-  "take": "L08_t2.wav",
+  "end": 54.431,
+  "take": "L08_t0.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L09",
+  "text": "Just with some chemical help!",
+  "emph": [
+   3
+  ],
+  "start": 54.941,
+  "end": 56.699,
+  "take": "L09_t2.wav",
   "heard_miss": 0
  }
 ]

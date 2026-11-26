@@ -614,7 +614,7 @@
  {
   "word": "The",
   "line": "L05",
-  "start": 30.02,
+  "start": 30.0,
   "end": 30.14
  },
  {
@@ -663,12 +663,12 @@
   "word": "workers,",
   "line": "L05",
   "start": 32.16,
-  "end": 32.56
+  "end": 32.58
  },
  {
   "word": "and",
   "line": "L05",
-  "start": 32.56,
+  "start": 32.78,
   "end": 33.06
  },
  {
@@ -699,19 +699,19 @@
   "word": "in",
   "line": "L05",
   "start": 34.2,
-  "end": 34.38
+  "end": 34.36
  },
  {
   "word": "the",
   "line": "L05",
-  "start": 34.38,
+  "start": 34.36,
   "end": 34.5
  },
  {
   "word": "dark.",
   "line": "L05",
   "start": 34.5,
-  "end": 34.88
+  "end": 34.86
  },
  {
   "word": "So",
@@ -747,30 +747,30 @@
   "word": "match",
   "line": "L06",
   "start": 36.84,
-  "end": 37.04
+  "end": 37.02
  },
  {
   "word": "in",
   "line": "L06",
-  "start": 37.04,
+  "start": 37.02,
   "end": 37.24
  },
  {
   "word": "two.",
   "line": "L06",
   "start": 37.24,
-  "end": 37.62
+  "end": 37.6
  },
  {
   "word": "The",
   "line": "L06",
-  "start": 37.92,
-  "end": 37.96
+  "start": 37.88,
+  "end": 37.98
  },
  {
   "word": "head",
   "line": "L06",
-  "start": 37.96,
+  "start": 37.98,
   "end": 38.14
  },
  {
@@ -806,7 +806,7 @@
  {
   "word": "and",
   "line": "L06",
-  "start": 39.34,
+  "start": 39.56,
   "end": 39.66
  },
  {
@@ -831,12 +831,12 @@
   "word": "the",
   "line": "L06",
   "start": 40.34,
-  "end": 40.5
+  "end": 40.52
  },
  {
   "word": "box",
   "line": "L06",
-  "start": 40.5,
+  "start": 40.52,
   "end": 40.74
  },
  {
@@ -860,7 +860,7 @@
  {
   "word": "Neither",
   "line": "L07",
-  "start": 42.48,
+  "start": 42.46,
   "end": 42.66
  },
  {
@@ -908,7 +908,7 @@
  {
   "word": "They",
   "line": "L07",
-  "start": 44.68,
+  "start": 44.66,
   "end": 44.78
  },
  {
@@ -933,30 +933,30 @@
   "word": "you",
   "line": "L07",
   "start": 45.52,
-  "end": 45.64
+  "end": 45.66
  },
  {
   "word": "rub",
   "line": "L07",
-  "start": 45.64,
-  "end": 45.8
+  "start": 45.66,
+  "end": 45.78
  },
  {
   "word": "them",
   "line": "L07",
-  "start": 45.8,
-  "end": 45.94
+  "start": 45.78,
+  "end": 45.96
  },
  {
   "word": "together.",
   "line": "L07",
-  "start": 45.94,
+  "start": 45.96,
   "end": 46.32
  },
  {
   "word": "That",
   "line": "L07",
-  "start": 46.72,
+  "start": 46.7,
   "end": 46.86
  },
  {
@@ -981,156 +981,162 @@
   "word": "is",
   "line": "L07",
   "start": 47.26,
-  "end": 47.4
+  "end": 47.38
  },
  {
   "word": "called",
   "line": "L07",
-  "start": 47.4,
+  "start": 47.38,
   "end": 47.66
  },
  {
   "word": "a",
   "line": "L07",
   "start": 47.66,
-  "end": 47.88
+  "end": 47.9
  },
  {
   "word": "safety",
   "line": "L07",
-  "start": 47.88,
+  "start": 47.9,
   "end": 48.14
  },
  {
   "word": "match.",
   "line": "L07",
   "start": 48.14,
-  "end": 48.56
+  "end": 48.54
  },
  {
   "word": "So",
   "line": "L08",
-  "start": 49.24,
-  "end": 49.34
+  "start": 49.48,
+  "end": 49.7
  },
  {
   "word": "striking",
   "line": "L08",
-  "start": 49.34,
-  "end": 49.74
+  "start": 49.7,
+  "end": 50.14
  },
  {
   "word": "a",
   "line": "L08",
-  "start": 49.74,
-  "end": 49.96
+  "start": 50.14,
+  "end": 50.36
  },
  {
   "word": "match",
   "line": "L08",
-  "start": 49.96,
-  "end": 50.18
+  "start": 50.36,
+  "end": 50.56
  },
  {
   "word": "still",
   "line": "L08",
-  "start": 50.18,
-  "end": 50.48
+  "start": 50.56,
+  "end": 50.84
  },
  {
   "word": "works",
   "line": "L08",
-  "start": 50.48,
-  "end": 50.8
+  "start": 50.84,
+  "end": 51.14
  },
  {
   "word": "like",
   "line": "L08",
-  "start": 50.8,
-  "end": 51.02
+  "start": 51.14,
+  "end": 51.38
  },
  {
   "word": "the",
   "line": "L08",
-  "start": 51.02,
-  "end": 51.18
+  "start": 51.38,
+  "end": 51.56
  },
  {
   "word": "very",
   "line": "L08",
-  "start": 51.18,
-  "end": 51.42
+  "start": 51.56,
+  "end": 51.8
  },
  {
   "word": "first",
   "line": "L08",
-  "start": 51.42,
-  "end": 51.84
+  "start": 51.8,
+  "end": 52.14
  },
  {
   "word": "fire.",
   "line": "L08",
-  "start": 51.84,
-  "end": 52.3
+  "start": 52.14,
+  "end": 52.58
  },
  {
   "word": "You",
   "line": "L08",
-  "start": 52.54,
-  "end": 52.64
+  "start": 52.78,
+  "end": 52.9
  },
  {
   "word": "are",
   "line": "L08",
-  "start": 52.64,
-  "end": 52.8
+  "start": 52.9,
+  "end": 53.04
  },
  {
   "word": "rubbing",
   "line": "L08",
-  "start": 52.8,
-  "end": 53.02
+  "start": 53.04,
+  "end": 53.26
  },
  {
   "word": "two",
   "line": "L08",
-  "start": 53.02,
-  "end": 53.3
+  "start": 53.26,
+  "end": 53.54
  },
  {
   "word": "things",
   "line": "L08",
-  "start": 53.3,
-  "end": 53.64
+  "start": 53.54,
+  "end": 53.86
  },
  {
-  "word": "together,",
+  "word": "together.",
   "line": "L08",
-  "start": 53.64,
-  "end": 53.98
+  "start": 53.86,
+  "end": 54.36
+ },
+ {
+  "word": "Just",
+  "line": "L09",
+  "start": 55.32,
+  "end": 55.34
  },
  {
   "word": "with",
-  "line": "L08",
-  "start": 53.98,
-  "end": 54.22
+  "line": "L09",
+  "start": 55.34,
+  "end": 55.54
  },
  {
   "word": "some",
-  "line": "L08",
-  "start": 54.22,
-  "end": 54.48
+  "line": "L09",
+  "start": 55.54,
+  "end": 55.86
  },
  {
   "word": "chemical",
-  "line": "L08",
-  "start": 54.48,
-  "end": 54.9
+  "line": "L09",
+  "start": 55.86,
+  "end": 56.28
  },
  {
   "word": "help!",
-  "line": "L08",
-  "start": 54.9,
-  "end": 55.24
+  "line": "L09",
+  "start": 56.28,
+  "end": 56.6
  }
 ]

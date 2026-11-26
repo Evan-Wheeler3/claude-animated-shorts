@@ -17,7 +17,7 @@ step "1/4 install (first run only)"
 cd remotion
 [ -d node_modules ] || npm ci --no-audit --no-fund
 
-step "2/4 render ${W}x${H} picture (GPU, ~1676 frames)"
+step "2/4 render ${W}x${H} picture (GPU, ~1716 frames)"
 mkdir -p "$STORY/out"
 npx remotion render src/index.ts MatchesShort "$STORY/out/picture.mp4" \
   --width=$W --height=$H --codec=h264 --crf=16 --muted --timeout=120000

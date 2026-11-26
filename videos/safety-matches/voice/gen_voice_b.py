@@ -14,7 +14,7 @@ import numpy as np, soundfile as sf
 HERE = os.path.dirname(os.path.abspath(__file__))
 REF_TEXT = "Your neighbor Phil keeps breaking into your house to use your bathroom. And worst of all, he never flushes."
 GAP = 0.06          # seconds between lines
-BEAT = {"L01": 0.12, "L05": 0.2, "L07": 0.2}   # planned beats after these lines
+BEAT = {"L01": 0.12, "L05": 0.2, "L07": 0.2, "L08": 0.45}   # planned beats after these lines (L08: the pause before the punchline)
 
 
 def script_lines():

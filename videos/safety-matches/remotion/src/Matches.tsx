@@ -471,11 +471,11 @@ const B: Record<number, (c: Ctx) => Upd> = {
     return (f, l, u) => { const sk = striker(f, [], 1e9, 0, false, l / FPS);
       a.draw(CAVE, {...sk, expr: 'neutral', seed: 5, look: -.3, headTilt: 6 * Math.sin(l / FPS * 2), costume: sk.costume});
       c.dof = 5; glide(c, [[.8, 1.4, 3.8], [-.2, 1.1, .5]], [[.5, 1.3, 2.8], [-.25, 1.15, .4]], u, 40); }; },
-  // 16 you are rubbing two things together, with some chemical help: he strikes (one fizzle, then it catches), shows it off,
-  //   and tosses it into the woodpile, which roars into a campfire
+  // 16 you are rubbing two things together. (pause) Just with some chemical help!: he strikes (one fizzle, then it catches on
+  //   "together"), holds it up through the pause, tosses it into the woodpile on "Just", and it roars into a campfire on "help"
   16: c => { meadow(c); const a = actor(1.7); a.k.mesh.position.set(-.55, 0, .25); c.scene.add(a.k.mesh);
     const fire = flame(c.scene, .7, 6), mf = flame(c.scene, .1, 1.2), m3 = match3d(.08); c.scene.add(m3);
-    const s1 = T('L08', 13) - 2, s2 = T('L08', 16) - 3, lit = s2 + 5, toss = T('L08', 18), land = toss + 12;
+    const s1 = T('L08', 13) - 2, s2 = T('L08', 16) - 3, lit = s2 + 5, toss = T('L09', 0) - 2, land = toss + 12;   // lights on "together", shown off in the pause, tossed on "Just"
     let hand: P = [0, 0], uu = 1; const spy: Costume = {hand: k => { hand = k.hands[1] ?? k.hands[0]; uu = k.u; }};
     const from = new THREE.Vector3();
     return (f, l, u) => { const t = l / FPS, raise = smooth((f - lit - 4) / 8) * (1 - smooth((f - toss) / 4)), gone = f > toss + 2;
@@ -489,9 +489,10 @@ const B: Record<number, (c: Ctx) => Upd> = {
       c.dof = 4; const pull = smooth((f - toss) / 14); cam(c, [lerp(.1, .2, pull), lerp(1.25, 1.3, pull), lerp(3.0, 3.7, pull)], [lerp(-.25, -.15, pull), lerp(.95, .7, pull), lerp(.45, .55, pull)], 42); }; },
 };
 
-const captionAt = (t: number) => { // groups of <= 3 words, shown while spoken
+const captionAt = (t: number) => { // groups of <= 3 words within a line, shown while spoken
   const idx = W.findIndex(w => t >= w.start - .05 && t < w.end + .25); if (idx < 0) return '';
-  const g = Math.floor(idx / 3) * 3; return W.slice(g, g + 3).map(w => w.word.replace(/[.,!?]/g, '')).join(' ');
+  const first = W.findIndex(w => w.line === W[idx].line), g = first + Math.floor((idx - first) / 3) * 3;   // groups never cross a line (keeps the pause clean)
+  return W.slice(g, g + 3).filter(w => w.line === W[idx].line).map(w => w.word.replace(/[.,!?]/g, '')).join(' ');
 };
 
 export const MatchesShort: React.FC = () => {

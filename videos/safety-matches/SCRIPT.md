@@ -10,10 +10,11 @@ L04 So match makers switched to white phosphorus, which lit on anything you stru
 L05 Worse, it was poison. The fumes destroyed the jawbones of the factory workers, and their bones even glowed in the dark.
 L06 So match makers split the match in two. The head got one set of chemicals, and the strip on the box got red phosphorus.
 L07 Neither half can catch fire on its own. They only light when you rub them together. That is why it is called a safety match.
-L08 So striking a match still works like the very first fire. You are rubbing two things together, with some chemical help!
+L08 So striking a match still works like the very first fire. You are rubbing two things together.
+L09 *(pause, ~0.5 s)* Just with some chemical help!
 
 ## Sources per line
-L01 F1 · L02 F2 · L03 F3-F4 · L04 F5 · L05 F6 · L06 F7 · L07 F8 · L08 callback to L01 (the ban, F9, dropped for length)
+L01 F1 · L02 F2 · L03 F3-F4 · L04 F5 · L05 F6 · L06 F7 · L07 F8 · L08-L09 callback to L01 (the ban, F9, dropped for length)
 
 ## Shots (one per link, look v2, library: fantasy props + medieval village + nature)
 1 caveman-ish figure rubbing sticks, sweating, smoke wisp, nothing · 2 acid bottle dip, a flame bursts, he juggles the bottle ·
@@ -25,3 +26,6 @@ slam) · 9 callback: the first caveman rubbing sticks dissolves into a hand stri
 ## Changes v1 -> v2 (owner: 'choppy and a bit confusing, don't sacrifice clarity')
 Full sentences; 'people / match makers' in the middle instead of 'you' doing impossible things; 'split the match in two'
 instead of 'split the fire'; the ban line dropped; ending spelled out.
+
+
+v2.1 (owner note 2026-11-26): last line split for a pause before the punchline: "...two things together. (pause) Just with some chemical help!" Only L08/L09 re-recorded; L01-L07 takes unchanged.

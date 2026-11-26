@@ -116,9 +116,11 @@ broken(S('L06'), S('L08'), ['F', 'C', 'Bb', 'F'], vel=.30, pattern=(0, 2, 3, 2))
 for j, m in enumerate((72, 76, 79, 84)):
     note(m, w('L07', 23) - .25 + j * .1, .24, 2.2, pan=.3)
 # callback: warm motif, soft final chord on the last word
-broken(S('L08'), E('L08'), ['F', 'C', 'Dm', 'Bb'], vel=.26)
+broken(S('L08'), E('L08') - .1, ['F', 'C', 'Dm', 'Bb'], vel=.26)
 motif(S('L08'), E('L08') - .4, WARM, vel=.22)
-chord('F', E('L08') - .05, vel=.30, dur=3.0)
+# the pause before the punchline: the piano stops, one soft held suspension, then the final chord lands on "help"
+chord('C', E('L08') - .02, vel=.16, dur=S('L09') - E('L08') + .5)
+chord('F', w('L09', 4) - .03, vel=.30, dur=3.0)
 
 # ---------- mix ----------
 hall = make_ir(1.8, 5, pre=.02, hf=1.4)
