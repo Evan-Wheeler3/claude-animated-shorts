@@ -140,7 +140,16 @@ const matchbox = () => { const g = new THREE.Group(); const b = new THREE.Mesh(n
 const bottle = () => { const g = new THREE.Group(); const gl = new THREE.Mesh(new THREE.CylinderGeometry(.03, .03, .1, 24), new THREE.MeshStandardMaterial({color: '#bfeacc', transparent: true, opacity: .45, roughness: .1}));
   gl.position.y = .05; const liq = new THREE.Mesh(new THREE.CylinderGeometry(.027, .027, .055, 24), new THREE.MeshStandardMaterial({color: '#7fe07a', emissive: '#2a6a20', roughness: .2})); liq.position.y = .03;
   const neck = new THREE.Mesh(new THREE.CylinderGeometry(.012, .012, .03, 16), new THREE.MeshStandardMaterial({color: '#bfeacc', transparent: true, opacity: .45})); neck.position.y = .115; g.add(gl, liq, neck); return g; };
-const sandpaper = () => { const m = new THREE.Mesh(new THREE.BoxGeometry(.07, .002, .05), std('#b98a52', 1)); m.castShadow = m.receiveShadow = true; return m; };
+/** a sheet of sandpaper folded over at the back edge (gap = the space between the leaves), grit texture, 1x real size */
+const sandpaper = (gap = .01) => { const cv = document.createElement('canvas'); cv.width = cv.height = 256; const g = cv.getContext('2d')!; g.fillStyle = '#b98a52'; g.fillRect(0, 0, 256, 256);
+  for (let i = 0; i < 2600; i++) { const v = Math.sin(i * 91.7) * 43758.5; const r = v - Math.floor(v), q = Math.sin(i * 17.3) * 9631.1 - Math.floor(Math.sin(i * 17.3) * 9631.1);
+    g.fillStyle = r > .5 ? 'rgba(80,50,20,.55)' : 'rgba(240,210,160,.6)'; g.fillRect(r * 256, q * 256, 2, 2); }
+  const t = new THREE.CanvasTexture(cv); t.colorSpace = THREE.SRGBColorSpace; const mat = new THREE.MeshStandardMaterial({map: t, roughness: 1, side: THREE.DoubleSide});
+  const G = new THREE.Group(), th = .0008, W = .07, D = .05;
+  const lo = new THREE.Mesh(new THREE.BoxGeometry(W, th, D), mat); lo.position.set(0, th / 2, 0);
+  const hi = new THREE.Mesh(new THREE.BoxGeometry(W, th, D), mat); hi.position.set(0, th * 1.5 + gap, 0);
+  const fold = new THREE.Mesh(new THREE.CylinderGeometry(gap / 2 + th, gap / 2 + th, W, 16, 1, true, Math.PI, Math.PI), mat); fold.rotation.z = Math.PI / 2; fold.position.set(0, th + gap / 2, -D / 2);
+  G.add(lo, hi, fold); G.traverse(o => { const m = o as THREE.Mesh; m.castShadow = m.receiveShadow = true; }); return G; };
 const rug = () => { const cv = document.createElement('canvas'); cv.width = cv.height = 256; const g = cv.getContext('2d')!; g.fillStyle = '#9a2a24'; g.fillRect(0, 0, 256, 256);
   g.strokeStyle = '#e8c45a'; g.lineWidth = 14; g.strokeRect(20, 20, 216, 216); g.strokeStyle = '#2f4a6a'; g.lineWidth = 8; g.strokeRect(48, 48, 160, 160);
   const t = new THREE.CanvasTexture(cv); t.colorSpace = THREE.SRGBColorSpace; const m = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 1.1), new THREE.MeshStandardMaterial({map: t, roughness: 1}));
@@ -160,7 +169,8 @@ const flame = (scene: THREE.Scene, size: number, light = 3) => {
     c.mesh.position.set(p[0], p[1], p[2]); pl.position.set(p[0], p[1] + size * .5, p[2]);
     c.draw((_p, g) => { const s = on, wob = 10 * Math.sin(t * 17);
       const grd = g.createRadialGradient(100, 220, 10, 100, 190, 120); grd.addColorStop(0, '#fff6c0'); grd.addColorStop(.35, '#ffcf4a'); grd.addColorStop(.75, '#ff7a1a'); grd.addColorStop(1, 'rgba(255,90,20,0)');
-      g.fillStyle = grd; g.beginPath(); g.moveTo(100, 300); g.bezierCurveTo(10, 270, 40 + wob, 160 - 40 * s, 100 + wob * .6, 300 - 290 * s); g.bezierCurveTo(160 + wob, 160 - 40 * s, 190, 270, 100, 300); g.fill(); }); }};
+      g.fillStyle = grd; g.beginPath(); g.moveTo(100, 300); const w = .4 + .6 * s; g.bezierCurveTo(100 - 90 * w, 300 - 30 * s, 100 - 60 * w + wob, 300 - 180 * s, 100 + wob * .6, 300 - 290 * s); g.bezierCurveTo(100 + 60 * w + wob, 300 - 180 * s, 100 + 90 * w, 300 - 30 * s, 100, 300); g.fill();
+      if (s < .6) { const a = 1 - s / .6, r = 90 * (1 - .5 * s), fg = g.createRadialGradient(100, 230, 0, 100, 230, r); fg.addColorStop(0, `rgba(255,255,235,${a})`); fg.addColorStop(.4, `rgba(255,220,120,${.8 * a})`); fg.addColorStop(1, 'rgba(255,160,40,0)'); g.fillStyle = fg; g.fillRect(0, 100, 200, 200); } }); }};   // ignition flash
 };
 /** drifting green fume puffs */
 const fumes = (scene: THREE.Scene, n = 14, col = '#8af07a') => Array.from({length: n}, (_, i) => { const m = new THREE.Mesh(new THREE.SphereGeometry(.12 + .05 * (i % 3), 12, 8),
@@ -232,12 +242,13 @@ const B: Record<number, (c: Ctx) => Upd> = {
       a.draw(GENT, {mode: w > 0 ? 'stroll' : 'stand', phase: w * 1.0, lift: 48, ...cb, tilt: w > 0 ? 0 : 6 * Math.sin(Math.PI * k) , headTilt: w > 0 ? 4 * Math.sin(w * Math.PI * 2) : -6 * smooth(k),
         expr: k < .62 ? 'nervous' : w > 0 ? 'nervous' : 'strain', seed: 21, look: w > 0 ? .7 : 0, costume: dress(cravat(), cb.costume)});
       c.dof = 5; cam(c, [lerp(-.5, .3, smooth(u)), 1.45, lerp(1.6, 3.2, smooth(u))], [lerp(-.85, .25, smooth(u)), lerp(1.2, 1.0, u), lerp(-1.0, -.1, u)], 42); }; },
-  // 5 a match dragged through folded sandpaper: whoosh (ECU, 4x props)
-  5: c => { c.near = .01; const top = room(c); const sp = sandpaper(); sp.scale.setScalar(4); sp.position.set(0, top + .008, -1.0); c.scene.add(sp);
-    const sp2 = sandpaper(); sp2.scale.setScalar(4); sp2.position.set(0, top + .05, -1.0); sp2.rotation.z = .2; c.scene.add(sp2);
-    const m = match3d(.2); c.scene.add(m); const fl = flame(c.scene, .16, 3.5); const lit = T('L03', 7);
-    return (f, l, u) => { const x = lerp(-.32, -.08, smooth((f - lit + 18) / 18)); m.position.set(x, top + .07, -.94); m.rotation.z = -Math.PI / 2;
-      fl.at([x + .22, top + .06, -.94], l / FPS, smooth((f - lit) / 4)); c.dof = 6; cam(c, [.12, top + .32, -.25], [.05, top + .04, -1.0], 40); }; },
+  // 5 a match dragged through folded sandpaper: pinched in the fold (open edge to camera), pulled out toward us, flares (ECU, 4x props)
+  5: c => { c.near = .01; const top = room(c); const sp = sandpaper(.0105); sp.scale.setScalar(4); sp.position.set(0, top + .001, -1.0); c.scene.add(sp);
+    const m = match3d(.2); c.scene.add(m); m.rotation.x = -Math.PI / 2; const fl = flame(c.scene, .14, 3.5); const lit = T('L03', 7), my = top + .001 + 4 * (.0008 + .0105 / 2);
+    return (f, l, u) => { const k = smooth((f - lit + 16) / 18), hz = lerp(-1.06, -.84, k);   // head z: deep in the fold -> clear of the front edge (-.9)
+      m.position.set(0, my, hz + .2); m.rotation.y = .04 * Math.sin(l * .9) * (1 - k);
+      fl.at([0, my, hz - .005], l / FPS, smooth((f - lit) / 4) * (hz > -.885 ? 1 : 0)); c.dof = 6;
+      cam(c, [.16, top + .2, -.42 + .03 * u], [0, top + .02, -.93], 40); }; },
   // 6 it stank of sulfur and burning bits fell onto the carpet
   6: c => { room(c); const r = rug(); r.position.set(.2, .022, .6); c.scene.add(r); const a = actor(1.78); a.k.mesh.position.set(-.3, 0, .1); c.scene.add(a.k.mesh);
     const fl = flame(c.scene, .18, 3); const blob = new THREE.Mesh(new THREE.SphereGeometry(.02, 10, 8), new THREE.MeshBasicMaterial({color: '#ffb23a', toneMapped: false})); c.scene.add(blob);
