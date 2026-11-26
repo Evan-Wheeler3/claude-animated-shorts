@@ -125,9 +125,51 @@ const cramBottle = (k: number, t: number, jacket: string) => {
   }};
   return {armPose, costume, armFront: true};
 };
-/** the jaw glows green (phossy jaw, kept comic: a soft green glow on the chin) */
-const glowJaw: Costume = {head: (k: Kit) => { const u = k.u;
-  for (const [r, a] of [[46, .18], [34, .3], [24, .55]] as const) k.p.ell(300, k.hc + .55 * k.Hb, r * u * 1.6, r * u, `rgba(150,255,140,${a})`, 0); }};
+/** X-ray of the head: the face goes dark, an anatomical skull (cranium, sutures, orbits, nasal cavity, cheekbones, teeth,
+ *  mandible, neck vertebrae) is revealed by a scan line moving down; the mandible glows green (phossy jaw).
+ *  scan 0..1 = reveal, glow 0..1 = jaw glow, t = seconds */
+const xray = (scan: number, glow: number, t: number): Costume => ({torso: (k: Kit) => { if (scan < .55) return; const u = k.u, p = k.p, sy = k.chin + (scan - .55) / .45 * (k.torsoBot - k.chin) * 1.2;
+  p.clip([[0, 0], [600, 0], [600, sy], [0, sy]], () => { p.poly(k.torso, '#0a1830', 0);
+    for (let i = 0; i < 7; i++) { const yy = k.chin + (8 + i * 15) * u; p.ell(k.tcx, yy, 8 * u, 5 * u, '#cfe3f2', 1.2 * u); }                       // spine
+    for (const sd of [-1, 1]) { p.stroke([[k.tcx + sd * 6 * u, k.chin + 10 * u], [k.tcx + sd * .5 * k.Ta, k.chin + 4 * u], [k.tcx + sd * .85 * k.Ta, k.chin + 9 * u]], 4 * u, '#dbeaf6');   // collarbones
+      for (let r = 0; r < 4; r++) p.stroke([[k.tcx + sd * 10 * u, k.chin + (26 + r * 16) * u], [k.tcx + sd * .7 * k.Ta, k.chin + (30 + r * 16) * u], [k.tcx + sd * .8 * k.Ta, k.chin + (44 + r * 16) * u]], 2.6 * u, 'rgba(200,225,245,.8)'); } }); },   // ribs
+  head: (k: Kit) => { if (scan <= 0) return;
+  const p = k.p, g = p.g, u = k.u, A = k.Ha, Bh = k.Hb, cx = 300, cy = k.hc;
+  const X = (x: number) => cx + x * A * .84, Y = (y: number) => cy + (y * .84 + .04) * Bh, pt = (x: number, y: number): P => [X(x), Y(y)];
+  const sy = Y(-1.15 + 2.6 * scan);
+  p.clip([[0, 0], [600, 0], [600, sy], [0, sy]], () => {
+    const head = k.head; p.poly(head, '#0a1830', 0); p.inkRing(head, 2.5 * u, k.thick);                              // dark flesh
+    for (const r of [1, .97]) p.stroke([...head, head[0]].map(q => [cx + (q[0] - cx) * r, cy + (q[1] - cy) * r] as P), 2 * u, 'rgba(120,200,255,.55)');
+    for (let i = 0; i < 2; i++) { const yy = Y(1.08 + i * .2); p.poly([[cx - .13 * A, yy - .045 * Bh], [cx + .13 * A, yy - .045 * Bh], [cx + .16 * A, yy + .03 * Bh], [cx - .16 * A, yy + .03 * Bh]], '#b8cfe2', 1.2 * u); }   // neck vertebrae
+    const bone = '#dbeaf6', dark = '#071226';
+    // cranium + cheekbones + upper jaw (maxilla) as one outline
+    const sk: P[] = [];
+    for (let i = 0; i <= 24; i++) { const a = Math.PI * (1 + i / 24); sk.push(pt(.84 * Math.cos(a), -.12 + .86 * Math.sin(a))); }      // dome, left temple -> right temple
+    sk.push(pt(.86, .05), pt(.9, .18), pt(.74, .3), pt(.5, .42), pt(.42, .55), pt(-.42, .55), pt(-.5, .42), pt(-.74, .3), pt(-.9, .18), pt(-.86, .05));
+    p.gradFill(sk, bone, '#9fb8cc', k.light); p.stroke([...sk, sk[0]], 1.8 * u, '#7f9bb3');
+    p.stroke([pt(-.05, -.95), pt(.04, -.8), pt(-.03, -.66), pt(.05, -.52)], 1.2 * u, '#8aa4ba');                                     // sagittal suture
+    p.stroke([pt(-.78, -.35), pt(-.4, -.6), pt(0, -.68), pt(.4, -.6), pt(.78, -.35)], 1.2 * u, '#8aa4ba');                            // coronal suture
+    for (const sd of [-1, 1]) {                                                                                                         // orbits
+      const o: P[] = Array.from({length: 24}, (_, i) => { const a = i / 24 * Math.PI * 2, c = Math.cos(a), s2 = Math.sin(a);
+        return pt(sd * .34 + .2 * Math.sign(c) * Math.abs(c) ** .7, -.02 + .19 * Math.sign(s2) * Math.abs(s2) ** .8 + (s2 < 0 ? -.02 * sd * c : 0)); });
+      p.poly(o, dark, 1.6 * u); p.stroke([pt(sd * .16, -.24), pt(sd * .52, -.24)], 2.4 * u, '#eef6fc');                                // brow ridge highlight
+      p.stroke([pt(sd * .55, .2), pt(sd * .85, .14)], 2.2 * u, '#eef6fc'); }                                                            // zygomatic arch
+    p.poly([pt(0, .1), pt(.1, .3), pt(.07, .37), pt(0, .34), pt(-.07, .37), pt(-.1, .3)], dark, 1.4 * u);                             // nasal cavity
+    p.stroke([pt(0, .14), pt(0, .34)], 1.2 * u, '#9fb8cc');                                                                              // septum
+    const teeth = (y: number, h: number, w: number) => { for (let i = -4; i < 4; i++) { const x0 = X((i + .08) * w), x1 = X((i + .92) * w);
+      p.poly([[x0, Y(y)], [x1, Y(y)], [x1, Y(y + h)], [x0, Y(y + h)]], '#f4f9fd', .9 * u); } };
+    teeth(.5, .1, .085);
+    // mandible: ramus up to the ear, angle, body, chin: a thick U that glows on cue
+    const md: P[] = [pt(-.66, .12), pt(-.68, .45), pt(-.56, .72), pt(-.3, .9), pt(0, .95), pt(.3, .9), pt(.56, .72), pt(.68, .45), pt(.66, .12)];
+    const inner: P[] = [pt(.5, .2), pt(.5, .46), pt(.42, .6), pt(.24, .68), pt(0, .7), pt(-.24, .68), pt(-.42, .6), pt(-.5, .46), pt(-.5, .2)];
+    const jawShape = [...md, ...inner], gc = `rgba(140,255,120,${.35 + .65 * glow})`;
+    if (glow > 0) { g.save(); g.shadowColor = '#7dff6a'; g.shadowBlur = (30 + 20 * Math.sin(t * 8)) * glow; }
+    p.poly(jawShape, glow > 0 ? `rgb(${Math.round(219 - 80 * glow)},${Math.round(234 + 21 * glow)},${Math.round(246 - 126 * glow)})` : bone, 1.6 * u);
+    if (glow > 0) { p.poly(jawShape, gc, 0); g.restore(); }
+    teeth(.6, .085, .075);
+  });
+  if (scan < 1) p.stroke([[X(-1.3), sy], [X(1.3), sy]], 3 * u, 'rgba(140,220,255,.9)');                                               // scan line
+}});
 const person = (o: Outfit, h: number, opts: Parameters<typeof bodyFront>[2]) => new Card(h, .8).draw((p: Pen) => bodyFront(p, o, {mode: 'stand', ...opts}));
 const actor = (h = 1.74) => { const k = new Card(h, .8); return {k, draw: (o: Outfit, opts: Parameters<typeof bodyFront>[2]) => k.draw((p: Pen) => bodyFront(p, o, {mode: 'stand', ...opts}))}; };
 
@@ -335,10 +377,14 @@ const B: Record<number, (c: Ctx) => Upd> = {
           expr: f > jaw ? 'pained' : f > poison + 10 ? 'nervous' : i === 1 ? 'neutral' : 'smile_closed', look: f > poison ? .4 * (i - 1) : 0, costume: dress(apron('#cfc2a0'), sticks)});
         fm[i].forEach(fn => fn(t + i, [xs[i] + .1, top + .08, tz - .22], .7 * smooth((f - poison) / 15))); });
       c.dof = 3; glide(c, [[0, 1.85, 4.4], [0, 1.1, -.7]], [[.05, 1.45, 1.1], [0, 1.25, -.95]], Math.min(1, (f - SHOTS[8].a) / (jaw + 20 - SHOTS[8].a)), 42); }; },
-  // 10 their bones even glowed in the dark (lights out: a green chin glow)
-  10: c => { factory(c, true); const a = person(GIRL('#8c3b4a'), 1.62, {expr: 'dazed', seed: 40, costume: glowJaw}); a.mesh.position.set(0, 0, -1.0); c.scene.add(a.mesh);
-    const gl = new THREE.PointLight('#8aff7a', 2.5, 3, 1.6); gl.position.set(0, 1.25, -.8); c.scene.add(gl);
-    return (f, l, u) => { c.dof = 6; cam(c, [0, 1.35, .9], [0, 1.3, -1.0], 40 * (1 - .002 * l)); }; },
+  // 10 their bones even glowed in the dark: lights out, push in on her face, an X-ray scan reveals the skull, the jawbone glows green
+  10: c => { factory(c, true); const a = actor(1.62); a.k.mesh.position.set(0, 0, -1.0); c.scene.add(a.k.mesh);
+    const gl = new THREE.PointLight('#8aff7a', 0, 3, 1.6); gl.position.set(0, 1.3, -.7); c.scene.add(gl); const bones = T('L05', 15) - 4, glowT = T('L05', 17);
+    return (f, l, u) => { const t = l / FPS, scan = Math.min(1, Math.max(0, (f - bones) / 12)), glow = smooth((f - glowT + 3) / 8);
+      if (scan > 0) c.scene.background = new THREE.Color('#020812');
+      gl.intensity = 3 * glow * (.85 + .15 * Math.sin(t * 8));
+      a.draw(GIRL('#8c3b4a'), {seed: 40, expr: 'dazed', blink: false, costume: dress(apron('#cfc2a0'), xray(scan, glow, t))});
+      c.dof = 6; const k = smooth(Math.min(1, l / 55)); cam(c, [0, lerp(1.4, 1.42, k), lerp(.9, -.05, k)], [0, lerp(1.3, 1.4, k), -1.0], 40); }; },
   // 11 split the match in two: head and box striker drift apart (ECU, 4x props)
   11: c => { c.near = .01; const top = room(c); const m = match3d(.2); c.scene.add(m); const bx = matchbox(); bx.scale.setScalar(4); c.scene.add(bx);
     return (f, l, u) => { const k = smooth(u * 1.4); m.position.set(-.3 - .06 * k, top + .015, -.9); m.rotation.z = -Math.PI / 2; bx.position.set(.1 + .06 * k, top, -1.0); bx.rotation.y = -.35;
