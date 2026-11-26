@@ -418,11 +418,25 @@ const B: Record<number, (c: Ctx) => Upd> = {
       const hx = m.position.x + .2 * Math.cos(tilt);
       dust.forEach(fn => fn(t * 2, [hx, top + .01, -.8], ms > 0 && ms < 1 ? .9 : Math.max(0, .9 - (l - 30) / 10)));
       void half; void own; c.dof = 6; cam(c, [.02, top + .4, -.3], [0, top + .02, -.92], 42); }; },
-  // 13 they only light when you rub them together: struck on the box, flare (4x props)
-  13: c => { c.near = .01; const top = room(c); const bx = matchbox(); bx.scale.setScalar(4); bx.position.set(.02, top, -1.0); c.scene.add(bx); const m = match3d(.2); c.scene.add(m);
-    const fl = flame(c.scene, .18, 4); const lit = T('L07', 13);
-    return (f, l, u) => { const x = lerp(-.36, -.1, smooth((f - lit + 10) / 10)); m.position.set(x, top + .035, -.92); m.rotation.z = -Math.PI / 2 + .15;
-      fl.at([x + .21, top + .06, -.92], l / FPS, smooth((f - lit) / 3)); c.dof = 6; cam(c, [.05, top + .26, -.25], [.03, top + .04, -.97], 42); }; },
+  // 13 they only light when you rub them together: the match is held at ~30 deg with its head on the striker strip, flicked
+  //   fast along it; at the end of the stroke: flash, sparks, smoke puff, the flame flares and settles, the match lifts away (4x props)
+  13: c => { c.near = .01; const top = room(c); const bx = matchbox(); bx.scale.setScalar(4); bx.position.set(0, top, -1.04); c.scene.add(bx);
+    const m = match3d(.2); c.scene.add(m); const fl = flame(c.scene, .16, 4), puff = smoke(c.scene, 7, '#d8d4cc', .006), rub = T('L07', 13);
+    const sparks = Array.from({length: 10}, (_, i) => { const sp = new THREE.Mesh(new THREE.SphereGeometry(.003, 6, 4), new THREE.MeshBasicMaterial({color: '#fff1a0', toneMapped: false})); sp.layers.set(NOINK); c.scene.add(sp);
+      return {sp, v: [.25 + .5 * Math.abs(Math.sin(i * 3.1)), .3 + .4 * Math.abs(Math.cos(i * 1.7)), .25 * Math.sin(i * 2.3) + .15]}; });
+    const sz = -1.04 + .0712 + .012, up = new THREE.Vector3(0, 1, 0), dir = new THREE.Vector3(.35, -.45, -.82).normalize(), tail = new THREE.Vector3(), H = new THREE.Vector3();
+    const x0 = -.085, x1 = .085, s0 = rub - 5, s1 = rub + 1;                                      // the stroke: 6 frames (~0.2 s), left to right
+    return (f, l, u) => { const t = l / FPS;
+      const stroke = Math.min(1, Math.max(0, (f - s0) / (s1 - s0))), after = Math.max(0, f - s1);
+      const press = smooth((l) / 10);                                                         // brought in onto the strip, pressed
+      H.set(lerp(x0, x1, stroke * stroke) - .03 * smooth((after - 4) / 14), top + .034 + (1 - press) * .05 + .09 * smooth((after - 4) / 14), sz + (1 - press) * .06 + .12 * smooth((after - 4) / 14));
+      const d2 = dir.clone(); if (after > 4) d2.lerp(new THREE.Vector3(.3, .5, -.8).normalize(), smooth((after - 4) / 14)).normalize();   // tips head-up after lighting
+      tail.copy(H).addScaledVector(d2, -.2); m.position.copy(tail); m.quaternion.setFromUnitVectors(up, d2);
+      const ign = f >= s1 ? 1 : 0, e = after / FPS;
+      fl.at([H.x, H.y + .005, H.z], t, ign * (e < .12 ? 1.6 - 3 * e : .9 + .15 * Math.sin(t * 9) * Math.exp(-e * 2)));   // flare then settle
+      sparks.forEach(({sp, v}) => { sp.visible = ign > 0 && e < .45; if (!sp.visible) return; sp.position.set(H.x + v[0] * e, H.y + v[1] * e - 4.9 * e * e, H.z + v[2] * e); });
+      puff.forEach(fn => fn(t, [H.x - .03, H.y, H.z], ign * Math.max(0, 1 - e * 1.2)));
+      c.dof = 6; cam(c, [.0, top + .42, -.2], [0, top + .07, -.95], 42); }; },
   // 14 that is why it is called a safety match (gent, proud, lit match)
   14: c => { street(c); const a = person(GENT, 1.78, {expr: 'smile', seed: 21, wave: 1, costume: dress(cravat(), matchInHand(1, 1))}); a.mesh.position.set(0, 0, 0); c.scene.add(a.mesh);
     return (f, l, u) => { c.dof = 6; cam(c, [.2, 1.55, 2.6], [0, 1.4, 0], 40 * (1 - .002 * l)); }; },
