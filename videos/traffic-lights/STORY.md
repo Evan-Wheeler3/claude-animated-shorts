@@ -2,7 +2,7 @@
 story_id: traffic-lights
 title_working: Why Traffic Lights Are Red, Yellow And Green
 format: Fix-Fail Chain (SHORTS-STORYTELLING.md), look v2 kit, read-along captions, voice B + solo piano. Experiment: opening only (LEARNING-LOG.md)
-script_status: draft
+script_status: approved
 ---
 
 # Why traffic lights are red, yellow and green: fact sheet (Wikipedia pages read 2026-11-26; quotes verbatim unless marked)

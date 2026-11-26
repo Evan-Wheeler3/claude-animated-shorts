@@ -1,6 +1,6 @@
 # Drop zone: drag downloaded asset zips here
 
-1. Download a pack (links in `assets/PACKS.md`). Leave it as a .zip.
+1. Download a pack (links in `assets/PACKS.md`). Leave it as a .zip. Single models (e.g. a Poly Pizza .glb) can go in as-is.
 2. Drag the .zip into THIS folder (`assets/inbox/`).
 3. Double-click `tools/assets/send-inbox.command` (first time only: right-click → Open → Open, because macOS asks
    about scripts from the internet). Or in Terminal from the repo:  `bash tools/assets/send-inbox.command`

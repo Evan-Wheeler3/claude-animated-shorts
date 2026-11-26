@@ -1,12 +1,13 @@
 #!/bin/bash
-# Double-click on the Mac: unpack every zip in assets/inbox, keep only the model files, push them for Claude.
+# Double-click on the Mac: unpack every zip in assets/inbox (and take any loose .glb/.gltf/.fbx/.obj), keep only the model files, push them for Claude.
 # Prefers glTF/GLB; falls back to OBJ (+mtl + textures), then FBX. Zips are deleted after a successful push.
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 REPO=$PWD; IN=assets/inbox; OUT=assets/library/_incoming
 shopt -s nullglob nocaseglob
 zips=("$IN"/*.zip)
-if [ ${#zips[@]} -eq 0 ]; then echo "No .zip files in $IN. Drag the downloaded packs there first."; read -n1 -r -p "Press any key to close."; exit 0; fi
+loose=("$IN"/*.glb "$IN"/*.gltf "$IN"/*.fbx "$IN"/*.obj)   # single models (e.g. Poly Pizza downloads) need no zip
+if [ ${#zips[@]} -eq 0 ] && [ ${#loose[@]} -eq 0 ]; then echo "No .zip or model files in $IN. Drag the downloads there first."; read -n1 -r -p "Press any key to close."; exit 0; fi
 git pull --ff-only -q || { echo "git pull failed: open Terminal in $REPO and run 'git status'"; exit 1; }
 for z in "${zips[@]}"; do
   name=$(basename "$z" .zip | tr ' ' '_' | tr -cd '[:alnum:]_-')
@@ -21,6 +22,10 @@ for z in "${zips[@]}"; do
   echo "$name: $n files ($kind, ${mb} MB)"
   rm -rf "$tmp" 2>/dev/null || true
 done
+for f in "${loose[@]}"; do
+  name=$(basename "$f" | sed 's/\.[^.]*$//' | tr ' ' '_' | tr -cd '[:alnum:]_-')
+  dest="$OUT/single-$name"; rm -rf "$dest"; mkdir -p "$dest"; cp "$f" "$dest/"; echo "$name: single model"
+done
 # push one pack per commit: a single huge push is refused by GitHub (HTTP 400)
 git config http.postBuffer 524288000
 for d in "$OUT"/*/; do
@@ -30,5 +35,5 @@ for d in "$OUT"/*/; do
   ok=0; for try in 1 2 3; do git push -q && { ok=1; break; }; echo "push of $p failed (try $try), retrying..."; sleep 5; done
   [ $ok = 1 ] && echo "pushed $p" || { echo "Could not push $p. Zips kept in $IN; send Claude a screenshot."; read -n1 -r -p "Press any key to close."; exit 1; }
 done
-rm -f "${zips[@]}" && echo "All pushed. Tell Claude: assets sent."
+rm -f "${zips[@]}" "${loose[@]}" && echo "All pushed. Tell Claude: assets sent."
 read -n1 -r -p "Press any key to close."
