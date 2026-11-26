@@ -1,0 +1,91 @@
+{
+ "_": "Each picture starts LEAD frames before word `w` (0-based) of script line `line` in ../../voice/words.json.",
+ "lead": 2,
+ "tail": 0.6,
+ "pics": [
+  {
+   "pic": 1,
+   "line": "L01",
+   "w": 0,
+   "env": "gas"
+  },
+  {
+   "pic": 2,
+   "line": "L02",
+   "w": 0,
+   "env": "gas"
+  },
+  {
+   "pic": 3,
+   "line": "L03",
+   "w": 0,
+   "env": "gas"
+  },
+  {
+   "pic": 4,
+   "line": "L04",
+   "w": 0,
+   "env": "gas"
+  },
+  {
+   "pic": 5,
+   "line": "L04",
+   "w": 17,
+   "env": "gas"
+  },
+  {
+   "pic": 6,
+   "line": "L05",
+   "w": 0,
+   "env": "gas"
+  },
+  {
+   "pic": 7,
+   "line": "L05",
+   "w": 7,
+   "env": "old"
+  },
+  {
+   "pic": 8,
+   "line": "L06",
+   "w": 0,
+   "env": "old"
+  },
+  {
+   "pic": 9,
+   "line": "L07",
+   "w": 0,
+   "env": "old"
+  },
+  {
+   "pic": 10,
+   "line": "L08",
+   "w": 0,
+   "env": "old"
+  },
+  {
+   "pic": 11,
+   "line": "L09",
+   "w": 0,
+   "env": "old"
+  },
+  {
+   "pic": 12,
+   "line": "L10",
+   "w": 0,
+   "env": "old"
+  },
+  {
+   "pic": 13,
+   "line": "L11",
+   "w": 0,
+   "env": "today"
+  },
+  {
+   "pic": 14,
+   "line": "L12",
+   "w": 0,
+   "env": "today"
+  }
+ ]
+}
