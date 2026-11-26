@@ -2,7 +2,7 @@
 story_id: safety-matches
 title_working: Why Matches Only Light On The Box
 format: Fix-Fail Chain (SHORTS-STORYTELLING.md), look v2 kit, read-along captions, voice B + solo piano
-script_status: draft (awaiting script gate: owner listens)
+script_status: text approved 2026-11-26 (owner: 'otherwise all good'); awaiting listen
 ---
 
 # Why matches only light on the box: fact sheet (Wikipedia pages read 2026-11-26; quotes verbatim unless marked)

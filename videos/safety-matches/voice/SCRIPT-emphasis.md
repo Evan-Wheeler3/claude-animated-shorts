@@ -6,4 +6,4 @@ L04 So match makers switched to white phosphorus, which lit on *anything* you st
 L05 Worse, it was *poison*. The fumes destroyed the jawbones of the factory workers, and their bones even *glowed* in the dark.
 L06 So match makers split the match in *two*. The head got one set of chemicals, and the strip on the box got red phosphorus.
 L07 Neither half can catch fire on its own. They only light when you rub them *together*. That is why it is called a *safety* match.
-L08 So striking a match still works like the very first fire. You are rubbing two things together. You just have the *right* two!
+L08 So striking a match still works like the very first fire. You are rubbing two things together, with some *chemical* help!

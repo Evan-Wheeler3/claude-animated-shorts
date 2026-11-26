@@ -114,11 +114,11 @@ chord('Dm', S('L05'), vel=.16, dur=2.5, up=-12)
 # the split + safety match: brighter major, rising figure into "safety"
 broken(S('L06'), S('L08'), ['F', 'C', 'Bb', 'F'], vel=.30, pattern=(0, 2, 3, 2))
 for j, m in enumerate((72, 76, 79, 84)):
-    note(m, w('L07', 17) - .25 + j * .1, .24, 2.2, pan=.3)
-# ban + callback: warm motif, soft final chord on the last word
-broken(S('L08'), E('L09'), ['F', 'C', 'Dm', 'Bb'], vel=.26)
-motif(S('L09'), E('L09') - .4, WARM, vel=.22)
-chord('F', E('L09') - .05, vel=.30, dur=3.0)
+    note(m, w('L07', 23) - .25 + j * .1, .24, 2.2, pan=.3)
+# callback: warm motif, soft final chord on the last word
+broken(S('L08'), E('L08'), ['F', 'C', 'Dm', 'Bb'], vel=.26)
+motif(S('L08'), E('L08') - .4, WARM, vel=.22)
+chord('F', E('L08') - .05, vel=.30, dur=3.0)
 
 # ---------- mix ----------
 hall = make_ir(1.8, 5, pre=.02, hf=1.4)
