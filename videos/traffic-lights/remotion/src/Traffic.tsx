@@ -160,7 +160,7 @@ const blast = (scene: THREE.Scene) => {
 };
 /** bandaged head + stars circling it (head hook) */
 const hurt = (t: number, on: number): Costume => ({head: k => { if (on <= 0) return; const u = k.u;
-  k.p.band([[300 - 1.02 * k.Ha, k.hc - .35 * k.Hb], [300 + 1.02 * k.Ha, k.hc - .5 * k.Hb]], '#f4f1ea', 16 * u, 1.8 * u);
+  k.p.band([[300 - 1.0 * k.Ha, k.hc - .58 * k.Hb], [300 + 1.0 * k.Ha, k.hc - .7 * k.Hb]], '#f4f1ea', 15 * u, 1.8 * u);
   k.p.band([[300 + .55 * k.Ha, k.hc - .62 * k.Hb], [300 + .85 * k.Ha, k.hc - .2 * k.Hb]], '#f4f1ea', 10 * u, 1.6 * u);
   for (let i = 0; i < 4; i++) { const a = t * 4 + i * Math.PI / 2, x = 300 + 1.1 * k.Ha * Math.cos(a), y = k.crown - 14 * u + 14 * u * Math.sin(a);
     const st: P2[] = Array.from({length: 10}, (_, j) => { const b = -Math.PI / 2 + j * Math.PI / 5, r = (j % 2 ? 5 : 12) * u; return [x + r * Math.cos(b), y + r * Math.sin(b)]; });
@@ -294,12 +294,12 @@ const B: Record<number, (c: Ctx) => Upd> = {
       c.dof = 3; cam(c, [lerp(1.4, 1.0, push) + kick(f - boom, .12), lerp(2.6, 2.1, push), lerp(7.4, 5.9, push)], [lerp(.1, .85, push), lerp(2.6, .7, push), lerp(0, .45, push)], 40); }; },
   // 6 "So the city took the lights down": the scorched pole is chained up and topples over with a thud and dust on "down"
   6: c => { london(c); const sig = gasSignal(); sig.g.position.set(-.1, 0, 0); c.scene.add(sig.g); sig.lamp.visible = false; sig.armL.rotation.z = 1.25; sig.armR.rotation.z = -1.4;
-    const a = actor(1.75); a.k.mesh.position.set(1.4, 0, .9); c.scene.add(a.k.mesh); const dust = smoke(c.scene, 10, '#c8b89a', .14), down = T('L05', 6) - 2;
+    const a = actor(1.75); a.k.mesh.position.set(1.4, 0, .9); c.scene.add(a.k.mesh); const dust = smoke(c.scene, 10, '#c8b89a', .08), down = T('L05', 6) - 2;
     return (f, l, u) => { const t = l / FPS, k = smooth((f - (down - 16)) / 16), hit = f >= down;
-      sig.g.rotation.z = hit ? -Math.PI / 2 + .06 * Math.exp(-(f - down) / 3) * Math.abs(Math.sin((f - down) * 1.3)) : -Math.PI / 2 * k * k;
-      dust.forEach(fn => fn(t, [-2.2, .1, .2], hit ? Math.max(0, 1 - (f - down) / 30) : 0));
-      a.draw(OFFICER, {seed: 31, look: -.8, expr: hit ? 'smile_closed' : 'neutral', costume: dress(helmet(-.5), soot(t, .7), hurt(t, 1))});
-      c.dof = 2; cam(c, [.6 + kick(f - down, .1), 2.2, 7.6 - .5 * u], [-.8, 1.4, 0], 40); }; },
+      sig.g.rotation.x = hit ? Math.PI / 2 - .06 * Math.exp(-(f - down) / 3) * Math.abs(Math.sin((f - down) * 1.3)) : Math.PI / 2 * k * k;   // topples toward the camera
+      dust.forEach(fn => fn(t, [-.1, .05, 3.0], hit ? Math.max(0, 1 - (f - down) / 30) : 0));
+      a.draw(OFFICER, {seed: 31, look: -.8, expr: hit ? 'smile_closed' : 'neutral', costume: dress(frazzle(1), soot(t, .7), hurt(t, 1))});
+      c.dof = 2; cam(c, [1.2 + kick(f - down, .1), 3.4, 8.6 - .5 * u], [.1, 1.1, 1.2], 40); }; },
 };
 // shots not built yet: the 1868 crossing, wide
 const placeholder = (c: Ctx): Upd => { london(c); const sig = gasSignal(); sig.g.position.set(-.1, 0, 0); c.scene.add(sig.g);
