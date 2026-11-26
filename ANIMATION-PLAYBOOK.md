@@ -106,6 +106,12 @@ arms, a TUNA label on the "sealed tin". Make it funny only once it's clear.
 
 ## 6. Effects
 
+- **Fire and explosions use the CC0 Kenney effect sprites** (`assets/library/fx`, `kit/fx.ts`: `loadFx`, `explosion`, `fire`),
+  not drawn cartoon shapes (owner, 2026-11-26: the drawn flames and burst rays "look so stupid"). An explosion is ~16 fireball
+  sprites that swap shapes, grow, drift out and tint white -> orange -> soot, then hand over to rising black smoke; fire is three
+  tinted additive flame layers flickering over a glow. Keep sprites above the ground (a sprite dipping into geometry gets a hard
+  straight edge) and size big blasts with the frame in mind (k 1.7 already fills a wide shot).
+
 - **Translucent spheres are only smoke when small.** Near the lens, or blurred by depth of field, they become big grey or
   green discs that cover faces. Use `smoke(..., size ≤ .02)` in close-ups (the drift scales with size), and few, faint puffs.
   For smells, use 2D `stinkLines()` instead of 3D fumes.

@@ -13,7 +13,8 @@ import type {LensBlur} from '../../../../templates/bridge/lensblur';
 import {Card, faceCards} from './kit/cards';
 import {dress} from './kit/costume';
 import {CAPTION_BOTTOM, captionActive, captionCss, captionWord, lightRig, loadCaptionFont, makePost, place, refStyle} from './kit/world';
-import {flame, onCard, reach, SIT_H, smoke, toCard, type P} from './kit/acting';
+import {onCard, reach, SIT_H, smoke, toCard, type P} from './kit/acting';
+import {explosion, fire, loadFx, type Fx} from './kit/fx';
 import {FPS, SHOTS, TOTAL, kick, lerp, lerp3, shotAt, smooth} from './story';
 const SHOT_A = (pic: number) => SHOTS.find(s => s.pic === pic)!.a;
 import {tw} from './story';
@@ -155,18 +156,8 @@ const cloud = (scene: THREE.Scene, n: number, size: number, col = '#4a4440') => 
   return (P: number[], e: number) => { m.visible = e > 0; if (!m.visible) return; const g = 1 - Math.exp(-e * 2.2);
     m.position.set(P[0] + Math.cos(a) * r * size * 2.4 * g, P[1] + size * (.6 + 6 * g * (.5 + .5 * r)) + .8 * e, P[2] + Math.sin(a) * r * size * 1.2 * g);
     m.scale.setScalar(.4 + .9 * g); (m.material as THREE.MeshStandardMaterial).opacity = .7 * Math.min(1, e * 6) * Math.max(0, 1 - (e - .4) / .9); }; });   // rises and clears in ~1.3 s
-const blast = (scene: THREE.Scene, k = 1, cols?: string[]) => {
-  const fire = flame(scene, 1.6 * k, 0), smk = cloud(scene, 8 + 3 * Math.round(k), .2 * k), bits = debris(scene, Math.round(12 * k), cols, k > 1.5 ? 2.5 : 1);
-  const flash = new THREE.PointLight('#ffd08a', 0, 14, 1.5); scene.add(flash);
-  const burst = new Card(3.2 * k, .6, 500, 500, false); burst.mesh.userData.figure = false; scene.add(burst.mesh);
-  const ball = new THREE.Mesh(new THREE.SphereGeometry(1, 24, 16), new THREE.MeshBasicMaterial({color: '#ffb347', transparent: true, toneMapped: false, depthWrite: false}));
-  ball.layers.set(NOINK); scene.add(ball);
-  return (P: number[], e: number, t: number) => { const on = e >= 0;
-    fire.at([P[0], P[1] - .5 * k, P[2] + .3 * k], t, on ? (e < .12 ? 1.7 : Math.max(0, 1.4 - 2.2 * (e - .12))) : 0);
-    flash.position.set(P[0], P[1], P[2] + 1); flash.intensity = on ? 80 * k * k * Math.exp(-e * 9 / Math.sqrt(k)) : 0; flash.distance = 14 * k;
-    bits.forEach(fn => fn(P, on ? e : -1)); smk.forEach(fn => fn([P[0], P[1] - .3 * k, P[2]], on ? e - .1 : -1));
-    burst.mesh.visible = on && e < .3; if (burst.mesh.visible) { burst.mesh.position.set(P[0], P[1] - 1.6 * k, P[2] + .5 * k); burst.draw(p => fxBurst(p, e / .3, '#fff3b0', 12, 40, 200)); }
-    ball.visible = on && e < .25; if (ball.visible) { ball.position.set(P[0], P[1], P[2] + .2); ball.scale.setScalar(k * (.2 + 1.8 * smooth(e / .25))); (ball.material as THREE.MeshBasicMaterial).opacity = .9 * (1 - e / .25) ** 2; } };
+const blast = (c: Ctx, k = 1, cols?: string[]) => { const boom = explosion(c.scene, c.fx, k), bits = debris(c.scene, Math.round(12 * k), cols, k > 1.5 ? 2.5 : 1);
+  return (P: number[], e: number, t: number) => { void t; boom(P, e); bits.forEach(fn => fn(P, e >= 0 ? e : -1)); };
 };
 /** bandaged head + stars circling it (head hook) */
 const hurt = (t: number, on: number): Costume => ({head: k => { if (on <= 0) return; const u = k.u;
@@ -269,7 +260,7 @@ const city = (c: Ctx, modern = false) => { const rig = lightRig(c.renderer, c.sc
 const modernCar = (L: Lib, id: string) => { const g = new THREE.Group(); g.add(place(L, `kenney-car-kit/${id}`, 0, 0, 0, Math.PI, 1.7)); return g; };
 
 // ---------- sets ----------
-type Ctx = {L: Lib; scene: THREE.Scene; camera: THREE.PerspectiveCamera; env: THREE.DataTexture; renderer: THREE.WebGLRenderer; look: number[]; dof: number; near?: number};
+type Ctx = {L: Lib; fx: Fx; scene: THREE.Scene; camera: THREE.PerspectiveCamera; env: THREE.DataTexture; renderer: THREE.WebGLRenderer; look: number[]; dof: number; near?: number};
 const cam = (c: Ctx, p: number[], t: number[], fov = 40) => { c.look = t; c.camera.fov = fov; c.camera.near = c.near ?? .05; c.camera.updateProjectionMatrix(); c.camera.position.set(p[0], p[1], p[2]); c.camera.lookAt(t[0], t[1], t[2]); };
 /** 1868 London crossing at dusk: brick road, terrace walls behind, warm low sun */
 const london = (c: Ctx, back = -3.2) => { const rig = lightRig(c.renderer, c.scene, c.env); rig.sun.intensity = 3.2; rig.sun.color.set('#ffcf9a'); const s = c.scene;
@@ -288,7 +279,7 @@ const B: Record<number, (c: Ctx) => Upd> = {
   //   to his sooty, frazzled face; the helmet drops back onto his head, crooked, on "face".
   1: c => { london(c); const sig = gasSignal(); sig.g.position.set(-.1, 0, 0); c.scene.add(sig.g);
     const a = actor(1.75); a.k.mesh.position.set(.5, 0, .35); c.scene.add(a.k.mesh); a.draw(OFFICER, {seed: 31});
-    const sputter = flame(c.scene, .14, 1.5), hiss = smoke(c.scene, 5, '#cfe3c0', .015), boomFx = blast(c.scene);
+    const sputter = fire(c.scene, c.fx, .14, 1.5), hiss = smoke(c.scene, 5, '#cfe3c0', .015), boomFx = blast(c);
     const hc = new Card(.42, .8, 300, 300, false); hc.mesh.userData.figure = false; c.scene.add(hc.mesh);   // the flying helmet
     hc.draw(p => drawHelmet(p, 150, 230, 95, .95, -.6, 0, 4.75));
     const boom = T('L01', 4) - 2, land = T('L01', 10), lampW = [-.1, 3.9, .1];
@@ -319,7 +310,7 @@ const B: Record<number, (c: Ctx) => Upd> = {
   //   other at the crossing on "crashing": both horses rear, a crate flies off, they recoil.
   2: c => { london(c, -16); const A = team(c.L, '#7a4a2a'), Bt = team(c.L, '#d8d0c4'); A.g.rotation.y = Math.PI / 2; c.scene.add(A.g, Bt.g);   // T-bone at the crossing
     const crate = place(c.L, 'fantasy-props-megakit/crate-wooden', 0, 0, 0, 0, .55); c.scene.add(crate);
-    const boomFx = blast(c.scene, 2.6, ['#6b3a24', '#8a5a34', '#c9a24a', '#2a1a12']), crash = T('L02', 8) - 2;                                    // owner note: a HUGE fiery explosion when they collide
+    const boomFx = blast(c, 1.7, ['#6b3a24', '#8a5a34', '#c9a24a', '#2a1a12']), crash = T('L02', 8) - 2;                                    // owner note: a HUGE fiery explosion when they collide
     return (f, l, u) => { const t = l / FPS, e = (f - crash) / FPS, before = f < crash, back = before ? 0 : 1.1 * smooth(e * 3);
       A.g.position.set(before ? -1.55 - 1.6 * (crash - f) / FPS : -1.55 - back, 0, 0);            // from the left, across the frame
       Bt.g.position.set(0, 0, before ? -1.55 - 2.6 * (crash - f) / FPS : -1.55 - back);           // down the street toward us
@@ -360,7 +351,7 @@ const B: Record<number, (c: Ctx) => Upd> = {
   //   the officer heaving the lever back and forth on "by hand".
   4: c => { london(c); const sig = gasSignal(); sig.g.position.set(-.1, 0, 0); c.scene.add(sig.g); sig.setArms(1);
     const a = actor(1.75); a.k.mesh.position.set(.5, 0, .35); c.scene.add(a.k.mesh); a.draw(OFFICER, {seed: 31});
-    const fl = flame(c.scene, .16, 2), gas = T('L04', 6) - 4, off = T('L04', 9), hand = T('L04', 13);
+    const fl = fire(c.scene, c.fx, .16, 2), gas = T('L04', 6) - 4, off = T('L04', 9), hand = T('L04', 13);
     const pulses = Array.from({length: 7}, () => { const m = new THREE.Mesh(new THREE.SphereGeometry(.05, 10, 8), new THREE.MeshBasicMaterial({color: '#ffe680', toneMapped: false})); m.layers.set(NOINK); c.scene.add(m); return m; });
     return (f, l, u) => { const t = l / FPS; sig.red.emissiveIntensity = 1.6 + .4 * Math.sin(t * 13);
       fl.at([-.1 - .075, 3.98, .32], t, .8 + .1 * Math.sin(t * 20));
@@ -379,7 +370,7 @@ const B: Record<number, (c: Ctx) => Upd> = {
   5: c => { london(c); const sig = gasSignal(); sig.g.position.set(-.1, 0, 0); c.scene.add(sig.g); sig.setArms(1);
     const a = actor(1.75); a.k.mesh.position.set(.5, 0, .35); c.scene.add(a.k.mesh); a.draw(OFFICER, {seed: 31});
     const lay = actor(1.75); lay.k.mesh.userData.fixed = true; c.scene.add(lay.k.mesh); lay.draw(OFFICER, {seed: 31, mode: 'fall'});
-    const leak = smoke(c.scene, 12, '#b9d98a', .035), boomFx = blast(c.scene), leaked = T('L04', 21) - 4, boom = T('L04', 24) - 2, badly = T('L04', 25), lampW = [-.1, 3.9, .1];
+    const leak = smoke(c.scene, 12, '#b9d98a', .035), boomFx = blast(c), leaked = T('L04', 21) - 4, boom = T('L04', 24) - 2, badly = T('L04', 25), lampW = [-.1, 3.9, .1];
     return (f, l, u) => { const t = l / FPS, e = (f - boom) / FPS, after = f >= boom;
       sig.red.emissiveIntensity = after ? 0 : 1.6; sig.lamp.visible = !after;
       if (after) { const d = smooth(e * 5); sig.armL.rotation.z = 1.25 * d; sig.armR.rotation.z = -1.4 * d; }
@@ -468,7 +459,7 @@ const B: Record<number, (c: Ctx) => Upd> = {
   // 11 "The light switched so suddenly that drivers could not stop in time": green snaps to red on "suddenly"; the car brakes
   //   hard, skids (tyre smoke, nose dips) past the line, and the car behind rear-ends it on "stop".
   11: c => { city(c); const b = lightBox(2), p = lightPole(b); p.position.set(-4.4, 0, 2.6); c.scene.add(p);
-    const A = oldCar('#1d1d22'), Bc = oldCar('#2a4a3a', '#4a3a2a'); c.scene.add(A.g, Bc.g); const tyre = smoke(c.scene, 10, '#d8d4cc', .1), bump = blast(c.scene, .45, ['#1d1d22', '#c9a24a', '#2a4a3a']);
+    const A = oldCar('#1d1d22'), Bc = oldCar('#2a4a3a', '#4a3a2a'); c.scene.add(A.g, Bc.g); const tyre = smoke(c.scene, 10, '#d8d4cc', .1), bump = blast(c, .45, ['#1d1d22', '#c9a24a', '#2a4a3a']);
     const snap = T('L09', 4) - 2, hit = T('L09', 9) - 2, v = 9, brake = snap + 3, stopZ = 2.6;
     return (f, l, u) => { const t = l / FPS;
       const zb = stopZ - v * v / (2 * 9) , e = (f - brake) / FPS; let za: number;
@@ -537,13 +528,13 @@ export const TrafficShort: React.FC = () => {
   const canvas = useRef<HTMLCanvasElement>(null);
   const frame = useCurrentFrame();
   const {width, height} = useVideoConfig();
-  const [st, setSt] = useState<{lib: Lib; env: THREE.DataTexture} | null>(null);
+  const [st, setSt] = useState<{lib: Lib; env: THREE.DataTexture; fx: Fx} | null>(null);
   const [handle] = useState(() => delayRender('assets'));
   const [fh] = useState(() => delayRender('font'));
   useLayoutEffect(() => { document.fonts.load('120px LilitaOneLocal').then(() => continueRender(fh)).catch(() => continueRender(fh)); }, [fh]);
   useLayoutEffect(() => { const ld = new GLTFLoader();
-    Promise.all([Promise.all(IDS.map(id => ld.loadAsync(staticFile(`${id}.glb`)).then(g => [id, g.scene] as const))), new RGBELoader().loadAsync(staticFile('meadow_2.hdr'))])
-      .then(([a, env]) => { setSt({lib: Object.fromEntries(a), env}); continueRender(handle); }).catch(e => { console.error(e); continueRender(handle); }); }, [handle]);
+    Promise.all([Promise.all(IDS.map(id => ld.loadAsync(staticFile(`${id}.glb`)).then(g => [id, g.scene] as const))), new RGBELoader().loadAsync(staticFile('meadow_2.hdr')), loadFx(staticFile)])
+      .then(([a, env, fx]) => { setSt({lib: Object.fromEntries(a), env, fx}); continueRender(handle); }).catch(e => { console.error(e); continueRender(handle); }); }, [handle]);
   const S = useRef<{renderer?: THREE.WebGLRenderer; pic?: number; scene?: THREE.Scene; camera?: THREE.PerspectiveCamera; composer?: EffectComposer; lens?: LensBlur; upd?: Upd; ctx?: Ctx}>({});
   useLayoutEffect(() => () => { S.current.composer?.dispose(); S.current.renderer?.dispose(); }, []);
   useLayoutEffect(() => {
@@ -553,7 +544,7 @@ export const TrafficShort: React.FC = () => {
     if (R.pic !== shot.pic) {
       R.composer?.dispose();
       const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(40, width / height, .05, 3000); camera.layers.enable(NOINK);
-      const ctx: Ctx = {L: st.lib, scene, camera, env: st.env, renderer: R.renderer, look: [0, 0, 0], dof: 0};
+      const ctx: Ctx = {L: st.lib, fx: st.fx, scene, camera, env: st.env, renderer: R.renderer, look: [0, 0, 0], dof: 0};
       R.upd = (B[shot.pic] ?? placeholder)(ctx);
       const {composer, lens} = makePost(R.renderer, scene, camera, width, height);
       Object.assign(R, {pic: shot.pic, scene, camera, composer, lens, ctx});
