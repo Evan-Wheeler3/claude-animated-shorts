@@ -385,10 +385,23 @@ const B: Record<number, (c: Ctx) => Upd> = {
       gl.intensity = 3 * glow * (.85 + .15 * Math.sin(t * 8));
       a.draw(GIRL('#8c3b4a'), {seed: 40, expr: 'dazed', blink: false, costume: dress(apron('#cfc2a0'), xray(scan, glow, t))});
       c.dof = 6; const k = smooth(Math.min(1, l / 55)); cam(c, [0, lerp(1.4, 1.42, k), lerp(.9, -.05, k)], [0, lerp(1.3, 1.4, k), -1.0], 40); }; },
-  // 11 split the match in two: head and box striker drift apart (ECU, 4x props)
-  11: c => { c.near = .01; const top = room(c); const m = match3d(.2); c.scene.add(m); const bx = matchbox(); bx.scale.setScalar(4); c.scene.add(bx);
-    return (f, l, u) => { const k = smooth(u * 1.4); m.position.set(-.3 - .06 * k, top + .015, -.9); m.rotation.z = -Math.PI / 2; bx.position.set(.1 + .06 * k, top, -1.0); bx.rotation.y = -.35;
-      c.dof = 6; cam(c, [0, top + .32, -.2], [0, top + .04, -.95], 42); }; },
+  // 11 split the match in two: the old head's red-phosphorus cap lifts off and paints the striker strip on the box;
+  //   then the head pulses on "the head got one set of chemicals", the strip pulses on "the strip on the box got red phosphorus" (4x props, nothing drifts)
+  11: c => { c.near = .01; const top = room(c); const m = match3d(.2); m.rotation.z = -Math.PI / 2; m.position.set(-.13, top + .015, -.8); c.scene.add(m);
+    const bx = matchbox(); bx.scale.setScalar(4); bx.position.set(0, top, -1.04); bx.rotation.y = 0; c.scene.add(bx);
+    const head = m.children[1] as THREE.Mesh, hm = head.material as THREE.MeshStandardMaterial; hm.emissive = new THREE.Color('#ffffff');
+    const strip = bx.children[2] as THREE.Mesh, smat = strip.material as THREE.MeshStandardMaterial, plain = new THREE.Color('#e8d6a0'), red = new THREE.Color('#5a2a1e'); smat.emissive = new THREE.Color('#ff3a20');
+    const cap = new THREE.Mesh(new THREE.SphereGeometry(.011, 14, 10), std('#5a2a1e', .8)); cap.castShadow = true; c.scene.add(cap);
+    const hp = new THREE.Vector3(), sp = new THREE.Vector3(), split = T('L06', 3), hT = T('L06', 9), sT = T('L06', 17), ring = new THREE.Mesh(new THREE.RingGeometry(.035, .045, 40), new THREE.MeshBasicMaterial({color: '#fff6c0', transparent: true, toneMapped: false}));
+    ring.layers.set(NOINK); c.scene.add(ring);
+    return (f, l, u) => { c.scene.updateMatrixWorld(true); head.getWorldPosition(hp); strip.getWorldPosition(sp);
+      const k = Math.min(1, Math.max(0, (f - split - 6) / 22)), arc = smooth(k);                                   // cap flies head -> strip
+      cap.visible = k < 1; cap.position.set(lerp(hp.x + .018, sp.x, arc), lerp(hp.y, sp.y, arc) + .09 * Math.sin(Math.PI * arc), lerp(hp.z, sp.z + .004, arc));
+      cap.scale.set(1 + 2 * arc, 1 - .5 * arc, 1); smat.color.copy(plain).lerp(red, smooth((f - split - 22) / 8));
+      const pulse = (t0: number, t1: number) => f < t0 || f > t1 ? 0 : (.5 + .5 * Math.sin((f - t0) * .35)) * smooth((f - t0) / 4) * smooth((t1 - f) / 6);
+      hm.emissiveIntensity = .9 * pulse(hT, sT - 6); smat.emissiveIntensity = 1.2 * pulse(sT, sT + 60);
+      const pr = pulse(hT, sT - 6); ring.visible = pr > .01; ring.position.copy(hp); ring.quaternion.copy(c.camera.quaternion); ring.scale.setScalar(1 + .3 * pr); (ring.material as THREE.MeshBasicMaterial).opacity = pr;
+      c.dof = 6; cam(c, [.02, top + .4, -.3 + .04 * u], [0, top + .02, -.92], 42); }; },
   // 12 neither half can catch fire on its own: struck on a stone, nothing
   12: c => { c.near = .01; const top = room(c); const st = place(c.L, 'pirate-kit/environment-rock-2', .12, top, -1.0, 0, .2); c.scene.add(st);
     const m = match3d(.2); c.scene.add(m);
