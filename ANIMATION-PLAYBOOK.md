@@ -85,6 +85,12 @@ arms, a TUNA label on the "sealed tin". Make it funny only once it's clear.
   and a dark striker strip. Cheap to do, and it's what the owner noticed.
 - **Point at things with light, not labels:** an emissive pulse plus `pointRing()` on the cue word ("the head got…",
   "the strip on the box got…"). Captions already carry the words.
+- **Wheels:** a wheel's axle runs along x: turn the tyre torus into the y-z plane (`rotation.y = π/2`), spokes rotated about x,
+  and spin the wheel group about x (`rotation.x = dist / r`). Do NOT also give the group a z quarter-turn: that lays the wheel flat.
+- **Moving vehicles near a character:** check lane offsets against half-widths (car ~.85 m, platform radius, card position) so
+  a "near miss" stays inches away instead of passing through; two vehicles meeting head-on must stop before their models overlap.
+- **Library pieces can render untextured** (downtown city blocks, the 4-way intersection): check a still before building a
+  shot on them; a road (asphalt, kerbs, lane lines, zebras) and window-grid buildings in code are quick and look consistent.
 - Library first (assets/library catalog). Build in code only what the library lacks: matches, boxes, cans, sandpaper,
   fireboards.
 
