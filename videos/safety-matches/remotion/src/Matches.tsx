@@ -50,28 +50,43 @@ const acidBottle = (hand: number): Costume => ({hand: (k: Kit) => { const [x, y]
 /** hand drill (bow-less fire drill): seated, a spindle spun between flat palms into a fireboard between the feet.
  *  t = seconds; the palms rub opposite ways ~3.5x/s and slide down the spindle, then hop back to the top. */
 const SIT_H = (h: number) => h * (1.2 + 1.1) / (1 + 1.1 + 1.4);   // a seated adult card is this tall (crown to soles)
-const drill = (t: number, weak = 0) => {
-  const rub = Math.sin(t * 22 * (1 - .55 * weak)) * (1 - .6 * weak), slide = (t * .55) % 1;
-  const armPose = (side: -1 | 1, S: [number, number], g: {u: number; HH: number; chin: number}) => { const u = g.u;
-    const hy = g.chin + (.3 + .35 * slide) * g.HH + side * rub * 5 * u, hx = 300 + side * (9 * u) + side * rub * 3 * u;
-    const ex = S[0] + side * (26 + 8 * weak) * u, ey = (S[1] + hy) / 2 + (8 + 30 * weak) * u;     // elbows out to the sides
-    return weak > 0 ? [S, [S[0] + side * 14 * u, S[1] + .2 * g.HH + 10 * weak * u * Math.sin(t * 9 + side)], [ex, ey + 6 * weak * u * Math.sin(t * 7)], [hx, hy]] as [number, number][]
-      : [S, [ex, ey], [hx, hy]] as [number, number][]; };
+type P = [number, number];
+/** a noodle arm: a sagging curve from S to H through C, wobbling like jelly (amp in design units) */
+const noodle = (S: P, C: P, H: P, amp: number, t: number): P[] => Array.from({length: 13}, (_, i) => { const s = i / 12, a = (1 - s) * (1 - s), b = 2 * s * (1 - s), c = s * s;
+  const x = a * S[0] + b * C[0] + c * H[0], y = a * S[1] + b * C[1] + c * H[1], dx = H[0] - S[0], dy = H[1] - S[1], L = Math.hypot(dx, dy) || 1, w = amp * Math.sin(Math.PI * s) * Math.sin(t * 9 - s * 5);
+  return [x - dy / L * w, y + dx / L * w]; });
+/** hand drill (bow-less fire drill): seated, a spindle spun between flat palms into a fireboard pinned by the feet.
+ *  t = seconds; weak 0..1 slows the rubbing and makes the arms wobble; drop 0..1 the arms give out: hands slide off,
+ *  arms flop to the ground like noodles, the spindle tips over. */
+const drill = (t: number, weak = 0, drop = 0) => {
+  const rub = Math.sin(t * 22 * (1 - .6 * weak)) * (1 - .6 * weak) * (1 - drop), slide = drop > 0 ? 1 : (t * .55) % 1;
+  const armPose = (side: -1 | 1, S: P, g: {u: number; HH: number; chin: number}): P[] => { const u = g.u;
+    const hy0 = g.chin + (.3 + .35 * slide) * g.HH + side * rub * 5 * u, hx0 = 300 + side * (9 * u) + side * rub * 3 * u;
+    const hx = lerp(hx0, 300 + side * 82 * u, drop), hy = lerp(hy0, 975 - 12 * u, drop);                              // hands flop to the ground beside him
+    const C: P = [lerp(S[0] + side * (30 + 10 * weak) * u, S[0] + side * 70 * u, drop), lerp((S[1] + hy0) / 2 + (8 + 25 * weak) * u, g.chin + .75 * g.HH, drop)];
+    const jelly = drop > 0 ? 16 * u * Math.exp(-2.5 * drop) * Math.sin(drop * 40) + 7 * u * drop : 7 * u * weak;
+    return noodle(S, C, [hx, hy], jelly, t + side); };
   const costume: Costume = {hand: (k: Kit) => { const u = k.u, p = k.p, rot = p.rot; const [a, b] = k.hands;
-    const top = p.P((a[0] + b[0]) / 2, Math.min(a[1], b[1]) - 40 * u); p.rot = null;
-    const tip: [number, number] = [300, 975 - 13 * u];
+    const grip = p.P((a[0] + b[0]) / 2, Math.min(a[1], b[1]) - 40 * u); p.rot = null;
+    const tip: P = [300, 975 - 13 * u], len = Math.hypot(grip[0] - tip[0], grip[1] - tip[1]), fall = drop > 0 ? 1.25 * smooth(drop * 1.6) : 0;
+    const top: P = drop > 0 ? [tip[0] + Math.sin(fall) * 150 * u, tip[1] - Math.cos(fall) * 150 * u] : [grip[0], tip[1] - len];
+    for (const sd of [-1, 1]) { const hip: P = [300 + sd * 16 * u, k.torsoBot - .12 * k.HH], knee: P = [300 + sd * 62 * u, k.torsoBot - .42 * k.HH],   // knees up, feet pin the board
+      ft: P = [300 + sd * 38 * u, 975 - 20 * u]; p.stroke([hip, knee, ft], 5.8 * u, INK);
+      p.stroke([[ft[0] - sd * 4 * u, ft[1]], [ft[0] + sd * 10 * u, ft[1] - 2 * u]], 10.5 * u, INK); p.stroke([[ft[0] - sd * 4 * u, ft[1]], [ft[0] + sd * 10 * u, ft[1] - 2 * u]], 7.5 * u, '#3a2a20'); }
     p.poly([[300 - 46 * u, 975 - 16 * u], [300 + 46 * u, 975 - 16 * u], [300 + 50 * u, 975 - 3 * u], [300 - 50 * u, 975 - 3 * u]], '#9a6a3c', 2 * u);   // fireboard
     p.ell(300, 975 - 15 * u, 7 * u, 2.6 * u, '#3a2414', 0);                                                                                       // burnt notch
-    if (weak === 0) p.ell(300, 975 - 15 * u, 4 * u * (.6 + .4 * Math.sin(t * 13)), 1.8 * u, `rgba(255,140,40,${Math.min(1, t / 3)})`, 0);           // ember glow builds
-    for (const sd of [-1, 1]) { const hip: [number, number] = [300 + sd * 16 * u, k.torsoBot - .12 * k.HH], knee: [number, number] = [300 + sd * 62 * u, k.torsoBot - .42 * k.HH],   // knees up, feet pin the board
-      ft: [number, number] = [300 + sd * 38 * u, 975 - 20 * u]; p.stroke([hip, knee, ft], 5.8 * u, INK);
-      p.stroke([[ft[0] - sd * 4 * u, ft[1]], [ft[0] + sd * 10 * u, ft[1] - 2 * u]], 10.5 * u, INK); p.stroke([[ft[0] - sd * 4 * u, ft[1]], [ft[0] + sd * 10 * u, ft[1] - 2 * u]], 7.5 * u, '#3a2a20'); }
-    p.band([tip, [top[0], top[1]]], '#c49a62', 5 * u, 1.6 * u, 'round');                                                                         // spindle
-    for (let i = 0; i < 4; i++) { const sx = Math.sin(t * 22 + i * 1.6) * 2 * u, f = .15 + .22 * i;                                             // spin marks
-      const q: [number, number] = [tip[0] + (top[0] - tip[0]) * f, tip[1] + (top[1] - tip[1]) * f]; p.stroke([[q[0] + sx - 1.2 * u, q[1]], [q[0] + sx + 1.2 * u, q[1] - 2 * u]], 1.4 * u, '#7a5430'); }
+    const glow = Math.min(1, t / 3) * (1 - smooth(drop * 2));
+    if (glow > 0) p.ell(300, 975 - 15 * u, 4 * u * (.6 + .4 * Math.sin(t * 13)), 1.8 * u, `rgba(255,140,40,${glow})`, 0);                         // ember glow builds, dies when he stops
+    p.band([tip, top], '#c49a62', 5 * u, 1.6 * u, 'round');                                                                                       // spindle
+    if (drop === 0) for (let i = 0; i < 4; i++) { const sx = Math.sin(t * 22 * (1 - .6 * weak) + i * 1.6) * 2 * u, f = .15 + .22 * i;          // spin marks
+      const q: P = [tip[0] + (top[0] - tip[0]) * f, tip[1] + (top[1] - tip[1]) * f]; p.stroke([[q[0] + sx - 1.2 * u, q[1]], [q[0] + sx + 1.2 * u, q[1] - 2 * u]], 1.4 * u, '#7a5430'); }
     p.rot = rot; }};
-  return {armPose, costume, armFront: true, mode: 'sit' as const, tilt: 3.5 * rub * (1 - .5 * weak) + 6 * weak, headTilt: -2 * rub};
+  return {armPose, costume, armFront: true, mode: 'sit' as const, tilt: 3.5 * rub + 7 * drop, headTilt: -2 * rub + 12 * drop};
 };
+/** sweat drops flicking off the head + a pant puff (head hook) */
+const sweat = (t: number, on: number): Costume['head'] => (k: Kit) => { if (on <= 0) return; const u = k.u;
+  for (const [sx, ph] of [[-1, 0], [1, .45], [1, .8]] as const) { const q = (t * .9 + ph) % 1, x = 300 + sx * (k.Ha + 6 * u + 14 * u * q), y = k.hc - .2 * k.Hb + 30 * u * q * q;
+    k.p.poly([[x, y - 9 * u], [x + 5 * u, y + 2 * u], [x, y + 7 * u], [x - 5 * u, y + 2 * u]], `rgba(140,200,255,${on * (1 - q)})`, 1.6 * u); } };
 /** a 3D puff of smoke rising from a point: grey, grows with `amount` (0..1) */
 const smoke = (scene: THREE.Scene, n = 8, col = '#d8d4cc', size = .018) => Array.from({length: n}, (_, i) => { const m = new THREE.Mesh(new THREE.SphereGeometry(size * (1 + .4 * (i % 3)), 12, 8),
   new THREE.MeshBasicMaterial({color: col, transparent: true, opacity: 0, depthWrite: false})); m.layers.set(NOINK); scene.add(m);
@@ -164,12 +179,15 @@ const B: Record<number, (c: Ctx) => Upd> = {
       a.draw(CAVE, {...d, expr: t > 1.2 ? 'strain' : 'stern', seed: 5, look: 0, costume: d.costume});
       const tip = onCard(a.k, 300, 975 - 20); sm.forEach(fn => fn(t, tip, Math.min(1, .25 + t / 3)));
       c.dof = 5; glide(c, [[.7, 1.35, 3.4], [0, .5, .6]], [[.45, 1.15, 2.7], [0, .48, .6]], u, 40); }; },
-  // 2 it takes so long your arms give out: the drilling slows, noodle arms, exhausted
+  // 2 it takes so long your arms give out: drilling slows, arms wobble, then flop off the spindle like noodles
   2: c => { meadow(c, 1.3).visible = false; const a = actor(SIT_H(1.7)); a.k.mesh.position.set(0, 0, .6); c.scene.add(a.k.mesh); const sm = smoke(c.scene, 6);
-    return (f, l, u) => { const t = l / FPS + 3, d = drill(t, smooth(u * 1.6));
-      a.draw(CAVE, {...d, expr: u > .35 ? 'exhausted' : 'strain', seed: 5, look: 0, costume: d.costume});
-      sm.forEach(fn => fn(t, onCard(a.k, 300, 975 - 20), .5 * (1 - smooth(u * 1.5))));
-      c.dof = 7; cam(c, [.2, 1.0, 2.5], [0, .58, .6], 40 * (1 - .0015 * l)); }; },
+    const give = T('L01', 20);   // "...arms GIVE out"
+    return (f, l, u) => { const t = l / FPS + 3, drop = Math.max(0, (f - give + 6) / 26), weak = Math.min(1, (f - SHOTS[1].a) / Math.max(1, give - 6 - SHOTS[1].a));
+      const d = drill(t, weak, Math.min(1, drop));
+      a.draw(CAVE, {...d, expr: drop > 0 ? 'exhausted' : weak > .5 ? 'pained' : 'strain', seed: 5, look: 0, blink: drop > .6 ? .5 : false,
+        costume: {...d.costume, head: sweat(t, Math.min(1, weak * 1.5))}});
+      sm.forEach(fn => fn(t, onCard(a.k, 300, 975 - 20), .5 * (1 - Math.min(1, drop * 2))));
+      c.dof = 7; cam(c, [.2, 1.0, 2.9], [0, .55, .6], 40 * (1 - .0008 * l)); }; },
   // 3 chemical match dipped in acid bursts into flame (ECU on the bench; close-up props are drawn 4x real size)
   3: c => { c.near = .01; const top = room(c); const bt = bottle(); bt.scale.setScalar(3.2); bt.position.set(.08, top, -1.0); c.scene.add(bt);
     const m = match3d(.2); c.scene.add(m); const fl = flame(c.scene, .16, 3); const burst = T('L02', 6);
