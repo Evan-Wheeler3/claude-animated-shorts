@@ -73,9 +73,14 @@ export const grassField = (n: number, x0: number, x1: number, z0: number, z1: nu
   mesh.count = k; mesh.receiveShadow = true; return mesh;
 };
 
-/** caption style (read-along, 1-3 words): Lilita One served from assets/library/fonts, white with a thick dark stroke */
+/** caption style (read-along, 1-3 words): Lilita One served from assets/library/fonts, white with a dark stroke, kept small
+ *  so it never hides the action (owner note 2026-11-26). Render each word as a <span>; the word being spoken gets
+ *  captionActive (yellow, slightly larger). Place it ~22 % above the bottom (clear of the Shorts title/description UI). */
 export const CAPTION_FONT = 'LilitaOneLocal';
-export const captionCss = (words: string) => ({fontFamily: CAPTION_FONT, fontSize: words.length > 10 ? 96 : 124, color: '#ffffff',
-  WebkitTextStroke: '15px #111', paintOrder: 'stroke fill', textShadow: '0 8px 0 rgba(0,0,0,.35)', textAlign: 'center' as const, maxWidth: '86%'});
+export const captionCss = (words: string) => ({fontFamily: CAPTION_FONT, fontSize: words.length > 14 ? 64 : 74, color: '#ffffff',
+  WebkitTextStroke: '9px #111', paintOrder: 'stroke fill', textShadow: '0 5px 0 rgba(0,0,0,.35)', textAlign: 'center' as const, maxWidth: '80%', lineHeight: 1.1});
+export const captionWord = {display: 'inline-block', margin: '0 .16em'} as const;   // words as separate spans: spaces come from the margin
+export const captionActive = {color: '#ffd23a', transform: 'scale(1.12)'} as const;
+export const CAPTION_BOTTOM = '22%';
 export const loadCaptionFont = (url: string) => { if (typeof document === 'undefined' || document.getElementById('lilita')) return;
   const st = document.createElement('style'); st.id = 'lilita'; st.textContent = `@font-face{font-family:'${CAPTION_FONT}';src:url('${url}') format('woff2');}`; document.head.appendChild(st); };

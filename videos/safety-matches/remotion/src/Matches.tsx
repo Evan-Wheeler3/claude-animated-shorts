@@ -12,7 +12,7 @@ import {bodyFront, INK, shade, type Costume, type Kit, type Outfit, type Pen} fr
 import type {LensBlur} from '../../../../templates/bridge/lensblur';
 import {Card, faceCards} from './kit/cards';
 import {apron, cravat, dress} from './kit/costume';
-import {candle, captionCss, grassField, lightRig, loadCaptionFont, makePost, place, refStyle} from './kit/world';
+import {candle, CAPTION_BOTTOM, captionActive, captionWord, captionCss, grassField, lightRig, loadCaptionFont, makePost, place, refStyle} from './kit/world';
 import {FPS, SHOTS, TOTAL, lerp, lerp3, shotAt, smooth, tw} from './story';
 import words from '../../voice/words.json';
 
@@ -489,10 +489,12 @@ const B: Record<number, (c: Ctx) => Upd> = {
       c.dof = 4; const pull = smooth((f - toss) / 14); cam(c, [lerp(.1, .2, pull), lerp(1.25, 1.3, pull), lerp(3.0, 3.7, pull)], [lerp(-.25, -.15, pull), lerp(.95, .7, pull), lerp(.45, .55, pull)], 42); }; },
 };
 
-const captionAt = (t: number) => { // groups of <= 3 words within a line, shown while spoken
-  const idx = W.findIndex(w => t >= w.start - .05 && t < w.end + .25); if (idx < 0) return '';
+const captionAt = (t: number) => { // groups of <= 3 words within a line, shown while spoken; active = the word being said
+  const idx = W.findIndex(w => t >= w.start - .05 && t < w.end + .25); if (idx < 0) return {words: [] as string[], active: -1};
   const first = W.findIndex(w => w.line === W[idx].line), g = first + Math.floor((idx - first) / 3) * 3;   // groups never cross a line (keeps the pause clean)
-  return W.slice(g, g + 3).filter(w => w.line === W[idx].line).map(w => w.word.replace(/[.,!?]/g, '')).join(' ');
+  const grp = W.slice(g, g + 3).filter(w => w.line === W[idx].line);
+  const active = grp.findIndex(w => t >= w.start - .03 && t < w.end + .08);   // -1 between words: nothing highlighted
+  return {words: grp.map(w => w.word.replace(/[.,!?]/g, '')), active};
 };
 
 export const MatchesShort: React.FC = () => {
@@ -526,10 +528,11 @@ export const MatchesShort: React.FC = () => {
     R.camera!.updateMatrixWorld(); R.scene!.updateMatrixWorld(true); faceCards(R.scene!, R.camera!);
     R.composer!.render();
   }, [frame, width, height, st]);
-  const cap = captionAt(frame / FPS);
+  const cap = captionAt(frame / FPS), capText = cap.words.join(' ');
   return <AbsoluteFill>
     <canvas ref={canvas} style={{width: '100%', height: '100%', display: 'block'}} />
-    <AbsoluteFill style={{justifyContent: 'flex-end', alignItems: 'center', paddingBottom: '28%'}}><div style={captionCss(cap)}>{cap}</div></AbsoluteFill>
+    <AbsoluteFill style={{justifyContent: 'flex-end', alignItems: 'center', paddingBottom: CAPTION_BOTTOM}}><div style={captionCss(capText)}>
+      {cap.words.map((w, i) => <span key={i} style={i === cap.active ? {...captionWord, ...captionActive} : captionWord}>{w}</span>)}</div></AbsoluteFill>
   </AbsoluteFill>;
 };
 export {SHOTS, candle, shade, INK};

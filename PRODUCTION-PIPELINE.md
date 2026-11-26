@@ -36,7 +36,7 @@ the owner decides. Owner decisions on unverified claims are recorded in the fact
 Claude writes and commits to `videos/<story-id>/`:
 - `STORY.md` (sourced fact table), `SCRIPT.md`, `voice/SCRIPT-emphasis.md` (same lines, `*stressed*` words)
 - narration in the chosen voice + a first music bed: `voice/voice-and-music-preview.mp3`
-  (`tools/voice/gen_voice.py`, `align.py`, `emph_gain.py`, `check_lines.py` must pass, `templates/holdup/music.py`)
+  (`tools/voice/gen_voice.py`, `align.py`, `emph_gain.py`, `declick.py` (voice B: silences the TTS "ts" burst at each take start), `check_lines.py` must pass, `templates/holdup/music.py`)
 - `SHOTLIST.md`: every line attached to its pictures, ~2 per sentence
 - `ASSET-BRIEF.md` + `CODEX-PROMPT.md` (moving parts, sizes, rest poses: see the template)
 
@@ -86,7 +86,7 @@ Numbers from `references/reports/editing.md`:
   approved light rig (low side sun, low HDRI ambient), AO + bloom + ACES, no ink on the world. Reference: `videos/look-test/previews/stills-v4-*`.
 - **Characters** are our 2D toon cards (`toon.ts`) in the reference style: `refStyle()` = plain white faces, black stick
   limbs, bold deadpan faces; hats, wigs and clothes from `costume.ts` (fitted to the body). No character cast shadows.
-- **Read-along captions ON** (owner 2026-11-25): 1-3 words, Lilita One, white with a thick dark stroke (`captionCss`).
+- **Read-along captions ON** (owner 2026-11-25/26): 1-3 words of the current line, Lilita One, white with a dark stroke, SMALL (74 px of 1920) at 22 % above the bottom so they never hide the action; the word being spoken turns yellow (`captionCss`, `captionWord`, `captionActive`, `CAPTION_BOTTOM`). Groups never cross a line so planned pauses stay clean.
 - English, one steady narrator: **voice B** (Qwen3-TTS clone of the Phil narrator), solo piano bed ~20 LU under the voice, -14 LUFS.
 
 ## Branches
