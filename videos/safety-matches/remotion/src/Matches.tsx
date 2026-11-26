@@ -51,6 +51,7 @@ const acidBottle = (hand: number): Costume => ({hand: (k: Kit) => { const [x, y]
  *  t = seconds; the palms rub opposite ways ~3.5x/s and slide down the spindle, then hop back to the top. */
 const SIT_H = (h: number) => h * (1.2 + 1.1) / (1 + 1.1 + 1.4);   // a seated adult card is this tall (crown to soles)
 type P = [number, number];
+const lerp2 = (a: P, b: P, k: number): P => [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k];
 /** a noodle arm: a sagging curve from S to H through C, wobbling like jelly (amp in design units) */
 const noodle = (S: P, C: P, H: P, amp: number, t: number): P[] => Array.from({length: 13}, (_, i) => { const s = i / 12, a = (1 - s) * (1 - s), b = 2 * s * (1 - s), c = s * s;
   const x = a * S[0] + b * C[0] + c * H[0], y = a * S[1] + b * C[1] + c * H[1], dx = H[0] - S[0], dy = H[1] - S[1], L = Math.hypot(dx, dy) || 1, w = amp * Math.sin(Math.PI * s) * Math.sin(t * 9 - s * 5);
@@ -224,12 +225,12 @@ const street = (c: Ctx) => { lightRig(c.renderer, c.scene, c.env); const s = c.s
     s.add(place(c.L, 'medieval-village-megakit/wall-plaster-straight', x, 3.12, -2.6)); }
   const inside = new THREE.Mesh(new THREE.BoxGeometry(14, 7, 3), new THREE.MeshStandardMaterial({color: '#2a2020', side: THREE.BackSide})); inside.position.set(0, 3.5, -4.2); s.add(inside);
   s.add(place(c.L, 'fantasy-props-megakit/crate-wooden', -2.6, 0, -1.6, .3)); s.add(place(c.L, 'fantasy-props-megakit/barrel', 2.8, 0, -1.7)); };
-const factory = (c: Ctx, night: boolean) => { lightRig(c.renderer, c.scene, c.env, {night: true}); const s = c.scene; s.background = new THREE.Color(night ? '#05040a' : '#1c1820');
+const factory = (c: Ctx, night: boolean, tables = [-1.4, 1.4]) => { lightRig(c.renderer, c.scene, c.env, {night: true}); const s = c.scene; s.background = new THREE.Color(night ? '#05040a' : '#1c1820');
   for (let x = -6; x <= 6; x += 2) for (let z = -2; z <= 4; z += 2) s.add(place(c.L, 'medieval-village-megakit/floor-wooddark', x, 0, z));
   for (let i = 0; i < 7; i++) s.add(place(c.L, 'medieval-village-megakit/wall-unevenbrick-straight', -6 + i * 2, 0, -2.4));
-  [-1.4, 1.4].forEach(x => s.add(place(c.L, 'fantasy-props-megakit/table-large', x, 0, -.4, Math.PI / 2)));
+  const tops = tables.map(x => { const t = place(c.L, 'fantasy-props-megakit/table-large', x, 0, -.4, Math.PI / 2); s.add(t); return new THREE.Box3().setFromObject(t).max.y; });
   if (!night) { [[-1.4, 2.2, .2], [1.4, 2.2, .2]].forEach(p => { const l = new THREE.PointLight('#ffe0a8', 10, 8, 1.6); l.position.set(p[0], p[1], p[2]); l.castShadow = true; s.add(l); }); }
-  s.add(place(c.L, 'fantasy-props-megakit/crate-wooden', -3.6, 0, -1.4)); s.add(place(c.L, 'fantasy-props-megakit/crate-wooden', 3.6, 0, -1.4, .4)); };
+  s.add(place(c.L, 'fantasy-props-megakit/crate-wooden', -3.6, 0, -1.4)); s.add(place(c.L, 'fantasy-props-megakit/crate-wooden', 3.6, 0, -1.4, .4)); return tops[0] ?? .8; };
 
 // ---------- the 16 pictures ----------
 type Upd = (f: number, l: number, u: number) => void;
@@ -306,10 +307,34 @@ const B: Record<number, (c: Ctx) => Upd> = {
       fizz.at(hp, l / FPS, fzOn); sm.forEach(fn => fn(l / FPS, hp, f > fz ? (shut ? Math.max(0, 1 - (f - slam) / 15) : .8) : 0));
       const shake = shut ? .006 * Math.exp(-(f - slam) / 4) * Math.sin((f - slam) * 2.5) : 0;
       c.dof = 3; cam(c, [.18 + shake, top + .78, -.42], [0, top + .1, -1.04], 40); }; },
-  // 9 worse, it was poison: the match factory, green fumes over the tables
-  9: c => { factory(c, false); const girls = ['#8c3b4a', '#3f6fb5', '#5d7a3a'].map((col, i) => { const a = person(GIRL(col), 1.62, {expr: i === 1 ? 'nervous' : 'neutral', seed: 40 + i, look: i - 1, costume: apron('#cfc2a0')}); a.mesh.position.set(-1.4 + i * 1.4, 0, -1.2); c.scene.add(a.mesh); return a; });
-    void girls; const fm = fumes(c.scene, 16);
-    return (f, l, u) => { fm.forEach(fn => fn(l / FPS, [0, .8, -.6])); c.dof = 3; glide(c, [[0, 1.8, 4.2], [0, 1.2, -.6]], [[0, 1.7, 3.6], [0, 1.25, -.6]], u, 44); }; },
+  // 9 worse, it was poison: the match girls dip splints in the phosphorus paste and box them; on "poison" green fumes rise
+  //   from the pots, and on "destroyed the jawbones" they wince and clutch their jaws; the camera pushes in on the middle girl
+  9: c => { const xs = [-.8, 0, .8], top = factory(c, false, xs), gz = -.95, tz = -.4;
+    xs.forEach(x => { const g = new THREE.Group(); const pot = new THREE.Mesh(new THREE.CylinderGeometry(.11, .09, .09, 24, 1, true), new THREE.MeshStandardMaterial({color: '#3a3532', roughness: .6, side: THREE.DoubleSide})); pot.position.y = .045;
+      const paste = new THREE.Mesh(new THREE.CircleGeometry(.1, 24), std('#d7e8a0', .5)); paste.rotation.x = -Math.PI / 2; paste.position.y = .07;
+      const bot = new THREE.Mesh(new THREE.CircleGeometry(.09, 24), std('#3a3532')); bot.rotation.x = -Math.PI / 2; bot.position.y = .001; g.add(pot, paste, bot);
+      for (let i = 0; i < 4; i++) { const bx = matchbox(); bx.scale.setScalar(2.2); bx.position.set(-.3 + (i % 2) * .12, Math.floor(i / 2) * .036, .05); g.add(bx); }
+      const bundle = new THREE.Mesh(new THREE.CylinderGeometry(.035, .035, .2, 12), std('#e8c48a')); bundle.rotation.z = Math.PI / 2; bundle.position.set(.28, .035, .02); g.add(bundle);
+      g.position.set(x + .1, top, tz - .22); g.traverse(o => { const m = o as THREE.Mesh; if (m.isMesh) m.castShadow = m.receiveShadow = true; }); c.scene.add(g); });
+    const cols = ['#8c3b4a', '#3f6fb5', '#5d7a3a'];
+    const girls = xs.map((x, i) => { const a = actor(1.62); a.k.mesh.position.set(x, 0, gz); c.scene.add(a.k.mesh); a.draw(GIRL(cols[i]), {seed: 40 + i, costume: apron('#cfc2a0')}); return a; });
+    const fm = xs.map(() => smoke(c.scene, 6, '#8af07a', .016)); const poison = T('L05', 3), jaw = T('L05', 6);
+    // world point (in front of the girl, over the table) -> her card's design units
+    const toCard = (a: ReturnType<typeof actor>, wx: number, wy: number): P => [((wx - a.k.mesh.position.x) / a.k.mesh.scale.x + .5) * 600, (.975 - wy / a.k.mesh.scale.y) * 1000];
+    return (f, l, u) => { const t = l / FPS, hurt = smooth((f - jaw) / 8);
+      girls.forEach((a, i) => { const ph = t * (1.6 + .2 * i) + i * 1.3, dip = Math.max(0, Math.sin(ph * Math.PI * 2)) ** 2;      // dip down into the pot, lift, repeat
+        const work = 1 - hurt, cough = i !== 1 && f > jaw ? .5 + .5 * Math.sin(t * 14 + i) : 0;
+        const dipHand = toCard(a, xs[i] + .1, top + .2 - .14 * dip), boxHand = toCard(a, xs[i] - .2 + .06 * Math.sin(ph * 3), top + .12);
+        const armPose = (side: -1 | 1, S: P, g: {u: number; HH: number; chin: number; tcx: number}): P[] => { const uu = g.u;
+          const jawP: P = [g.tcx + side * 57 * uu, g.chin - 22 * uu], H = lerp2(side > 0 ? dipHand : boxHand, jawP, hurt * (side > 0 ? 1 : .9));
+          return [S, [S[0] + side * (22 + 24 * hurt) * uu, (S[1] + H[1]) / 2 + (10 + 20 * hurt) * uu], H]; };
+        const sticks: Costume = {hand: k => { if (work < .3) return; const [hx, hy] = k.hands[1] ?? k.hands[0], uu = k.u;          // bundle of splints, heads dipped
+          for (let j = -2; j <= 2; j++) { const x2 = hx + j * 3 * uu; k.p.band([[x2, hy - 6 * uu], [x2 + j * 1.5 * uu, hy + 34 * uu]], '#e8c48a', 2.4 * uu, .8 * uu, 'round'); k.p.dot(x2 + j * 1.5 * uu, hy + 35 * uu, 3 * uu, '#e6eccf'); }
+          k.p.dot(hx, hy, 5.5 * k.u); }};
+        a.draw(GIRL(cols[i]), {seed: 40 + i, armPose, armFront: true, tilt: 4 * dip * work + 4 * cough, headTilt: -5 * dip * work - 6 * hurt,
+          expr: f > jaw ? 'pained' : f > poison + 10 ? 'nervous' : i === 1 ? 'neutral' : 'smile_closed', look: f > poison ? .4 * (i - 1) : 0, costume: dress(apron('#cfc2a0'), sticks)});
+        fm[i].forEach(fn => fn(t + i, [xs[i] + .1, top + .08, tz - .22], .7 * smooth((f - poison) / 15))); });
+      c.dof = 3; glide(c, [[0, 1.85, 4.4], [0, 1.1, -.7]], [[.05, 1.45, 1.1], [0, 1.25, -.95]], Math.min(1, (f - SHOTS[8].a) / (jaw + 20 - SHOTS[8].a)), 42); }; },
   // 10 their bones even glowed in the dark (lights out: a green chin glow)
   10: c => { factory(c, true); const a = person(GIRL('#8c3b4a'), 1.62, {expr: 'dazed', seed: 40, costume: glowJaw}); a.mesh.position.set(0, 0, -1.0); c.scene.add(a.mesh);
     const gl = new THREE.PointLight('#8aff7a', 2.5, 3, 1.6); gl.position.set(0, 1.25, -.8); c.scene.add(gl);
