@@ -146,6 +146,8 @@ arms, a TUNA label on the "sealed tin". Make it funny only once it's clear.
 - **Small:** 74 px of 1920, 22 % above the bottom (`captionCss`, `CAPTION_BOTTOM`). 124 px hid the animation.
 - **Read-along:** each word is a `<span>` (`captionWord`, spacing by margin, not spaces). The word being spoken gets
   `captionActive` (yellow, ×1.12). Between words nothing is highlighted.
+- **Scale captions with the render width** (`transform: scale(width / 1080)` on the caption box): the px sizes are designed
+  for 1080 wide, and run_mac renders the final at 1440 (captions 25 % too small) and the proof at 540 (twice too big).
 - **Groups of up to 3 words never cross a line,** so a planned pause shows no caption and doesn't spoil the punchline.
 
 ## 9. Pre-show checklist (per shot)

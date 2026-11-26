@@ -558,8 +558,8 @@ export const TrafficShort: React.FC = () => {
   const cap = captionAt(frame / FPS), capText = cap.words.join(' ');
   return <AbsoluteFill>
     <canvas ref={canvas} style={{width: '100%', height: '100%', display: 'block'}} />
-    <AbsoluteFill style={{justifyContent: 'flex-end', alignItems: 'center', paddingBottom: CAPTION_BOTTOM}}><div style={captionCss(capText)}>
-      {cap.words.map((w, i) => <span key={i} style={i === cap.active ? {...captionWord, ...captionActive} : captionWord}>{w}</span>)}</div></AbsoluteFill>
+    <AbsoluteFill style={{justifyContent: 'flex-end', alignItems: 'center', paddingBottom: CAPTION_BOTTOM}}><div style={{transform: `scale(${width / 1080})`, transformOrigin: '50% 100%', display: 'flex', justifyContent: 'center', width: '100%'}}><div style={captionCss(capText)}>
+      {cap.words.map((w, i) => <span key={i} style={i === cap.active ? {...captionWord, ...captionActive} : captionWord}>{w}</span>)}</div></div></AbsoluteFill>
   </AbsoluteFill>;
 };
 export {lerp3, INK};
