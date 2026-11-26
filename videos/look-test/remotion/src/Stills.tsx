@@ -13,6 +13,8 @@ import {NOINK} from '../../../../templates/bridge/ink';
 import {LensBlur} from '../../../../templates/bridge/lensblur';
 import {bodyFront, INK, type Outfit, type Pen} from '../../../../templates/bridge/toon';
 import {Card, faceCards} from './kit/cards';
+import {apron as apronC, belt, chain, coinBag, cravat as cravatC, dress, foam as foamC, motorCap, periwig, razor as razorC, rough, scarf as scarfC, tricorn} from './costume';
+import type {Costume} from '../../../../templates/bridge/toon';
 import {skyDome} from './kit/look';
 
 export const STILL_FRAMES = 4;
@@ -82,13 +84,24 @@ const scarf = (g: CanvasRenderingContext2D) => { g.strokeStyle = INK; g.lineWidt
   g.beginPath(); g.moveTo(222, 425); g.quadraticCurveTo(300, 455, 378, 425); g.lineTo(380, 455); g.quadraticCurveTo(300, 485, 220, 455); g.closePath(); g.fill(); g.stroke();
   g.beginPath(); g.moveTo(350, 450); g.quadraticCurveTo(420, 480, 470, 440); g.lineTo(480, 470); g.quadraticCurveTo(420, 515, 352, 480); g.closePath(); g.fill(); g.stroke(); };
 
-const CLIPPER: Outfit = {jacket: '#7a5a36', pants: '#4a3a2a', boots: '#2a1d16', hat: 'hair', hair: '#3a2a1e', skin: '#ffffff', limbs: INK, face: 'ref'};
-const NEWTON: Outfit = {jacket: '#1f2433', pants: '#1f2433', boots: '#141018', hat: 'hair', hair: '#ece7dc', buttons: '#e8c45a', skin: '#ffffff', limbs: INK, face: 'ref'};
+const CLIPPER: Outfit = {jacket: '#7a5a36', pants: '#4a3a2a', boots: '#2a1d16', hat: null, skin: '#ffffff', limbs: INK, face: 'ref'};
+const NEWTON: Outfit = {jacket: '#1f2433', pants: '#1f2433', boots: '#141018', hat: null, buttons: '#e8c45a', skin: '#ffffff', limbs: INK, face: 'ref'};
 const SHOPPER: Outfit = {jacket: '#3f6fb5', pants: '#3b3f52', boots: '#4a3426', hat: 'bonnet', dress: '#d9a441', skin: '#ffffff', limbs: INK, face: 'ref'};
-const MOTORIST: Outfit = {jacket: '#c9b48a', pants: '#5a4a3a', boots: '#2a1d16', hat: 'hair', hair: '#5a3b2a', moustache: '#5a3b2a', buttons: '#5a3820', skin: '#ffffff', limbs: INK, face: 'ref'};
+const MOTORIST: Outfit = {jacket: '#c9b48a', pants: '#5a4a3a', boots: '#2a1d16', hat: null, moustache: '#5a3b2a', buttons: '#5a3820', skin: '#ffffff', limbs: INK, face: 'ref'};
 type Ex = {back?: (g: CanvasRenderingContext2D) => void; over?: (g: CanvasRenderingContext2D) => void};
 const person = (o: Outfit, h: number, opts: Parameters<typeof bodyFront>[2], ex: Ex = {}) =>
   new Card(h, .8).draw((p: Pen, g) => { ex.back?.(g); bodyFront(p, o, {mode: 'stand', ...opts}); ex.over?.(g); });
+const CLIPPER_DRESS = (extra: Costume[] = []) => dress(rough(), tricorn('#2f2622'), apronC(), belt(), ...extra);
+const NEWTON_DRESS = dress(periwig(), cravatC(), chain());
+/** invisible copy of a character card, turned to face the key light, that casts the character's real silhouette shadow */
+const shadowFrom = (card: Card, from: THREE.Vector3) => {
+  const mat = card.mesh.material as THREE.MeshBasicMaterial;
+  const caster = new THREE.Mesh(card.mesh.geometry, new THREE.MeshBasicMaterial({map: mat.map, alphaTest: .5, colorWrite: false, depthWrite: false}));
+  caster.customDepthMaterial = new THREE.MeshDepthMaterial({depthPacking: THREE.RGBADepthPacking, map: mat.map, alphaTest: .5});
+  caster.castShadow = true; caster.scale.copy(card.mesh.scale); caster.position.copy(card.mesh.position);
+  caster.rotation.y = Math.atan2(from.x - caster.position.x, from.z - caster.position.z); caster.userData.caster = true;
+  card.mesh.parent?.add(caster); return caster;
+};
 
 // ---------- world helpers ----------
 type L = Record<string, THREE.Group>;
@@ -114,7 +127,7 @@ const grassField = (n: number, x0: number, x1: number, z0: number, z1: number, a
   mesh.count = k; mesh.receiveShadow = true; return mesh;
 };
 
-type Ctx = {scene: THREE.Scene; camera: THREE.PerspectiveCamera; focus: THREE.Vector3; dof: number; caption: string; dim?: boolean};
+type Ctx = {scene: THREE.Scene; camera: THREE.PerspectiveCamera; focus: THREE.Vector3; dof: number; caption: string; dim?: boolean; keyLight?: THREE.Vector3};
 /** a straight razor held in the raised right hand (bodyFront wave = 1 puts the hand at ~(471, 313) for an adult) */
 const razor = (g: CanvasRenderingContext2D) => { g.save(); g.translate(471, 313); g.rotate(-.55); g.lineJoin = 'round';
   g.fillStyle = shadeFill(g, 0, -6, 0, 8, '#9a6a3a', '#5a3820'); g.strokeStyle = INK; g.lineWidth = 7; g.beginPath(); g.roundRect(-10, -6, 78, 14, 6); g.fill(); g.stroke();
@@ -126,7 +139,7 @@ const room = (s: THREE.Scene, lib: L, wallA: string, wallB: string, floor: strin
   for (let i = 0; i < 6; i++) { const x = -5 + i * 2; s.add(place(lib, i % 3 === 1 ? wallB : wallA, x, 0, -2.6)); s.add(place(lib, wallA, x, 3.12, -2.6)); }
   const inside = new THREE.Mesh(new THREE.BoxGeometry(14, 7, 3), new THREE.MeshStandardMaterial({color: '#2a2020', side: THREE.BackSide})); inside.position.set(0, 3.5, -4.2); s.add(inside);
 };
-const candleGlow = (s: THREE.Scene, x: number, y: number, z: number, i = 6) => { const l = new THREE.PointLight('#ffb866', i, 7, 1.6); l.position.set(x, y, z); l.castShadow = true; s.add(l); };
+const candleGlow = (s: THREE.Scene, x: number, y: number, z: number, i = 6) => { const l = new THREE.PointLight('#ffb866', i, 7, 1.6); l.position.set(x, y, z); l.castShadow = true; l.shadow.mapSize.set(2048, 2048); l.shadow.bias = -.002; l.shadow.radius = 6; s.add(l); return l.position; };
 
 const BUILD: Record<number, (c: Ctx, lib: L) => void> = {
   0: (c, lib) => { const s = c.scene;
@@ -153,9 +166,9 @@ const BUILD: Record<number, (c: Ctx, lib: L) => void> = {
     s.add(place(lib, 'stylized-nature-megakit/commontree-3', -7.5, 0, -1.5, 0, 1.1));
     s.add(place(lib, 'stylized-nature-megakit/bush-common-flowers', -5.2, 0, -2.8)); s.add(place(lib, 'stylized-nature-megakit/flower-3-group', 4.6, 0, -2.9));
     // cast
-    const cl = person(CLIPPER, 1.72, {expr: 'neutral', seed: 7, look: -.5}, {over: g => { stubble(g); goldTooth(g); apron(g); flatCap('#4f5a3a')(g); }});
+    const cl = person(CLIPPER, 1.72, {expr: 'neutral', seed: 7, look: -.5, costume: CLIPPER_DRESS([coinBag(0)])});
     cl.mesh.position.set(-.1, 0, -1.25); s.add(cl.mesh);
-    const nw = person(NEWTON, 1.74, {expr: 'stern', seed: 12, look: -1}, {back: wigBack, over: g => { cravat(g); wigTop(g); }});
+    const nw = person(NEWTON, 1.74, {expr: 'stern', seed: 12, look: -1, costume: NEWTON_DRESS});
     nw.mesh.position.set(1.15, 0, 2.6); s.add(nw.mesh);
     const sh = person(SHOPPER, 1.62, {expr: 'nervous', seed: 31, look: .6}); sh.mesh.position.set(-1.25, 0, 1.6); s.add(sh.mesh);
     c.camera.position.set(.5, 1.6, 6.4); c.camera.lookAt(.2, 1.5, 0); c.focus = new THREE.Vector3(-.1, 1.5, -1.25); c.dof = 4; c.caption = 'shave'; },
@@ -181,7 +194,7 @@ const BUILD: Record<number, (c: Ctx, lib: L) => void> = {
     for (let i = 0; i < 12; i++) { const sp = new THREE.Mesh(new THREE.BoxGeometry(.36, .03, .03), new THREE.MeshStandardMaterial({color: '#8a5a32'})); sp.rotation.z = Math.PI * i / 12; tyre.add(sp); }
     const hub = new THREE.Mesh(new THREE.CylinderGeometry(.05, .05, .1, 20), new THREE.MeshStandardMaterial({color: '#3a2a20'})); hub.rotation.x = Math.PI / 2; tyre.add(hub);
     tyre.position.set(-1.1, R, .9); tyre.rotation.set(0, .5, .12); shadowAll(tyre); s.add(tyre);
-    const mo = person(MOTORIST, 1.74, {expr: 'neutral', seed: 18, look: -.7, wave: 1}, {over: g => { scarf(g); flatCap('#6b5a3a')(g); goggles(g); }});
+    const mo = person(MOTORIST, 1.74, {expr: 'neutral', seed: 18, look: -.7, wave: 1, costume: dress(scarfC(), belt('#4a3220', '#c9a24a'), motorCap())});
     mo.mesh.position.set(-.1, 0, 1.4); s.add(mo.mesh);
     c.camera.position.set(.4, 1.4, 6.4); c.camera.lookAt(-.3, 1.15, 0); c.focus = new THREE.Vector3(-.1, 1.2, 1.4); c.dof = 5; c.caption = 'white!'; },
   // Newton questions a nervous witness by candlelight (medium two-shot, characters fill the frame)
@@ -192,8 +205,8 @@ const BUILD: Record<number, (c: Ctx, lib: L) => void> = {
     const top = new THREE.Box3().setFromObject(s.children[s.children.length - 1]).max.y;
     s.add(place(lib, 'fantasy-props-megakit/candlestick', .15, top, .1)); s.add(place(lib, 'fantasy-props-megakit/book-stack-1', -.45, top, -.1)); s.add(place(lib, 'fantasy-props-megakit/scroll-1', .45, top, .25, .6));
     s.add(place(lib, 'fantasy-props-megakit/chair-1', 1.3, 0, .3, -Math.PI / 2));
-    candleGlow(s, .15, top + .45, .1, 9);
-    const nw = person(NEWTON, 1.74, {expr: 'stern', seed: 12, look: 1}, {back: wigBack, over: g => { cravat(g); wigTop(g); }}); nw.mesh.position.set(-.62, 0, -.75); s.add(nw.mesh);
+    c.keyLight = candleGlow(s, .15, top + .45, .1, 14).clone();
+    const nw = person(NEWTON, 1.74, {expr: 'stern', seed: 12, look: 1, costume: NEWTON_DRESS}); nw.mesh.position.set(-.62, 0, -.75); s.add(nw.mesh);
     const wt = person(SHOPPER, 1.62, {expr: 'nervous', seed: 31, look: -1}); wt.mesh.position.set(.68, 0, -.7); s.add(wt.mesh);
     c.camera.position.set(0, 1.75, 3.9); c.camera.lookAt(0, 1.35, -.6); c.focus = new THREE.Vector3(0, 1.4, -.7); c.dof = 6; c.caption = 'himself'; },
   // the Clipper "shaving" a coin: medium close-up, foam on his nose, razor raised, coins on the counter
@@ -203,7 +216,7 @@ const BUILD: Record<number, (c: Ctx, lib: L) => void> = {
     const top = 1.0;
     s.add(place(lib, 'fantasy-props-megakit/coin-pile', -.45, top, .3, 0, 1.6)); s.add(place(lib, 'fantasy-props-megakit/coin-pile-2', .5, top, .35, .4, 1.6));
     s.add(place(lib, 'fantasy-props-megakit/coin', .2, top, .55, .3, 2)); s.add(place(lib, 'fantasy-props-megakit/candlestick', .9, top, .2));
-    const cl = person(CLIPPER, 1.72, {expr: 'neutral', seed: 7, look: 0, wave: 1}, {over: g => { stubble(g); apron(g); flatCap('#4f5a3a')(g); foam(g, HX + 52, HY + 14, 18); razor(g); }});
+    const cl = person(CLIPPER, 1.72, {expr: 'neutral', seed: 7, look: 0, wave: 1, costume: CLIPPER_DRESS([foamC(), razorC(1)])});
     cl.mesh.position.set(0, 0, -.45); s.add(cl.mesh);
     c.camera.position.set(.15, 1.6, 2.7); c.camera.lookAt(0, 1.35, 0); c.focus = new THREE.Vector3(0, 1.4, -.45); c.dof = 7; c.caption = 'not with shaving cream'; },
 };
@@ -228,13 +241,16 @@ export const Stills: React.FC = () => {
     renderer.setSize(width, height, false); renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(42, width / height, .05, 3000); camera.layers.enable(NOINK);
     st.env.mapping = THREE.EquirectangularReflectionMapping;
-    const pm = new THREE.PMREMGenerator(renderer); scene.environment = pm.fromEquirectangular(st.env).texture; scene.environmentIntensity = .85;
-    skyDome(scene, 'day'); scene.fog = new THREE.Fog('#b9d3e8', 40, 220);
-    const sun = new THREE.DirectionalLight('#fff0d6', 3.0); sun.position.set(-10, 16, 9); sun.castShadow = true; sun.shadow.mapSize.set(4096, 4096);
-    Object.assign(sun.shadow.camera, {left: -14, right: 14, top: 14, bottom: -14, near: 1, far: 60}); sun.shadow.bias = -.0004; sun.shadow.normalBias = .02; scene.add(sun);
+    const pm = new THREE.PMREMGenerator(renderer); scene.environment = pm.fromEquirectangular(st.env).texture; scene.environmentIntensity = .32;
+    skyDome(scene, 'day', false); scene.fog = new THREE.Fog('#b9d3e8', 40, 220);
+    scene.add(new THREE.HemisphereLight('#cfe0ff', '#6b5a40', .35));
+    const sun = new THREE.DirectionalLight('#ffe7c4', 4.6); sun.position.set(-13, 8, 1.5); sun.shadow.radius = 4; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    const fillL = new THREE.DirectionalLight('#9fb8ff', .35); fillL.position.set(8, 6, 6); scene.add(fillL); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
+    Object.assign(sun.shadow.camera, {left: -14, right: 14, top: 14, bottom: -14, near: 1, far: 60}); sun.shadow.bias = -.0004; sun.shadow.normalBias = .02; sun.shadow.camera.updateProjectionMatrix(); scene.add(sun, sun.target);
     const c: Ctx = {scene, camera, focus: new THREE.Vector3(), dof: 0, caption: ''};
     BUILD[frame](c, st.lib); setCap(c.caption);
-    if (c.dim) { sun.intensity = .25; scene.environmentIntensity = .18; scene.background = new THREE.Color('#141016'); }   // night interior: candle is the key light
+    scene.updateMatrixWorld(true);
+    if (c.dim) { sun.intensity = .15; scene.environmentIntensity = .08; scene.background = new THREE.Color('#141016'); }   // night interior: candle is the key light
     camera.updateMatrixWorld(); scene.updateMatrixWorld(true); faceCards(scene, camera);
     const composer = new EffectComposer(renderer, {frameBufferType: THREE.HalfFloatType});
     composer.addPass(new RenderPass(scene, camera));

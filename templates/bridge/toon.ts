@@ -438,11 +438,18 @@ const BUILD: Record<Build, { a: number; torso: number; legs: number; tw: number 
   kid: { a: 112, torso: 0.85, legs: 1.0, tw: 0.72 },
 };
 
+/** geometry handed to costume hooks (design units of the 600 x 1000 card) so clothing and hats fit the actual body */
+export type Kit = { p: Pen; u: number; W: number; HH: number; light: number; thick: number; ow: number;
+  torso: P2[]; tcx: number; tcy: number; Ta: number; Tb: number; chin: number; torsoBot: number; shoulders: [P2, P2];
+  head: P2[]; hc: number; Ha: number; Hb: number; crown: number; hands: P2[] };
+/** costume hooks: torso = inside the torso clip (clothes), behindHead / head = with the head's tilt, hand = after arms */
+export type Costume = { torso?: (k: Kit) => void; behindHead?: (k: Kit) => void; head?: (k: Kit) => void; hand?: (k: Kit) => void };
 export type FrontOpts = {
   phase?: number; expr?: Expr; mode?: "march" | "stroll" | "stand" | "sit" | "fall"; look?: number; blink?: boolean | number; lift?: number;
   prop?: Prop; tilt?: number; headTilt?: number; wave?: number;
   /** canvas angle the key light comes FROM (painted crescent + thick outline side) */
   light?: number; facing?: -1 | 0 | 1; seed?: number;
+  costume?: Costume;
 };
 
 const footStroke = (p: Pen, a: P2, b: P2, w: number, col: string) => {
@@ -452,7 +459,7 @@ const footStroke = (p: Pen, a: P2, b: P2, w: number, col: string) => {
 
 export const bodyFront = (p: Pen, o: Outfit, opts: FrontOpts) => {
   const { phase = 0, expr = "neutral", mode = "march", look = 0, blink = false, lift = 60, prop = null, tilt = 0, headTilt = 0, wave,
-    light = DEF_LIGHT, facing = 0, seed = 1 } = opts;
+    light = DEF_LIGHT, facing = 0, seed = 1, costume } = opts;
   const Bd = BUILD[o.build ?? "adult"], skin = o.skin ?? SKIN, two = Math.PI * 2, lid = lidOf(blink);
   const H = headBlob(seed, Bd.a, facing), W = 2 * H.a, HH = 2 * H.b, u = W / 100;
   const tall = (1 + Bd.torso + Bd.legs) * HH, sole = 975;
@@ -537,6 +544,8 @@ export const bodyFront = (p: Pen, o: Outfit, opts: FrontOpts) => {
     } else arms.push({ pts: hang(1, sw), front: false });
   }
   const drawArm = (a: Arm) => { p.stroke(curve(a.pts[0], a.pts[1], a.pts[2]), 5.2 * u, armCol); p.dot(a.pts[2][0], a.pts[2][1], 5.5 * u); };
+  const kit = (head: P2[] = blobPts(300, hc, H)): Kit => ({ p, u, W, HH, light, thick, ow, torso: tp, tcx, tcy, Ta: T.a, Tb: T.b, chin, torsoBot,
+    shoulders: [sh(-1), sh(1)], head, hc, Ha: H.a, Hb: H.b, crown, hands: arms.map(a => a.pts[2]) });
   // behind the body: rifle, sword, arms
   if (rifle) {
     p.band([R0, R1], "#7a4b2a", 5 * u, 1.5 * u, "round");
@@ -571,11 +580,13 @@ export const bodyFront = (p: Pen, o: Outfit, opts: FrontOpts) => {
         if (o.sash && Math.abs(y - (torsoBot - 0.32 * HH)) < 0.08 * HH) continue;
         p.dot(tcx + 2 * u * facing, y, 2.2 * u + 0.8 * u, INK); p.dot(tcx + 2 * u * facing, y, 2.2 * u, o.buttons ?? shade(o.jacket, 0.7));
       }
+      costume?.torso?.(kit());
     });
     if (o.sash) { const s = facing || 1; p.poly([[tcx + s * 0.55 * T.a, torsoBot - 0.3 * HH], [tcx + s * 0.75 * T.a, torsoBot + 0.05 * HH], [tcx + s * 0.45 * T.a, torsoBot + 0.02 * HH]], o.sash, 1.6 * u); }
     p.inkRing(tp, ow, thick);
   }
   // in front of the body: hands holding props
+  costume?.hand?.(kit());
   for (const a of arms) if (a.front) {
     drawArm(a);
     const [hx, hy] = a.pts[2];
@@ -602,11 +613,13 @@ export const bodyFront = (p: Pen, o: Outfit, opts: FrontOpts) => {
   p.rot = Ah ? [rad(Ah), 300, chin, cpx - 300, cpy - chin] : null;
   hatBehind(p, o, H, 300, hc, light, thick, ow, false);
   const hp = blobPts(300, hc, H);
+  costume?.behindHead?.(kit(hp));
   p.shadedFill(hp, skin, mul(skin, SH_SKIN), light, H.a);
   p.inkRing(hp, ow, thick);
   hatOn(p, o, hp, H, 300, hc, light, seed, facing, false);
   const brim = !!o.hat && o.hat !== "hair" && o.hat !== "bonnet" && o.hat !== "cap";
   faceFront(p, 300, hc, W, expr, facing, look, lid, brim, skin, o.moustache, o.build === "stout", o.face === "ref");
+  costume?.head?.(kit(hp));
   p.rot = null;
 };
 

@@ -13,7 +13,8 @@ const SKY: Record<Pal, {c: string[]; e: number[]; fog: string; sun: string; sunI
   afternoon: {c: ['#d9d3c4', '#b9cde6', '#7fa9e0', '#5a8fd8', '#3a74c8'], e: [0, 3, 9, 18, 40], fog: '#cfd3d6', sun: '#ffe2b8', sunI: 2.8, hemiSky: '#d6e2ff', hemiGround: '#7d6248', hemiI: 1.15},
 };
 
-export const skyDome = (scene: THREE.Scene, pal: Pal) => {
+/** painted sky dome + fog; lights = false skips the kit's own sun + hemisphere (scenes that light themselves) */
+export const skyDome = (scene: THREE.Scene, pal: Pal, lights = true) => {
   const k = SKY[pal], u: Record<string, THREE.IUniform> = {e: {value: new THREE.Vector4(...k.e.slice(1).map(d => THREE.MathUtils.degToRad(d)))}};
   k.c.forEach((h, i) => { u['c' + i] = {value: untone(h)}; });
   const m = new THREE.ShaderMaterial({
@@ -28,6 +29,7 @@ export const skyDome = (scene: THREE.Scene, pal: Pal) => {
   sky.renderOrder = -1; sky.frustumCulled = false; sky.layers.set(NOINK);
   scene.add(sky);
   scene.fog = new THREE.Fog(untone(k.fog).getHex(), 160, 900);
+  if (!lights) return;
   const sun = new THREE.DirectionalLight(k.sun, k.sunI);
   sun.position.set(-50, 55, 70);                       // front-left key from the port-side camera
   sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
