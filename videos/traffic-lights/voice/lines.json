@@ -1,0 +1,124 @@
+[
+ {
+  "line": "L01",
+  "text": "The first traffic light blew up in a police officer's face.",
+  "emph": [
+   10
+  ],
+  "start": 0.05,
+  "end": 3.463,
+  "take": "L01_t1.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L02",
+  "text": "See, the city needed to stop drivers from crashing at busy intersections.",
+  "emph": [],
+  "start": 3.673,
+  "end": 7.866,
+  "take": "L02_t0.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L03",
+  "text": "So they put up a signal with lights, to tell people when to stop and when to go.",
+  "emph": [],
+  "start": 7.926,
+  "end": 12.646,
+  "take": "L03_t2.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L04",
+  "text": "The problem? The lights ran on gas, and a police officer had to work them by hand. One day the gas leaked, and it exploded, badly hurting the officer running it.",
+  "emph": [
+   6
+  ],
+  "start": 12.706,
+  "end": 22.189,
+  "take": "L04_t2.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L05",
+  "text": "So the city took the lights down. Instead, a police officer stood in the middle of the intersection, directing traffic.",
+  "emph": [],
+  "start": 22.399,
+  "end": 28.243,
+  "take": "L05_t2.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L06",
+  "text": "But standing in the middle of traffic all day was dangerous too.",
+  "emph": [
+   11
+  ],
+  "start": 28.303,
+  "end": 31.583,
+  "take": "L06_t0.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L07",
+  "text": "Until 1912, when a police officer invented an electric traffic light, and cities started putting them back up.",
+  "emph": [
+   8
+  ],
+  "start": 31.643,
+  "end": 37.883,
+  "take": "L07_t0.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L08",
+  "text": "The problem now? There were only two lights: red and green.",
+  "emph": [
+   6
+  ],
+  "start": 38.043,
+  "end": 41.397,
+  "take": "L08_t0.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L09",
+  "text": "The light switched so suddenly that drivers could not stop in time.",
+  "emph": [],
+  "start": 41.457,
+  "end": 44.897,
+  "take": "L09_t0.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L10",
+  "text": "So they added a yellow light, to warn you before the light turns red.",
+  "emph": [
+   4
+  ],
+  "start": 44.957,
+  "end": 48.877,
+  "take": "L10_t2.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L11",
+  "text": "And that is the same traffic light we still use today.",
+  "emph": [],
+  "start": 48.937,
+  "end": 51.977,
+  "take": "L11_t2.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L12",
+  "text": "Of course, to some people, it is still just a suggestion.",
+  "emph": [
+   10
+  ],
+  "start": 52.487,
+  "end": 55.687,
+  "take": "L12_t2.wav",
+  "heard_miss": 0
+ }
+]
