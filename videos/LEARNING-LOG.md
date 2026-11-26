@@ -39,6 +39,7 @@ One row per upload. Add a row after every release and re-pull at 48 h and 7 d. R
 | 19 Nov | Stupid Phil Won't Leave! | ? | 53 s | no CC | voice B (Qwen3 clone) | 1,786 | 1,795 | | 46% | 71% | 0.49 @ 10 s | 52% | 37 / 3 / **2** / 3 | 2nd most views; most comments and shares; best ending (RRP 0.95) |
 | 23 Nov | How a Guardrail Saves Lives! | ? | 42 s | no CC | ? | 1,103 | (pending) | | 47% | 70% | | | 33 / 1 / 0 / 1 | |
 | 24 Nov | "November 23, 2026" = **Vasa** | "Sweden's largest warship only sailed for twenty minutes!" | 58 s | none | am_puck (Kokoro) | (pending) | (pending) | | (pending) | (pending) | (pending) | (pending) | — | Public counter 193 views at about 1.5 days. Analytics has no data yet. Re-pull 27 Nov |
+| 26 Nov | How Matches Were Invented! (safety-matches) | "The oldest way to make fire is to rub two sticks together." | 57 s | **read-along (yellow active word)** | voice B (Qwen3 clone) | 1.2K at 8 h (flat after ~4 h) | (pending) | **60.5%** | (pending) | **~139%** (AVD 1:19 on 57 s; Studio: "0:41 more than usual") | (pending) | (pending) | (pending) | First Short in look v2 + Fix-Fail Chain + captions. Best hold by far (loops/rewatches); views still one test batch. 98.3% Shorts feed. Retention curve pending (2 days) |
 
 Engaged ÷ views across the 17 Shorts with data: median **53%**, range 27-68%. Views: median **1,248**. Totals:
 3 shares and 26 subscribers gained on about 23k views.
@@ -63,6 +64,12 @@ Engaged ÷ views across the 17 Shorts with data: median **53%**, range 27-68%. V
 8. **Vasa is the first Short whose test batch itself is small:** 193 public views at about 1.5 days, against
    1,100+ in the first day for every other Short. Analytics hasn't caught up, so the data can't say why yet.
 
+9. **safety-matches (8 h):** the new format holds viewers far better than anything before (AVD 1:19 on a 57 s Short,
+   ~139%, so many watch it more than once; previous best Avg % viewed was 105%). But the test batch was the usual size
+   (~1.2K, flat after ~4 h), and 39.5% still swiped away at the start. So the body works; the **opening** is what
+   limits distribution. Its first line is a calm statement ("The oldest way to make fire is...") over a caveman
+   sitting down, with no question or surprise in the first 2 s.
+
 ## Hypotheses (not shown by the data)
 - The 6-10 s dip is the "orient" stretch after the hook (dates, names, setup), e.g. Niagara line 2-3 and Vasa L02-L04
   (guns, sculptures, "The King had approved the design himself."). It matches the "long dates/names before viewers
@@ -77,4 +84,5 @@ Engaged ÷ views across the 17 Shorts with data: median **53%**, range 27-68%. V
 ## Experiments
 | Next upload | Variable changed | Held constant | Success looks like |
 |---|---|---|---|
+| next after safety-matches | **Opening only:** first 1.5 s = a surprising claim or question shown on screen (e.g. "Matches used to explode in your pocket"), with motion on frame 1; body format unchanged (Fix-Fail Chain, look v2, read-along captions, voice B) | everything after ~3 s | Stayed to watch > 70%; views keep rising after hour 4 |
 | (Step 2) | Hook extended: claim proven on frame 1 **and** a second reveal by ~6 s | voice, length band | Engaged ÷ views > 60%; RRP at 10 s > 0.5; any views past day 2 |
