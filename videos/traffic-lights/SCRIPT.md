@@ -1,21 +1,24 @@
-# Why Traffic Lights Are Red, Yellow And Green: script v2 (Fix-Fail Chain, for the script gate)
+# Why Traffic Lights Are Red, Yellow And Green: script v3 (Fix-Fail Chain, for the script gate)
 
 Narrator voice B. ~175 words (~55 s). Experiment (LEARNING-LOG.md): **opening only** - the most surprising fact, happening
 on frame 1, then a second surprise by ~5 s. Everything after follows the safety-matches format that held 139 %.
 Title options: "The First Traffic Light Exploded" · "Why Traffic Lights Are Red, Yellow And Green" · "Why Yellow Lights Exist"
 
-L01 The world's first traffic light exploded, right next to the police officer running it.
-L02 Because it ran on gas. Red and green glass, with a gas flame burning behind it.
-L03 One day the gas leaked, and boom. Britain was so spooked, it went sixty years without another traffic light.
-L04 Then came electricity: no flame, nothing to blow up. A policeman in Salt Lake City put red and green bulbs in a box, the same colors trains already used.
-L05 But he still had to sit in a booth and flip it by hand. And drivers just ignored it.
-L06 Worse, it jumped straight from green to red. Fast drivers had no time to stop.
-L07 So a policeman in Detroit added a third light in the middle. Yellow, meaning: the light is about to change.
-L08 Then timers took over, and New York moved over five thousand traffic cops to other jobs.
-L09 So every yellow light is a warning. *(pause, ~0.5 s)* Which is more than that first policeman ever got.
+L01 The first traffic light blew up in a police officer's face.
+L02 See, the city needed to stop drivers from crashing at busy intersections.
+L03 So they put up a signal with lights, to tell people when to stop and when to go.
+L04 The problem? The lights ran on gas, and a police officer had to work them by hand. One day the gas leaked, and it exploded, badly hurting the officer running it.
+L05 So the city took the lights down. Instead, a police officer stood in the middle of the intersection, directing traffic.
+L06 But standing in the middle of traffic all day was dangerous too.
+L07 Until 1912, when a police officer invented an electric traffic light, and cities started putting them back up.
+L08 The problem now? There were only two lights: red and green.
+L09 The light switched so suddenly that drivers could not stop in time.
+L10 So they added a yellow light, to warn you before the light turns red.
+L11 And that is the same traffic light we still use today.
+L12 *(pause, ~0.5 s)* Of course, to some people, it is still just a suggestion.
 
 ## Sources per line
-L01 F2-F3 (operated at the post; 'in his face' not in any source read) · L02 F2 (gas lamps, red/green lenses: Potts 'two-lens, red/green') · L03 F3-F4 · L04 F6-F7 (railway signals) + electric = no flame · L05 F6, F8 · L06 F9 · L07 F10 · L08 F11 · L09 callback to L01
+L01 F3 ("blew up in his face" as the idiom; sources say the explosion badly injured the officer operating it, not where) · L02 F1 · L03 F2 · L04 F2-F3 · L05 F3 (taken down), F5 (officers in the intersection) · L06 F5 ("very chaotic and dangerous", long hours in the road) · L07 F6 · L08 F6 · L09 F9 · L10 F10 · L11 general · L12 comic close (show a car running a red)
 
 ## Opening (the experiment)
 - Frame 1: 1868 London street at dusk, a policeman pulls the lever on the gas signal, it BLOWS (flash, smoke, his hat flies,
@@ -33,3 +36,9 @@ traffic light turns yellow; on the pause, cut to our 1868 policeman (soot face, 
 ## Changes v1 -> v2 (owner: "could be more interesting... more about how traffic lights evolved from this point on. Why did it explode? People don't know it used gas")
 Hook + why it exploded (gas) up front; the chain is now about the technology: gas flame -> electric bulbs (nothing to blow up) ->
 hand-flipped in a booth -> no warning before red -> yellow -> timers (no one at the switch). "Police by hand" and "both at once" dropped for length.
+
+## Changes v2 -> v3 (owner rewrite: "less history, more iterative", keep the hook)
+Owner's structure kept line by line: problem -> fix -> new problem. Edits for accuracy: "hospitalized" -> "badly hurting" (sources
+say badly injured); "drivers often hit the traffic director" -> "standing in the middle of traffic all day was dangerous too" (no
+source says officers were often hit); "electric stop sign" -> "electric traffic light", year 1912; "multiple accidents" -> "drivers
+could not stop in time" (what the source says). Places and names (London, Salt Lake City, Detroit) dropped on purpose.
