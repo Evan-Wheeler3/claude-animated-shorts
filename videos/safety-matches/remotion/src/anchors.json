@@ -1,0 +1,103 @@
+{
+ "_": "Each picture starts LEAD frames before word `w` (0-based) of script line `line` in ../../voice/words.json.",
+ "lead": 2,
+ "tail": 0.6,
+ "pics": [
+  {
+   "pic": 1,
+   "line": "L01",
+   "w": 0,
+   "env": "meadow"
+  },
+  {
+   "pic": 2,
+   "line": "L01",
+   "w": 12,
+   "env": "meadow"
+  },
+  {
+   "pic": 3,
+   "line": "L02",
+   "w": 0,
+   "env": "bench"
+  },
+  {
+   "pic": 4,
+   "line": "L02",
+   "w": 15,
+   "env": "street"
+  },
+  {
+   "pic": 5,
+   "line": "L03",
+   "w": 0,
+   "env": "bench"
+  },
+  {
+   "pic": 6,
+   "line": "L03",
+   "w": 8,
+   "env": "bench"
+  },
+  {
+   "pic": 7,
+   "line": "L04",
+   "w": 0,
+   "env": "street"
+  },
+  {
+   "pic": 8,
+   "line": "L04",
+   "w": 15,
+   "env": "bench"
+  },
+  {
+   "pic": 9,
+   "line": "L05",
+   "w": 0,
+   "env": "factory"
+  },
+  {
+   "pic": 10,
+   "line": "L05",
+   "w": 13,
+   "env": "dark"
+  },
+  {
+   "pic": 11,
+   "line": "L06",
+   "w": 0,
+   "env": "bench"
+  },
+  {
+   "pic": 12,
+   "line": "L07",
+   "w": 0,
+   "env": "bench"
+  },
+  {
+   "pic": 13,
+   "line": "L07",
+   "w": 8,
+   "env": "bench"
+  },
+  {
+   "pic": 14,
+   "line": "L07",
+   "w": 16,
+   "env": "street"
+  },
+  {
+   "pic": 15,
+   "line": "L08",
+   "w": 0,
+   "env": "meadow"
+  },
+  {
+   "pic": 16,
+   "line": "L08",
+   "w": 11,
+   "env": "meadow"
+  }
+ ]
+}
