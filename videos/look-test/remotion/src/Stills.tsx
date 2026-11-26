@@ -15,7 +15,7 @@ import {bodyFront, INK, type Outfit, type Pen} from '../../../../templates/bridg
 import {Card, faceCards} from './kit/cards';
 import {skyDome} from './kit/look';
 
-export const STILL_FRAMES = 2;
+export const STILL_FRAMES = 4;
 const fontFamily = 'LilitaOneLocal';
 if (typeof document !== 'undefined' && !document.getElementById('lilita')) { const st = document.createElement('style'); st.id = 'lilita';
   st.textContent = `@font-face{font-family:'${fontFamily}';src:url('${staticFile('fonts/LilitaOne.woff2')}') format('woff2');}`; document.head.appendChild(st); }
@@ -31,6 +31,11 @@ const NEED: Record<number, string[]> = {
   1: ['stylized-nature-megakit/commontree-1', 'stylized-nature-megakit/commontree-4', 'stylized-nature-megakit/commontree-5', 'stylized-nature-megakit/bush-common',
     'stylized-nature-megakit/bush-common-flowers', 'stylized-nature-megakit/flower-3-group', 'stylized-nature-megakit/flower-4-group', 'stylized-nature-megakit/grass-common-short',
     'stylized-nature-megakit/grass-wispy-tall', 'ultimate-crops/wheat-4', 'medieval-village-megakit/prop-woodenfence-single', 'pirate-kit/environment-rock-2'],
+  2: ['medieval-village-megakit/floor-wooddark', 'medieval-village-megakit/wall-plaster-straight', 'medieval-village-megakit/wall-plaster-window-thin-round',
+    'fantasy-props-megakit/table-large', 'fantasy-props-megakit/candlestick', 'fantasy-props-megakit/book-stack-1', 'fantasy-props-megakit/scroll-1',
+    'fantasy-props-megakit/chair-1', 'fantasy-props-megakit/bookcase-2', 'fantasy-props-megakit/lantern-wall'],
+  3: ['medieval-village-megakit/floor-unevenbrick', 'medieval-village-megakit/wall-unevenbrick-straight', 'medieval-village-megakit/wall-plaster-window-wide-round',
+    'fantasy-props-megakit/stall-empty', 'fantasy-props-megakit/coin', 'fantasy-props-megakit/coin-pile', 'fantasy-props-megakit/coin-pile-2', 'fantasy-props-megakit/candlestick'],
 };
 
 // ---------- our cast: costume pieces drawn on the 600 x 1000 toon card (adult head centre ~ (300, 309), chin ~420) ----------
@@ -77,10 +82,10 @@ const scarf = (g: CanvasRenderingContext2D) => { g.strokeStyle = INK; g.lineWidt
   g.beginPath(); g.moveTo(222, 425); g.quadraticCurveTo(300, 455, 378, 425); g.lineTo(380, 455); g.quadraticCurveTo(300, 485, 220, 455); g.closePath(); g.fill(); g.stroke();
   g.beginPath(); g.moveTo(350, 450); g.quadraticCurveTo(420, 480, 470, 440); g.lineTo(480, 470); g.quadraticCurveTo(420, 515, 352, 480); g.closePath(); g.fill(); g.stroke(); };
 
-const CLIPPER: Outfit = {jacket: '#7a5a36', pants: '#4a3a2a', boots: '#2a1d16', hat: 'hair', hair: '#3a2a1e', skin: '#f5c9a0'};
-const NEWTON: Outfit = {jacket: '#1f2433', pants: '#1f2433', boots: '#141018', hat: 'hair', hair: '#ece7dc', buttons: '#e8c45a', skin: '#ffe2c2'};
-const SHOPPER: Outfit = {jacket: '#3f6fb5', pants: '#3b3f52', boots: '#4a3426', hat: 'bonnet', dress: '#d9a441'};
-const MOTORIST: Outfit = {jacket: '#c9b48a', pants: '#5a4a3a', boots: '#2a1d16', hat: 'hair', hair: '#5a3b2a', moustache: '#5a3b2a', buttons: '#5a3820', skin: '#ffe2c2'};
+const CLIPPER: Outfit = {jacket: '#7a5a36', pants: '#4a3a2a', boots: '#2a1d16', hat: 'hair', hair: '#3a2a1e', skin: '#ffffff', limbs: INK, face: 'ref'};
+const NEWTON: Outfit = {jacket: '#1f2433', pants: '#1f2433', boots: '#141018', hat: 'hair', hair: '#ece7dc', buttons: '#e8c45a', skin: '#ffffff', limbs: INK, face: 'ref'};
+const SHOPPER: Outfit = {jacket: '#3f6fb5', pants: '#3b3f52', boots: '#4a3426', hat: 'bonnet', dress: '#d9a441', skin: '#ffffff', limbs: INK, face: 'ref'};
+const MOTORIST: Outfit = {jacket: '#c9b48a', pants: '#5a4a3a', boots: '#2a1d16', hat: 'hair', hair: '#5a3b2a', moustache: '#5a3b2a', buttons: '#5a3820', skin: '#ffffff', limbs: INK, face: 'ref'};
 type Ex = {back?: (g: CanvasRenderingContext2D) => void; over?: (g: CanvasRenderingContext2D) => void};
 const person = (o: Outfit, h: number, opts: Parameters<typeof bodyFront>[2], ex: Ex = {}) =>
   new Card(h, .8).draw((p: Pen, g) => { ex.back?.(g); bodyFront(p, o, {mode: 'stand', ...opts}); ex.over?.(g); });
@@ -109,7 +114,20 @@ const grassField = (n: number, x0: number, x1: number, z0: number, z1: number, a
   mesh.count = k; mesh.receiveShadow = true; return mesh;
 };
 
-type Ctx = {scene: THREE.Scene; camera: THREE.PerspectiveCamera; focus: THREE.Vector3; dof: number; caption: string};
+type Ctx = {scene: THREE.Scene; camera: THREE.PerspectiveCamera; focus: THREE.Vector3; dof: number; caption: string; dim?: boolean};
+/** a straight razor held in the raised right hand (bodyFront wave = 1 puts the hand at ~(471, 313) for an adult) */
+const razor = (g: CanvasRenderingContext2D) => { g.save(); g.translate(471, 313); g.rotate(-.55); g.lineJoin = 'round';
+  g.fillStyle = shadeFill(g, 0, -6, 0, 8, '#9a6a3a', '#5a3820'); g.strokeStyle = INK; g.lineWidth = 7; g.beginPath(); g.roundRect(-10, -6, 78, 14, 6); g.fill(); g.stroke();
+  g.fillStyle = shadeFill(g, -100, -14, -100, 12, '#ffffff', '#aeb8c4'); g.beginPath(); g.moveTo(-10, -8); g.lineTo(-108, -14); g.quadraticCurveTo(-118, 4, -104, 12); g.lineTo(-10, 8); g.closePath(); g.fill(); g.stroke(); g.restore(); };
+const foam = (g: CanvasRenderingContext2D, x: number, y: number, r: number) => { g.strokeStyle = INK; g.lineWidth = 5;
+  [[0, 0, 1], [-.9, .2, .7], [.9, .15, .75], [-.4, -.6, .6], [.45, -.55, .65]].forEach(([dx, dy, k]) => { g.fillStyle = shadeFill(g, x - r, y - r, x + r, y + r, '#ffffff', '#d8e0ea'); g.beginPath(); g.arc(x + dx * r, y + dy * r, r * k, 0, 7); g.fill(); g.stroke(); }); };
+const room = (s: THREE.Scene, lib: L, wallA: string, wallB: string, floor: string) => {
+  for (let x = -6; x <= 6; x += 2) for (let z = -4; z <= 6; z += 2) s.add(place(lib, floor, x, 0, z));
+  for (let i = 0; i < 6; i++) { const x = -5 + i * 2; s.add(place(lib, i % 3 === 1 ? wallB : wallA, x, 0, -2.6)); s.add(place(lib, wallA, x, 3.12, -2.6)); }
+  const inside = new THREE.Mesh(new THREE.BoxGeometry(14, 7, 3), new THREE.MeshStandardMaterial({color: '#2a2020', side: THREE.BackSide})); inside.position.set(0, 3.5, -4.2); s.add(inside);
+};
+const candleGlow = (s: THREE.Scene, x: number, y: number, z: number, i = 6) => { const l = new THREE.PointLight('#ffb866', i, 7, 1.6); l.position.set(x, y, z); l.castShadow = true; s.add(l); };
+
 const BUILD: Record<number, (c: Ctx, lib: L) => void> = {
   0: (c, lib) => { const s = c.scene;
     // cobbled street
@@ -135,7 +153,7 @@ const BUILD: Record<number, (c: Ctx, lib: L) => void> = {
     s.add(place(lib, 'stylized-nature-megakit/commontree-3', -7.5, 0, -1.5, 0, 1.1));
     s.add(place(lib, 'stylized-nature-megakit/bush-common-flowers', -5.2, 0, -2.8)); s.add(place(lib, 'stylized-nature-megakit/flower-3-group', 4.6, 0, -2.9));
     // cast
-    const cl = person(CLIPPER, 1.72, {expr: 'grin', seed: 7, look: -.5}, {over: g => { stubble(g); goldTooth(g); apron(g); flatCap('#4f5a3a')(g); }});
+    const cl = person(CLIPPER, 1.72, {expr: 'neutral', seed: 7, look: -.5}, {over: g => { stubble(g); goldTooth(g); apron(g); flatCap('#4f5a3a')(g); }});
     cl.mesh.position.set(-.1, 0, -1.25); s.add(cl.mesh);
     const nw = person(NEWTON, 1.74, {expr: 'stern', seed: 12, look: -1}, {back: wigBack, over: g => { cravat(g); wigTop(g); }});
     nw.mesh.position.set(1.15, 0, 2.6); s.add(nw.mesh);
@@ -163,9 +181,31 @@ const BUILD: Record<number, (c: Ctx, lib: L) => void> = {
     for (let i = 0; i < 12; i++) { const sp = new THREE.Mesh(new THREE.BoxGeometry(.36, .03, .03), new THREE.MeshStandardMaterial({color: '#8a5a32'})); sp.rotation.z = Math.PI * i / 12; tyre.add(sp); }
     const hub = new THREE.Mesh(new THREE.CylinderGeometry(.05, .05, .1, 20), new THREE.MeshStandardMaterial({color: '#3a2a20'})); hub.rotation.x = Math.PI / 2; tyre.add(hub);
     tyre.position.set(-1.1, R, .9); tyre.rotation.set(0, .5, .12); shadowAll(tyre); s.add(tyre);
-    const mo = person(MOTORIST, 1.74, {expr: 'grin', seed: 18, look: -.7, wave: 1}, {over: g => { scarf(g); flatCap('#6b5a3a')(g); goggles(g); }});
+    const mo = person(MOTORIST, 1.74, {expr: 'neutral', seed: 18, look: -.7, wave: 1}, {over: g => { scarf(g); flatCap('#6b5a3a')(g); goggles(g); }});
     mo.mesh.position.set(-.1, 0, 1.4); s.add(mo.mesh);
     c.camera.position.set(.4, 1.4, 6.4); c.camera.lookAt(-.3, 1.15, 0); c.focus = new THREE.Vector3(-.1, 1.2, 1.4); c.dof = 5; c.caption = 'white!'; },
+  // Newton questions a nervous witness by candlelight (medium two-shot, characters fill the frame)
+  2: (c, lib) => { const s = c.scene; c.dim = true;
+    room(s, lib, 'medieval-village-megakit/wall-plaster-straight', 'medieval-village-megakit/wall-plaster-window-thin-round', 'medieval-village-megakit/floor-wooddark');
+    s.add(place(lib, 'fantasy-props-megakit/bookcase-2', -2.6, 0, -2.0)); s.add(place(lib, 'fantasy-props-megakit/lantern-wall', 1.6, 2.1, -2.3));
+    s.add(place(lib, 'fantasy-props-megakit/table-large', 0, 0, 0, Math.PI / 2));
+    const top = new THREE.Box3().setFromObject(s.children[s.children.length - 1]).max.y;
+    s.add(place(lib, 'fantasy-props-megakit/candlestick', .15, top, .1)); s.add(place(lib, 'fantasy-props-megakit/book-stack-1', -.45, top, -.1)); s.add(place(lib, 'fantasy-props-megakit/scroll-1', .45, top, .25, .6));
+    s.add(place(lib, 'fantasy-props-megakit/chair-1', 1.3, 0, .3, -Math.PI / 2));
+    candleGlow(s, .15, top + .45, .1, 9);
+    const nw = person(NEWTON, 1.74, {expr: 'stern', seed: 12, look: 1}, {back: wigBack, over: g => { cravat(g); wigTop(g); }}); nw.mesh.position.set(-.62, 0, -.75); s.add(nw.mesh);
+    const wt = person(SHOPPER, 1.62, {expr: 'nervous', seed: 31, look: -1}); wt.mesh.position.set(.68, 0, -.7); s.add(wt.mesh);
+    c.camera.position.set(0, 1.75, 3.9); c.camera.lookAt(0, 1.35, -.6); c.focus = new THREE.Vector3(0, 1.4, -.7); c.dof = 6; c.caption = 'himself'; },
+  // the Clipper "shaving" a coin: medium close-up, foam on his nose, razor raised, coins on the counter
+  3: (c, lib) => { const s = c.scene;
+    room(s, lib, 'medieval-village-megakit/wall-unevenbrick-straight', 'medieval-village-megakit/wall-plaster-window-wide-round', 'medieval-village-megakit/floor-unevenbrick');
+    s.add(place(lib, 'fantasy-props-megakit/stall-empty', 0, 0, 0));
+    const top = 1.0;
+    s.add(place(lib, 'fantasy-props-megakit/coin-pile', -.45, top, .3, 0, 1.6)); s.add(place(lib, 'fantasy-props-megakit/coin-pile-2', .5, top, .35, .4, 1.6));
+    s.add(place(lib, 'fantasy-props-megakit/coin', .2, top, .55, .3, 2)); s.add(place(lib, 'fantasy-props-megakit/candlestick', .9, top, .2));
+    const cl = person(CLIPPER, 1.72, {expr: 'neutral', seed: 7, look: 0, wave: 1}, {over: g => { stubble(g); apron(g); flatCap('#4f5a3a')(g); foam(g, HX + 52, HY + 14, 18); razor(g); }});
+    cl.mesh.position.set(0, 0, -.45); s.add(cl.mesh);
+    c.camera.position.set(.15, 1.6, 2.7); c.camera.lookAt(0, 1.35, 0); c.focus = new THREE.Vector3(0, 1.4, -.45); c.dof = 7; c.caption = 'not with shaving cream'; },
 };
 
 export const Stills: React.FC = () => {
@@ -194,6 +234,7 @@ export const Stills: React.FC = () => {
     Object.assign(sun.shadow.camera, {left: -14, right: 14, top: 14, bottom: -14, near: 1, far: 60}); sun.shadow.bias = -.0004; sun.shadow.normalBias = .02; scene.add(sun);
     const c: Ctx = {scene, camera, focus: new THREE.Vector3(), dof: 0, caption: ''};
     BUILD[frame](c, st.lib); setCap(c.caption);
+    if (c.dim) { sun.intensity = .25; scene.environmentIntensity = .18; scene.background = new THREE.Color('#141016'); }   // night interior: candle is the key light
     camera.updateMatrixWorld(); scene.updateMatrixWorld(true); faceCards(scene, camera);
     const composer = new EffectComposer(renderer, {frameBufferType: THREE.HalfFloatType});
     composer.addPass(new RenderPass(scene, camera));
@@ -207,7 +248,7 @@ export const Stills: React.FC = () => {
   return <AbsoluteFill>
     <canvas ref={canvas} style={{width: '100%', height: '100%', display: 'block'}} />
     <AbsoluteFill style={{justifyContent: 'flex-end', alignItems: 'center', paddingBottom: '30%'}}>
-      <div style={{fontFamily, fontSize: 124, color: '#ffffff', WebkitTextStroke: '15px #111', paintOrder: 'stroke fill', textShadow: '0 8px 0 rgba(0,0,0,.35)'}}>{cap}</div>
+      <div style={{fontFamily, fontSize: cap.length > 10 ? 96 : 124, textAlign: 'center', maxWidth: '86%', color: '#ffffff', WebkitTextStroke: '15px #111', paintOrder: 'stroke fill', textShadow: '0 8px 0 rgba(0,0,0,.35)'}}>{cap}</div>
     </AbsoluteFill>
   </AbsoluteFill>;
 };
