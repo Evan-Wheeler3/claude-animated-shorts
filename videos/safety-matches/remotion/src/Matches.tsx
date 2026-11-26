@@ -154,9 +154,30 @@ const rug = () => { const cv = document.createElement('canvas'); cv.width = cv.h
   g.strokeStyle = '#e8c45a'; g.lineWidth = 14; g.strokeRect(20, 20, 216, 216); g.strokeStyle = '#2f4a6a'; g.lineWidth = 8; g.strokeRect(48, 48, 160, 160);
   const t = new THREE.CanvasTexture(cv); t.colorSpace = THREE.SRGBColorSpace; const m = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 1.1), new THREE.MeshStandardMaterial({map: t, roughness: 1}));
   m.rotation.x = -Math.PI / 2; m.position.y = .022; m.receiveShadow = true; return m; };
-const tin = () => { const g = new THREE.Group(); const b = new THREE.Mesh(new THREE.CylinderGeometry(.04, .04, .05, 32), std('#9aa2ae', .35)); b.position.y = .025; g.add(b);
-  const lid = new THREE.Group(); const l = new THREE.Mesh(new THREE.CylinderGeometry(.042, .042, .012, 32), std('#b8c0cc', .3)); l.position.set(0, 0, .042); lid.add(l); lid.position.set(0, .05, -.042); g.add(lid);
-  g.traverse(o => { (o as THREE.Mesh).castShadow = (o as THREE.Mesh).receiveShadow = true; }); return {g, lid}; };
+/** a hollow tuna can (4x real: r .17, h .13): open wall, bottom, rolled rim, ribbed sides, "TUNA" label with a fish,
+ *  pull-tab lid hinged at the back edge (lid.rotation.x < 0 opens it) */
+const tunaCan = () => { const r = .17, h = .13, g = new THREE.Group(), steel = new THREE.MeshStandardMaterial({color: '#c9ced6', metalness: .85, roughness: .32, side: THREE.DoubleSide});
+  const inner = new THREE.MeshStandardMaterial({color: '#e2e6ec', metalness: .7, roughness: .4, side: THREE.BackSide});
+  const wall = new THREE.Mesh(new THREE.CylinderGeometry(r, r, h, 64, 1, true), steel); wall.position.y = h / 2;
+  const wallIn = new THREE.Mesh(new THREE.CylinderGeometry(r - .003, r - .003, h, 64, 1, true), inner); wallIn.position.y = h / 2;
+  const bot = new THREE.Mesh(new THREE.CircleGeometry(r - .002, 64), inner.clone()); (bot.material as THREE.Material).side = THREE.DoubleSide; bot.rotation.x = -Math.PI / 2; bot.position.y = .004;
+  const rim = new THREE.Mesh(new THREE.TorusGeometry(r, .006, 8, 64), steel); rim.rotation.x = Math.PI / 2; rim.position.y = h;
+  const base = new THREE.Mesh(new THREE.TorusGeometry(r, .006, 8, 64), steel); base.rotation.x = Math.PI / 2; base.position.y = .005;
+  const cv = document.createElement('canvas'); cv.width = 1024; cv.height = 256; const x = cv.getContext('2d')!; x.fillStyle = '#1f5fa8'; x.fillRect(0, 0, 1024, 256);
+  x.fillStyle = '#f2c230'; x.fillRect(0, 18, 1024, 14); x.fillRect(0, 224, 1024, 14);
+  for (const ox of [130, 642]) { x.fillStyle = '#ffffff'; x.font = 'bold 120px sans-serif'; x.textBaseline = 'middle'; x.fillText('TUNA', ox, 132);
+    x.fillStyle = '#ffb04a'; x.beginPath(); x.ellipse(ox - 70, 130, 52, 30, 0, 0, 7); x.fill(); x.beginPath(); x.moveTo(ox - 118, 130); x.lineTo(ox - 150, 100); x.lineTo(ox - 150, 160); x.fill();
+    x.fillStyle = '#222'; x.beginPath(); x.arc(ox - 40, 122, 6, 0, 7); x.fill(); }
+  const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace;
+  const label = new THREE.Mesh(new THREE.CylinderGeometry(r + .002, r + .002, h * .62, 64, 1, true), new THREE.MeshStandardMaterial({map: tex, roughness: .6})); label.position.y = h * .5; label.rotation.y = Math.PI * .55;
+  g.add(wall, wallIn, bot, rim, base, label);
+  for (const y of [.18, .82]) { const rib = new THREE.Mesh(new THREE.TorusGeometry(r + .001, .003, 6, 64), steel); rib.rotation.x = Math.PI / 2; rib.position.y = h * y; g.add(rib); }
+  const lid = new THREE.Group(); lid.position.set(0, h + .004, -r);
+  const disc = new THREE.Mesh(new THREE.CylinderGeometry(r - .004, r - .004, .004, 64), steel); disc.position.set(0, 0, r); lid.add(disc);
+  for (const rr of [.13, .07]) { const ring = new THREE.Mesh(new THREE.TorusGeometry(rr, .003, 6, 48), steel); ring.rotation.x = Math.PI / 2; ring.position.set(0, .003, r); lid.add(ring); }
+  const tab = new THREE.Mesh(new THREE.TorusGeometry(.028, .007, 8, 24), steel); tab.rotation.x = Math.PI / 2; tab.scale.set(1, 1.5, 1); tab.position.set(0, .006, r + .1); lid.add(tab);
+  const rivet = new THREE.Mesh(new THREE.SphereGeometry(.01, 10, 8), steel); rivet.position.set(0, .004, r + .06); lid.add(rivet);
+  g.add(lid); g.traverse(o => { const m = o as THREE.Mesh; if (m.isMesh) m.castShadow = m.receiveShadow = true; }); return {g, lid, r, h}; };
 const woodPile = () => { const g = new THREE.Group(); for (let i = 0; i < 7; i++) { const l = new THREE.Mesh(new THREE.CylinderGeometry(.04, .045, .55, 10), std(i % 2 ? '#7a4a2a' : '#8a5a32', 1));
   l.rotation.z = Math.PI / 2; l.rotation.y = i * .9; l.position.set(0, .04 + (i > 3 ? .07 : 0), 0); l.castShadow = l.receiveShadow = true; g.add(l); }
   const ring = new THREE.Mesh(new THREE.TorusGeometry(.38, .07, 8, 16), std('#7a7a72', 1)); ring.rotation.x = Math.PI / 2; ring.position.y = .03; ring.receiveShadow = ring.castShadow = true; g.add(ring); return g; };
@@ -274,11 +295,17 @@ const B: Record<number, (c: Ctx) => Upd> = {
   7: c => { street(c); const a = actor(1.78); a.k.mesh.position.set(.1, 0, -.9); c.scene.add(a.k.mesh); const strike = T('L04', 12);
     return (f, l, u) => { a.draw(GENT, {expr: f > strike ? 'smile' : 'neutral', seed: 21, look: -1, wave: 1, costume: dress(cravat(), matchInHand(1, smooth((f - strike) / 4)))});
       c.dof = 5; glide(c, [[1.4, 1.6, 2.6], [0, 1.4, -1.2]], [[1.1, 1.6, 2.2], [0, 1.45, -1.2]], u, 40); }; },
-  // 8 it lit so easily it had to be kept in a sealed tin (lid slams; 4x props)
-  8: c => { c.near = .01; const top = room(c); const t = tin(); t.g.scale.setScalar(3); t.g.position.set(0, top, -1.0); c.scene.add(t.g);
-    for (let i = 0; i < 7; i++) { const m = match3d(.2); m.rotation.z = Math.PI / 2 + .08 * (i - 3); m.position.set(-.1 + .006 * i, top + .1 + .012 * i, -1.0 + .02 * (i % 3)); c.scene.add(m); }
-    const slam = T('L04', 28);
-    return (f, l, u) => { t.lid.rotation.x = -1.9 * (1 - smooth((f - slam + 8) / 8)); c.dof = 6; cam(c, [.25, top + .55, -.15], [0, top + .1, -1.0], 40); }; },
+  // 8 it lit so easily it had to be kept in a sealed tin: matches lie inside an open tuna can, one fizzes by itself, the lid slams shut (4x props)
+  8: c => { c.near = .01; const top = room(c); const t = tunaCan(); t.g.position.set(0, top, -1.0); c.scene.add(t.g);
+    const ms = Array.from({length: 9}, (_, i) => { const m = match3d(.2), layer = i < 5 ? 0 : 1; m.rotation.z = -Math.PI / 2; m.rotation.y = .12 * (i % 3 - 1) + (layer ? .15 : 0);
+      m.position.set(-.1, top + .004 + .007 + layer * .012, -1.0 + (layer ? -.035 + .023 * (i - 5) : -.06 + .03 * i)); c.scene.add(m); return m; });
+    void ms; const fizz = flame(c.scene, .12, 1.5), sm = smoke(c.scene, 5, '#e8e4dc', .01); const slam = T('L04', 28), fz = T('L04', 17);
+    return (f, l, u) => { const k = (f - slam + 7) / 7, shut = k >= 1;
+      t.lid.rotation.x = shut ? -.12 * Math.exp(-(f - slam) / 3) * Math.abs(Math.cos((f - slam) * .9)) : -1.75 * (1 - smooth(Math.max(0, k)) ** 2);
+      const fzOn = f > fz && !shut ? Math.min(1, (f - fz) / 6) * (.6 + .4 * Math.sin(l * 2.1)) : 0, hp = [.1 + .013, top + .015, -1.0 - .06 + .06];
+      fizz.at(hp, l / FPS, fzOn); sm.forEach(fn => fn(l / FPS, hp, f > fz ? (shut ? Math.max(0, 1 - (f - slam) / 15) : .8) : 0));
+      const shake = shut ? .006 * Math.exp(-(f - slam) / 4) * Math.sin((f - slam) * 2.5) : 0;
+      c.dof = 3; cam(c, [.18 + shake, top + .78, -.42], [0, top + .1, -1.04], 40); }; },
   // 9 worse, it was poison: the match factory, green fumes over the tables
   9: c => { factory(c, false); const girls = ['#8c3b4a', '#3f6fb5', '#5d7a3a'].map((col, i) => { const a = person(GIRL(col), 1.62, {expr: i === 1 ? 'nervous' : 'neutral', seed: 40 + i, look: i - 1, costume: apron('#cfc2a0')}); a.mesh.position.set(-1.4 + i * 1.4, 0, -1.2); c.scene.add(a.mesh); return a; });
     void girls; const fm = fumes(c.scene, 16);
