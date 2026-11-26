@@ -92,7 +92,7 @@ const sweat = (t: number, on: number): Costume['head'] => (k: Kit) => { if (on <
 const smoke = (scene: THREE.Scene, n = 8, col = '#d8d4cc', size = .018) => Array.from({length: n}, (_, i) => { const m = new THREE.Mesh(new THREE.SphereGeometry(size * (1 + .4 * (i % 3)), 12, 8),
   new THREE.MeshBasicMaterial({color: col, transparent: true, opacity: 0, depthWrite: false})); m.layers.set(NOINK); scene.add(m);
   return (t: number, p: number[], amount: number) => { const k = (t * .45 + i / n) % 1; m.scale.setScalar(.5 + 2.2 * k);
-    m.position.set(p[0] + (.08 + .25 * k) * Math.sin(i * 2.3) * k + .06 * k, p[1] + .3 * k, p[2] + .04); (m.material as THREE.MeshBasicMaterial).opacity = .5 * amount * Math.sin(Math.PI * k); }; });
+    const sc = size / .018; m.position.set(p[0] + ((.08 + .25 * k) * Math.sin(i * 2.3) * k + .06 * k) * sc, p[1] + .3 * k * sc, p[2] + .04 * sc); (m.material as THREE.MeshBasicMaterial).opacity = .5 * amount * Math.sin(Math.PI * k); }; });
 /** world position of a point on a figure card (design units, 600 x 1000) */
 const onCard = (c: Card, x: number, y: number) => { c.mesh.updateMatrixWorld(true); return c.mesh.localToWorld(new THREE.Vector3(x / 600 - .5, .975 - y / 1000, 0)).toArray(); };
 /** acid bottle crammed into the coat pocket. k 0..1: 0 = held at the chest in the screen-right hand, .7 = shoved in, 1 = settled.
@@ -402,11 +402,22 @@ const B: Record<number, (c: Ctx) => Upd> = {
       hm.emissiveIntensity = .9 * pulse(hT, sT - 6); smat.emissiveIntensity = 1.2 * pulse(sT, sT + 60);
       const pr = pulse(hT, sT - 6); ring.visible = pr > .01; ring.position.copy(hp); ring.quaternion.copy(c.camera.quaternion); ring.scale.setScalar(1 + .3 * pr); (ring.material as THREE.MeshBasicMaterial).opacity = pr;
       c.dof = 6; cam(c, [.02, top + .4, -.3 + .04 * u], [0, top + .02, -.92], 42); }; },
-  // 12 neither half can catch fire on its own: struck on a stone, nothing
-  12: c => { c.near = .01; const top = room(c); const st = place(c.L, 'pirate-kit/environment-rock-2', .12, top, -1.0, 0, .2); c.scene.add(st);
-    const m = match3d(.2); c.scene.add(m);
-    return (f, l, u) => { const k = Math.sin(l * .4); m.position.set(-.27 + .05 * k, top + .04, -.86); m.rotation.z = -Math.PI / 2 + .25;
-      c.dof = 6; cam(c, [-.05, top + .3, -.2], [.02, top + .08, -.95], 42); }; },
+  // 12 neither half can catch fire on its own: the head is scraped hard on the bare table (only a puff of dust), then the
+  //   box's strip is scraped on the table too: nothing. Same layout as 11 (match in front, box behind) (4x props)
+  12: c => { c.near = .01; const top = room(c); const m = match3d(.2); c.scene.add(m); const bx = matchbox(); bx.scale.setScalar(4); c.scene.add(bx);
+    const bare = match3d(.2); (bare.children[1] as THREE.Mesh).visible = false; c.scene.add(bare);
+    const dust = smoke(c.scene, 6, '#bdb4a6', .006), half = T('L07', 1), own = T('L07', 4) - 2, a = .35;
+    return (f, l, u) => { const t = l / FPS;
+      // match: head down on the table, scraped back and forth twice (frames 4..30)
+      const ms = Math.min(1, Math.max(0, (l - 4) / 26)), sx = -.06 * Math.cos(ms * Math.PI * 4) * (ms > 0 && ms < 1 ? 1 : 0), lift = ms >= 1 ? smooth((l - 30) / 6) : 1 - smooth(l / 4);
+      const tilt = a * (1 - lift) + .0 * lift; m.rotation.z = -Math.PI / 2 - tilt; m.position.set(-.13 + sx - .2 * (Math.cos(tilt) - 1), top + .013 + .2 * Math.sin(tilt) + .002 * lift, -.8);
+      // then a bare stick (no head) is scraped along the box's strip (frames 34..60): nothing
+      const bs = Math.min(1, Math.max(0, (l - 34) / 26)), on = l > 30;
+      bare.visible = on; bare.position.set(-.07 + .07 * Math.sin(bs * Math.PI * 4) * (bs < 1 ? 1 : 0), top + .036 + .04 * (1 - smooth((l - 30) / 5)), -1.04 + .0705 + .006); bare.rotation.set(0, 0, -Math.PI / 2 - .12);
+      bx.position.set(0, top, -1.04);
+      const hx = m.position.x + .2 * Math.cos(tilt);
+      dust.forEach(fn => fn(t * 2, [hx, top + .01, -.8], ms > 0 && ms < 1 ? .9 : Math.max(0, .9 - (l - 30) / 10)));
+      void half; void own; c.dof = 6; cam(c, [.02, top + .4, -.3], [0, top + .02, -.92], 42); }; },
   // 13 they only light when you rub them together: struck on the box, flare (4x props)
   13: c => { c.near = .01; const top = room(c); const bx = matchbox(); bx.scale.setScalar(4); bx.position.set(.02, top, -1.0); c.scene.add(bx); const m = match3d(.2); c.scene.add(m);
     const fl = flame(c.scene, .18, 4); const lit = T('L07', 13);
