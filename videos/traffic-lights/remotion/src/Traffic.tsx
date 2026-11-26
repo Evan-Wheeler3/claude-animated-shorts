@@ -92,8 +92,8 @@ const gasSignal = () => {
   return {g, armL, armR, lamp, red, green, lever, setArms: (stop: number) => { armL.rotation.z = .7 * (1 - stop); armR.rotation.z = -.7 * (1 - stop); }};   // stop = level, go = both dropped 40 deg
 };
 /** pieces of a burst lantern: tumbling chunks with gravity, resting where they land */
-const debris = (scene: THREE.Scene, n = 12) => Array.from({length: n}, (_, i) => {
-  const m = new THREE.Mesh(new THREE.BoxGeometry(.06 + .04 * (i % 3), .05, .03 + .03 * (i % 2)), i % 4 === 0 ? std('#ff5a3a', .3) : i % 4 === 1 ? std('#4aff7a', .3) : std('#2c3a33', .5, .4));
+const debris = (scene: THREE.Scene, n = 12, cols = ['#ff5a3a', '#4aff7a', '#2c3a33', '#2c3a33'], sz = 1) => Array.from({length: n}, (_, i) => {
+  const m = new THREE.Mesh(new THREE.BoxGeometry((.06 + .04 * (i % 3)) * sz, .05 * sz, (.03 + .03 * (i % 2)) * sz * 2), std(cols[i % cols.length], .5));
   m.castShadow = true; m.visible = false; scene.add(m);
   const v = [Math.sin(i * 2.4) * 2.2, 2.5 + 2 * Math.abs(Math.cos(i * 1.7)), .8 + 1.4 * Math.abs(Math.sin(i * 3.1))];
   return (p: number[], e: number) => { m.visible = e >= 0; if (e < 0) return; const y = p[1] + v[1] * e - 4.9 * e * e, land = y <= .03;
@@ -116,7 +116,8 @@ const horse = (col = '#7a4a2a') => {
     const leg = new THREE.Mesh(new THREE.BoxGeometry(.13, 1.0, .14), coat); leg.position.y = -.5; const hoof = new THREE.Mesh(new THREE.BoxGeometry(.15, .1, .17), dark); hoof.position.y = -.98;
     piv.add(leg, hoof); body.add(piv); return {piv, ph: i === 0 || i === 3 ? 0 : .5}; });
   shadows(g);
-  return {g, pose: (phase: number, speed: number, rear = 0) => { legs.forEach(L => { L.piv.rotation.x = .5 * speed * Math.sin(2 * Math.PI * (phase + L.ph)); });
+  const base = coat.color.clone();
+  return {g, char: (x: number) => coat.color.copy(base).lerp(new THREE.Color('#1c1714'), x), pose: (phase: number, speed: number, rear = 0) => { legs.forEach(L => { L.piv.rotation.x = .5 * speed * Math.sin(2 * Math.PI * (phase + L.ph)); });
     body.position.y = .04 * speed * Math.abs(Math.sin(2 * Math.PI * phase)) + .25 * rear; body.rotation.x = -.55 * rear;
     if (rear > 0) { legs[0].piv.rotation.x = -1.1 * rear; legs[1].piv.rotation.x = -1.3 * rear; } }};
 };
@@ -140,23 +141,31 @@ const team = (L: Lib, col: string, body = '#6b3a24', coat = '#5a3a6a') => { void
   cr.g.position.z = -.75; g.add(h.g, cr.g);
   const d = actor(SIT_H(1.7)); d.k.mesh.position.set(0, 1.45, -1.3); g.add(d.k.mesh);
   const outfit = refStyle({jacket: coat, pants: '#2b2b33', boots: '#1d1a1a', hat: 'tophat'});
-  return {g, h, roll: cr.roll, driver: (expr: string, t: number, shock = 0) => d.draw(outfit, {mode: 'sit', seed: 50 + col.length, expr: expr as never,
+  return {g, h, roll: cr.roll, driver: (expr: string, t: number, shock = 0, burnt = 0) => d.draw(outfit, {mode: 'sit', seed: 50 + col.length, expr: expr as never,
+    costume: dress(soot(t, burnt), frazzle(burnt)),
     armFront: true, armPose: (side, S, gg) => shock > 0 ? [S, [S[0] + side * 30 * gg.u, S[1] - .2 * gg.HH], [S[0] + side * 46 * gg.u, S[1] - .6 * gg.HH]] as P[]
       : [S, [S[0] + side * 20 * gg.u, S[1] + .35 * gg.HH], [300 + side * 14 * gg.u, gg.chin + .75 * gg.HH + 3 * gg.u * Math.sin(t * 9)]] as P[]})};
 };
 /** the lantern blast: fireball sphere, comic burst rays, flame, flash light, tumbling debris, dark smoke. at(pos, e = seconds since boom) */
-const blast = (scene: THREE.Scene) => {
-  const fire = flame(scene, 1.6, 0), puff = smoke(scene, 12, '#3e3a38', .16), bits = debris(scene);
+/** billowing LIT smoke (shaded spheres read as a cloud; flat unlit discs don't): a rising, spreading mushroom */
+const cloud = (scene: THREE.Scene, n: number, size: number, col = '#4a4440') => Array.from({length: n}, (_, i) => {
+  const m = new THREE.Mesh(new THREE.SphereGeometry(size * (.7 + .5 * ((i * 7) % 3) / 2), 16, 12), new THREE.MeshStandardMaterial({color: col, roughness: 1, transparent: true, opacity: 0, depthWrite: false}));
+  scene.add(m); const a = i * 2.4, r = .35 + .65 * ((i * 5) % 7) / 6;
+  return (P: number[], e: number) => { m.visible = e > 0; if (!m.visible) return; const g = 1 - Math.exp(-e * 2.2);
+    m.position.set(P[0] + Math.cos(a) * r * size * 2.4 * g, P[1] + size * (.6 + 6 * g * (.5 + .5 * r)) + .8 * e, P[2] + Math.sin(a) * r * size * 1.2 * g);
+    m.scale.setScalar(.4 + .9 * g); (m.material as THREE.MeshStandardMaterial).opacity = .7 * Math.min(1, e * 6) * Math.max(0, 1 - (e - .4) / .9); }; });   // rises and clears in ~1.3 s
+const blast = (scene: THREE.Scene, k = 1, cols?: string[]) => {
+  const fire = flame(scene, 1.6 * k, 0), smk = cloud(scene, 8 + 3 * Math.round(k), .2 * k), bits = debris(scene, Math.round(12 * k), cols, k > 1.5 ? 2.5 : 1);
   const flash = new THREE.PointLight('#ffd08a', 0, 14, 1.5); scene.add(flash);
-  const burst = new Card(3.2, .6, 500, 500, false); burst.mesh.userData.figure = false; scene.add(burst.mesh);
+  const burst = new Card(3.2 * k, .6, 500, 500, false); burst.mesh.userData.figure = false; scene.add(burst.mesh);
   const ball = new THREE.Mesh(new THREE.SphereGeometry(1, 24, 16), new THREE.MeshBasicMaterial({color: '#ffb347', transparent: true, toneMapped: false, depthWrite: false}));
   ball.layers.set(NOINK); scene.add(ball);
   return (P: number[], e: number, t: number) => { const on = e >= 0;
-    fire.at([P[0], P[1] - .5, P[2] + .3], t, on ? (e < .12 ? 1.7 : Math.max(0, 1.4 - 2.2 * (e - .12))) : 0);
-    flash.position.set(P[0], P[1], P[2] + 1); flash.intensity = on ? 80 * Math.exp(-e * 9) : 0;
-    bits.forEach(fn => fn(P, on ? e : -1)); puff.forEach(fn => fn(t, [P[0], P[1] - .2, P[2] + .2], on ? Math.max(0, 1 - e * .5) : 0));
-    burst.mesh.visible = on && e < .3; if (burst.mesh.visible) { burst.mesh.position.set(P[0], P[1] - 1.6, P[2] + .5); burst.draw(p => fxBurst(p, e / .3, '#fff3b0', 12, 40, 200)); }
-    ball.visible = on && e < .35; if (ball.visible) { ball.position.set(P[0], P[1], P[2] + .2); ball.scale.setScalar(.2 + 2.2 * smooth(e / .35)); (ball.material as THREE.MeshBasicMaterial).opacity = .9 * (1 - e / .35); } };
+    fire.at([P[0], P[1] - .5 * k, P[2] + .3 * k], t, on ? (e < .12 ? 1.7 : Math.max(0, 1.4 - 2.2 * (e - .12))) : 0);
+    flash.position.set(P[0], P[1], P[2] + 1); flash.intensity = on ? 80 * k * k * Math.exp(-e * 9 / Math.sqrt(k)) : 0; flash.distance = 14 * k;
+    bits.forEach(fn => fn(P, on ? e : -1)); smk.forEach(fn => fn([P[0], P[1] - .3 * k, P[2]], on ? e - .1 : -1));
+    burst.mesh.visible = on && e < .3; if (burst.mesh.visible) { burst.mesh.position.set(P[0], P[1] - 1.6 * k, P[2] + .5 * k); burst.draw(p => fxBurst(p, e / .3, '#fff3b0', 12, 40, 200)); }
+    ball.visible = on && e < .25; if (ball.visible) { ball.position.set(P[0], P[1], P[2] + .2); ball.scale.setScalar(k * (.2 + 1.8 * smooth(e / .25))); (ball.material as THREE.MeshBasicMaterial).opacity = .9 * (1 - e / .25) ** 2; } };
 };
 /** bandaged head + stars circling it (head hook) */
 const hurt = (t: number, on: number): Costume => ({head: k => { if (on <= 0) return; const u = k.u;
@@ -216,19 +225,20 @@ const B: Record<number, (c: Ctx) => Upd> = {
   // 2 "See, the city needed to stop drivers from crashing at busy intersections": two horse wagons trot head-on into each
   //   other at the crossing on "crashing": both horses rear, a crate flies off, they recoil.
   2: c => { london(c, -16); const A = team(c.L, '#7a4a2a'), Bt = team(c.L, '#d8d0c4'); A.g.rotation.y = Math.PI / 2; c.scene.add(A.g, Bt.g);   // T-bone at the crossing
-    const crate = place(c.L, 'fantasy-props-megakit/crate-wooden', 0, 0, 0, 0, .55); c.scene.add(crate); const dust = smoke(c.scene, 8, '#c8b89a', .12);
-    const crash = T('L02', 8) - 2;
-    return (f, l, u) => { const t = l / FPS, e = (f - crash) / FPS, before = f < crash, back = before ? 0 : .3 * smooth(e * 4);
+    const crate = place(c.L, 'fantasy-props-megakit/crate-wooden', 0, 0, 0, 0, .55); c.scene.add(crate);
+    const boomFx = blast(c.scene, 2.6, ['#6b3a24', '#8a5a34', '#c9a24a', '#2a1a12']), crash = T('L02', 8) - 2;                                    // owner note: a HUGE fiery explosion when they collide
+    return (f, l, u) => { const t = l / FPS, e = (f - crash) / FPS, before = f < crash, back = before ? 0 : 1.1 * smooth(e * 3);
       A.g.position.set(before ? -1.15 - 1.6 * (crash - f) / FPS : -1.15 - back, 0, 0);            // from the left, across the frame
       Bt.g.position.set(0, 0, before ? -1.15 - 2.6 * (crash - f) / FPS : -1.15 - back);           // down the street toward us
-      const rear = before ? 0 : Math.sin(Math.min(1, e / .8) * Math.PI) * .9;
-      A.h.pose(t * 2.2, before ? 1 : 0, rear); Bt.h.pose(t * 2.4 + .3, before ? 1 : 0, rear * .8);
+      const rear = before ? 0 : Math.sin(Math.min(1, e / .9) * Math.PI) * 1.0, burnt = before ? 0 : smooth(e * 8);
+      A.h.pose(t * 2.2, before ? 1 : 0, rear); Bt.h.pose(t * 2.4 + .3, before ? 1 : 0, rear * .85); A.h.char(burnt * .85); Bt.h.char(burnt * .8);
       A.roll(A.g.position.x); Bt.roll(Bt.g.position.z);
-      A.driver(before ? 'neutral' : 'shock', t, before ? 0 : 1); Bt.driver(before ? 'smile_closed' : 'shock', t, before ? 0 : 1);
-      const ce = Math.max(0, e), cy = .85 + 4.5 * ce - 4.9 * ce * ce;                                  // a crate bounces off the brown wagon
-      crate.position.set(A.g.position.x - 2.1 + .9 * ce, cy > 0 ? cy : 0, .9 * ce); crate.rotation.set(ce * 6, ce * 4, 0);
-      dust.forEach(fn => fn(t, [0, .3, 0], before ? 0 : Math.max(0, 1 - e)));
-      c.dof = 0; cam(c, [2.4 - .4 * u + kick(f - crash, .15), 7.2 - .5 * u, 9.6 - .8 * u], [-1.5, .4, -2.0], 40); }; },
+      A.driver(before ? 'neutral' : e < .6 ? 'shock' : 'dazed', t, before ? 0 : 1, burnt); Bt.driver(before ? 'smile_closed' : e < .6 ? 'shock' : 'dazed', t, before ? 0 : 1, burnt);
+      boomFx([-.45, 1.6, -.45], before ? -1 : e, t);
+      const ce = Math.max(0, e), cy = 1.3 + 7 * ce - 4.9 * ce * ce;                                    // a crate is blown sky-high off the brown carriage
+      crate.position.set(A.g.position.x - 2.1 + 1.6 * ce, cy > 0 ? cy : 0, 1.4 * ce); crate.rotation.set(ce * 9, ce * 6, 0);
+      c.dof = 0; const sh = kick(f - crash, .45);
+      cam(c, [2.4 - .4 * u + sh, 7.2 - .5 * u + sh * .5, 9.6 - .8 * u], [-1.5, .4 + .6 * smooth(e * 2), -2.0], 40); }; },
   // 3 "So they put up a signal with lights, to tell people when to stop and when to go": the signal springs up on "put up";
   //   on "stop" the officer pulls the lever, arms go level, red glows and the wagon halts; on "go" arms drop, green, it trots on.
   3: c => { london(c); const sig = gasSignal(); sig.g.position.set(-.3, 0, -1.2); c.scene.add(sig.g); const A = team(c.L, '#7a4a2a'); A.g.rotation.y = Math.PI / 2; c.scene.add(A.g);
