@@ -1,0 +1,93 @@
+[
+ {
+  "line": "L01",
+  "text": "The oldest way to make fire is to rub two sticks together. But it takes so long that your arms give out.",
+  "emph": [
+   16
+  ],
+  "start": 0.05,
+  "end": 5.97,
+  "take": "L01_t2.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L02",
+  "text": "So people made chemical matches that burst into flame when you dipped them in acid. But then you had to carry a bottle of acid around.",
+  "emph": [
+   14
+  ],
+  "start": 6.15,
+  "end": 12.95,
+  "take": "L02_t0.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L03",
+  "text": "Next came matches that you dragged through sandpaper. But they stank of sulfur, and burning bits fell onto the carpet.",
+  "emph": [
+   19
+  ],
+  "start": 13.01,
+  "end": 19.482,
+  "take": "L03_t2.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L04",
+  "text": "So match makers switched to white phosphorus, which lit on anything you struck it against. But it lit so easily that it had to be kept in a sealed tin.",
+  "emph": [
+   10,
+   28
+  ],
+  "start": 19.542,
+  "end": 27.542,
+  "take": "L04_t2.wav",
+  "heard_miss": 29
+ },
+ {
+  "line": "L05",
+  "text": "Worse, it was poison. The fumes destroyed the jawbones of the factory workers, and their bones even glowed in the dark.",
+  "emph": [
+   3,
+   17
+  ],
+  "start": 27.602,
+  "end": 34.951,
+  "take": "L05_t1.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L06",
+  "text": "So match makers split the match in two. The head got one set of chemicals, and the strip on the box got red phosphorus.",
+  "emph": [
+   7
+  ],
+  "start": 35.211,
+  "end": 42.091,
+  "take": "L06_t2.wav",
+  "heard_miss": 23
+ },
+ {
+  "line": "L07",
+  "text": "Neither half can catch fire on its own. They only light when you rub them together. That is why it is called a safety match.",
+  "emph": [
+   15,
+   23
+  ],
+  "start": 42.151,
+  "end": 48.671,
+  "take": "L07_t1.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L08",
+  "text": "So striking a match still works like the very first fire. You are rubbing two things together, with some chemical help!",
+  "emph": [
+   19
+  ],
+  "start": 48.931,
+  "end": 55.384,
+  "take": "L08_t2.wav",
+  "heard_miss": 0
+ }
+]
