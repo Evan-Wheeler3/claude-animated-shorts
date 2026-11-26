@@ -229,7 +229,7 @@ const lightBox = (n: 2 | 3, style: 'old' | 'modern' = 'old') => { const g = new 
   const mk = (c: string, y: number) => { const m = new THREE.Mesh(new THREE.CircleGeometry(.12, 28), new THREE.MeshStandardMaterial({color: shade(c, .35), emissive: c, emissiveIntensity: 0, roughness: .3}));
     m.position.set(0, y, .165); g.add(m); const back = m.clone(); back.position.z = -.165; back.rotation.y = Math.PI; back.material = m.material; g.add(back); if (style === 'modern') { const v = new THREE.Mesh(new THREE.CylinderGeometry(.15, .15, .14, 20, 1, true, 0, Math.PI), std('#151515', .5)); v.rotation.x = Math.PI / 2; v.rotation.z = Math.PI / 2; v.position.set(0, y + .03, .23); g.add(v); }
     return m; };
-  const red = mk('#ff2a1a', n === 2 ? .17 : .33), green = mk('#2aff5a', n === 2 ? -.17 : -.33), yellow = n === 3 ? mk('#ffc21a', 0) : null;
+  const red = mk('#ff0a0a', n === 2 ? .17 : .33), green = mk('#2aff5a', n === 2 ? -.17 : -.33), yellow = n === 3 ? mk('#ffc21a', 0) : null;
   shadows(g);
   return {g, set: (v: {red?: number; yellow?: number; green?: number}) => { (red.material as THREE.MeshStandardMaterial).emissiveIntensity = 3 * (v.red ?? 0);
     (green.material as THREE.MeshStandardMaterial).emissiveIntensity = 3 * (v.green ?? 0); if (yellow) (yellow.material as THREE.MeshStandardMaterial).emissiveIntensity = 3 * (v.yellow ?? 0); },
