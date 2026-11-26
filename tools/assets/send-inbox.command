@@ -21,7 +21,14 @@ for z in "${zips[@]}"; do
   echo "$name: $n files ($kind, ${mb} MB)"
   rm -rf "$tmp" 2>/dev/null || true
 done
-git add "$OUT"
-git commit -q -m "Assets inbox: $(ls "$OUT" | tr '\n' ' ')" || true
-git push -q && rm -f "${zips[@]}" && echo "Pushed. Tell Claude: assets sent." || echo "Push failed; zips kept in $IN."
+# push one pack per commit: a single huge push is refused by GitHub (HTTP 400)
+git config http.postBuffer 524288000
+for d in "$OUT"/*/; do
+  p=$(basename "$d"); git add "$d"
+  git diff --cached --quiet && continue
+  git commit -q -m "Assets inbox: $p"
+  ok=0; for try in 1 2 3; do git push -q && { ok=1; break; }; echo "push of $p failed (try $try), retrying..."; sleep 5; done
+  [ $ok = 1 ] && echo "pushed $p" || { echo "Could not push $p. Zips kept in $IN; send Claude a screenshot."; read -n1 -r -p "Press any key to close."; exit 1; }
+done
+rm -f "${zips[@]}" && echo "All pushed. Tell Claude: assets sent."
 read -n1 -r -p "Press any key to close."
