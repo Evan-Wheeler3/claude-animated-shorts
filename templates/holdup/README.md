@@ -7,6 +7,8 @@ Everything the Vasa short had to invent, ready for the next story (lessons: `vid
 | `remotion/` | Remotion 4.0.544 / three 0.169 project that renders in the cloud (software GL) and on the Mac (GPU). Public dir = `ASSETS_DIR` | Claude (copy per story), Codex (asset preview) |
 | `remotion/src/kit/look.ts` | Sky dome (bridge palettes), painted clouds, stylised toon water (crests, glints, hull foam, fog), shoreline with painted houses, cliffs, trees, church | Claude |
 | `remotion/src/kit/cards.ts` | Toon character/fx cards with contact shadows, camera-facing; splash and wind-streak effects; Lambert conversion | Claude |
+| `remotion/src/kit/world.ts` | **Look v2 (approved):** `lightRig()`, `candle()`, `makePost()` (AO, lens blur, bloom, ACES), `place()` library models, `grassField()`, `refStyle()` cast, caption style | Claude |
+| `remotion/src/kit/costume.ts` | Fitted costumes on the toon cards: tricorn, flat/motor cap, periwig, cravat, apron, belt, chain, scarf, razor, coin bag, foam | Claude |
 | `remotion/src/kit/post.ts` | Ink → lens blur → tone map + grade chain; `dofFor()` | Claude |
 | `remotion/src/AssetPreview.tsx` + `preview.sh` | 3 views per asset (three-quarter with a 1.75 m sailor, side, moving parts opened) + contact sheet | **Codex before delivering**, Claude at acceptance |
 | `probe-model.mjs` | Measures a hero model: walkable decks, masts/posts, half-width along the length, named parts | Claude before placing any camera or character |

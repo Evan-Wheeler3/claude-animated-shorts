@@ -11,6 +11,16 @@ Supplement to the original SKILL.md. Target 45–60 seconds (a soft target: the 
 
 These are creative defaults, not fixed second-by-second rules. Fit the actual narration and story.
 
+## Preferred structure for "why is it like that" topics: the Fix-Fail Chain (owner pick, 2026-11-26)
+Owner shared a competitor script (tyres, ~170 words) as the style to beat. We copy the STRUCTURE, never the topic,
+lines or beats of someone else's video. Pattern:
+1. **Start with the simplest version, in second person:** "If you ... , you've built a ...". No dates, no names.
+2. **Chain:** each line = one fix ("So, you ...") + the new problem it causes ("but ..."). 6-10 links, each a concrete,
+   visual failure (it slices, it shreds, it floats, it tears). A new picture every link (~2-3 s).
+3. **Drop the title's answer in the middle** ("That's why X is Y, but ..."): the video keeps paying off after it.
+4. **End on a reframe** (a surprising true consequence of the final design) **+ a callback** to the first line.
+5. ~150-180 words; every number must be sourced (no "a bucket every third of a second" unless we can cite it).
+
 ## What tends to work creatively
 - A clear physical problem the audience can visualize
 - Specific stakes, scale and consequences

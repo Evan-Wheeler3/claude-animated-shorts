@@ -9,7 +9,7 @@ Lessons behind every rule here: `videos/vasa-warship/RETRO.md`.
 |---|---|---|
 | **Owner** | Ideas, every approval gate, merges, publishing, final say on claims and hooks | — |
 | **Claude** | Planning, research, script, voice, shot list, asset brief + Codex prompts, asset acceptance, look, characters, water/effects, camera, animation, editing, music, QA | Approve its own work on the owner's behalf |
-| **Codex** | Every 3D prop, set piece and background kit in the asset brief, as GLBs that pass `tools/check-assets.mjs` **and** its own `tools/asset-preview` stills | Characters, water/effects, scene code, edits outside `videos/<story-id>/assets/` |
+| **Codex** (optional since 2026-11-26) | Only bespoke models the library can't supply (search `assets/library/catalog.json` first); every 3D prop, set piece and background kit in its asset brief, as GLBs that pass `tools/check-assets.mjs` **and** its own `tools/asset-preview` stills | Characters, water/effects, scene code, edits outside `videos/<story-id>/assets/` |
 
 Codex starts the moment the script is approved and works **in parallel** with Claude's voice, look and blocking
 work. The more of the world Codex builds (props, ships, buildings, terrain pieces, interiors), the less Claude has
@@ -81,8 +81,13 @@ Numbers from `references/reports/editing.md`:
 ## Settled rules
 - **Length:** 45-60 s (the reference channel runs 55-78 s, median 60.5 s; see `research/vasa/`). ~165-220 words.
 - **Holds:** the camera never fully freezes for 4+ frames; a hold is a slow creeping push. Freeze frames only as named comic beats.
-- **Characters** are our 2D toon cards (`toon.ts`), with contact shadows. Codex never builds characters.
-- **No captions or labels,** English, one steady narrator (currently `am_puck`, Kokoro), subtle original music under the voice, -14 LUFS.
+- **Look v2 (owner-approved 2026-11-26):** `templates/holdup/remotion/src/kit/world.ts` + `costume.ts`. World built from
+  `assets/library` (Quaternius + Poly Haven, search `catalog.json`; new packs via `assets/PACKS.md` -> `assets/inbox`),
+  approved light rig (low side sun, low HDRI ambient), AO + bloom + ACES, no ink on the world. Reference: `videos/look-test/previews/stills-v4-*`.
+- **Characters** are our 2D toon cards (`toon.ts`) in the reference style: `refStyle()` = plain white faces, black stick
+  limbs, bold deadpan faces; hats, wigs and clothes from `costume.ts` (fitted to the body). No character cast shadows.
+- **Read-along captions ON** (owner 2026-11-25): 1-3 words, Lilita One, white with a thick dark stroke (`captionCss`).
+- English, one steady narrator: **voice B** (Qwen3-TTS clone of the Phil narrator), solo piano bed ~20 LU under the voice, -14 LUFS.
 
 ## Branches
 - Claude: one story branch. Codex: `codex/<story-id>`, touching only `videos/<story-id>/assets/`.
