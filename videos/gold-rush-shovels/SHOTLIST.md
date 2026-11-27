@@ -1,0 +1,29 @@
+# Gold Rush Shovels — shot script
+
+**Target** 37 seconds, 9:16, 30 fps. Timings are editorial estimates. Retiming follows the aligned owner narration. Hold the final image about half a second after the last word.
+
+**Geography** At the shop, miner and doorway live screen left and Brannan and stock live screen right. The shovel always moves right to left across the counter. The gold moves left to right. Keep the same screen axis in inserts and return to the opening lens for the payoff.
+
+| Shot | Time | Narration cue | Picture, camera and performance | Sound, transition and contact |
+| --- | --- | --- | --- | --- |
+| 01 | 00:00–00:03.5 | “One man got rich … selling shovels.” | Low, locked close-up across the counter. Start with a clean shovel blade slapping the wood in the foreground. Focus lifts to the mud-splattered miner at the counter as he blinks at the impact. Brannan's clean cuff stays on the right edge. Cut as the miner regains his composure. | Dry wooden thump, short blade ring. Make the blade contact before the rebound and keep the grip consistent. |
+| 02 | 00:03.5–00:08.0 | “In 1849 … strike it rich.” | River wide, low telephoto look. Follow the same miner charging toward one open patch of bank. Two prospectors beat him there from either side. He skids to a stop with his worn shovel still in hand and looks up the track. Hold his change of eyeline. | Boots in gravel, creek ambience. The skid ends with planted feet. Cut on his look to the pan crate. |
+| 03 | 00:08.0–00:12.0 | “Samuel Brannan stocked his store …” | Inside, medium at shelf height. Brannan fits the last of a tall stack of nested pans on the display, then straightens one shovel. The miner and the first waiting customer appear through the doorway on screen left. Brannan looks up at the line. | Nested metal ring, dry board creak. Match the circular top pan into the price insert. |
+| 04 | 00:12.0–00:16.5 | “A gold pan that once cost twenty cents? … eight dollars for one.” | Locked macro of a pan on a plain neutral board with the same period palette and no shop branding. Set “20¢” beside it, pause at the question, then replace the price with “$8” on “eight.” The pan stays exactly the same size. Match its dark rim into the shop counter angle. | Small metal tap on the price change. Make each price readable on a phone. This insert represents market prices. |
+| 05 | 00:16.5–00:19.5 | “Supplies were scarce … kept buying.” | Medium across the counter. Brannan hands over a pan. Two matched action cuts clear the shelf while the queue fills the door. On the last cut the hero miner gets the last pan. He looks back at the line, then hugs it to his chest. | Three progressively faster pan clinks. Keep exchange between palms and pan rim. Leave all purchase prices outside this frame. |
+| 06 | 00:19.5–00:24.5 | “One report estimated … sixteen dollars in gold.” | Start on the miner crouched in the shallows, then cut close as he tips the pan. The first swish sends water up his sleeve. After the second swish a tiny asymmetrical nugget stays in the pan. Put “$16 in gold / day (estimate)” in open frame space over the work, then clear it before the distinct nugget reveal. | Swish, sleeve splash, brief quiet on the discovery. Pan water falls with tilt. Nugget settles against the pan wall. Show his delight with one widening eye beat. |
+| 07 | 00:24.5–00:29.0 | “Brannan's store reportedly took in …” | Cut from a glint in the pan to a glint in Brannan's shallow drawer, seen low from three-quarter angle. Show three customers in short matched cuts, each exchange moving from the waiting line to the counter. Super “Over $2,000 / day in sales” on “two thousand.” Keep Brannan's movements brisk and ordinary. | Till scrape and three dry clinks. Cut the price graphic before the next beat. Keep the gold pile modest and labels clear of the hands. |
+| 08 | 00:29.0–00:32.0 | “The miners went looking for a fortune.” | Creek medium. Hero miner holds up the same nugget and gives it a private grin. He pockets it, plants his worn shovel in a gravel seam and leans. The handle cracks. Hold one eye flick from the broken tool toward the store. | Wood crack after the lean. Music ducks at the snap. Keep the blade planted, break at the pre-scored point, and cut on the miner's look. |
+| 09 | 00:32.0–00:37.0 | “The man selling shovels … bring it to him.” | Return to the opening counter lens. Miner holds the broken handle on the left. Brannan drops the fresh blade onto the counter as in the opening, then slides it in from the right. The miner starts to take it. Brannan rests one finger on the blade. One beat of eye contact. The miner slides over the same nugget. Follow it just far enough to see Brannan drop it into the drawer. The miner starts to leave with the shovel as the drawer shuts. Cut on the dry knock. | Payoff order is slide, pause, gold-to-wood clink, drawer knock. Give the gold handoff a clear silhouette and the final picture a half-second hold. Keep the final contact audible over the score. |
+
+## Stills to prove first
+
+- **01** · Blade across the counter and the miner's face both read at phone size.
+- **04** · The $8 price still, with the pan recognizable and the figure inside the safe area.
+- **06** · Nugget sitting in wet gravel in the pan, with its asymmetrical silhouette visible.
+- **09** · Replacement shovel moving left and the hero nugget moving right. Crop to hands and the counter if a wider frame hides the trade.
+
+## Motion proofs after stills review
+
+- Pan handoff and water-to-nugget reveal. Inspect hand contacts, rim occlusion, water direction and where the nugget settles.
+- Broken shovel and final exchange. Inspect planted blade and handle split, shelf-to-counter scale, gold transfer, drawer clearance and comic holds. Watch the sequence muted for legibility and then with audio for the contact cues.
