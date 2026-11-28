@@ -1,0 +1,169 @@
+{
+ "_": "Each picture starts LEAD frames before word `w` (0-based) of script line `line` in ../../voice/words.json.",
+ "lead": 2,
+ "tail": 0.6,
+ "pics": [
+  {
+   "pic": 1,
+   "line": "L01",
+   "w": 0,
+   "env": "set"
+  },
+  {
+   "pic": 2,
+   "line": "L01",
+   "w": 8,
+   "env": "set"
+  },
+  {
+   "pic": 3,
+   "line": "L01",
+   "w": 11,
+   "env": "set"
+  },
+  {
+   "pic": 4,
+   "line": "L02",
+   "w": 0,
+   "env": "set"
+  },
+  {
+   "pic": 5,
+   "line": "L02",
+   "w": 7,
+   "env": "set"
+  },
+  {
+   "pic": 6,
+   "line": "L03",
+   "w": 0,
+   "env": "set"
+  },
+  {
+   "pic": 7,
+   "line": "L03",
+   "w": 6,
+   "env": "set"
+  },
+  {
+   "pic": 8,
+   "line": "L03",
+   "w": 14,
+   "env": "set"
+  },
+  {
+   "pic": 9,
+   "line": "L04",
+   "w": 0,
+   "env": "set"
+  },
+  {
+   "pic": 10,
+   "line": "L05",
+   "w": 0,
+   "env": "set"
+  },
+  {
+   "pic": 11,
+   "line": "L05",
+   "w": 6,
+   "env": "set"
+  },
+  {
+   "pic": 12,
+   "line": "L06",
+   "w": 0,
+   "env": "set"
+  },
+  {
+   "pic": 13,
+   "line": "L06",
+   "w": 6,
+   "env": "set"
+  },
+  {
+   "pic": 14,
+   "line": "L07",
+   "w": 0,
+   "env": "set"
+  },
+  {
+   "pic": 15,
+   "line": "L07",
+   "w": 5,
+   "env": "set"
+  },
+  {
+   "pic": 16,
+   "line": "L07",
+   "w": 10,
+   "env": "set"
+  },
+  {
+   "pic": 17,
+   "line": "L08",
+   "w": 0,
+   "env": "set"
+  },
+  {
+   "pic": 18,
+   "line": "L08",
+   "w": 5,
+   "env": "set"
+  },
+  {
+   "pic": 19,
+   "line": "L09",
+   "w": 0,
+   "env": "set"
+  },
+  {
+   "pic": 20,
+   "line": "L09",
+   "w": 5,
+   "env": "set"
+  },
+  {
+   "pic": 21,
+   "line": "L10",
+   "w": 0,
+   "env": "set"
+  },
+  {
+   "pic": 22,
+   "line": "L10",
+   "w": 9,
+   "env": "set"
+  },
+  {
+   "pic": 23,
+   "line": "L11",
+   "w": 0,
+   "env": "set"
+  },
+  {
+   "pic": 24,
+   "line": "L11",
+   "w": 5,
+   "env": "set"
+  },
+  {
+   "pic": 25,
+   "line": "L11",
+   "w": 7,
+   "env": "set"
+  },
+  {
+   "pic": 26,
+   "line": "L12",
+   "w": 0,
+   "env": "set"
+  },
+  {
+   "pic": 27,
+   "line": "L13",
+   "w": 0,
+   "env": "set"
+  }
+ ]
+}
