@@ -70,7 +70,16 @@ Engaged ÷ views across the 17 Shorts with data: median **53%**, range 27-68%. V
    limits distribution. Its first line is a calm statement ("The oldest way to make fire is...") over a caveman
    sitting down, with no question or surprise in the first 2 s.
 
+10. **Reference study (2026-11-28), outside channels in our format:** *Random numbers* (9.7M views, 47 s) and
+    *Pudding money glitch* (3.4M, 59 s). Both: one subject per shot, a new picture every 2–2.5 s, plain bright sets,
+    big expressive faces, one small white caption word, and a "person beats a system" story with a huge number as the
+    payoff. Details and rules: `ANIMATION-PLAYBOOK.md` section 1b; frames and transcripts in `refs/`.
+
 ## Hypotheses (not shown by the data)
+- **Our shots are too busy, not too many.** The references change the picture *more* often than we do, but each shot
+  has one subject on a plain background. Test: the next video built to playbook 1b, same voice and length band.
+- **Story type matters.** Both references are about one person and a clever stunt; traffic-lights is the history of
+  an object. Compare its retention with safety-matches (people with a problem) when the numbers are in.
 - The 6-10 s dip is the "orient" stretch after the hook (dates, names, setup), e.g. Niagara line 2-3 and Vasa L02-L04
   (guns, sculptures, "The King had approved the design himself."). It matches the "long dates/names before viewers
   know why they matter" warning in `SHORTS-STORYTELLING.md`. **Test:** a second hook or reveal by ~6 s.
@@ -85,4 +94,6 @@ Engaged ÷ views across the 17 Shorts with data: median **53%**, range 27-68%. V
 | Next upload | Variable changed | Held constant | Success looks like |
 |---|---|---|---|
 | next after safety-matches | **Opening only:** first 1.5 s = a surprising claim or question shown on screen (e.g. "Matches used to explode in your pocket"), with motion on frame 1; body format unchanged (Fix-Fail Chain, look v2, read-along captions, voice B) | everything after ~3 s | Stayed to watch > 70%; views keep rising after hour 4 |
+| next after traffic-lights | **Visual simplicity (playbook 1b):** one subject per shot, plain bright sets, picture change every 2–2.5 s, person-beats-a-system story | voice B, piano, read-along captions (1–3 words), hook on frame 1, ~45–60 s | Stayed to watch > 70%; Avg % viewed ≥ safety-matches |
+| after that | **Captions only:** one small white word, no highlight | everything else | Stayed to watch and AVD not lower |
 | (Step 2) | Hook extended: claim proven on frame 1 **and** a second reveal by ~6 s | voice, length band | Engaged ÷ views > 60%; RRP at 10 s > 0.5; any views past day 2 |

@@ -23,6 +23,40 @@ The first cut was rejected for three reasons. Check every shot against all three
 Comic exaggeration is welcome *on top of* a literal action: the bottle crammed into the pocket with a huge bulge, noodle
 arms, a TUNA label on the "sealed tin". Make it funny only once it's clear.
 
+## 1b. Simplicity: one thing per shot (reference study, 2026-11-28)
+
+The owner felt our shots were over-complicated. Two outside Shorts in nearly our format (2D toon characters in simple 3D
+sets) were studied frame by frame: *Why Humans Can't Pick Random Numbers* (Ricks Clips, 9.7M views, 47 s) and *This Man
+Found a Real-Life Money Glitch… in Pudding* (Timeless moments, 3.4M views, 59 s). Frames, cut times and transcripts are
+in `refs/` (`tools/refs/grab.sh` fetches more on the Mac). Only two references: treat these as strong defaults to test,
+not proven laws. Side by side with traffic-lights, the difference was not the format, it was how much each shot carries.
+
+- **One subject per shot.** Either one character (often a close-up filling half the frame) or one prop alone on a plain
+  surface: the pudding cup on a table for "the pudding company", an envelope with barcodes flying in for "mail in 10
+  barcodes", a calendar with the 31st circled for "end of the month". Our shots held a character plus pole, horses,
+  barrels, wall and ground texture, so nothing read first at phone size.
+- **Cut to the noun.** When the line names a thing, the picture *is* that thing within ~0.3 s. Wide establishing shots
+  only briefly (≤ 2 s), then go in close.
+- **A new picture every 2–2.5 s.** Pudding: 24 cuts in 59 s. Random numbers moves the camera to a new subject instead
+  of cutting, same rate. Ours changed every ~3 s, but many shots reused the same wide set, so it felt slower. A shot
+  "changes" only when the subject changes, not when the same set is re-framed.
+- **Plain, bright backgrounds.** Flat-colour or simply striped walls, empty sky, clean floors; bright, saturated,
+  high-key lighting. No busy textures (stone, timber, cobbles) behind characters: with ink outlines they turn into
+  noise, and the dim brown palette of traffic-lights read muddy next to the references.
+- **Big characters, big faces.** The face changes on every beat (smug → sweating → shocked) and is large enough to read.
+  Characters are centred and fill a third to a half of the frame height most of the time.
+- **One idea = one picture.** Abstract ideas become one simple visual: elevator buttons for "most numbers start with
+  1", a 10×10 coin grid with a streak lighting up for "randomness is streaky", a winged coin for "every quarter was 100
+  air miles".
+- **Captions: one small white word at a time** in both references (no highlight colour). Ours are 1–3 words with a
+  yellow active word. Not yet changed in the kit: test it as its own variable (see LEARNING-LOG experiments).
+- **Story shape (both references):** a person beating, or failing to beat, a system. Line 1 names the person and the
+  surprising thing they did ("A man walked into a cheap grocery store, bought every single cup of chocolate pudding").
+  Then why it worked → a setback (deadline, blisters; or the auditor) → a clever fix or the catch → a huge concrete
+  number as payoff ("1.25 million air miles... Europe 31 times"). Prefer this over "how an object evolved".
+
+Per-shot test before building: *name the one subject of this shot in two words.* If you can't, split the shot.
+
 ## 2. Workflow that avoids trial and error
 
 - **Plan each shot as beats tied to words.** Write the comment first: "on *give* the arms flop; on *poison* fumes rise".
@@ -152,6 +186,7 @@ arms, a TUNA label on the "sealed tin". Make it funny only once it's clear.
 
 ## 9. Pre-show checklist (per shot)
 
+- [ ] One subject per shot (nameable in two words), on a plain bright background; the picture changes every 2–2.5 s
 - [ ] The character does the line's verb with their body; their face changes on the beat
 - [ ] Beats are timed with `T(line, i)` on the right words
 - [ ] Frame strip: nothing clips, nothing hidden by draw order, nothing leaves the portrait frame unintentionally
