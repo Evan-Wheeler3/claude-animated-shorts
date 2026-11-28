@@ -1,6 +1,6 @@
 # The Retired Couple Who Cracked The Lottery: script v1 (person beats a system, for the script gate)
 
-Narrator voice B. ~165 words (~52 s). Experiment (LEARNING-LOG.md): **visual simplicity** (ANIMATION-PLAYBOOK.md 1b):
+Narrator voice B. ~183 words (~58 s; traffic-lights ran 3.1 words/s). Experiment (LEARNING-LOG.md): **visual simplicity** (ANIMATION-PLAYBOOK.md 1b):
 one subject per shot, plain bright sets, a new picture every 2–2.5 s. Story shape from the two reference Shorts:
 person + stunt in line 1 → why it works → a setback → the fix → trouble → a huge number → a closing image.
 Title options: "He Cracked The Lottery In 2 Minutes" · "The Retired Couple Who Beat The Lottery" · "The Lottery Had A Math Mistake"
