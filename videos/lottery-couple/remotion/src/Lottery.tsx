@@ -26,7 +26,7 @@ const W = words as Word[];
 const T = (line: string, i = 0) => Math.round(tw(line, i) * FPS);
 const FONT = 'LilitaOneLocal, Arial Black, sans-serif';
 
-const IDS = ['kenney-car-kit/sedan'];
+const IDS: string[] = [];   // no library models: every prop is simple code geometry (playbook 1b)
 type Lib = Record<string, THREE.Group>;
 type Ctx = {L: Lib; scene: THREE.Scene; camera: THREE.PerspectiveCamera; env: THREE.DataTexture; renderer: THREE.WebGLRenderer; look: number[]; dof: number};
 type Upd = (f: number, l: number, u: number) => void;
@@ -72,7 +72,8 @@ const TICKET_W = .18, TICKET_H = .09;
 const ticket = (px = 900, nums?: number[]) => sheet(TICKET_W, TICKET_H, px, (g, w, h) => drawTicket(g, w, h, nums));
 /** a stack of tickets (cream block, ticket printed on top) of height h, base at y = 0 */
 const ticketStack = (h = .3) => { const top = canvasTex(600, 300, g => drawTicket(g, 600, 300));
-  const side = std('#f3e6c8', .9), mats = [side, side, new THREE.MeshStandardMaterial({map: top.t, roughness: .8}), side, side, side];
+  const edge = canvasTex(64, 512, g => { for (let i = 0; i < 64; i++) { g.fillStyle = i % 2 ? '#fff6e2' : '#efe2c2'; g.fillRect(0, i * 8, 64, 8); } });
+  edge.t.wrapT = THREE.RepeatWrapping; const side = new THREE.MeshStandardMaterial({map: edge.t, roughness: .9}), mats = [side, side, new THREE.MeshStandardMaterial({map: top.t, roughness: .8}), side, side, side];
   const g = new THREE.Group(), b = box(TICKET_W, 1, TICKET_H, mats, [0, .5, 0]);
   for (let i = 1; i < 12; i++) { const ln = box(TICKET_W + .002, .002, TICKET_H + .002, std('#d8c7a4', .9), [0, i / 12, 0]); b.add(ln); ln.position.y = i / 12 - .5; }
   g.add(b); g.scale.y = h; return g; };
@@ -86,9 +87,13 @@ const cashPile = (layers = 6, s = 1) => { const g = new THREE.Group(), bricks: T
   g.scale.setScalar(s); return {g, n: bricks.length, set: (k: number) => bricks.forEach((b, i) => { b.visible = i < k; })}; };
 const coin = () => { const m = new THREE.Mesh(new THREE.CylinderGeometry(.012, .012, .003, 24), std('#d9b44a', .35, .8)); m.castShadow = true; return m; };
 /** a rubber-stamp mark that thumps onto a surface: big -> 1 with a pop */
-const stampMark = (label: string, col: string, wM = .2, rot = -.15) => sheet(wM, wM * .38, 700, (g, w, h) => {
+const stampMark = (label: string, col: string, wM = .2, rot = -.15) => label === 'TICK' || label === 'CROSS' ? mark(label, col, wM) : sheet(wM, wM * .38, 700, (g, w, h) => {
   g.save(); g.translate(w / 2, h / 2); g.rotate(rot); g.lineWidth = h * .07; g.strokeStyle = col; rrect(g, -w * .44, -h * .38, w * .88, h * .76, h * .1); g.stroke();
   text(g, label, 0, h * .03, h * .48, col); g.restore(); });
+/** a hand-drawn tick or cross (drawn as paths: the caption font has no check-mark glyphs) */
+function mark(kind: 'TICK' | 'CROSS', col: string, wM: number) { return sheet(wM, wM, 300, (g, w, h) => {
+  g.lineCap = 'round'; g.lineJoin = 'round'; const pts = kind === 'TICK' ? [[[.18, .55], [.42, .78], [.84, .24]]] : [[[.2, .2], [.8, .8]], [[.8, .2], [.2, .8]]];
+  for (const [lw, c] of [[w * .2, '#1a1a1a'], [w * .13, col]] as const) for (const s of pts) { g.beginPath(); s.forEach(([x, y], i) => i ? g.lineTo(x * w, y * h) : g.moveTo(x * w, y * h)); g.lineWidth = lw; g.strokeStyle = c; g.stroke(); } }); }
 
 // ---------- cast (reference style) ----------
 const JERRY = refStyle({jacket: '#5d7fb8', pants: '#4a4a52', boots: '#3a2a1a', hat: 'hair', hair: '#dadada', buttons: '#efe6cf'});
@@ -139,7 +144,7 @@ const B: Record<number, (c: Ctx) => Upd> = {
     return (f, l, u) => { const t = l / FPS; jerry(a, t, f < wow ? 'neutral' : 'shock', {armPose: chestHands(30), armFront: true, look: f < wow ? .25 : 0, costume: brochure});
       closeUp(c, a, u, 1.45, 1.38); }; },
   // 2 "beat the lottery": one WinFall ticket fills the frame; a red tick stamps onto it.
-  2: c => { tabletop(c); const tk = ticket(1200); tk.position.y = .002; c.scene.add(tk); const tick = stampMark('✔', '#e23b2e', .09, 0); c.scene.add(tick); const at = T('L01', 9);
+  2: c => { tabletop(c); const tk = ticket(1200); tk.position.y = .002; c.scene.add(tk); const tick = stampMark('TICK', '#2aa04a', .09, 0); c.scene.add(tick); const at = T('L01', 9);
     return (f, l, u) => { const k = pop(f, at); tick.visible = f >= at; tick.position.set(.035, .006, 0); tick.scale.setScalar(Math.max(.01, 2.2 - 1.2 * Math.min(1, k)));
       c.dof = 2; cam(c, [0, .26 - .02 * u, .14 - .02 * u], [0, 0, -.005], 40); }; },
   // 3 "in under two minutes": a stopwatch on the table, the hand sweeps round to 1:59 and dings.
@@ -158,13 +163,13 @@ const B: Record<number, (c: Ctx) => Upd> = {
   // 4 L02 "Normally, if nobody matches all six numbers": six drawn balls above a ticket; every ticket number gets a red cross.
   4: c => { tabletop(c, '#efdcbc', '#b5e3a8'); const drawn = [7, 13, 21, 29, 38, 44];
     const balls = drawn.map((n, i) => { const tex = canvasTex(256, 128, g => { g.fillStyle = '#ffffff'; g.fillRect(0, 0, 256, 128); text(g, String(n), 64, 64, 70, '#1a1a1a'); text(g, String(n), 192, 64, 70, '#1a1a1a'); });
-      const m = new THREE.Mesh(new THREE.SphereGeometry(.026, 32, 20), new THREE.MeshStandardMaterial({map: tex.t, roughness: .3})); m.position.set((i - 2.5) * .062, .026, -.07); m.castShadow = true; c.scene.add(m); const d = sheet(.03, .03, 200, (g, w, h) => { g.beginPath(); g.arc(w / 2, h / 2, w * .48, 0, 7); g.fillStyle = '#ffffff'; g.fill(); text(g, String(n), w / 2, h / 2 + 3, h * .62, '#1a1a1a'); }, true); d.position.set(0, .008, .0245); d.rotation.set(-.7, 0, 0); m.add(d); return m; });
+      void tex; const m = new THREE.Mesh(new THREE.SphereGeometry(.022, 32, 20), new THREE.MeshStandardMaterial({color: '#ffffff', roughness: .3})); m.position.set((i - 2.5) * .05, .022, -.07); m.castShadow = true; c.scene.add(m); const d = sheet(.032, .032, 256, (g, w, h) => { g.beginPath(); g.arc(w / 2, h / 2, w * .48, 0, 7); g.fillStyle = '#ffffff'; g.fill(); text(g, String(n), w / 2, h / 2 + 3, h * .62, '#1a1a1a'); }, true); d.position.set(0, .012, .0245); d.rotation.set(-.7, 0, 0); (d.material as THREE.MeshStandardMaterial).depthTest = true; m.add(d); return m; });
     const tk = ticket(1200); tk.position.set(0, .002, .05); tk.scale.setScalar(1.8); c.scene.add(tk);
-    const xs = [0, 1, 2, 3, 4, 5].map(i => { const x = stampMark('✖', '#e23b2e', .05, 0); c.scene.add(x); x.position.set((-.5 + (.13 + i * .148)) * TICKET_W * 1.8, .005, .05 + (.55 - .5) * TICKET_H * 1.8); return x; });
+    const xs = [0, 1, 2, 3, 4, 5].map(i => { const x = stampMark('CROSS', '#e23b2e', .05, 0); c.scene.add(x); x.position.set((-.5 + (.13 + i * .148)) * TICKET_W * 1.8, .005, .05 + (.55 - .5) * TICKET_H * 1.8); return x; });
     const t0 = T('L02', 2), t1 = T('L02', 6);
-    return (f, l, u) => { balls.forEach((b, i) => { b.position.y = .026 + .05 * Math.max(0, 1 - pop(f, SHOTS[3].a + 2 + i * 3)) ; });
+    return (f, l, u) => { balls.forEach((b, i) => { b.position.y = .022 + .05 * Math.max(0, 1 - pop(f, SHOTS[3].a + 2 + i * 3)); });
       xs.forEach((x, i) => { const at = t0 + (t1 - t0) * i / 5; x.visible = f >= at; x.scale.setScalar(Math.max(.01, 1.8 - .8 * Math.min(1, pop(f, at)))); });
-      c.dof = 2; cam(c, [0, .42, .42], [0, 0, -.025], 40); }; },
+      c.dof = 1; cam(c, [0, .5, .56], [0, 0, -.03], 40); }; },
   // 5 "the jackpot just keeps growing": a cash pile on the table grows in pops.
   5: c => { tabletop(c, '#efdcbc', '#f4c95d'); const P = cashPile(7); c.scene.add(P.g); const sign = sheet(.3, .12, 700, (g, w, h) => { rrect(g, 6, 6, w - 12, h - 12, 20); g.fillStyle = '#7a3fb0'; g.fill(); text(g, 'JACKPOT', w / 2, h / 2 + 4, h * .55, '#ffd84a', 10); }, true);
     sign.position.set(0, .34, -.05); c.scene.add(sign); const a0 = SHOTS[4].a, grow = [T('L02', 8), T('L02', 10), T('L02', 11)];
@@ -173,7 +178,7 @@ const B: Record<number, (c: Ctx) => Upd> = {
       c.dof = 2; cam(c, [0, .45, .95 - .1 * u], [0, .12, 0], 40); void a0; }; },
   // 6 L03 "But in a game called WinFall": the brochure slaps down on the table.
   6: c => { tabletop(c, '#efdcbc', '#c7a6f0'); const br = sheet(.22, .3, 900, (g, w, h) => { g.fillStyle = '#7a3fb0'; rrect(g, 0, 0, w, h, 30); g.fill();
-      text(g, 'WIN', w / 2, h * .26, w * .3, '#ffd84a', 14); text(g, 'FALL', w / 2, h * .48, w * .3, '#ffd84a', 14); text(g, 'Mass. Lottery', w / 2, h * .7, w * .09, '#ffffff');
+      text(g, 'WIN', w / 2, h * .26, w * .3, '#ffd84a', 14); text(g, 'FALL', w / 2, h * .48, w * .3, '#ffd84a', 14); text(g, 'STATE LOTTERY', w / 2, h * .7, w * .09, '#ffffff');
       for (let i = 0; i < 6; i++) { g.beginPath(); g.arc(w * (.15 + i * .14), h * .86, w * .055, 0, 7); g.fillStyle = '#ffffff'; g.fill(); } });
     c.scene.add(br); const land = T('L03', 5) - 3;
     return (f, l, u) => { const e = (f - land) / FPS; br.position.set(0, e < 0 ? .002 + 1.2 * e * e * 4 : .002, 0); br.rotation.z = e < 0 ? .5 * e : 0;
@@ -184,7 +189,7 @@ const B: Record<number, (c: Ctx) => Upd> = {
     return (f, l, u) => { const k = pop(f, at); st.visible = f >= at; st.position.set(0, .3, .45); st.scale.setScalar(Math.max(.01, 2.5 - 1.5 * Math.min(1, k)));
       c.dof = 1; cam(c, [0, .55, 1.45 - .1 * u], [0, .18, 0], 40); }; },
   // 8 "it was split between everyone who matched just a few numbers": the pile slides down a staircase into small piles 5, 4, 3.
-  8: c => { tabletop(c, '#efdcbc', '#9fdcc6'); const stepCol = ['#7a3fb0', '#9a5fd0', '#b98ae6', '#d6b8f4'], H = [.6, .4, .2, 0];
+  8: c => { tabletop(c, '#efdcbc', '#9fdcc6'); const stepCol = ['#7a3fb0', '#9a5fd0', '#b98ae6', '#d6b8f4'], H = [.8, .55, .3, .1];
     H.forEach((h, i) => { if (h > 0) c.scene.add(box(.42, h, .4, std(stepCol[i]), [-.63 + i * .42, h / 2, 0])); });
     const lab = ['', 'MATCH 5', 'MATCH 4', 'MATCH 3'].map((s, i) => { if (!s) return null; const m = sheet(.3, .08, 600, (g, w, h) => { rrect(g, 0, 0, w, h, 16); g.fillStyle = '#ffffff'; g.fill(); text(g, s, w / 2, h / 2 + 3, h * .62, '#7a3fb0'); }, true);
       m.position.set(-.63 + i * .42, H[i] + .005, .205); m.rotation.x = 0; c.scene.add(m); return m; });
@@ -193,14 +198,14 @@ const B: Record<number, (c: Ctx) => Upd> = {
     const go = T('L03', 16);
     return (f, l, u) => { bricks.forEach(({b, home, dest, delay}) => { const s = smooth((f - go - delay) / 12), arc = Math.sin(Math.PI * s) * .25;
       b.position.set(lerp(home[0], dest[0], s), lerp(home[1], dest[1], s) + arc, lerp(home[2], dest[2], s)); b.rotation.z = -Math.PI * 2 * s * .5; });
-      c.dof = 1; cam(c, [0, 1.0, 3.7 - .15 * u], [0, .34, 0], 40); }; },
+      c.dof = 1; cam(c, [0, 1.15, 4.4 - .15 * u], [0, .4, 0], 40); }; },
   // 9 L04 "And matching a few numbers is easy, if you buy enough tickets": one ticket becomes a tall stack; green ticks rain on.
   9: c => { tabletop(c, '#efdcbc', '#b5e3a8'); const S = ticketStack(.002); c.scene.add(S);
-    const ticks = Array.from({length: 8}, (_, i) => { const m = stampMark('✔', '#2aa04a', .06, 0); m.rotation.set(0, 0, 0); c.scene.add(m); return m; });
+    const ticks = Array.from({length: 8}, (_, i) => { const m = stampMark('TICK', '#2aa04a', .06, 0); m.rotation.set(0, 0, 0); c.scene.add(m); return m; });
     const easy = T('L04', 6), buy = T('L04', 9), full = T('L04', 11);
     return (f, l, u) => { S.scale.y = .002 + .38 * smooth((f - buy) / Math.max(4, full - buy));
       ticks.forEach((m, i) => { const at = easy + i * 3, k = pop(f, at); m.visible = f >= at; m.position.set(((i * 37) % 7 - 3) * .03, .02 + .38 * smooth((f - buy) / Math.max(4, full - buy)) * (.2 + .1 * (i % 8)), .05); m.scale.setScalar(Math.max(.01, Math.min(1, k))); });
-      c.dof = 1; cam(c, [0, .3, .95 - .06 * u], [0, .19, 0], 40); }; },
+      c.dof = 1; cam(c, [0, .62, .95 - .06 * u], [0, .2, 0], 40); }; },
   // 10 L05 "Jerry did the math": kitchen table, pencil flying over a notepad, tongue out; a smile on "math".
   10: c => { kitchen(c); const a = actor(c, [0, 0, .05]); const pad = sheet(.2, .26, 600, (g, w, h) => { g.fillStyle = '#fffbe8'; g.fillRect(0, 0, w, h); g.strokeStyle = '#9ac4e8'; g.lineWidth = 3;
       for (let y = h * .12; y < h; y += h * .08) { g.beginPath(); g.moveTo(0, y); g.lineTo(w, y); g.stroke(); } text(g, '100 → 120', w / 2, h * .3, w * .13, '#1a1a1a'); text(g, '+20%', w / 2, h * .48, w * .15, '#2aa04a'); });
@@ -208,7 +213,7 @@ const B: Record<number, (c: Ctx) => Upd> = {
     return (f, l, u) => { const t = l / FPS, writing = f < done + 6;
       jerry(a, t, writing ? 'lick' : 'proud', {armFront: true, look: writing ? .6 : 0, armPose: (side, S, g) => side < 0 ? [S, [S[0] - 26 * g.u, S[1] + .35 * g.HH], [300 - 20 * g.u, g.chin + .75 * g.HH]] as P[] :
         [S, [S[0] + 24 * g.u, S[1] + .35 * g.HH], [300 + (14 + (writing ? 14 * Math.sin(t * 24) : 0)) * g.u, g.chin + (.72 + (writing ? .04 * Math.sin(t * 17) : 0)) * g.HH]] as P[]});
-      c.dof = 3; cam(c, [0, 1.35, 1.75 - .12 * u], [0, 1.08, .1], 40); }; },
+      c.dof = 3; cam(c, [0, 1.5, 1.9 - .12 * u], [0, .98, .2], 40); }; },
   // 11 "every hundred dollars ... about a hundred and twenty": $100 stack in, a taller $120 stack pops out.
   11: c => { tabletop(c, '#efdcbc', '#f4c95d'); const mk = (n: number, x: number) => { const g = new THREE.Group(); for (let i = 0; i < n; i++) { const b = brick(); b.position.y = i * .031; g.add(b); } g.position.x = x; c.scene.add(g); return g; };
     const A = mk(5, -.16), Bq = mk(6, .16); const lab = (s: string, x: number, col: string) => { const m = sheet(.14, .063, 600, (g, w, h) => text(g, s, w / 2, h / 2, h * .8, col, 12), true); m.position.set(x, .3, .02); c.scene.add(m); return m; };
@@ -239,7 +244,7 @@ const B: Record<number, (c: Ctx) => Upd> = {
   15: c => { tabletop(c, '#efdcbc', '#8fd0f0'); const S = ticketStack(.75); c.scene.add(S); const lab = sheet(.32, .11, 700, (g, w, h) => text(g, '$8,000', w / 2, h / 2, h * .8, '#ffffff', 14), true); c.scene.add(lab);
     const land = T('L07', 8) - 1;
     return (f, l, u) => { const e = (f - land) / FPS; S.position.y = e < 0 ? Math.min(2, 5 * e * e * 6) : 0; lab.visible = f >= land; lab.position.set(0, .85, .1); lab.scale.setScalar(Math.max(.01, Math.min(1, pop(f, land + 2))));
-      const sh = kick(f - land, .03); c.dof = 1; cam(c, [sh, .55, 1.65 - .08 * u], [0, .45, 0], 40); }; },
+      const sh = kick(f - land, .03); c.dof = 1; cam(c, [sh, 1.15, 1.55 - .08 * u], [0, .42, 0], 40); }; },
   // 16 "and won almost sixteen thousand": the cash pile doubles with a pop; Jerry pops up behind it, grinning.
   16: c => { tabletop(c, '#efdcbc', '#f4c95d'); const P = cashPile(8, 1.4); c.scene.add(P.g); const a = actor(c, [0, 0, -.5], 1.0, 3); const dbl = T('L07', 13);
     return (f, l, u) => { const t = l / FPS; P.set(f < dbl ? Math.round(P.n * .45) : P.n); P.g.scale.setScalar(1.4 * (f < dbl ? 1 : 1 + .08 * Math.exp(-(f - dbl) / 4)));
@@ -308,11 +313,11 @@ const B: Record<number, (c: Ctx) => Upd> = {
   25: c => { tabletop(c, '#efdcbc', '#b5e3a8'); const tk = ticket(1200); tk.position.y = .002; tk.scale.setScalar(1.6); c.scene.add(tk); const st = stampMark('LEGAL', '#1f9a45', .13, -.18); c.scene.add(st);
     const at = T('L11', 11);
     return (f, l, u) => { const k = pop(f, at); st.visible = f >= at; st.position.set(0, .006, .005); st.scale.setScalar(Math.max(.01, 2.4 - 1.4 * Math.min(1, k)));
-      c.dof = 1; cam(c, [kick(f - at, .006), .5, .3], [0, 0, -.01], 40); }; },
+      c.dof = 1; cam(c, [kick(f - at, .006), .66, .38], [0, 0, -.01], 40); }; },
   // 26 L12 "In the end, their group won nearly twenty-seven million dollars": a counter rolls up to $27,000,000 over a mountain of cash.
   26: c => { tabletop(c, '#efdcbc', '#f4c95d'); const P = cashPile(10, 1.6); P.set(P.n); c.scene.add(P.g);
     const ctr = sheet(.9, .24, 1000, () => {}, true); ctr.position.set(0, 1.05, -.2); c.scene.add(ctr); const end = T('L12', 7), a0 = SHOTS[25].a;
-    return (f, l, u) => { const k = smooth((f - a0) / Math.max(1, end - a0)), v = Math.round(27000000 * (1 - (1 - k) ** 3));
+    return (f, l, u) => { const k = smooth((f - a0) / Math.max(1, end - a0)), v = Math.round(26900000 * (1 - (1 - k) ** 3) / 1000) * 1000;
       ctr.redraw((g, w, h) => { rrect(g, 0, 0, w, h, 30); g.fillStyle = '#1a1a1a'; g.fill(); text(g, '$' + v.toLocaleString('en-US'), w / 2, h / 2 + 6, h * .62, f >= end ? '#ffd84a' : '#7fe08a'); });
       ctr.scale.setScalar(f >= end ? 1 + .12 * Math.exp(-(f - end) / 5) : 1);
       c.dof = 0; cam(c, [0, .9, 3.3 - .2 * u], [0, .62, 0], 40); }; },
