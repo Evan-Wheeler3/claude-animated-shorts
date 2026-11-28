@@ -133,7 +133,7 @@ const store = (c: Ctx) => { room(c, '#9fdcc6', '#e9e4d6'); const g = new THREE.G
 const kitchen = (c: Ctx) => { room(c, '#f6d36b', '#c99c6e'); const g = new THREE.Group(), legs = std('#8a5a3a');
   g.add(box(1.5, .05, .8, std('#f4ead2', .6), [0, .76, .45])); for (const x of [-.68, .68]) for (const z of [.12, .78]) g.add(box(.06, .74, .06, legs, [x, .37, z]));
   c.scene.add(g); return g; };
-const closeUp = (c: Ctx, a: Actor, push: number, dz = 1.35, y = 1.42) => { const p = a.k.mesh.position; c.dof = 4; cam(c, [p.x, y + .2, p.z + dz + .65 - .2 * push], [p.x, y + .14, p.z], 40); };
+const closeUp = (c: Ctx, a: Actor, push: number, dz = 1.35, y = 1.42) => { const p = a.k.mesh.position; c.dof = 4; cam(c, [p.x, y + .27, p.z + dz + .7 - .2 * push], [p.x, y + .21, p.z], 40); };
 
 // ---------- the 27 pictures ----------
 const B: Record<number, (c: Ctx) => Upd> = {
@@ -180,11 +180,11 @@ const B: Record<number, (c: Ctx) => Upd> = {
   6: c => { tabletop(c, '#efdcbc', '#c7a6f0'); const br = sheet(.22, .3, 900, (g, w, h) => { g.fillStyle = '#7a3fb0'; rrect(g, 0, 0, w, h, 30); g.fill();
       text(g, 'WIN', w / 2, h * .26, w * .3, '#ffd84a', 14); text(g, 'FALL', w / 2, h * .48, w * .3, '#ffd84a', 14); text(g, 'STATE LOTTERY', w / 2, h * .7, w * .09, '#ffffff');
       for (let i = 0; i < 6; i++) { g.beginPath(); g.arc(w * (.15 + i * .14), h * .86, w * .055, 0, 7); g.fillStyle = '#ffffff'; g.fill(); } });
-    c.scene.add(br); const land = T('L03', 5) - 3;
-    return (f, l, u) => { const e = (f - land) / FPS; br.position.set(0, e < 0 ? .002 + 1.2 * e * e * 4 : .002, 0); br.rotation.z = e < 0 ? .5 * e : 0;
+    c.scene.add(br); const land = T('L03', 5) - 3, a0 = SHOTS[5].a;
+    return (f, l, u) => { const s = Math.min(1, (f - a0) / Math.max(1, land - a0)); br.position.set(0, .002 + .35 * (1 - s * s), .05 * (1 - s)); br.rotation.z = .25 * (1 - s);
       const sh = kick(f - land, .01); c.dof = 2; cam(c, [sh, .52, .26], [0, 0, -.02], 40); }; },
   // 7 "once the jackpot got big and nobody won": a huge pile, NO WINNER stamped on it.
-  7: c => { tabletop(c, '#efdcbc', '#f4c95d'); const P = cashPile(9); P.set(P.n); c.scene.add(P.g); const st = stampMark('NO WINNER', '#e23b2e', .7, -.12); st.rotation.set(0, 0, 0); c.scene.add(st);
+  7: c => { tabletop(c, '#efdcbc', '#f4c95d'); const P = cashPile(9); P.set(P.n); c.scene.add(P.g); const st = stampMark('NO WINNER', '#e23b2e', .34, -.12); st.rotation.set(0, 0, 0); c.scene.add(st);
     const at = T('L03', 12);
     return (f, l, u) => { const k = pop(f, at); st.visible = f >= at; st.position.set(0, .3, .45); st.scale.setScalar(Math.max(.01, 2.5 - 1.5 * Math.min(1, k)));
       c.dof = 1; cam(c, [0, .55, 1.45 - .1 * u], [0, .18, 0], 40); }; },
@@ -213,13 +213,13 @@ const B: Record<number, (c: Ctx) => Upd> = {
     return (f, l, u) => { const t = l / FPS, writing = f < done + 6;
       jerry(a, t, writing ? 'lick' : 'proud', {armFront: true, look: writing ? .6 : 0, armPose: (side, S, g) => side < 0 ? [S, [S[0] - 26 * g.u, S[1] + .35 * g.HH], [300 - 20 * g.u, g.chin + .75 * g.HH]] as P[] :
         [S, [S[0] + 24 * g.u, S[1] + .35 * g.HH], [300 + (14 + (writing ? 14 * Math.sin(t * 24) : 0)) * g.u, g.chin + (.72 + (writing ? .04 * Math.sin(t * 17) : 0)) * g.HH]] as P[]});
-      c.dof = 3; cam(c, [0, 1.5, 1.9 - .12 * u], [0, .98, .2], 40); }; },
+      c.dof = 3; cam(c, [0, 1.55, 2.3 - .12 * u], [0, 1.12, .2], 40); }; },
   // 11 "for every hundred dollars he spent, he'd win back about a hundred and twenty": $100 stack in, a taller $120 stack pops out.
   11: c => { tabletop(c, '#efdcbc', '#f4c95d'); const mk = (n: number, x: number) => { const g = new THREE.Group(); for (let i = 0; i < n; i++) { const b = brick(); b.position.y = i * .031; g.add(b); } g.position.x = x; c.scene.add(g); return g; };
     const A = mk(5, -.16), Bq = mk(6, .16); const lab = (s: string, x: number, col: string) => { const m = sheet(.14, .063, 600, (g, w, h) => text(g, s, w / 2, h / 2, h * .8, col, 12), true); m.position.set(x, .3, .02); c.scene.add(m); return m; };
     const la = lab('$100', -.14, '#ffffff'), lb = lab('$120', .14, '#ffd84a'), arrow = lab('→', 0, '#ffffff'); arrow.position.y = .1;
     const in0 = T('L05', 8), out = T('L05', 16), big = T('L05', 19);
-    return (f, l, u) => { const ka = pop(f, in0), kb = pop(f, out); A.scale.setScalar(Math.max(.01, Math.min(1.2, ka))); la.visible = f >= in0; la.position.y = .21;
+    return (f, l, u) => { const ka = pop(f, Math.min(in0, SHOTS[10].a + 3)), kb = pop(f, out); A.scale.setScalar(Math.max(.01, Math.min(1.2, ka))); la.visible = true; la.position.y = .21;
       Bq.visible = f >= out; Bq.scale.set(1, Math.max(.01, kb), 1); lb.visible = f >= out; lb.position.y = .25; lb.scale.setScalar(f >= big ? 1 + .4 * Math.exp(-(f - big) / 5) : 1); arrow.visible = f >= out - 6;
       c.dof = 1; cam(c, [0, .3, 1.25 - .05 * u], [0, .15, 0], 40); }; },
   // 12 L06 "So he bet twenty-two hundred dollars": at the counter, Jerry slides a fat bundle of cash to the cashier.
@@ -291,7 +291,7 @@ const B: Record<number, (c: Ctx) => Upd> = {
       text(g, '?', .5 * w, .5 * h, h * .3, '#d42a2a', 10); }, true); board.position.set(0, 1.55, -1.55); c.scene.add(board);
     const a = actor(c, [0, 0, -.1], 1.78, 9); const mag = holding((p, x, y, u) => { p.line([[x, y], [x + 22 * u, y - 46 * u]], '#6a4a2a', 9 * u); p.ell(x + 32 * u, y - 70 * u, 26 * u, 26 * u, 'rgba(210,235,255,.5)', 6 * u); });
     const sus = T('L10', 13);
-    return (f, l, u) => { const t = l / FPS; a.draw(SLEUTH, {expr: f < sus ? 'stern' : 'nervous', blink: blinkAt(t), look: .3 * Math.sin(t * 2), armFront: true, costume: dress(fedora(), mag),
+    return (f, l, u) => { const t = l / FPS; a.draw(SLEUTH, {expr: 'stern', blink: blinkAt(t), look: .3 * Math.sin(t * 2), armFront: true, costume: dress(fedora(), mag),
       armPose: (side, S, g) => side > 0 ? [S, [S[0] + 30 * g.u, S[1] + .32 * g.HH], [300 + 40 * g.u, g.chin + .4 * g.HH]] as P[] : null});
       closeUp(c, a, u * (f >= sus ? 1.6 : 1), 1.5, 1.45); }; },
   // 23 L11 "Investigators found a retired couple...": a giant lens sweeps the kitchen and stops on Jerry and Marge, waving.
@@ -299,9 +299,9 @@ const B: Record<number, (c: Ctx) => Upd> = {
     const lens = new THREE.Group(), rim = new THREE.Mesh(new THREE.TorusGeometry(.42, .04, 12, 64), std('#6a4a2a', .5)), handle = box(.08, .7, .06, std('#6a4a2a', .5), [.34, -.62, 0]); handle.rotation.z = .5;
     lens.add(rim, handle); lens.traverse(o => o.layers.set(NOINK)); c.scene.add(lens); const stop = T('L11', 3);
     return (f, l, u) => { const t = l / FPS, s = smooth((f - SHOTS[22].a) / Math.max(6, stop - SHOTS[22].a)), found = f >= stop;
-      lens.position.set(lerp(-1.4, .0, s), 1.25, 1.1); lens.rotation.z = lerp(.3, 0, s);
+      lens.position.set(lerp(-1.4, .0, s), 1.36, 1.1); lens.rotation.z = lerp(.3, 0, s);
       jerry(j, t, found ? 'grin' : 'neutral', {wave: found ? t * 8 : undefined}); marge(m, t, found ? 'smile' : 'neutral', {wave: found ? t * 8 + 1 : undefined});
-      c.dof = 0; cam(c, [0, 1.35, 2.6], [0, 1.2, 0], 40); }; },
+      c.dof = 0; cam(c, [0, 1.45, 3.0], [0, 1.32, 0], 40); }; },
   // 24 "...doing math": a calculator on the kitchen table, keys pressing, the display ends on the answer.
   24: c => { tabletop(c, '#f4ead2', '#f6d36b'); const calc = new THREE.Group(); calc.add(box(.16, .02, .24, std('#3a3f4a', .5), [0, .01, 0])); c.scene.add(calc);
     const keys: THREE.Mesh[] = []; for (let r = 0; r < 4; r++) for (let q = 0; q < 4; q++) { const k = box(.03, .012, .03, std(q === 3 ? '#ff9a3a' : '#e9e6df', .5), [(q - 1.5) * .036, .024, (r - .6) * .036]); calc.add(k); keys.push(k); }
@@ -310,7 +310,7 @@ const B: Record<number, (c: Ctx) => Upd> = {
       disp.redraw((g, w, h) => { g.fillStyle = '#b8d8b0'; g.fillRect(0, 0, w, h); text(g, f < ans ? String(100 + Math.floor(t * 37) % 900) : '+20%', w * .93, h / 2 + 4, h * .62, '#1a2a1a', 0, 'right'); });
       c.dof = 1; cam(c, [0, .32, .3 - .02 * u], [0, 0, -.02], 40); }; },
   // 25 "And it was all legal": a green LEGAL stamp thumps onto a ticket.
-  25: c => { tabletop(c, '#efdcbc', '#b5e3a8'); const tk = ticket(1200); tk.position.y = .002; tk.scale.setScalar(1.6); c.scene.add(tk); const st = stampMark('LEGAL', '#1f9a45', .13, -.18); c.scene.add(st);
+  25: c => { tabletop(c, '#efdcbc', '#b5e3a8'); const tk = ticket(1200); tk.position.y = .002; tk.scale.setScalar(1.6); c.scene.add(tk); const st = stampMark('LEGAL', '#1f9a45', .17, -.18); c.scene.add(st);
     const at = T('L11', 11);
     return (f, l, u) => { const k = pop(f, at); st.visible = f >= at; st.position.set(0, .006, .005); st.scale.setScalar(Math.max(.01, 2.4 - 1.4 * Math.min(1, k)));
       c.dof = 1; cam(c, [kick(f - at, .006), .66, .38], [0, 0, -.01], 40); }; },
