@@ -3,36 +3,36 @@
   "word": "A",
   "line": "L01",
   "start": 0.0,
-  "end": 0.36
+  "end": 0.38
  },
  {
   "word": "retired",
   "line": "L01",
-  "start": 0.36,
+  "start": 0.38,
   "end": 0.78
  },
  {
   "word": "shop",
   "line": "L01",
   "start": 0.78,
-  "end": 1.1
+  "end": 1.08
  },
  {
   "word": "owner",
   "line": "L01",
-  "start": 1.1,
+  "start": 1.08,
   "end": 1.32
  },
  {
   "word": "figured",
   "line": "L01",
   "start": 1.32,
-  "end": 1.62
+  "end": 1.6
  },
  {
   "word": "out",
   "line": "L01",
-  "start": 1.62,
+  "start": 1.6,
   "end": 1.88
  },
  {
@@ -51,12 +51,12 @@
   "word": "beat",
   "line": "L01",
   "start": 2.14,
-  "end": 2.28
+  "end": 2.26
  },
  {
   "word": "the",
   "line": "L01",
-  "start": 2.28,
+  "start": 2.26,
   "end": 2.5
  },
  {
@@ -87,996 +87,1008 @@
   "word": "minutes.",
   "line": "L01",
   "start": 3.52,
-  "end": 4.02
+  "end": 3.94
  },
  {
-  "word": "Normally,",
+  "word": "Usually,",
   "line": "L02",
-  "start": 4.82,
-  "end": 5.04
+  "start": 4.76,
+  "end": 5.1
  },
  {
   "word": "if",
   "line": "L02",
-  "start": 5.16,
-  "end": 5.26
+  "start": 5.14,
+  "end": 5.28
  },
  {
   "word": "nobody",
   "line": "L02",
-  "start": 5.26,
+  "start": 5.28,
   "end": 5.56
  },
  {
   "word": "matches",
   "line": "L02",
   "start": 5.56,
-  "end": 5.9
+  "end": 5.86
  },
  {
   "word": "all",
   "line": "L02",
-  "start": 5.9,
-  "end": 6.26
+  "start": 5.86,
+  "end": 6.08
  },
  {
   "word": "six",
   "line": "L02",
-  "start": 6.26,
-  "end": 6.56
+  "start": 6.08,
+  "end": 6.38
  },
  {
   "word": "numbers,",
   "line": "L02",
-  "start": 6.56,
-  "end": 6.94
+  "start": 6.38,
+  "end": 6.72
  },
  {
   "word": "the",
   "line": "L02",
-  "start": 7.2,
-  "end": 7.26
+  "start": 6.88,
+  "end": 6.96
  },
  {
   "word": "jackpot",
   "line": "L02",
-  "start": 7.26,
-  "end": 7.66
+  "start": 6.96,
+  "end": 7.36
  },
  {
   "word": "just",
   "line": "L02",
-  "start": 7.66,
-  "end": 7.88
+  "start": 7.36,
+  "end": 7.58
  },
  {
   "word": "keeps",
   "line": "L02",
-  "start": 7.88,
-  "end": 8.14
+  "start": 7.58,
+  "end": 7.76
  },
  {
   "word": "growing.",
   "line": "L02",
-  "start": 8.14,
-  "end": 8.56
+  "start": 7.76,
+  "end": 8.12
  },
  {
   "word": "But",
   "line": "L03",
-  "start": 9.12,
-  "end": 9.2
+  "start": 8.6,
+  "end": 8.72
  },
  {
   "word": "in",
   "line": "L03",
-  "start": 9.2,
-  "end": 9.3
+  "start": 8.72,
+  "end": 8.82
  },
  {
   "word": "a",
   "line": "L03",
-  "start": 9.3,
-  "end": 9.46
+  "start": 8.82,
+  "end": 8.98
  },
  {
   "word": "game",
   "line": "L03",
-  "start": 9.46,
-  "end": 9.64
+  "start": 8.98,
+  "end": 9.16
  },
  {
   "word": "called",
   "line": "L03",
-  "start": 9.64,
-  "end": 9.92
+  "start": 9.16,
+  "end": 9.44
  },
  {
   "word": "WinFall,",
   "line": "L03",
-  "start": 9.92,
-  "end": 10.42
+  "start": 9.44,
+  "end": 9.94
  },
  {
   "word": "once",
   "line": "L03",
-  "start": 10.58,
-  "end": 10.72
+  "start": 10.1,
+  "end": 10.24
  },
  {
   "word": "the",
   "line": "L03",
-  "start": 10.72,
-  "end": 10.9
+  "start": 10.24,
+  "end": 10.42
  },
  {
   "word": "jackpot",
   "line": "L03",
-  "start": 10.9,
-  "end": 11.36
+  "start": 10.42,
+  "end": 10.88
  },
  {
   "word": "got",
   "line": "L03",
-  "start": 11.36,
-  "end": 11.6
+  "start": 10.88,
+  "end": 11.12
  },
  {
   "word": "big",
   "line": "L03",
-  "start": 11.6,
-  "end": 11.92
+  "start": 11.12,
+  "end": 11.44
  },
  {
   "word": "and",
   "line": "L03",
-  "start": 11.92,
-  "end": 12.08
+  "start": 11.44,
+  "end": 11.6
  },
  {
   "word": "nobody",
   "line": "L03",
-  "start": 12.08,
-  "end": 12.38
+  "start": 11.6,
+  "end": 11.9
  },
  {
   "word": "won,",
   "line": "L03",
-  "start": 12.38,
-  "end": 12.72
+  "start": 11.9,
+  "end": 12.24
  },
  {
   "word": "it",
   "line": "L03",
-  "start": 13.02,
-  "end": 13.08
+  "start": 12.52,
+  "end": 12.6
  },
  {
   "word": "was",
   "line": "L03",
-  "start": 13.08,
-  "end": 13.22
+  "start": 12.6,
+  "end": 12.72
  },
  {
   "word": "split",
   "line": "L03",
-  "start": 13.22,
-  "end": 13.5
+  "start": 12.72,
+  "end": 13.02
  },
  {
   "word": "between",
   "line": "L03",
-  "start": 13.5,
-  "end": 13.84
+  "start": 13.02,
+  "end": 13.36
  },
  {
   "word": "everyone",
   "line": "L03",
-  "start": 13.84,
-  "end": 14.32
+  "start": 13.36,
+  "end": 13.86
  },
  {
   "word": "who",
+  "line": "L03",
+  "start": 13.86,
+  "end": 14.04
+ },
+ {
+  "word": "matched",
+  "line": "L03",
+  "start": 14.04,
+  "end": 14.32
+ },
+ {
+  "word": "just",
   "line": "L03",
   "start": 14.32,
   "end": 14.52
  },
  {
-  "word": "matched",
-  "line": "L03",
-  "start": 14.52,
-  "end": 14.78
- },
- {
-  "word": "just",
-  "line": "L03",
-  "start": 14.78,
-  "end": 15.0
- },
- {
   "word": "a",
   "line": "L03",
-  "start": 15.0,
-  "end": 15.16
+  "start": 14.52,
+  "end": 14.68
  },
  {
   "word": "few",
   "line": "L03",
-  "start": 15.16,
-  "end": 15.28
+  "start": 14.68,
+  "end": 14.8
  },
  {
   "word": "numbers.",
   "line": "L03",
-  "start": 15.28,
-  "end": 15.72
+  "start": 14.8,
+  "end": 15.24
  },
  {
   "word": "And",
   "line": "L04",
-  "start": 16.14,
-  "end": 16.26
+  "start": 15.68,
+  "end": 15.78
  },
  {
   "word": "matching",
   "line": "L04",
-  "start": 16.26,
-  "end": 16.56
+  "start": 15.78,
+  "end": 16.08
  },
  {
   "word": "a",
   "line": "L04",
-  "start": 16.56,
-  "end": 16.74
+  "start": 16.08,
+  "end": 16.26
  },
  {
   "word": "few",
   "line": "L04",
-  "start": 16.74,
-  "end": 16.9
+  "start": 16.26,
+  "end": 16.42
  },
  {
   "word": "numbers",
   "line": "L04",
-  "start": 16.9,
-  "end": 17.26
+  "start": 16.42,
+  "end": 16.8
  },
  {
   "word": "is",
   "line": "L04",
-  "start": 17.26,
-  "end": 17.54
+  "start": 16.8,
+  "end": 17.06
  },
  {
   "word": "easy,",
   "line": "L04",
-  "start": 17.54,
-  "end": 17.9
+  "start": 17.06,
+  "end": 17.42
  },
  {
   "word": "if",
   "line": "L04",
-  "start": 17.9,
-  "end": 18.3
+  "start": 17.72,
+  "end": 17.84
  },
  {
   "word": "you",
   "line": "L04",
-  "start": 18.3,
-  "end": 18.46
+  "start": 17.84,
+  "end": 17.96
  },
  {
   "word": "buy",
   "line": "L04",
-  "start": 18.46,
-  "end": 18.66
+  "start": 17.96,
+  "end": 18.16
  },
  {
   "word": "enough",
   "line": "L04",
-  "start": 18.66,
-  "end": 18.92
+  "start": 18.16,
+  "end": 18.44
  },
  {
   "word": "tickets.",
   "line": "L04",
-  "start": 18.92,
-  "end": 19.38
+  "start": 18.44,
+  "end": 18.88
  },
  {
   "word": "Jerry",
   "line": "L05",
-  "start": 19.92,
-  "end": 20.12
+  "start": 19.6,
+  "end": 19.8
  },
  {
   "word": "did",
   "line": "L05",
-  "start": 20.12,
-  "end": 20.3
+  "start": 19.8,
+  "end": 20.0
  },
  {
   "word": "the",
   "line": "L05",
-  "start": 20.3,
-  "end": 20.52
+  "start": 20.0,
+  "end": 20.24
  },
  {
   "word": "math:",
   "line": "L05",
-  "start": 20.52,
-  "end": 20.74
+  "start": 20.24,
+  "end": 20.48
  },
  {
   "word": "those",
   "line": "L05",
-  "start": 21.02,
-  "end": 21.22
+  "start": 20.86,
+  "end": 21.12
  },
  {
   "word": "weeks,",
   "line": "L05",
-  "start": 21.22,
-  "end": 21.54
+  "start": 21.12,
+  "end": 21.4
+ },
+ {
+  "word": "for",
+  "line": "L05",
+  "start": 21.4,
+  "end": 21.68
  },
  {
   "word": "every",
   "line": "L05",
-  "start": 21.84,
-  "end": 21.96
+  "start": 21.68,
+  "end": 22.04
  },
  {
   "word": "hundred",
   "line": "L05",
-  "start": 21.96,
-  "end": 22.24
+  "start": 22.04,
+  "end": 22.34
  },
  {
   "word": "dollars",
   "line": "L05",
-  "start": 22.24,
-  "end": 22.56
+  "start": 22.34,
+  "end": 22.68
  },
  {
-  "word": "of",
+  "word": "he",
   "line": "L05",
-  "start": 22.56,
-  "end": 22.76
+  "start": 22.68,
+  "end": 22.86
  },
  {
-  "word": "tickets",
+  "word": "spent,",
   "line": "L05",
-  "start": 22.76,
-  "end": 23.04
+  "start": 22.86,
+  "end": 23.16
  },
  {
-  "word": "paid",
+  "word": "he'd",
   "line": "L05",
-  "start": 23.04,
-  "end": 23.3
+  "start": 23.16,
+  "end": 23.46
+ },
+ {
+  "word": "win",
+  "line": "L05",
+  "start": 23.46,
+  "end": 23.6
  },
  {
   "word": "back",
   "line": "L05",
-  "start": 23.3,
-  "end": 23.56
+  "start": 23.6,
+  "end": 23.9
  },
  {
   "word": "about",
   "line": "L05",
-  "start": 23.56,
-  "end": 23.82
+  "start": 23.9,
+  "end": 24.14
  },
  {
   "word": "a",
   "line": "L05",
-  "start": 23.82,
-  "end": 23.94
+  "start": 24.14,
+  "end": 24.3
  },
  {
   "word": "hundred",
   "line": "L05",
-  "start": 23.94,
-  "end": 24.14
+  "start": 24.3,
+  "end": 24.5
  },
  {
   "word": "and",
   "line": "L05",
-  "start": 24.14,
-  "end": 24.42
+  "start": 24.5,
+  "end": 24.8
  },
  {
   "word": "twenty.",
   "line": "L05",
-  "start": 24.42,
-  "end": 24.66
+  "start": 24.8,
+  "end": 25.06
  },
  {
   "word": "So",
   "line": "L06",
-  "start": 25.12,
-  "end": 25.36
+  "start": 25.56,
+  "end": 25.82
  },
  {
   "word": "he",
   "line": "L06",
-  "start": 25.36,
-  "end": 25.56
+  "start": 25.82,
+  "end": 26.02
  },
  {
   "word": "bet",
   "line": "L06",
-  "start": 25.56,
-  "end": 25.78
+  "start": 26.02,
+  "end": 26.24
  },
  {
   "word": "twenty-two",
   "line": "L06",
-  "start": 25.78,
-  "end": 26.3
+  "start": 26.24,
+  "end": 26.76
  },
  {
   "word": "hundred",
   "line": "L06",
-  "start": 26.3,
-  "end": 26.54
+  "start": 26.76,
+  "end": 26.98
  },
  {
   "word": "dollars...",
   "line": "L06",
-  "start": 26.54,
-  "end": 26.86
+  "start": 26.98,
+  "end": 27.3
  },
  {
   "word": "and",
   "line": "L06",
-  "start": 26.86,
-  "end": 27.06
+  "start": 27.3,
+  "end": 27.52
  },
  {
   "word": "lost",
   "line": "L06",
-  "start": 27.06,
-  "end": 27.42
+  "start": 27.52,
+  "end": 27.86
  },
  {
   "word": "fifty.",
   "line": "L06",
-  "start": 27.42,
-  "end": 27.92
+  "start": 27.86,
+  "end": 28.38
  },
  {
   "word": "He",
   "line": "L07",
-  "start": 27.92,
-  "end": 28.44
+  "start": 28.38,
+  "end": 28.88
  },
  {
   "word": "hadn't",
   "line": "L07",
-  "start": 28.44,
-  "end": 28.76
+  "start": 28.88,
+  "end": 29.2
  },
  {
   "word": "bought",
   "line": "L07",
-  "start": 28.76,
-  "end": 28.94
+  "start": 29.2,
+  "end": 29.4
  },
  {
   "word": "enough",
   "line": "L07",
-  "start": 28.94,
-  "end": 29.2
+  "start": 29.4,
+  "end": 29.66
  },
  {
   "word": "tickets.",
   "line": "L07",
-  "start": 29.2,
-  "end": 29.62
+  "start": 29.66,
+  "end": 30.08
  },
  {
   "word": "So",
   "line": "L07",
-  "start": 29.76,
-  "end": 29.94
+  "start": 30.22,
+  "end": 30.4
  },
  {
   "word": "he",
   "line": "L07",
-  "start": 29.94,
-  "end": 30.12
+  "start": 30.4,
+  "end": 30.58
  },
  {
   "word": "bet",
   "line": "L07",
-  "start": 30.12,
-  "end": 30.3
+  "start": 30.58,
+  "end": 30.76
  },
  {
   "word": "eight",
   "line": "L07",
-  "start": 30.3,
-  "end": 30.62
+  "start": 30.76,
+  "end": 31.06
  },
  {
   "word": "thousand,",
   "line": "L07",
-  "start": 30.62,
-  "end": 31.08
+  "start": 31.06,
+  "end": 31.52
  },
  {
   "word": "and",
   "line": "L07",
-  "start": 31.08,
-  "end": 31.56
+  "start": 31.52,
+  "end": 32.02
  },
  {
   "word": "won",
   "line": "L07",
-  "start": 31.56,
-  "end": 31.74
+  "start": 32.02,
+  "end": 32.18
  },
  {
   "word": "almost",
   "line": "L07",
-  "start": 31.74,
-  "end": 32.14
+  "start": 32.18,
+  "end": 32.58
  },
  {
   "word": "sixteen",
   "line": "L07",
-  "start": 32.14,
-  "end": 32.54
+  "start": 32.58,
+  "end": 33.0
  },
  {
   "word": "thousand.",
   "line": "L07",
-  "start": 32.54,
-  "end": 33.02
+  "start": 33.0,
+  "end": 33.48
  },
  {
   "word": "He",
   "line": "L08",
-  "start": 33.5,
-  "end": 33.78
+  "start": 33.96,
+  "end": 34.24
  },
  {
   "word": "told",
   "line": "L08",
-  "start": 33.78,
-  "end": 34.02
+  "start": 34.24,
+  "end": 34.46
  },
  {
   "word": "his",
   "line": "L08",
-  "start": 34.02,
-  "end": 34.18
+  "start": 34.46,
+  "end": 34.64
  },
  {
   "word": "wife",
   "line": "L08",
-  "start": 34.18,
-  "end": 34.46
+  "start": 34.64,
+  "end": 34.92
  },
  {
   "word": "Marge,",
   "line": "L08",
-  "start": 34.46,
-  "end": 34.9
+  "start": 34.92,
+  "end": 35.36
  },
  {
   "word": "and",
   "line": "L08",
-  "start": 34.9,
-  "end": 35.1
+  "start": 35.36,
+  "end": 35.54
  },
  {
   "word": "she",
   "line": "L08",
-  "start": 35.1,
-  "end": 35.26
+  "start": 35.54,
+  "end": 35.72
  },
  {
   "word": "was",
   "line": "L08",
-  "start": 35.26,
-  "end": 35.46
+  "start": 35.72,
+  "end": 35.9
  },
  {
   "word": "in.",
   "line": "L08",
-  "start": 35.46,
-  "end": 35.72
+  "start": 35.9,
+  "end": 36.18
  },
  {
   "word": "Friends",
   "line": "L09",
-  "start": 36.02,
-  "end": 36.42
+  "start": 36.48,
+  "end": 36.86
  },
  {
   "word": "and",
   "line": "L09",
-  "start": 36.42,
-  "end": 36.7
+  "start": 36.86,
+  "end": 37.16
  },
  {
   "word": "family",
   "line": "L09",
-  "start": 36.7,
-  "end": 37.0
+  "start": 37.16,
+  "end": 37.46
  },
  {
   "word": "chipped",
   "line": "L09",
-  "start": 37.0,
-  "end": 37.3
+  "start": 37.46,
+  "end": 37.76
  },
  {
   "word": "in,",
   "line": "L09",
-  "start": 37.3,
-  "end": 37.62
+  "start": 37.76,
+  "end": 38.06
  },
  {
   "word": "and",
   "line": "L09",
-  "start": 37.62,
-  "end": 37.96
+  "start": 38.18,
+  "end": 38.42
  },
  {
   "word": "they",
   "line": "L09",
-  "start": 37.96,
-  "end": 38.1
+  "start": 38.42,
+  "end": 38.56
  },
  {
   "word": "bought",
   "line": "L09",
-  "start": 38.1,
-  "end": 38.28
+  "start": 38.56,
+  "end": 38.74
  },
  {
   "word": "hundreds",
   "line": "L09",
-  "start": 38.28,
-  "end": 38.66
+  "start": 38.74,
+  "end": 39.12
  },
  {
   "word": "of",
   "line": "L09",
-  "start": 38.66,
-  "end": 39.0
+  "start": 39.12,
+  "end": 39.44
  },
  {
   "word": "thousands",
   "line": "L09",
-  "start": 39.0,
-  "end": 39.28
+  "start": 39.44,
+  "end": 39.74
  },
  {
   "word": "of",
   "line": "L09",
-  "start": 39.28,
-  "end": 39.58
+  "start": 39.74,
+  "end": 40.02
  },
  {
   "word": "tickets.",
   "line": "L09",
-  "start": 39.58,
-  "end": 39.88
+  "start": 40.02,
+  "end": 40.32
  },
  {
   "word": "Then",
   "line": "L10",
-  "start": 40.44,
-  "end": 40.58
+  "start": 40.88,
+  "end": 41.04
  },
  {
   "word": "a",
   "line": "L10",
-  "start": 40.58,
-  "end": 40.7
+  "start": 41.04,
+  "end": 41.16
  },
  {
   "word": "newspaper",
   "line": "L10",
-  "start": 40.7,
-  "end": 41.1
+  "start": 41.16,
+  "end": 41.54
  },
  {
   "word": "spotted",
   "line": "L10",
-  "start": 41.1,
-  "end": 41.48
+  "start": 41.54,
+  "end": 41.92
  },
  {
   "word": "stores",
   "line": "L10",
-  "start": 41.48,
-  "end": 41.84
+  "start": 41.92,
+  "end": 42.28
  },
  {
   "word": "selling",
   "line": "L10",
-  "start": 41.84,
-  "end": 42.16
+  "start": 42.28,
+  "end": 42.62
  },
  {
   "word": "millions",
   "line": "L10",
-  "start": 42.16,
-  "end": 42.52
+  "start": 42.62,
+  "end": 42.98
  },
  {
   "word": "in",
   "line": "L10",
-  "start": 42.52,
-  "end": 42.78
+  "start": 42.98,
+  "end": 43.24
  },
  {
   "word": "tickets,",
   "line": "L10",
-  "start": 42.78,
-  "end": 43.04
+  "start": 43.24,
+  "end": 43.5
  },
  {
   "word": "and",
   "line": "L10",
-  "start": 43.04,
-  "end": 43.4
+  "start": 43.58,
+  "end": 43.86
  },
  {
   "word": "the",
   "line": "L10",
-  "start": 43.4,
-  "end": 43.58
+  "start": 43.86,
+  "end": 43.98
  },
  {
   "word": "state",
   "line": "L10",
-  "start": 43.58,
-  "end": 43.8
+  "start": 43.98,
+  "end": 44.26
  },
  {
   "word": "suspected",
   "line": "L10",
-  "start": 43.8,
-  "end": 44.34
+  "start": 44.26,
+  "end": 44.78
  },
  {
   "word": "organized",
   "line": "L10",
-  "start": 44.34,
-  "end": 44.94
+  "start": 44.78,
+  "end": 45.4
  },
  {
   "word": "crime.",
   "line": "L10",
-  "start": 44.94,
-  "end": 45.38
+  "start": 45.4,
+  "end": 45.82
  },
  {
   "word": "Investigators",
   "line": "L11",
-  "start": 45.76,
-  "end": 46.12
+  "start": 46.2,
+  "end": 46.56
  },
  {
   "word": "found",
   "line": "L11",
-  "start": 46.12,
-  "end": 46.6
+  "start": 46.56,
+  "end": 47.06
  },
  {
   "word": "a",
   "line": "L11",
-  "start": 46.6,
-  "end": 46.78
+  "start": 47.06,
+  "end": 47.24
  },
  {
   "word": "retired",
   "line": "L11",
-  "start": 46.78,
-  "end": 47.2
+  "start": 47.24,
+  "end": 47.66
  },
  {
   "word": "couple...",
   "line": "L11",
-  "start": 47.2,
-  "end": 47.54
+  "start": 47.66,
+  "end": 48.0
  },
  {
   "word": "doing",
   "line": "L11",
-  "start": 47.54,
-  "end": 47.88
+  "start": 48.0,
+  "end": 48.34
  },
  {
   "word": "math.",
   "line": "L11",
-  "start": 47.88,
-  "end": 48.26
+  "start": 48.34,
+  "end": 48.72
  },
  {
   "word": "And",
   "line": "L11",
-  "start": 48.26,
-  "end": 48.56
+  "start": 48.78,
+  "end": 49.02
  },
  {
   "word": "it",
   "line": "L11",
-  "start": 48.56,
-  "end": 48.68
+  "start": 49.02,
+  "end": 49.14
  },
  {
   "word": "was",
   "line": "L11",
-  "start": 48.68,
-  "end": 48.82
+  "start": 49.14,
+  "end": 49.28
  },
  {
   "word": "all",
   "line": "L11",
-  "start": 48.82,
-  "end": 49.1
+  "start": 49.28,
+  "end": 49.56
  },
  {
   "word": "legal.",
   "line": "L11",
-  "start": 49.1,
-  "end": 49.38
+  "start": 49.56,
+  "end": 49.84
  },
  {
   "word": "In",
   "line": "L12",
-  "start": 49.86,
-  "end": 50.12
+  "start": 50.32,
+  "end": 50.58
  },
  {
   "word": "the",
   "line": "L12",
-  "start": 50.12,
-  "end": 50.32
+  "start": 50.58,
+  "end": 50.78
  },
  {
   "word": "end,",
   "line": "L12",
-  "start": 50.32,
-  "end": 50.66
+  "start": 50.78,
+  "end": 51.1
  },
  {
   "word": "their",
   "line": "L12",
-  "start": 51.0,
-  "end": 51.08
+  "start": 51.44,
+  "end": 51.54
  },
  {
   "word": "group",
   "line": "L12",
-  "start": 51.08,
-  "end": 51.36
+  "start": 51.54,
+  "end": 51.8
  },
  {
   "word": "won",
   "line": "L12",
-  "start": 51.36,
-  "end": 51.58
+  "start": 51.8,
+  "end": 52.04
  },
  {
   "word": "nearly",
   "line": "L12",
-  "start": 51.58,
-  "end": 51.96
+  "start": 52.04,
+  "end": 52.42
  },
  {
   "word": "twenty-seven",
   "line": "L12",
-  "start": 51.96,
-  "end": 52.6
+  "start": 52.42,
+  "end": 53.04
  },
  {
   "word": "million",
   "line": "L12",
-  "start": 52.6,
-  "end": 53.02
+  "start": 53.04,
+  "end": 53.48
  },
  {
   "word": "dollars.",
   "line": "L12",
-  "start": 53.02,
-  "end": 53.72
+  "start": 53.48,
+  "end": 54.14
  },
  {
   "word": "And",
   "line": "L13",
-  "start": 54.46,
-  "end": 54.88
+  "start": 54.92,
+  "end": 55.34
  },
  {
   "word": "they",
   "line": "L13",
-  "start": 54.88,
-  "end": 55.0
+  "start": 55.34,
+  "end": 55.46
  },
  {
   "word": "kept",
   "line": "L13",
-  "start": 55.0,
-  "end": 55.22
+  "start": 55.46,
+  "end": 55.68
  },
  {
   "word": "every",
   "line": "L13",
-  "start": 55.22,
-  "end": 55.44
+  "start": 55.68,
+  "end": 55.9
  },
  {
   "word": "ticket",
   "line": "L13",
-  "start": 55.44,
-  "end": 55.76
+  "start": 55.9,
+  "end": 56.2
  },
  {
   "word": "in",
   "line": "L13",
-  "start": 55.76,
-  "end": 55.92
+  "start": 56.2,
+  "end": 56.38
  },
  {
   "word": "tubs",
   "line": "L13",
-  "start": 55.92,
-  "end": 56.3
+  "start": 56.38,
+  "end": 56.76
  },
  {
   "word": "in",
   "line": "L13",
-  "start": 56.3,
-  "end": 56.4
+  "start": 56.76,
+  "end": 56.86
  },
  {
   "word": "their",
   "line": "L13",
-  "start": 56.4,
-  "end": 56.52
+  "start": 56.86,
+  "end": 56.98
  },
  {
   "word": "barn,",
   "line": "L13",
-  "start": 56.52,
-  "end": 56.92
+  "start": 56.98,
+  "end": 57.36
  },
  {
   "word": "in",
   "line": "L13",
-  "start": 56.92,
-  "end": 57.24
+  "start": 57.36,
+  "end": 57.7
  },
  {
   "word": "case",
   "line": "L13",
-  "start": 57.24,
-  "end": 57.52
+  "start": 57.7,
+  "end": 57.98
  },
  {
   "word": "of",
   "line": "L13",
-  "start": 57.52,
-  "end": 57.7
+  "start": 57.98,
+  "end": 58.16
  },
  {
   "word": "an",
   "line": "L13",
-  "start": 57.7,
-  "end": 57.8
+  "start": 58.16,
+  "end": 58.26
  },
  {
   "word": "audit.",
   "line": "L13",
-  "start": 57.8,
-  "end": 58.0
+  "start": 58.26,
+  "end": 58.46
  }
 ]

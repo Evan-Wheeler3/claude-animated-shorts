@@ -214,11 +214,11 @@ const B: Record<number, (c: Ctx) => Upd> = {
       jerry(a, t, writing ? 'lick' : 'proud', {armFront: true, look: writing ? .6 : 0, armPose: (side, S, g) => side < 0 ? [S, [S[0] - 26 * g.u, S[1] + .35 * g.HH], [300 - 20 * g.u, g.chin + .75 * g.HH]] as P[] :
         [S, [S[0] + 24 * g.u, S[1] + .35 * g.HH], [300 + (14 + (writing ? 14 * Math.sin(t * 24) : 0)) * g.u, g.chin + (.72 + (writing ? .04 * Math.sin(t * 17) : 0)) * g.HH]] as P[]});
       c.dof = 3; cam(c, [0, 1.5, 1.9 - .12 * u], [0, .98, .2], 40); }; },
-  // 11 "every hundred dollars ... about a hundred and twenty": $100 stack in, a taller $120 stack pops out.
+  // 11 "for every hundred dollars he spent, he'd win back about a hundred and twenty": $100 stack in, a taller $120 stack pops out.
   11: c => { tabletop(c, '#efdcbc', '#f4c95d'); const mk = (n: number, x: number) => { const g = new THREE.Group(); for (let i = 0; i < n; i++) { const b = brick(); b.position.y = i * .031; g.add(b); } g.position.x = x; c.scene.add(g); return g; };
     const A = mk(5, -.16), Bq = mk(6, .16); const lab = (s: string, x: number, col: string) => { const m = sheet(.14, .063, 600, (g, w, h) => text(g, s, w / 2, h / 2, h * .8, col, 12), true); m.position.set(x, .3, .02); c.scene.add(m); return m; };
     const la = lab('$100', -.14, '#ffffff'), lb = lab('$120', .14, '#ffd84a'), arrow = lab('→', 0, '#ffffff'); arrow.position.y = .1;
-    const in0 = T('L05', 7), out = T('L05', 15), big = T('L05', 17);
+    const in0 = T('L05', 8), out = T('L05', 16), big = T('L05', 19);
     return (f, l, u) => { const ka = pop(f, in0), kb = pop(f, out); A.scale.setScalar(Math.max(.01, Math.min(1.2, ka))); la.visible = f >= in0; la.position.y = .21;
       Bq.visible = f >= out; Bq.scale.set(1, Math.max(.01, kb), 1); lb.visible = f >= out; lb.position.y = .25; lb.scale.setScalar(f >= big ? 1 + .4 * Math.exp(-(f - big) / 5) : 1); arrow.visible = f >= out - 6;
       c.dof = 1; cam(c, [0, .3, 1.25 - .05 * u], [0, .15, 0], 40); }; },
