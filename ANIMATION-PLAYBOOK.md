@@ -186,6 +186,12 @@ Per-shot test before building: *name the one subject of this shot in two words.*
 
 ## 9. Pre-show checklist (per shot)
 
+- [ ] **Correctness pass** (owner, 2026-11-28, after cars drove backwards in traffic-lights): render every picture with
+      printed text or numbers at scale ≥ .5 and read it. Check: text not mirrored or upside down; numbers agree with the
+      narration and the fact sheet ("nearly 27M" must not count to 27,000,000); labels name the right place and time (no
+      "Mass." brochure in the Michigan part); symbols drawn as paths, not font glyphs (Lilita One has no ✔ ✖: they render
+      as empty boxes); vehicles move nose-first and wheels turn the right way; clocks run clockwise; doors swing on their
+      hinge side; nothing inside another object hides its face (number discs sunk into balls)
 - [ ] One subject per shot (nameable in two words), on a plain bright background; the picture changes every 2–2.5 s
 - [ ] The character does the line's verb with their body; their face changes on the beat
 - [ ] Beats are timed with `T(line, i)` on the right words
