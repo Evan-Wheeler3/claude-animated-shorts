@@ -186,7 +186,7 @@ const B: Record<number, (c: Ctx) => Upd> = {
   // 7 "once the jackpot got big and nobody won": a huge pile, NO WINNER stamped on it.
   7: c => { tabletop(c, '#efdcbc', '#f4c95d'); const P = cashPile(9); P.set(P.n); c.scene.add(P.g); const st = stampMark('NO WINNER', '#e23b2e', .34, -.12); st.rotation.set(0, 0, 0); c.scene.add(st);
     const at = T('L03', 12);
-    return (f, l, u) => { const k = pop(f, at); st.visible = f >= at; st.position.set(0, .3, .45); st.scale.setScalar(Math.max(.01, 2.5 - 1.5 * Math.min(1, k)));
+    return (f, l, u) => { const k = pop(f, at); st.visible = f >= at; st.position.set(0, .3, .45); st.scale.setScalar(Math.max(.01, 1.7 - .7 * Math.min(1, k)));
       c.dof = 1; cam(c, [0, .55, 1.45 - .1 * u], [0, .18, 0], 40); }; },
   // 8 "it was split between everyone who matched just a few numbers": the pile slides down a staircase into small piles 5, 4, 3.
   8: c => { tabletop(c, '#efdcbc', '#9fdcc6'); const stepCol = ['#7a3fb0', '#9a5fd0', '#b98ae6', '#d6b8f4'], H = [.8, .55, .3, .1];
