@@ -1,0 +1,10 @@
+  0.0-  3.4 If you ever fake a number, there's a way to tell a human made it up.
+  3.4-  8.6 A man stole $2 million with fake checks, made every amount look totally random,
+  8.6- 13.1 and still got caught. But how? Well, picture a building with 19 floors.
+ 13.1- 17.8 Step into the elevator and look at the buttons. Floors 2 through 9 each start with a different
+ 17.8- 23.6 number. But floor 1 and 10 all the way up to 19 all start with a 1. That's more than half
+ 23.6- 28.4 the buttons. Real numbers work like that elevator, so ones show up way more than anything
+ 28.9- 33.2 else. On top of that, real randomness is streaky. Flip a coin a hundred times,
+ 33.2- 38.2 and you'll usually get 6 heads in a row. His checks mostly began with a 7, 8 or 9,
+ 38.2- 42.8 and he avoided doubles to make them look random, but truly random numbers are the opposite.
+ 42.8- 47.0 So no matter how random you try to make yours, there's almost always a way to tell.
