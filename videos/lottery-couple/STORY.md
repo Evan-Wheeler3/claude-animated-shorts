@@ -2,7 +2,7 @@
 story_id: lottery-couple
 title_working: The Retired Couple Who Cracked The Lottery
 format: Person beats a system (ANIMATION-PLAYBOOK.md 1b), look v2 kit built to the simplicity rules, read-along captions, voice B + solo piano. Experiment: visual simplicity (LEARNING-LOG.md)
-script_status: draft
+script_status: approved
 ---
 
 # The retired couple who cracked the lottery: fact sheet (Wikipedia pages read 2026-11-28; quotes verbatim unless marked)
