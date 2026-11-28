@@ -53,7 +53,7 @@ if sys.argv[1] == "takes":
         if only and L["line"] not in only:
             continue
         for t in range(n):
-            torch.manual_seed(1000 + t)
+            torch.manual_seed(int(os.environ.get("SEED0", 1000)) + t)   # SEED0=2000 for fresh takes of a line
             t0 = time.time()
             wavs, sr2 = m.generate_voice_clone(text=L["text"], language="English", voice_clone_prompt=prompt)
             w = np.asarray(wavs[0], dtype=np.float32).reshape(-1)

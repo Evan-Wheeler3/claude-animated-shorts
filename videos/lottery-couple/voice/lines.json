@@ -1,0 +1,137 @@
+[
+ {
+  "line": "L01",
+  "text": "A retired shop owner figured out how to beat the lottery in under two minutes.",
+  "emph": [
+   13
+  ],
+  "start": 0.05,
+  "end": 4.132,
+  "take": "L01_t2.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L02",
+  "text": "Normally, if nobody matches all six numbers, the jackpot just keeps growing.",
+  "emph": [],
+  "start": 4.342,
+  "end": 8.662,
+  "take": "L02_t1.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L03",
+  "text": "But in a game called WinFall, once the jackpot got big and nobody won, it was split between everyone who matched just a few numbers.",
+  "emph": [
+   23
+  ],
+  "start": 8.722,
+  "end": 15.842,
+  "take": "L03_t1.wav",
+  "heard_miss": 1
+ },
+ {
+  "line": "L04",
+  "text": "And matching a few numbers is easy, if you buy enough tickets.",
+  "emph": [],
+  "start": 15.902,
+  "end": 19.502,
+  "take": "L04_t2.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L05",
+  "text": "Jerry did the math: those weeks, every hundred dollars of tickets paid back about a hundred and twenty.",
+  "emph": [
+   17
+  ],
+  "start": 19.562,
+  "end": 24.8,
+  "take": "L05_t2.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L06",
+  "text": "So he bet twenty-two hundred dollars... and lost fifty.",
+  "emph": [
+   8
+  ],
+  "start": 24.96,
+  "end": 28.064,
+  "take": "L06_t2.wav",
+  "heard_miss": 7
+ },
+ {
+  "line": "L07",
+  "text": "He hadn't bought enough tickets. So he bet eight thousand, and won almost sixteen thousand.",
+  "emph": [
+   3
+  ],
+  "start": 28.124,
+  "end": 33.164,
+  "take": "L07_t0.wav",
+  "heard_miss": 7
+ },
+ {
+  "line": "L08",
+  "text": "He told his wife Marge, and she was in.",
+  "emph": [],
+  "start": 33.324,
+  "end": 35.797,
+  "take": "L08_t2.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L09",
+  "text": "Friends and family chipped in, and they bought hundreds of thousands of tickets.",
+  "emph": [],
+  "start": 35.857,
+  "end": 40.041,
+  "take": "L09_t2.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L10",
+  "text": "Then a newspaper spotted stores selling millions in tickets, and the state suspected organized crime.",
+  "emph": [
+   13
+  ],
+  "start": 40.101,
+  "end": 45.461,
+  "take": "L10_t1.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L11",
+  "text": "Investigators found a retired couple... doing math. And it was all legal.",
+  "emph": [
+   6
+  ],
+  "start": 45.521,
+  "end": 49.519,
+  "take": "L11_t2.wav",
+  "heard_miss": 0
+ },
+ {
+  "line": "L12",
+  "text": "In the end, their group won nearly twenty-seven million dollars.",
+  "emph": [
+   8
+  ],
+  "start": 49.579,
+  "end": 53.763,
+  "take": "L12_t2.wav",
+  "heard_miss": 4
+ },
+ {
+  "line": "L13",
+  "text": "And they kept every ticket in tubs in their barn, in case of an audit.",
+  "emph": [
+   14
+  ],
+  "start": 54.273,
+  "end": 58.238,
+  "take": "L13_t0.wav",
+  "heard_miss": 0
+ }
+]
